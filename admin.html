@@ -30,7 +30,7 @@
         }
         .header-section {
             border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
         }
         .panel-card {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
@@ -46,6 +46,13 @@
             border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
         .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
+
+        .danger-btn {
+            background: linear-gradient(135deg, #dc2626, #ef4444); color: white;
+            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+        .danger-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6); }
         
         .back-link { color: var(--accent); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
         .back-link:hover { text-decoration: underline; }
@@ -87,7 +94,10 @@
                     <h1 style="margin:0; font-size: 2.2rem; color: var(--gold);">👑 President's Command Center</h1>
                     <p style="margin: 5px 0 0 0; color: #94a3b8;">Manage student telemetry and system broadcasts.</p>
                 </div>
-                <button class="action-btn" onclick="openBroadcastModal()">📢 Broadcast Official Post</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="action-btn" onclick="openBroadcastModal()">📢 Broadcast Official Post</button>
+                    <button class="danger-btn" onclick="resetAllData()">⚠️ Reset All Data</button>
+                </div>
             </div>
         </div>
 
@@ -110,7 +120,6 @@
         </div>
     </div>
 
-    <!-- Fixed Broadcast Modal (Removed space in broadcastName ID) -->
     <div id="broadcastModal" class="modal">
         <div class="modal-content" style="text-align: left;">
             <h2 style="margin-top: 0; color: var(--gold);">Broadcast Announcement</h2>
@@ -126,7 +135,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -144,6 +153,7 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        // ⚠️ PUT YOUR EXACT ADMIN GMAIL HERE ⚠️
         const ADMIN_EMAIL = "patilshivakumarcr7@gmail.com";
 
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
@@ -157,7 +167,8 @@
                     document.getElementById('adminDashboard').style.display = 'flex';
                     loadUserData();
                 } else {
-                    alert(`Access Denied: You logged in as "${user.email}". This does not match the admin email (${ADMIN_EMAIL}).`);
+                    // SECURE: Generic error message that does not leak the admin email address
+                    alert("Access Denied: You are not authorized as the administrator.");
                     auth.signOut();
                 }
             } else {
@@ -206,7 +217,26 @@
             } else {
                 alert("Please fill in both title and description.");
             }
-        }
+        };
+
+        window.resetAllData = async () => {
+            if (confirm("⚠️ WARNING: This will delete ALL student projects and user database records to start a new month. Are you sure?")) {
+                try {
+                    const agentsSnapshot = await getDocs(collection(db, "agents"));
+                    let agentDeletes = agentsSnapshot.docs.map(d => deleteDoc(doc(db, "agents", d.id)));
+                    
+                    const usersSnapshot = await getDocs(collection(db, "users"));
+                    let userDeletes = usersSnapshot.docs.map(d => deleteDoc(doc(db, "users", d.id)));
+
+                    await Promise.all([...agentDeletes, ...userDeletes]);
+                    alert("System successfully reset! All projects and user records have been wiped for the new month.");
+                    location.reload();
+                } catch (e) {
+                    console.error("Reset error:", e);
+                    alert("Error resetting database. Check console.");
+                }
+            }
+        };
     </script>
 </body>
 </html>
