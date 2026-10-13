@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACHYON — Admin Control Center</title>
+    <title>TACHYON — AIML & Tachyon Agent Hub</title>
     <style>
         :root {
             --primary: #0ea5e9;
             --accent: #38bdf8;
             --gold: #fbbf24;
-            --glass-bg: rgba(15, 23, 42, 0.85);
+            --silver: #cbd5e1;
+            --bronze: #b45309;
+            --glass-bg: rgba(15, 23, 42, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
+        
         body {
             margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
             color: #f8fafc; display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
@@ -21,54 +24,91 @@
 
         #bg-video {
             position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%;
-            z-index: -100; object-fit: cover; filter: brightness(0.3);
+            z-index: -100; object-fit: cover; filter: brightness(0.35);
         }
-
-        .admin-container {
-            flex: 1; padding: 40px; overflow-y: auto; background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(8px);
-            display: flex; flex-direction: column; gap: 24px; max-width: 1000px; margin: 0 auto;
+        
+        .left-wall {
+            width: 350px; background: var(--glass-bg); backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border); padding: 24px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+        }
+        .shoutout-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(56, 189, 248, 0.05));
+            border: 1px solid var(--primary); border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.2); text-align: center;
+        }
+        .shoutout-card h3 { margin: 0 0 12px 0; color: var(--gold); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;}
+        
+        .leaderboard-item {
+            background: rgba(30, 41, 59, 0.6); padding: 12px 16px; border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid var(--glass-border); transition: all 0.3s ease;
+        }
+        .leaderboard-item:hover {
+            transform: translateX(5px); background: rgba(30, 41, 59, 0.9);
+            border-color: var(--primary); box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+        }
+        .xp-badge {
+            background: rgba(14, 165, 233, 0.2); color: var(--accent);
+            padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+        }
+        
+        .main-hub {
+            flex: 1; padding: 40px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 24px;
+            background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(4px);
         }
         .header-section {
-            border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 24px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .panel-card {
+        .header-text h1 { margin: 0 0 8px 0; font-size: 2.8rem; letter-spacing: 1px; text-shadow: 0 2px 15px rgba(14,165,233,0.5); }
+        .header-text p { margin: 0; color: #cbd5e1; font-size: 1.1rem; }
+        
+        .post-btn {
+            background: linear-gradient(135deg, #0284c7, #0ea5e9); color: white;
+            border: none; padding: 12px 24px; border-radius: 8px;
+            font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .post-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6); }
+        
+        .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+        .agent-card {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 25px; backdrop-filter: blur(10px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 12px; padding: 24px; transition: 0.3s; backdrop-filter: blur(10px);
         }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.95rem; }
-        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--glass-border); }
-        .admin-table th { color: var(--gold); }
+        .agent-card:hover { border-color: var(--primary); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2); transform: translateY(-5px); }
         
-        .action-btn {
-            background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white;
-            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        .build-agent-fab {
+            position: fixed; bottom: 30px; right: 30px;
+            background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: white; 
+            padding: 16px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.5); display: flex; align-items: center; gap: 8px; transition: 0.3s; z-index: 100;
         }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
-
-        .danger-btn {
-            background: linear-gradient(135deg, #dc2626, #ef4444); color: white;
-            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-        }
-        .danger-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6); }
+        .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.7); }
         
-        .back-link { color: var(--accent); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-        .back-link:hover { text-decoration: underline; }
-
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.9); justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+            background: rgba(2, 6, 23, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+            backdrop-filter: blur(8px);
         }
         .modal-content {
-            background: rgba(15, 23, 42, 0.95); padding: 35px; border-radius: 16px; width: 100%; max-width: 450px;
-            border: 1px solid var(--glass-border); text-align: center;
+            background: rgba(15, 23, 42, 0.95); padding: 35px; border-radius: 16px; width: 100%; max-width: 420px; 
+            border: 1px solid var(--glass-border); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
         .modal-content input, .modal-content textarea {
-            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8);
+            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8); 
             border: 1px solid var(--glass-border); color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem;
         }
+        .google-btn {
+            background-color: white; color: #1e293b; border: none; padding: 12px 24px; border-radius: 8px; 
+            font-size: 1.05rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            gap: 12px; width: 100%; transition: 0.2s;
+        }
+        .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+        .google-btn img { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
@@ -77,66 +117,72 @@
         <source src="bg-video.mp4" type="video/mp4">
     </video>
 
-    <div id="auth-gate" class="modal" style="display:flex;">
+    <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
         <div class="modal-content">
-            <h2 style="color: #ef4444; margin-top:0;">Restricted Access</h2>
-            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">You must sign in with the President account to access this terminal.</p>
-            <button class="action-btn" id="adminLoginBtn" style="width: 100%;">Sign in as Admin</button>
-            <button class="action-btn" style="width: 100%; margin-top: 10px; background: #334155;" onclick="window.location.href='index.html'">Back to Hub</button>
+            <h2 style="margin-top: 0; color: var(--accent); font-size: 2rem;">Tachyon Auth</h2>
+            <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 30px;">Initialize connection with your Google ID</p>
+            <button class="google-btn" id="googleLoginBtn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+                Sign in with Google
+            </button>
         </div>
     </div>
 
-    <div class="admin-container" id="adminDashboard" style="display:none;">
-        <div>
-            <a href="index.html" class="back-link">← Return to Student Hub</a>
-            <div class="header-section">
-                <div>
-                    <h1 style="margin:0; font-size: 2.2rem; color: var(--gold);">👑 President's Command Center</h1>
-                    <p style="margin: 5px 0 0 0; color: #94a3b8;">Manage student telemetry and system broadcasts.</p>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="action-btn" onclick="openBroadcastModal()">📢 Broadcast Official Post</button>
-                    <button class="danger-btn" onclick="resetAllData()">⚠️ Reset All Data</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel-card">
-            <h3 style="margin-top:0; color: var(--accent);">📊 Live Student Database & Login Logs</h3>
-            <div style="max-height: 450px; overflow-y: auto;">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Hacker Username</th>
-                            <th>Google Email</th>
-                            <th>Last Active Timestamp</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-user-list">
-                        <tr><td colspan="3" style="text-align:center; color:#94a3b8;">Scanning database...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+    <div id="username-modal" class="modal" style="display:none; z-index: 2500;">
+        <div class="modal-content">
+            <h2 style="margin-top: 0; color: var(--accent);">Create Identity</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard.</p>
+            <input type="text" id="customUsernameInput" placeholder="e.g. Neo, Trinity, ZeroCool">
+            <button class="post-btn" style="width: 100%; padding: 14px;" onclick="saveUsername()">Set Username</button>
         </div>
     </div>
 
-    <div id="broadcastModal" class="modal">
+    <div class="left-wall">
+        <h2 style="margin-top:0;">🏆 Tachyon Rankings</h2>
+        <div class="shoutout-card">
+            <h3>Top Developer 👑</h3>
+            <div id="top-student" style="font-size: 1.6rem; font-weight: bold; color: white;">Loading...</div>
+        </div>
+        <div style="margin-top: 15px;">
+            <h3 style="color: #cbd5e1; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; display:flex; justify-content:space-between;">
+                <span>Live Leaderboard</span> <span>XP</span>
+            </h3>
+            <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;"></div>
+        </div>
+        <button style="margin-top: auto; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()">Disconnect</button>
+    </div>
+
+    <div class="main-hub">
+        <div class="header-section">
+            <div class="header-text">
+                <h1>TACHYON — AIML HUB</h1>
+                <p>Deploy and showcase your AI creations here. <br><strong style="color: var(--accent);">— Shivakumar Patil, President</strong></p>
+            </div>
+            <button class="post-btn" onclick="openModal()" style="padding: 14px 28px;">+ Deploy Agent</button>
+        </div>
+        <div class="agent-grid" id="agent-grid"></div>
+    </div>
+
+    <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">✨ Build Your Own Agent</a>
+
+    <div class="modal" id="postModal">
         <div class="modal-content" style="text-align: left;">
-            <h2 style="margin-top: 0; color: var(--gold);">Broadcast Announcement</h2>
-            <input type="text" id="broadcastName" placeholder="Announcement Title">
-            <input type="text" id="broadcastLink" placeholder="Resource URL (Optional)">
-            <textarea id="broadcastDesc" placeholder="Announcement message..." rows="4"></textarea>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="action-btn" style="background: #334155;" onclick="closeBroadcastModal()">Cancel</button>
-                <button class="action-btn" onclick="sendBroadcast()">Publish Official</button>
+            <h2 style="margin-top: 0; color: var(--accent);">Deploy to Network</h2>
+            <input type="text" id="agentName" placeholder="Agent Name (e.g. CodeHelper Bot)">
+            <input type="text" id="studentName" placeholder="Your Hacker Name" readonly style="background: rgba(255,255,255,0.05); color: #94a3b8; cursor: not-allowed;">
+            <input type="text" id="agentLink" placeholder="Link to Agent (URL)">
+            <textarea id="agentDesc" placeholder="What does your agent do?" rows="3"></textarea>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+                <button class="post-btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); box-shadow:none;" onclick="closeModal()">Abort</button>
+                <button class="post-btn" onclick="submitAgent()">Launch Live</button>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
@@ -153,91 +199,173 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        const ADMIN_EMAIL = "patilshivakumarcr7@gmail.com";
+        let allUsers = {};
+        let allAgents = [];
+        let currentUserEmail = "";
+        let currentCustomName = "";
 
-        document.getElementById('adminLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(() => alert("Authentication failed."));
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(() => alert("Error signing in."));
         });
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
-                if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                    document.getElementById('auth-gate').style.display = 'none';
-                    document.getElementById('adminDashboard').style.display = 'flex';
-                    loadUserData();
+                currentUserEmail = user.email;
+                const userDocRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userDocRef);
+                
+                if (userSnap.exists() && userSnap.data().customName) {
+                    currentCustomName = userSnap.data().customName;
+                    document.getElementById('studentName').value = currentCustomName; 
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'none';
+                    renderAgents();
                 } else {
-                    alert(`Access Denied: You logged in as "${user.email}". This does not match the admin email (${ADMIN_EMAIL}).`);
-                    auth.signOut();
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'flex';
                 }
             } else {
-                document.getElementById('auth-gate').style.display = 'flex';
-                document.getElementById('adminDashboard').style.display = 'none';
+                currentUserEmail = "";
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('username-modal').style.display = 'none';
             }
         });
 
-        function loadUserData() {
-            onSnapshot(collection(db, "users"), (snapshot) => {
-                let tableHTML = '';
-                snapshot.forEach((doc) => {
-                    let u = doc.data();
-                    let dateStr = u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'N/A';
-                    tableHTML += `<tr><td><strong>@${u.customName || 'Anonymous'}</strong></td><td>${u.email}</td><td>${dateStr}</td></tr>`;
-                });
-                document.getElementById('admin-user-list').innerHTML = tableHTML || '<tr><td colspan="3">No user data found.</td></tr>';
+        window.saveUsername = async () => {
+            const inputName = document.getElementById('customUsernameInput').value.trim();
+            const lowerName = inputName.toLowerCase();
+            if(inputName.length < 3) { alert("Username must be at least 3 characters."); return; }
+
+            const q = query(collection(db, "users"), where("customNameLower", "==", lowerName));
+            if (!(await getDocs(q)).empty) { alert("Username already taken!"); return; }
+
+            const user = auth.currentUser;
+            await setDoc(doc(db, "users", user.uid), {
+                customName: inputName, customNameLower: lowerName, email: user.email, lastLogin: Date.now()
+            }, { merge: true });
+
+            currentCustomName = inputName;
+            document.getElementById('studentName').value = currentCustomName;
+            document.getElementById('username-modal').style.display = 'none';
+        };
+
+        window.logout = () => signOut(auth).then(() => document.getElementById('login-screen').style.display = 'flex');
+        window.openModal = () => document.getElementById('postModal').style.display = 'flex';
+        window.closeModal = () => document.getElementById('postModal').style.display = 'none';
+
+        window.submitAgent = async () => {
+            const name = document.getElementById('agentName').value;
+            const desc = document.getElementById('agentDesc').value;
+            if(name) {
+                try {
+                    await addDoc(collection(db, "agents"), {
+                        name: name,
+                        author: currentCustomName,
+                        authorEmail: currentUserEmail, 
+                        desc: desc,
+                        upvotes: 0,
+                        boostedBy: [],
+                        timestamp: Date.now()
+                    });
+                    closeModal();
+                    document.getElementById('agentName').value = '';
+                    document.getElementById('agentDesc').value = '';
+                } catch (e) { alert("Error saving to database."); }
+            } else { alert("Please fill in the Agent Name."); }
+        }
+
+        window.upvote = async (id, authorEmail) => {
+            if (!currentUserEmail || currentUserEmail === authorEmail) return;
+            await updateDoc(doc(db, "agents", id), { 
+                upvotes: increment(1),
+                boostedBy: arrayUnion(currentUserEmail) 
             });
         }
 
-        window.openBroadcastModal = () => document.getElementById('broadcastModal').style.display = 'flex';
-        window.closeBroadcastModal = () => document.getElementById('broadcastModal').style.display = 'none';
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            allUsers = {};
+            snapshot.forEach((doc) => { allUsers[doc.data().email] = doc.data(); });
+            renderLeaderboard();
+        });
 
-        window.sendBroadcast = async () => {
-            const name = document.getElementById('broadcastName').value;
-            const link = document.getElementById('broadcastLink').value;
-            const desc = document.getElementById('broadcastDesc').value;
-            
-            if(name && desc) {
-                await addDoc(collection(db, "agents"), {
-                    name: name,
-                    link: link || "",
-                    author: "President Shivakumar",
-                    authorEmail: ADMIN_EMAIL,
-                    desc: desc,
-                    upvotes: 0,
-                    isOfficial: true,
-                    boostedBy: [],
-                    timestamp: Date.now()
-                });
-                closeBroadcastModal();
-                document.getElementById('broadcastName').value = '';
-                document.getElementById('broadcastLink').value = '';
-                document.getElementById('broadcastDesc').value = '';
-                alert("Official announcement broadcasted successfully!");
-            } else {
-                alert("Please fill in both title and description.");
-            }
-        };
+        onSnapshot(collection(db, "agents"), (snapshot) => {
+            allAgents = [];
+            snapshot.forEach((doc) => {
+                let data = doc.data(); data.id = doc.id; allAgents.push(data);
+            });
+            renderAgents();
+            renderLeaderboard();
+        });
 
-        // RESET ALL DATA FUNCTION (Wipes Agents & Users)
-        window.resetAllData = async () => {
-            if (confirm("⚠️ WARNING: This will delete ALL student projects and user database records to start a new month. Are you sure?")) {
-                try {
-                    // 1. Delete all agents
-                    const agentsSnapshot = await getDocs(collection(db, "agents"));
-                    let agentDeletes = agentsSnapshot.docs.map(d => deleteDoc(doc(db, "agents", d.id)));
-                    
-                    // 2. Delete all users
-                    const usersSnapshot = await getDocs(collection(db, "users"));
-                    let userDeletes = usersSnapshot.docs.map(d => deleteDoc(doc(db, "users", d.id)));
+        function renderAgents() {
+            const grid = document.getElementById('agent-grid');
+            grid.innerHTML = '';
+            if(allAgents.length === 0) return;
 
-                    await Promise.all([...agentDeletes, ...userDeletes]);
-                    alert("System successfully reset! All projects and user records have been wiped for the new month.");
-                    location.reload();
-                } catch (e) {
-                    console.error("Reset error:", e);
-                    alert("Error resetting database. Check console.");
+            allAgents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
+                let hasBoosted = agent.boostedBy && agent.boostedBy.includes(currentUserEmail);
+                let isOwner = agent.authorEmail === currentUserEmail;
+                let btnHTML = '';
+                
+                if (isOwner) {
+                    btnHTML = `<button style="background: rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:#94a3b8; padding:10px; border-radius:8px; width:100%; cursor:not-allowed;">🔒 Your Agent (${agent.upvotes})</button>`;
+                } else if (hasBoosted) {
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.2); border:1px solid var(--primary); color:white; padding:10px; border-radius:8px; width:100%; cursor:not-allowed;">✅ Boosted (${agent.upvotes})</button>`;
+                } else {
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.15); border:1px solid var(--primary); color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;" onclick="upvote('${agent.id}', '${agent.authorEmail}')">🚀 Boost (${agent.upvotes})</button>`;
                 }
+
+                let cardBorder = agent.isOfficial ? '2px solid var(--gold)' : '1px solid var(--glass-border)';
+                let cardBadge = agent.isOfficial ? '<span style="background:var(--gold); color:#020617; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-left:8px;">OFFICIAL</span>' : '';
+
+                grid.innerHTML += `
+                    <div class="agent-card" style="border: ${cardBorder};">
+                        <h3 style="margin-top:0; color:var(--accent); font-size:1.3rem;">${agent.name} ${cardBadge}</h3>
+                        <p style="color:#cbd5e1; font-size:0.9rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
+                        <p style="line-height: 1.5;">${agent.desc}</p>
+                        ${btnHTML}
+                    </div>
+                `;
+            });
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = '';
+            let scores = {};
+            
+            for(let email in allUsers) {
+                let user = allUsers[email];
+                if(user.customName) scores[email] = { name: user.customName, points: 10 };
             }
-        };
+            
+            allAgents.forEach(a => {
+                let email = a.authorEmail || "unknown";
+                if(scores[email]) scores[email].points += 50 + (a.upvotes * 10);
+                else scores[email] = { name: a.author, points: 50 + (a.upvotes * 10) };
+            });
+
+            let sortedEmails = Object.keys(scores).sort((a,b) => scores[b].points - scores[a].points);
+            if(sortedEmails.length > 0) {
+                let top = scores[sortedEmails[0]];
+                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.1rem;">${top.points} XP</span>`;
+            } else {
+                document.getElementById('top-student').innerText = `Awaiting Data...`;
+            }
+
+            sortedEmails.forEach((email, index) => {
+                let s = scores[email];
+                let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? 'var(--silver)' : (index === 2 ? 'var(--bronze)' : '#94a3b8'));
+                list.innerHTML += `
+                    <div class="leaderboard-item" style="border-left: 4px solid ${rankColor};">
+                        <span style="display:flex; align-items:center; gap:10px; font-weight:bold;">
+                            <span style="color:${rankColor}; width:20px;">#${index + 1}</span> @${s.name}
+                        </span>
+                        <span class="xp-badge">${s.points} XP</span>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html>
