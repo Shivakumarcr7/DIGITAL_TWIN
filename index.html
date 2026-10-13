@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACHYON — AIML & Tachyon Agent Hub</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --text-light: #f8fafc;
+            --accent: #38bdf8;
+        }
+        body {
+            margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-dark); color: var(--text-light);
+            display: flex; height: 100vh; overflow: hidden;
+        }
+        /* Left Leaderboard Wall */
+        .left-wall {
+            width: 320px; background-color: var(--panel-bg);
+            border-right: 1px solid #334155; padding: 24px;
+            overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+        }
+        .shoutout-card {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(56, 189, 248, 0.1));
+            border: 1px solid var(--primary); border-radius: 12px;
+            padding: 16px; box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+        .shoutout-card h3 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1rem; }
+        .leaderboard-item {
+            background: #334155; padding: 12px; border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        /* Main Hub Area */
+        .main-hub {
+            flex: 1; padding: 40px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 24px;
+        }
+        .header-section {
+            border-bottom: 2px solid #334155; padding-bottom: 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; letter-spacing: 1px; }
+        .header-text p { margin: 0; color: #94a3b8; font-size: 1.1rem; }
+        .post-btn {
+            background-color: var(--primary); color: white;
+            border: none; padding: 12px 24px; border-radius: 8px;
+            font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .post-btn:hover { background-color: var(--accent); transform: translateY(-2px); }
+        /* Agent Grid */
+        .agent-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+        }
+        .agent-card {
+            background: var(--panel-bg); border: 1px solid #334155;
+            border-radius: 12px; padding: 20px; transition: 0.2s;
+        }
+        .agent-card:hover { border-color: var(--primary); }
+        /* Floating Build Button */
+        .build-agent-fab {
+            position: fixed; bottom: 30px; right: 30px;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: white; padding: 16px 28px; border-radius: 50px;
+            text-decoration: none; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+            z-index: 100;
+        }
+        .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6); }
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--panel-bg); padding: 30px; border-radius: 12px;
+            width: 400px; border: 1px solid #334155;
+        }
+        .modal input, .modal textarea {
+            width: 100%; padding: 10px; margin-bottom: 15px;
+            background: #0f172a; border: 1px solid #334155; color: white;
+            border-radius: 6px; box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Wall: Leaderboard -->
+    <div class="left-wall">
+        <h2>🏆 Wall of Fame</h2>
+        
+        <div class="shoutout-card">
+            <h3>President's Shoutout 🎙️</h3>
+            <p><strong>Top Contributor:</strong> <span id="top-student">Aditi (3rd Yr)</span></p>
+            <p style="font-size: 0.9rem; color: #cbd5e1;">Most agents built and community upvotes this month!</p>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <h3 style="color: #94a3b8; font-size: 1rem; border-bottom: 1px solid #334155; padding-bottom: 8px;">Live Leaderboard</h3>
+            <div id="leaderboard-list">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-hub">
+        <div class="header-section">
+            <div class="header-text">
+                <h1>TACHYON — AIML & Tachyon</h1>
+                <p>Welcome to the official Agent Hub. Build, deploy, and showcase your AI creations here. <br><strong>— Shivakumar Patil, President</strong></p>
+            </div>
+            <button class="post-btn" onclick="openModal()">+ Post Your Agent</button>
+        </div>
+
+        <div class="agent-grid" id="agent-grid">
+            <!-- Populated via JS -->
+        </div>
+    </div>
+
+    <!-- Bottom Right FAB -->
+    <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">
+        ✨ Build Your Own Agent
+    </a>
+
+    <!-- Post Modal -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Submit Your Agent</h2>
+            <input type="text" id="agentName" placeholder="Agent Name (e.g. CodeHelper Bot)">
+            <input type="text" id="studentName" placeholder="Your Name">
+            <input type="text" id="agentLink" placeholder="Link to Agent (URL)">
+            <textarea id="agentDesc" placeholder="What does your agent do?" rows="3"></textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="post-btn" style="background: transparent; border: 1px solid #334155;" onclick="closeModal()">Cancel</button>
+                <button class="post-btn" onclick="submitAgent()">Post Live</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dummy data for initial showcase
+        let agents = [
+            { name: "Syllabus Tracker AI", author: "Aditi", desc: "Answers questions based on our 2nd-year CS syllabus.", upvotes: 24 },
+            { name: "Hackathon Idea Gen", author: "Rahul", desc: "Brainstorms IoT and AI project ideas.", upvotes: 18 }
+        ];
+
+        function renderAgents() {
+            const grid = document.getElementById('agent-grid');
+            grid.innerHTML = '';
+            agents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent, index) => {
+                grid.innerHTML += `
+                    <div class="agent-card">
+                        <h3 style="margin-top:0; color:var(--accent);">${agent.name}</h3>
+                        <p style="color:#94a3b8; font-size:0.9rem;">By: ${agent.author}</p>
+                        <p>${agent.desc}</p>
+                        <button style="background:#334155; border:none; color:white; padding:6px 12px; border-radius:4px; cursor:pointer;" onclick="upvote(${index})">
+                            👍 Upvote (${agent.upvotes})
+                        </button>
+                    </div>
+                `;
+            });
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = '';
+            
+            // Tally scores by author
+            let scores = {};
+            agents.forEach(a => { scores[a.author] = (scores[a.author] || 0) + a.upvotes; });
+            
+            // Sort authors by score
+            let sortedAuthors = Object.keys(scores).sort((a,b) => scores[b] - scores[a]);
+            
+            if(sortedAuthors.length > 0) {
+                document.getElementById('top-student').innerText = `${sortedAuthors[0]} (${scores[sortedAuthors[0]]} pts)`;
+            }
+
+            sortedAuthors.forEach((author, index) => {
+                list.innerHTML += `
+                    <div class="leaderboard-item" style="margin-bottom: 8px;">
+                        <span><strong>#${index + 1}</strong> ${author}</span>
+                        <span style="color:var(--accent);">${scores[author]} pts</span>
+                    </div>
+                `;
+            });
+        }
+
+        function upvote(index) {
+            agents[index].upvotes++;
+            renderAgents();
+        }
+
+        function openModal() { document.getElementById('postModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('postModal').style.display = 'none'; }
+        
+        function submitAgent() {
+            const name = document.getElementById('agentName').value;
+            const author = document.getElementById('studentName').value;
+            const desc = document.getElementById('agentDesc').value;
+            
+            if(name && author) {
+                agents.push({ name: name, author: author, desc: desc, upvotes: 0 });
+                renderAgents();
+                closeModal();
+                // Reset fields
+                document.getElementById('agentName').value = '';
+                document.getElementById('studentName').value = '';
+                document.getElementById('agentDesc').value = '';
+            } else {
+                alert("Please fill in at least the Agent Name and Your Name.");
+            }
+        }
+
+        // Initial Load
+        renderAgents();
+    </script>
+</body>
+</html>
