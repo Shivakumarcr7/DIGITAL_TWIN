@@ -70,16 +70,15 @@
         <source src="bg-video.mp4" type="video/mp4">
     </video>
 
-    <!-- Security Gate -->
     <div id="auth-gate" class="modal" style="display:flex;">
         <div class="modal-content">
             <h2 style="color: #ef4444; margin-top:0;">Restricted Access</h2>
             <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">You must sign in with the President account to access this terminal.</p>
             <button class="action-btn" id="adminLoginBtn" style="width: 100%;">Sign in as Admin</button>
+            <button class="action-btn" style="width: 100%; margin-top: 10px; background: #334155;" onclick="window.location.href='index.html'">Back to Hub</button>
         </div>
     </div>
 
-    <!-- Admin Dashboard Content -->
     <div class="admin-container" id="adminDashboard" style="display:none;">
         <div>
             <a href="index.html" class="back-link">← Return to Student Hub</a>
@@ -111,11 +110,11 @@
         </div>
     </div>
 
-    <!-- Broadcast Modal -->
+    <!-- Fixed Broadcast Modal (Removed space in broadcastName ID) -->
     <div id="broadcastModal" class="modal">
         <div class="modal-content" style="text-align: left;">
             <h2 style="margin-top: 0; color: var(--gold);">Broadcast Announcement</h2>
-            <input type="text" id=" broadcastName" placeholder="Announcement Title (e.g. Hackathon Kickoff)">
+            <input type="text" id="broadcastName" placeholder="Announcement Title">
             <input type="text" id="broadcastLink" placeholder="Resource URL (Optional)">
             <textarea id="broadcastDesc" placeholder="Announcement message..." rows="4"></textarea>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
@@ -145,7 +144,6 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // ⚠️ PUT YOUR EXACT ADMIN GMAIL HERE ⚠️
         const ADMIN_EMAIL = "patilshivakumarcr7@gmail.com";
 
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
@@ -153,14 +151,15 @@
         });
 
         onAuthStateChanged(auth, (user) => {
-            if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-                // Verified Admin!
-                document.getElementById('auth-gate').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'flex';
-                loadUserData();
-            } else if (user) {
-                alert("Access Denied: You are not authorized as the administrator.");
-                auth.signOut();
+            if (user) {
+                if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    document.getElementById('auth-gate').style.display = 'none';
+                    document.getElementById('adminDashboard').style.display = 'flex';
+                    loadUserData();
+                } else {
+                    alert(`Access Denied: You logged in as "${user.email}". This does not match the admin email (${ADMIN_EMAIL}).`);
+                    auth.signOut();
+                }
             } else {
                 document.getElementById('auth-gate').style.display = 'flex';
                 document.getElementById('adminDashboard').style.display = 'none';
@@ -184,10 +183,13 @@
 
         window.sendBroadcast = async () => {
             const name = document.getElementById('broadcastName').value;
+            const link = document.getElementById('broadcastLink').value;
             const desc = document.getElementById('broadcastDesc').value;
+            
             if(name && desc) {
                 await addDoc(collection(db, "agents"), {
                     name: name,
+                    link: link || "",
                     author: "President Shivakumar",
                     authorEmail: ADMIN_EMAIL,
                     desc: desc,
@@ -197,7 +199,10 @@
                     timestamp: Date.now()
                 });
                 closeBroadcastModal();
-                alert("Official announcement broadcasted successfully to the Student Hub!");
+                document.getElementById('broadcastName').value = '';
+                document.getElementById('broadcastLink').value = '';
+                document.getElementById('broadcastDesc').value = '';
+                alert("Official announcement broadcasted successfully!");
             } else {
                 alert("Please fill in both title and description.");
             }
