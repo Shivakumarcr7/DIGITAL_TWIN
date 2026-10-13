@@ -121,7 +121,7 @@
             <h2 style="margin-top: 0; color: var(--accent);">Tachyon Auth</h2>
             <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Sign in with your Google account to access the Agent Hub</p>
             
-            <button class="google-btn" onclick="signInWithGoogle()">
+            <button class="google-btn" id="googleLoginBtn">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
                 Sign in with Google
             </button>
@@ -194,7 +194,7 @@
         const provider = new GoogleAuthProvider();
 
         // 100% FREE GOOGLE AUTHENTICATION LOGIC
-        window.signInWithGoogle = () => {
+        document.getElementById('googleLoginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider)
                 .then((result) => {
                     const user = result.user;
@@ -209,10 +209,10 @@
                     document.getElementById('studentName').value = user.displayName;
                     document.getElementById('login-screen').style.display = 'none';
                 }).catch((error) => {
-                    console.error(error);
-                    alert("Error signing in with Google. Check the console.");
+                    console.error("Login Error: ", error);
+                    alert("Error signing in. Make sure popups are allowed for this site!");
                 });
-        };
+        });
 
         window.logout = () => {
             signOut(auth).then(() => {
