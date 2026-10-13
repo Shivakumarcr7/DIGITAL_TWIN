@@ -7,33 +7,48 @@
     <style>
         :root {
             --primary: #0ea5e9;
-            --bg-dark: #0f172a;
-            --panel-bg: #1e293b;
+            --bg-dark: #020617;
+            --panel-bg: #0f172a;
             --text-light: #f8fafc;
             --accent: #38bdf8;
+            --gold: #fbbf24;
+            --silver: #cbd5e1;
+            --bronze: #b45309;
         }
         body {
             margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-dark); color: var(--text-light);
-            display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            background: radial-gradient(circle at top left, #1e293b, var(--bg-dark));
+            color: var(--text-light); display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
         }
         *, *::before, *::after { box-sizing: inherit; }
         
         /* Left Leaderboard Wall */
         .left-wall {
-            width: 320px; background-color: var(--panel-bg);
+            width: 340px; background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
             border-right: 1px solid #334155; padding: 24px;
             overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
         }
         .shoutout-card {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(56, 189, 248, 0.1));
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(56, 189, 248, 0.05));
             border: 1px solid var(--primary); border-radius: 12px;
-            padding: 16px; box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
+            padding: 20px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
+            text-align: center;
         }
-        .shoutout-card h3 { margin: 0 0 8px 0; color: var(--accent); font-size: 1.1rem; }
+        .shoutout-card h3 { margin: 0 0 12px 0; color: var(--gold); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;}
+        
         .leaderboard-item {
-            background: #334155; padding: 12px; border-radius: 8px;
+            background: rgba(30, 41, 59, 0.5); padding: 12px 16px; border-radius: 8px;
             display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #334155; transition: all 0.3s ease;
+        }
+        .leaderboard-item:hover {
+            transform: translateX(5px); background: rgba(30, 41, 59, 0.9);
+            border-color: var(--primary); box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+        }
+        .xp-badge {
+            background: rgba(14, 165, 233, 0.15); color: var(--accent);
+            padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;
+            border: 1px solid rgba(14, 165, 233, 0.3);
         }
         
         /* Main Hub Area */
@@ -45,69 +60,59 @@
             border-bottom: 2px solid #334155; padding-bottom: 24px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; letter-spacing: 1px; }
+        .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; letter-spacing: 1px; text-shadow: 0 0 15px rgba(14,165,233,0.3); }
         .header-text p { margin: 0; color: #94a3b8; font-size: 1.1rem; }
+        
         .post-btn {
-            background-color: var(--primary); color: white;
+            background: linear-gradient(135deg, #0284c7, #0ea5e9); color: white;
             border: none; padding: 12px 24px; border-radius: 8px;
-            font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
+            font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
-        .post-btn:hover { background-color: var(--accent); transform: translateY(-2px); }
-        .agent-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-        }
+        .post-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5); }
+        
+        .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .agent-card {
-            background: var(--panel-bg); border: 1px solid #334155;
-            border-radius: 12px; padding: 20px; transition: 0.2s;
+            background: rgba(30, 41, 59, 0.6); border: 1px solid #334155;
+            border-radius: 12px; padding: 20px; transition: 0.3s; backdrop-filter: blur(5px);
         }
-        .agent-card:hover { border-color: var(--primary); }
+        .agent-card:hover { border-color: var(--primary); box-shadow: 0 0 20px rgba(14, 165, 233, 0.2); transform: translateY(-5px); }
+        
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1; text-align: center; padding: 60px 20px;
+            background: rgba(14, 165, 233, 0.05); border: 2px dashed #334155; border-radius: 12px;
+        }
         
         /* Floating Build Button */
         .build-agent-fab {
             position: fixed; bottom: 30px; right: 30px;
-            background: linear-gradient(135deg, #2563eb, #0ea5e9);
-            color: white; padding: 16px 28px; border-radius: 50px;
-            text-decoration: none; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
-            display: flex; align-items: center; gap: 8px; transition: 0.3s;
-            z-index: 100;
+            background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: white; 
+            padding: 16px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s; z-index: 100;
         }
         .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6); }
         
         /* Modal */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95); justify-content: center; align-items: center; z-index: 1000;
-            padding: 20px;
+            background: rgba(2, 6, 23, 0.95); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+            backdrop-filter: blur(5px);
         }
         .modal-content {
-            background: var(--panel-bg); padding: 30px; border-radius: 12px;
-            width: 100%; max-width: 400px; border: 1px solid #334155; text-align: center;
+            background: var(--panel-bg); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; 
+            border: 1px solid #334155; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
         .modal-content input, .modal-content textarea {
-            width: 100%; padding: 12px; margin-bottom: 15px;
-            background: #0f172a; border: 1px solid #334155; color: white;
-            border-radius: 6px; box-sizing: border-box; font-size: 1rem;
+            width: 100%; padding: 12px; margin-bottom: 15px; background: #020617; 
+            border: 1px solid #334155; color: white; border-radius: 6px; box-sizing: border-box; font-size: 1rem;
         }
+        .modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: var(--primary); }
 
-        /* 📱 Mobile Responsiveness Rules */
-        @media (max-width: 768px) {
-            body { flex-direction: column; overflow-y: auto; height: auto; }
-            .left-wall { width: 100%; height: auto; max-height: 400px; border-right: none; border-bottom: 1px solid #334155; }
-            .main-hub { padding: 20px; overflow: visible; }
-            .header-section { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .header-text h1 { font-size: 2rem; }
-            .post-btn { width: 100%; text-align: center; }
-            .build-agent-fab { bottom: 20px; right: 20px; padding: 12px 20px; font-size: 1rem; }
-        }
-        
-        /* Google Button Styling */
         .google-btn {
-            background-color: white; color: #333; border: none;
-            padding: 12px 24px; border-radius: 8px; font-size: 1rem;
-            font-weight: bold; cursor: pointer; display: flex;
-            align-items: center; justify-content: center; gap: 10px; width: 100%;
-            transition: 0.2s;
+            background-color: white; color: #333; border: none; padding: 12px 24px; border-radius: 8px; 
+            font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            gap: 10px; width: 100%; transition: 0.2s;
         }
         .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); }
         .google-btn img { width: 24px; height: 24px; }
@@ -115,11 +120,11 @@
 </head>
 <body>
 
-    <!-- Full Screen Login Overlay (Google Auth) -->
+    <!-- Full Screen Login Overlay -->
     <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
         <div class="modal-content">
-            <h2 style="margin-top: 0; color: var(--accent);">Tachyon Auth</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Sign in with your Google account to access the Agent Hub</p>
+            <h2 style="margin-top: 0; color: var(--accent);">Tachyon Secure Auth</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Initialize connection with your Google ID</p>
             
             <button class="google-btn" id="googleLoginBtn">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
@@ -130,27 +135,27 @@
 
     <!-- Main App Structure -->
     <div class="left-wall">
-        <h2>🏆 Wall of Fame</h2>
+        <h2>🏆 Tachyon Rankings</h2>
         <div class="shoutout-card">
-            <h3>President's Shoutout 🎙️</h3>
-            <p><strong>Top Contributor:</strong> <span id="top-student">Loading...</span></p>
-            <p style="font-size: 0.9rem; color: #cbd5e1;">Most agents built and community upvotes this month!</p>
+            <h3>Top Developer 👑</h3>
+            <div id="top-student" style="font-size: 1.5rem; font-weight: bold; color: white;">Loading...</div>
         </div>
         <div style="margin-top: 10px;">
-            <h3 style="color: #94a3b8; font-size: 1rem; border-bottom: 1px solid #334155; padding-bottom: 8px;">Live Leaderboard</h3>
-            <div id="leaderboard-list"></div>
+            <h3 style="color: #94a3b8; font-size: 1rem; border-bottom: 1px solid #334155; padding-bottom: 8px; display:flex; justify-content:space-between;">
+                <span>Live Leaderboard</span> <span>XP</span>
+            </h3>
+            <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;"></div>
         </div>
-        <!-- Logout Button -->
-        <button style="margin-top: auto; background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 8px; border-radius: 6px; cursor: pointer;" onclick="logout()">Sign Out</button>
+        <button style="margin-top: auto; background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 6px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()" onmouseover="this.style.background='#ef4444'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">Disconnect (Sign Out)</button>
     </div>
 
     <div class="main-hub">
         <div class="header-section">
             <div class="header-text">
-                <h1>TACHYON — AIML</h1>
-                <p>Build, deploy, and showcase your AI creations here. <br><strong>— Shivakumar Patil, President</strong></p>
+                <h1>TACHYON — AIML HUB</h1>
+                <p>Deploy and showcase your AI creations here. <br><strong>— Shivakumar Patil, President</strong></p>
             </div>
-            <button class="post-btn" onclick="openModal()">+ Post Your Agent</button>
+            <button class="post-btn" onclick="openModal()">+ Deploy Agent</button>
         </div>
         <div class="agent-grid" id="agent-grid"></div>
     </div>
@@ -159,25 +164,24 @@
 
     <div class="modal" id="postModal">
         <div class="modal-content" style="text-align: left;">
-            <h2 style="margin-top: 0;">Submit Your Agent</h2>
+            <h2 style="margin-top: 0; color: var(--accent);">Deploy to Network</h2>
             <input type="text" id="agentName" placeholder="Agent Name (e.g. CodeHelper Bot)">
-            <input type="text" id="studentName" placeholder="Your Name">
+            <input type="text" id="studentName" placeholder="Your Hacker Name" readonly style="background: rgba(255,255,255,0.05); color: #94a3b8; cursor: not-allowed;">
             <input type="text" id="agentLink" placeholder="Link to Agent (URL)">
             <textarea id="agentDesc" placeholder="What does your agent do?" rows="3"></textarea>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="post-btn" style="background: transparent; border: 1px solid #334155;" onclick="closeModal()">Cancel</button>
-                <button class="post-btn" onclick="submitAgent()">Post Live</button>
+                <button class="post-btn" style="background: transparent; border: 1px solid #334155; box-shadow:none;" onclick="closeModal()">Abort</button>
+                <button class="post-btn" onclick="submitAgent()">Launch Live</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Connection Script -->
+    <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        // PRE-FILLED FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
             authDomain: "digital-twin-6c779.firebaseapp.com",
@@ -193,61 +197,68 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // 100% FREE GOOGLE AUTHENTICATION LOGIC
+        // Global Variables to hold data
+        let allUsers = {};
+        let allAgents = [];
+        let currentUserEmail = "";
+        let currentExtractedName = "";
+
+        // AUTHENTICATION
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    // Save user info to database
-                    setDoc(doc(db, "users", user.uid), {
-                        name: user.displayName,
-                        email: user.email,
-                        lastLogin: Date.now()
-                    }, { merge: true });
-                    
-                    // Auto-fill their name in the post modal
-                    document.getElementById('studentName').value = user.displayName;
-                    document.getElementById('login-screen').style.display = 'none';
-                }).catch((error) => {
-                    console.error("Login Error: ", error);
-                    alert("Error signing in. Make sure popups are allowed for this site!");
-                });
+            signInWithPopup(auth, provider).then((result) => {
+                const user = result.user;
+                // EXTRACT NAME FROM EMAIL (e.g. shivakumarcr7@gmail.com -> shivakumarcr7)
+                const extractedName = user.email.split('@')[0];
+                
+                // Save to database
+                setDoc(doc(db, "users", user.uid), {
+                    name: extractedName,
+                    email: user.email,
+                    lastLogin: Date.now()
+                }, { merge: true });
+                
+                document.getElementById('login-screen').style.display = 'none';
+            }).catch((error) => {
+                console.error("Login Error: ", error);
+                alert("Error signing in. Check console/popups.");
+            });
         });
 
-        window.logout = () => {
-            signOut(auth).then(() => {
-                document.getElementById('login-screen').style.display = 'flex';
-            });
-        };
+        window.logout = () => signOut(auth).then(() => document.getElementById('login-screen').style.display = 'flex');
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                currentUserEmail = user.email;
+                currentExtractedName = user.email.split('@')[0];
+                document.getElementById('studentName').value = currentExtractedName; // Lock in their hacker name
                 document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('studentName').value = user.displayName; // Auto-fill name
             } else {
                 document.getElementById('login-screen').style.display = 'flex';
             }
         });
 
-        // MAIN APP LOGIC
-        window.openModal = function() { document.getElementById('postModal').style.display = 'flex'; }
-        window.closeModal = function() { document.getElementById('postModal').style.display = 'none'; }
+        // MODAL LOGIC
+        window.openModal = () => document.getElementById('postModal').style.display = 'flex';
+        window.closeModal = () => document.getElementById('postModal').style.display = 'none';
 
-        window.submitAgent = async function() {
+        window.submitAgent = async () => {
             const name = document.getElementById('agentName').value;
-            const author = document.getElementById('studentName').value;
             const desc = document.getElementById('agentDesc').value;
             
-            if(name && author) {
+            if(name) {
                 try {
                     await addDoc(collection(db, "agents"), {
-                        name: name, author: author, desc: desc, upvotes: 0, timestamp: Date.now()
+                        name: name,
+                        author: currentExtractedName, // Use the extracted email name
+                        authorEmail: currentUserEmail, // Link it to calculate points later
+                        desc: desc,
+                        upvotes: 0,
+                        timestamp: Date.now()
                     });
                     closeModal();
                     document.getElementById('agentName').value = '';
                     document.getElementById('agentDesc').value = '';
                 } catch (e) {
-                    console.error("Error: ", e);
                     alert("Error saving to database.");
                 }
             } else {
@@ -255,55 +266,102 @@
             }
         }
 
-        window.upvote = async function(id) {
+        window.upvote = async (id) => {
             const agentRef = doc(db, "agents", id);
             await updateDoc(agentRef, { upvotes: increment(1) });
         }
 
-        onSnapshot(collection(db, "agents"), (snapshot) => {
-            let agents = [];
-            snapshot.forEach((doc) => {
-                let data = doc.data(); data.id = doc.id; agents.push(data);
-            });
-            renderAgents(agents);
+        // REAL-TIME DATABASE LISTENERS
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            allUsers = {};
+            snapshot.forEach((doc) => { allUsers[doc.data().email] = doc.data(); });
+            renderLeaderboard();
         });
 
-        function renderAgents(agents) {
+        onSnapshot(collection(db, "agents"), (snapshot) => {
+            allAgents = [];
+            snapshot.forEach((doc) => {
+                let data = doc.data(); data.id = doc.id; allAgents.push(data);
+            });
+            renderAgents();
+            renderLeaderboard();
+        });
+
+        // RENDER AGENTS
+        function renderAgents() {
             const grid = document.getElementById('agent-grid');
             grid.innerHTML = '';
-            agents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
+            
+            if(allAgents.length === 0) {
+                grid.innerHTML = `
+                <div class="empty-state">
+                    <h2 style="color: var(--accent); margin: 0 0 10px 0;">No Agents Deployed Yet</h2>
+                    <p style="color: #94a3b8; font-size: 1.1rem; margin: 0;">Be the first developer to launch an AI into the Tachyon network.</p>
+                </div>`;
+                return;
+            }
+
+            allAgents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
                 grid.innerHTML += `
                     <div class="agent-card">
-                        <h3 style="margin-top:0; color:var(--accent);">${agent.name}</h3>
-                        <p style="color:#94a3b8; font-size:0.9rem;">By: ${agent.author}</p>
-                        <p>${agent.desc}</p>
-                        <button style="background:#334155; border:none; color:white; padding:6px 12px; border-radius:4px; cursor:pointer;" onclick="upvote('${agent.id}')">
-                            👍 Upvote (${agent.upvotes})
+                        <h3 style="margin-top:0; color:var(--accent); font-size:1.3rem;">${agent.name}</h3>
+                        <p style="color:#94a3b8; font-size:0.9rem; border-bottom: 1px solid #334155; padding-bottom: 10px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
+                        <p style="line-height: 1.5;">${agent.desc}</p>
+                        <button style="background: rgba(14, 165, 233, 0.1); border:1px solid var(--primary); color:var(--text-light); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; width:100%; transition: 0.2s;" onclick="upvote('${agent.id}')" onmouseover="this.style.background='var(--primary)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.1)'">
+                            🚀 Boost (${agent.upvotes})
                         </button>
                     </div>
                 `;
             });
-            renderLeaderboard(agents);
         }
 
-        function renderLeaderboard(agents) {
+        // GAMIFIED LEADERBOARD LOGIC
+        function renderLeaderboard() {
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = '';
-            let scores = {};
-            agents.forEach(a => { scores[a.author] = (scores[a.author] || 0) + a.upvotes; });
-            let sortedAuthors = Object.keys(scores).sort((a,b) => scores[b] - scores[a]);
             
-            if(sortedAuthors.length > 0) {
-                document.getElementById('top-student').innerText = `${sortedAuthors[0]} (${scores[sortedAuthors[0]]} pts)`;
+            let scores = {};
+            
+            // 1. Give Base Points to everyone who has logged in (10 XP)
+            for(let email in allUsers) {
+                scores[email] = {
+                    name: allUsers[email].name || email.split('@')[0],
+                    points: 10
+                };
+            }
+            
+            // 2. Add points from agents (50 XP per agent, 10 XP per upvote)
+            allAgents.forEach(a => {
+                let email = a.authorEmail || "unknown";
+                if(scores[email]) {
+                    scores[email].points += 50 + (a.upvotes * 10);
+                } else {
+                    scores[email] = { name: a.author, points: 50 + (a.upvotes * 10) };
+                }
+            });
+
+            // Sort top players
+            let sortedEmails = Object.keys(scores).sort((a,b) => scores[b].points - scores[a].points);
+            
+            if(sortedEmails.length > 0) {
+                let top = scores[sortedEmails[0]];
+                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.1rem;">${top.points} XP</span>`;
             } else {
-                document.getElementById('top-student').innerText = `No agents yet!`;
+                document.getElementById('top-student').innerText = `Awaiting Data...`;
             }
 
-            sortedAuthors.forEach((author, index) => {
+            sortedEmails.forEach((email, index) => {
+                let s = scores[email];
+                // Assign colors based on rank
+                let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? 'var(--silver)' : (index === 2 ? 'var(--bronze)' : '#334155'));
+                
                 list.innerHTML += `
-                    <div class="leaderboard-item" style="margin-bottom: 8px;">
-                        <span><strong>#${index + 1}</strong> ${author}</span>
-                        <span style="color:var(--accent);">${scores[author]} pts</span>
+                    <div class="leaderboard-item" style="border-left: 4px solid ${rankColor};">
+                        <span style="display:flex; align-items:center; gap:10px; font-weight:bold;">
+                            <span style="color:${rankColor}; width:20px;">#${index + 1}</span> 
+                            @${s.name}
+                        </span>
+                        <span class="xp-badge">${s.points} XP</span>
                     </div>
                 `;
             });
