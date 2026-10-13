@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACHYON — Admin Control Center</title>
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --accent: #38bdf8;
+            --gold: #fbbf24;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #f8fafc; display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            background-color: #020617;
+        }
+        *, *::before, *::after { box-sizing: inherit; }
+
+        #bg-video {
+            position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%;
+            z-index: -100; object-fit: cover; filter: brightness(0.3);
+        }
+
+        .admin-container {
+            flex: 1; padding: 40px; overflow-y: auto; background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(8px);
+            display: flex; flex-direction: column; gap: 24px; max-width: 1000px; margin: 0 auto;
+        }
+        .header-section {
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .panel-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 25px; backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.95rem; }
+        .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--glass-border); }
+        .admin-table th { color: var(--gold); }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white;
+            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
+        
+        .back-link { color: var(--accent); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+        .back-link:hover { text-decoration: underline; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.9); justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+        }
+        .modal-content {
+            background: rgba(15, 23, 42, 0.95); padding: 35px; border-radius: 16px; width: 100%; max-width: 450px;
+            border: 1px solid var(--glass-border); text-align: center;
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--glass-border); color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="bg-video.mp4" type="video/mp4">
+    </video>
+
+    <!-- Security Gate -->
+    <div id="auth-gate" class="modal" style="display:flex;">
+        <div class="modal-content">
+            <h2 style="color: #ef4444; margin-top:0;">Restricted Access</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">You must sign in with the President account to access this terminal.</p>
+            <button class="action-btn" id="adminLoginBtn" style="width: 100%;">Sign in as Admin</button>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Content -->
+    <div class="admin-container" id="adminDashboard" style="display:none;">
+        <div>
+            <a href="index.html" class="back-link">← Return to Student Hub</a>
+            <div class="header-section">
+                <div>
+                    <h1 style="margin:0; font-size: 2.2rem; color: var(--gold);">👑 President's Command Center</h1>
+                    <p style="margin: 5px 0 0 0; color: #94a3b8;">Manage student telemetry and system broadcasts.</p>
+                </div>
+                <button class="action-btn" onclick="openBroadcastModal()">📢 Broadcast Official Post</button>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <h3 style="margin-top:0; color: var(--accent);">📊 Live Student Database & Login Logs</h3>
+            <div style="max-height: 450px; overflow-y: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Hacker Username</th>
+                            <th>Google Email</th>
+                            <th>Last Active Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-user-list">
+                        <tr><td colspan="3" style="text-align:center; color:#94a3b8;">Scanning database...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Broadcast Modal -->
+    <div id="broadcastModal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-top: 0; color: var(--gold);">Broadcast Announcement</h2>
+            <input type="text" id=" broadcastName" placeholder="Announcement Title (e.g. Hackathon Kickoff)">
+            <input type="text" id="broadcastLink" placeholder="Resource URL (Optional)">
+            <textarea id="broadcastDesc" placeholder="Announcement message..." rows="4"></textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="action-btn" style="background: #334155;" onclick="closeBroadcastModal()">Cancel</button>
+                <button class="action-btn" onclick="sendBroadcast()">Publish Official</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
+            authDomain: "digital-twin-6c779.firebaseapp.com",
+            projectId: "digital-twin-6c779",
+            storageBucket: "digital-twin-6c779.firebasestorage.app",
+            messagingSenderId: "445832291229",
+            appId: "1:445832291229:web:00d7de2c4c4ade9646c574",
+            measurementId: "G-55ZB5JW4P9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // ⚠️ PUT YOUR EXACT ADMIN GMAIL HERE ⚠️
+        const ADMIN_EMAIL = "shivakumarcr7@gmail.com";
+
+        document.getElementById('adminLoginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(() => alert("Authentication failed."));
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                // Verified Admin!
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'flex';
+                loadUserData();
+            } else if (user) {
+                alert("Access Denied: You are not authorized as the administrator.");
+                auth.signOut();
+            } else {
+                document.getElementById('auth-gate').style.display = 'flex';
+                document.getElementById('adminDashboard').style.display = 'none';
+            }
+        });
+
+        function loadUserData() {
+            onSnapshot(collection(db, "users"), (snapshot) => {
+                let tableHTML = '';
+                snapshot.forEach((doc) => {
+                    let u = doc.data();
+                    let dateStr = u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'N/A';
+                    tableHTML += `<tr><td><strong>@${u.customName || 'Anonymous'}</strong></td><td>${u.email}</td><td>${dateStr}</td></tr>`;
+                });
+                document.getElementById('admin-user-list').innerHTML = tableHTML || '<tr><td colspan="3">No user data found.</td></tr>';
+            });
+        }
+
+        window.openBroadcastModal = () => document.getElementById('broadcastModal').style.display = 'flex';
+        window.closeBroadcastModal = () => document.getElementById('broadcastModal').style.display = 'none';
+
+        window.sendBroadcast = async () => {
+            const name = document.getElementById('broadcastName').value;
+            const desc = document.getElementById('broadcastDesc').value;
+            if(name && desc) {
+                await addDoc(collection(db, "agents"), {
+                    name: name,
+                    author: "President Shivakumar",
+                    authorEmail: ADMIN_EMAIL,
+                    desc: desc,
+                    upvotes: 0,
+                    isOfficial: true,
+                    boostedBy: [],
+                    timestamp: Date.now()
+                });
+                closeBroadcastModal();
+                alert("Official announcement broadcasted successfully to the Student Hub!");
+            } else {
+                alert("Please fill in both title and description.");
+            }
+        }
+    </script>
+</body>
+</html>
