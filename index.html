@@ -7,125 +7,129 @@
     <style>
         :root {
             --primary: #0ea5e9;
-            --bg-dark: #020617;
-            --panel-bg: #0f172a;
-            --text-light: #f8fafc;
             --accent: #38bdf8;
             --gold: #fbbf24;
             --silver: #cbd5e1;
             --bronze: #b45309;
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
+        
         body {
             margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
-            background: radial-gradient(circle at top left, #1e293b, var(--bg-dark));
-            color: var(--text-light); display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            color: #f8fafc; display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            background-color: #020617; /* Fallback */
         }
         *, *::before, *::after { box-sizing: inherit; }
+
+        /* Video Background */
+        #bg-video {
+            position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%;
+            z-index: -100; object-fit: cover; filter: brightness(0.35); /* Darkens video so text is readable */
+        }
         
-        /* Left Leaderboard Wall */
+        /* Glassmorphism Left Leaderboard Wall */
         .left-wall {
-            width: 340px; background-color: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px);
-            border-right: 1px solid #334155; padding: 24px;
+            width: 350px; background: var(--glass-bg); backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border); padding: 24px;
             overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
         }
         .shoutout-card {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(56, 189, 248, 0.05));
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(56, 189, 248, 0.05));
             border: 1px solid var(--primary); border-radius: 12px;
-            padding: 20px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.15);
-            text-align: center;
+            padding: 20px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.2); text-align: center;
         }
         .shoutout-card h3 { margin: 0 0 12px 0; color: var(--gold); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;}
         
         .leaderboard-item {
-            background: rgba(30, 41, 59, 0.5); padding: 12px 16px; border-radius: 8px;
+            background: rgba(30, 41, 59, 0.6); padding: 12px 16px; border-radius: 8px;
             display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #334155; transition: all 0.3s ease;
+            border: 1px solid var(--glass-border); transition: all 0.3s ease;
         }
         .leaderboard-item:hover {
             transform: translateX(5px); background: rgba(30, 41, 59, 0.9);
             border-color: var(--primary); box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
         }
         .xp-badge {
-            background: rgba(14, 165, 233, 0.15); color: var(--accent);
+            background: rgba(14, 165, 233, 0.2); color: var(--accent);
             padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;
             border: 1px solid rgba(14, 165, 233, 0.3);
         }
         
-        /* Main Hub Area */
+        /* Glassmorphism Main Hub Area */
         .main-hub {
             flex: 1; padding: 40px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 24px;
+            background: rgba(2, 6, 23, 0.4); backdrop-filter: blur(4px);
         }
         .header-section {
-            border-bottom: 2px solid #334155; padding-bottom: 24px;
+            border-bottom: 1px solid var(--glass-border); padding-bottom: 24px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .header-text h1 { margin: 0 0 8px 0; font-size: 2.5rem; letter-spacing: 1px; text-shadow: 0 0 15px rgba(14,165,233,0.3); }
-        .header-text p { margin: 0; color: #94a3b8; font-size: 1.1rem; }
+        .header-text h1 { margin: 0 0 8px 0; font-size: 2.8rem; letter-spacing: 1px; text-shadow: 0 2px 15px rgba(14,165,233,0.5); }
+        .header-text p { margin: 0; color: #cbd5e1; font-size: 1.1rem; }
         
         .post-btn {
             background: linear-gradient(135deg, #0284c7, #0ea5e9); color: white;
             border: none; padding: 12px 24px; border-radius: 8px;
             font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
         }
-        .post-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5); }
+        .post-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.6); }
         
-        .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
         .agent-card {
-            background: rgba(30, 41, 59, 0.6); border: 1px solid #334155;
-            border-radius: 12px; padding: 20px; transition: 0.3s; backdrop-filter: blur(5px);
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 12px; padding: 24px; transition: 0.3s; backdrop-filter: blur(10px);
         }
-        .agent-card:hover { border-color: var(--primary); box-shadow: 0 0 20px rgba(14, 165, 233, 0.2); transform: translateY(-5px); }
-        
-        /* Empty State */
-        .empty-state {
-            grid-column: 1 / -1; text-align: center; padding: 60px 20px;
-            background: rgba(14, 165, 233, 0.05); border: 2px dashed #334155; border-radius: 12px;
-        }
+        .agent-card:hover { border-color: var(--primary); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2); transform: translateY(-5px); }
         
         /* Floating Build Button */
         .build-agent-fab {
             position: fixed; bottom: 30px; right: 30px;
             background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: white; 
             padding: 16px 28px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem;
-            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4); display: flex; align-items: center; gap: 8px; transition: 0.3s; z-index: 100;
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.5); display: flex; align-items: center; gap: 8px; transition: 0.3s; z-index: 100;
         }
-        .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6); }
+        .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.7); }
         
         /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.95); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
-            backdrop-filter: blur(5px);
+            background: rgba(2, 6, 23, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
+            backdrop-filter: blur(8px);
         }
         .modal-content {
-            background: var(--panel-bg); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; 
-            border: 1px solid #334155; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            background: rgba(15, 23, 42, 0.95); padding: 35px; border-radius: 16px; width: 100%; max-width: 420px; 
+            border: 1px solid var(--glass-border); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
         .modal-content input, .modal-content textarea {
-            width: 100%; padding: 12px; margin-bottom: 15px; background: #020617; 
-            border: 1px solid #334155; color: white; border-radius: 6px; box-sizing: border-box; font-size: 1rem;
+            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8); 
+            border: 1px solid var(--glass-border); color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem;
         }
         .modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: var(--primary); }
 
         .google-btn {
-            background-color: white; color: #333; border: none; padding: 12px 24px; border-radius: 8px; 
-            font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            gap: 10px; width: 100%; transition: 0.2s;
+            background-color: white; color: #1e293b; border: none; padding: 12px 24px; border-radius: 8px; 
+            font-size: 1.05rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            gap: 12px; width: 100%; transition: 0.2s;
         }
-        .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); }
+        .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
         .google-btn img { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
 
-    <!-- Step 1: Google Login Overlay -->
+    <!-- VIDEO BACKGROUND -->
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="bg-video.mp4" type="video/mp4">
+    </video>
+
+    <!-- Login Overlay -->
     <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
         <div class="modal-content">
-            <h2 style="margin-top: 0; color: var(--accent);">Tachyon Secure Auth</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Initialize connection with your Google ID</p>
-            
+            <h2 style="margin-top: 0; color: var(--accent); font-size: 2rem;">Tachyon Auth</h2>
+            <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 30px;">Initialize connection with your Google ID</p>
             <button class="google-btn" id="googleLoginBtn">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
                 Sign in with Google
@@ -133,45 +137,47 @@
         </div>
     </div>
 
-    <!-- Step 2: Custom Username Setup Modal (Hidden by default) -->
+    <!-- Custom Username Modal -->
     <div id="username-modal" class="modal" style="display:none; z-index: 2500;">
         <div class="modal-content">
-            <h2 style="margin-top: 0; color: var(--accent);">Create Username</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard. (Cannot be changed later).</p>
+            <h2 style="margin-top: 0; color: var(--accent);">Create Identity</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard. (Permanent).</p>
             <input type="text" id="customUsernameInput" placeholder="e.g. Neo, Trinity, ZeroCool">
-            <button class="post-btn" style="width: 100%;" onclick="saveUsername()">Set Username</button>
+            <button class="post-btn" style="width: 100%; padding: 14px;" onclick="saveUsername()">Set Username</button>
         </div>
     </div>
 
-    <!-- Main App Structure -->
+    <!-- Left Wall -->
     <div class="left-wall">
-        <h2>🏆 Tachyon Rankings</h2>
+        <h2 style="margin-top:0;">🏆 Tachyon Rankings</h2>
         <div class="shoutout-card">
             <h3>Top Developer 👑</h3>
-            <div id="top-student" style="font-size: 1.5rem; font-weight: bold; color: white;">Loading...</div>
+            <div id="top-student" style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3);">Loading...</div>
         </div>
-        <div style="margin-top: 10px;">
-            <h3 style="color: #94a3b8; font-size: 1rem; border-bottom: 1px solid #334155; padding-bottom: 8px; display:flex; justify-content:space-between;">
+        <div style="margin-top: 15px;">
+            <h3 style="color: #cbd5e1; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; display:flex; justify-content:space-between;">
                 <span>Live Leaderboard</span> <span>XP</span>
             </h3>
-            <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;"></div>
+            <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;"></div>
         </div>
-        <button style="margin-top: auto; background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 6px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()" onmouseover="this.style.background='#ef4444'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='#ef4444';">Disconnect (Sign Out)</button>
+        <button style="margin-top: auto; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()" onmouseover="this.style.background='#ef4444'; this.style.color='white';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#ef4444';">Disconnect</button>
     </div>
 
+    <!-- Main Hub -->
     <div class="main-hub">
         <div class="header-section">
             <div class="header-text">
                 <h1>TACHYON — AIML HUB</h1>
-                <p>Deploy and showcase your AI creations here. <br><strong>— Shivakumar Patil, President</strong></p>
+                <p>Deploy and showcase your AI creations here. <br><strong style="color: var(--accent);">— Shivakumar Patil, President</strong></p>
             </div>
-            <button class="post-btn" onclick="openModal()">+ Deploy Agent</button>
+            <button class="post-btn" onclick="openModal()" style="padding: 14px 28px; font-size:1.1rem;">+ Deploy Agent</button>
         </div>
         <div class="agent-grid" id="agent-grid"></div>
     </div>
 
     <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">✨ Build Your Own Agent</a>
 
+    <!-- Deploy Modal -->
     <div class="modal" id="postModal">
         <div class="modal-content" style="text-align: left;">
             <h2 style="margin-top: 0; color: var(--accent);">Deploy to Network</h2>
@@ -179,8 +185,8 @@
             <input type="text" id="studentName" placeholder="Your Hacker Name" readonly style="background: rgba(255,255,255,0.05); color: #94a3b8; cursor: not-allowed;">
             <input type="text" id="agentLink" placeholder="Link to Agent (URL)">
             <textarea id="agentDesc" placeholder="What does your agent do?" rows="3"></textarea>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="post-btn" style="background: transparent; border: 1px solid #334155; box-shadow:none;" onclick="closeModal()">Abort</button>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+                <button class="post-btn" style="background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border); box-shadow:none;" onclick="closeModal()">Abort</button>
                 <button class="post-btn" onclick="submitAgent()">Launch Live</button>
             </div>
         </div>
@@ -188,9 +194,9 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
-        // Added getDoc, getDocs, query, and where for database searching
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // IMPORT arrayUnion for strict single-boost tracking
+        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -208,7 +214,6 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Global Variables
         let allUsers = {};
         let allAgents = [];
         let currentUserEmail = "";
@@ -217,79 +222,59 @@
         // AUTHENTICATION LOGIC
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
             signInWithPopup(auth, provider).catch((error) => {
-                console.error("Login Error: ", error);
                 alert("Error signing in. Check console/popups.");
             });
         });
 
-        // Listen for Login State changes
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserEmail = user.email;
-                
-                // Fetch user data from Database to see if they already picked a username
                 const userDocRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userDocRef);
                 
                 if (userSnap.exists() && userSnap.data().customName) {
-                    // They already have a username! Let them in.
                     currentCustomName = userSnap.data().customName;
                     document.getElementById('studentName').value = currentCustomName; 
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'none';
+                    renderAgents(); // Re-render to show accurate boost button states
                 } else {
-                    // They are new! Show the Create Username screen.
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'flex';
                 }
             } else {
-                // Not logged in
+                currentUserEmail = "";
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('username-modal').style.display = 'none';
             }
         });
 
-        // SAVE & VERIFY CUSTOM USERNAME
         window.saveUsername = async () => {
             const inputName = document.getElementById('customUsernameInput').value.trim();
-            const lowerName = inputName.toLowerCase(); // For strict comparison
+            const lowerName = inputName.toLowerCase();
             
-            if(inputName.length < 3) {
-                alert("Username must be at least 3 characters long.");
-                return;
-            }
+            if(inputName.length < 3) { alert("Username must be at least 3 characters."); return; }
 
-            // 1. Search the database to see if this name is already taken
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("customNameLower", "==", lowerName));
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                // Someone already has it!
                 alert("This username is already taken! Please choose a different one.");
                 return;
             }
 
-            // 2. It is unique! Save it to the database for this specific user.
             const user = auth.currentUser;
             await setDoc(doc(db, "users", user.uid), {
-                customName: inputName,
-                customNameLower: lowerName, // Hidden lower case version for accurate searching
-                email: user.email,
-                lastLogin: Date.now()
+                customName: inputName, customNameLower: lowerName, email: user.email, lastLogin: Date.now()
             }, { merge: true });
 
-            // 3. Let them into the Hub
             currentCustomName = inputName;
             document.getElementById('studentName').value = currentCustomName;
             document.getElementById('username-modal').style.display = 'none';
         };
 
-        window.logout = () => signOut(auth).then(() => {
-            document.getElementById('login-screen').style.display = 'flex';
-        });
-
-        // MODAL LOGIC
+        window.logout = () => signOut(auth).then(() => document.getElementById('login-screen').style.display = 'flex');
         window.openModal = () => document.getElementById('postModal').style.display = 'flex';
         window.closeModal = () => document.getElementById('postModal').style.display = 'none';
 
@@ -301,29 +286,39 @@
                 try {
                     await addDoc(collection(db, "agents"), {
                         name: name,
-                        author: currentCustomName, // Lock to their custom username
+                        author: currentCustomName,
                         authorEmail: currentUserEmail, 
                         desc: desc,
                         upvotes: 0,
+                        boostedBy: [], // Initialize tracking array
                         timestamp: Date.now()
                     });
                     closeModal();
                     document.getElementById('agentName').value = '';
                     document.getElementById('agentDesc').value = '';
-                } catch (e) {
-                    alert("Error saving to database.");
-                }
-            } else {
-                alert("Please fill in the Agent Name.");
+                } catch (e) { alert("Error saving to database."); }
+            } else { alert("Please fill in the Agent Name."); }
+        }
+
+        // STRICT ONE-BOOST LOGIC
+        window.upvote = async (id, authorEmail) => {
+            if (!currentUserEmail) return;
+            if (currentUserEmail === authorEmail) {
+                alert("You cannot boost your own agent!");
+                return;
             }
-        }
-
-        window.upvote = async (id) => {
+            
             const agentRef = doc(db, "agents", id);
-            await updateDoc(agentRef, { upvotes: increment(1) });
+            try {
+                // Increment score AND securely log the user's email so they can't vote again
+                await updateDoc(agentRef, { 
+                    upvotes: increment(1),
+                    boostedBy: arrayUnion(currentUserEmail) 
+                });
+            } catch (e) { console.error("Error boosting:", e); }
         }
 
-        // REAL-TIME DATABASE LISTENERS
+        // DATABASE LISTENERS
         onSnapshot(collection(db, "users"), (snapshot) => {
             allUsers = {};
             snapshot.forEach((doc) => { allUsers[doc.data().email] = doc.data(); });
@@ -339,81 +334,73 @@
             renderLeaderboard();
         });
 
-        // RENDER AGENTS
+        // RENDER AGENTS WITH SMART BOOST BUTTON
         function renderAgents() {
             const grid = document.getElementById('agent-grid');
             grid.innerHTML = '';
             
-            if(allAgents.length === 0) {
-                grid.innerHTML = `
-                <div class="empty-state">
-                    <h2 style="color: var(--accent); margin: 0 0 10px 0;">No Agents Deployed Yet</h2>
-                    <p style="color: #94a3b8; font-size: 1.1rem; margin: 0;">Be the first developer to launch an AI into the Tachyon network.</p>
-                </div>`;
-                return;
-            }
+            if(allAgents.length === 0) return;
 
             allAgents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
+                
+                // Determine Boost Button State
+                let hasBoosted = agent.boostedBy && agent.boostedBy.includes(currentUserEmail);
+                let isOwner = agent.authorEmail === currentUserEmail;
+                let btnHTML = '';
+                
+                if (isOwner) {
+                    btnHTML = `<button style="background: rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:#94a3b8; padding:10px 16px; border-radius:8px; width:100%; cursor:not-allowed;">🔒 Your Agent (${agent.upvotes})</button>`;
+                } else if (hasBoosted) {
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.2); border:1px solid var(--primary); color:white; padding:10px 16px; border-radius:8px; width:100%; cursor:not-allowed;">✅ Boosted (${agent.upvotes})</button>`;
+                } else {
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.15); border:1px solid var(--primary); color:var(--text-light); padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; transition: 0.2s;" onclick="upvote('${agent.id}', '${agent.authorEmail}')" onmouseover="this.style.background='var(--primary)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.15)'">🚀 Boost (${agent.upvotes})</button>`;
+                }
+
                 grid.innerHTML += `
                     <div class="agent-card">
-                        <h3 style="margin-top:0; color:var(--accent); font-size:1.3rem;">${agent.name}</h3>
-                        <p style="color:#94a3b8; font-size:0.9rem; border-bottom: 1px solid #334155; padding-bottom: 10px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
-                        <p style="line-height: 1.5;">${agent.desc}</p>
-                        <button style="background: rgba(14, 165, 233, 0.1); border:1px solid var(--primary); color:var(--text-light); padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; width:100%; transition: 0.2s;" onclick="upvote('${agent.id}')" onmouseover="this.style.background='var(--primary)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.1)'">
-                            🚀 Boost (${agent.upvotes})
-                        </button>
+                        <h3 style="margin-top:0; color:var(--accent); font-size:1.4rem;">${agent.name}</h3>
+                        <p style="color:#cbd5e1; font-size:0.95rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
+                        <p style="line-height: 1.6; color:#f1f5f9;">${agent.desc}</p>
+                        ${btnHTML}
                     </div>
                 `;
             });
         }
 
-        // GAMIFIED LEADERBOARD LOGIC
+        // GAMIFIED LEADERBOARD
         function renderLeaderboard() {
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = '';
-            
             let scores = {};
             
-            // 1. Give Base Points to everyone who has successfully created a custom name (10 XP)
             for(let email in allUsers) {
                 let user = allUsers[email];
-                if(user.customName) {
-                    scores[email] = {
-                        name: user.customName,
-                        points: 10
-                    };
-                }
+                if(user.customName) scores[email] = { name: user.customName, points: 10 };
             }
             
-            // 2. Add points from agents (50 XP per agent, 10 XP per upvote)
             allAgents.forEach(a => {
                 let email = a.authorEmail || "unknown";
-                if(scores[email]) {
-                    scores[email].points += 50 + (a.upvotes * 10);
-                } else {
-                    scores[email] = { name: a.author, points: 50 + (a.upvotes * 10) };
-                }
+                if(scores[email]) scores[email].points += 50 + (a.upvotes * 10);
+                else scores[email] = { name: a.author, points: 50 + (a.upvotes * 10) };
             });
 
-            // Sort top players
             let sortedEmails = Object.keys(scores).sort((a,b) => scores[b].points - scores[a].points);
             
             if(sortedEmails.length > 0) {
                 let top = scores[sortedEmails[0]];
-                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.1rem;">${top.points} XP</span>`;
+                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.2rem;">${top.points} XP</span>`;
             } else {
                 document.getElementById('top-student').innerText = `Awaiting Data...`;
             }
 
             sortedEmails.forEach((email, index) => {
                 let s = scores[email];
-                // Assign colors based on rank
-                let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? 'var(--silver)' : (index === 2 ? 'var(--bronze)' : '#334155'));
+                let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? 'var(--silver)' : (index === 2 ? 'var(--bronze)' : '#94a3b8'));
                 
                 list.innerHTML += `
                     <div class="leaderboard-item" style="border-left: 4px solid ${rankColor};">
-                        <span style="display:flex; align-items:center; gap:10px; font-weight:bold;">
-                            <span style="color:${rankColor}; width:20px;">#${index + 1}</span> 
+                        <span style="display:flex; align-items:center; gap:12px; font-weight:bold;">
+                            <span style="color:${rankColor}; width:24px; font-size:1.1rem;">#${index + 1}</span> 
                             @${s.name}
                         </span>
                         <span class="xp-badge">${s.points} XP</span>
