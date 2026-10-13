@@ -50,7 +50,6 @@
             font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
         .post-btn:hover { background-color: var(--accent); transform: translateY(-2px); }
-        /* Agent Grid */
         .agent-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
         }
@@ -59,7 +58,6 @@
             border-radius: 12px; padding: 20px; transition: 0.2s;
         }
         .agent-card:hover { border-color: var(--primary); }
-        /* Floating Build Button */
         .build-agent-fab {
             position: fixed; bottom: 30px; right: 30px;
             background: linear-gradient(135deg, #2563eb, #0ea5e9);
@@ -70,43 +68,58 @@
             z-index: 100;
         }
         .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6); }
-        /* Modal */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.8); justify-content: center; align-items: center; z-index: 1000;
+            background: rgba(15, 23, 42, 0.95); justify-content: center; align-items: center; z-index: 1000;
         }
         .modal-content {
             background: var(--panel-bg); padding: 30px; border-radius: 12px;
-            width: 400px; border: 1px solid #334155;
+            width: 400px; border: 1px solid #334155; text-align: center;
         }
-        .modal input, .modal textarea {
-            width: 100%; padding: 10px; margin-bottom: 15px;
+        .modal-content input, .modal-content textarea {
+            width: 100%; padding: 12px; margin-bottom: 15px;
             background: #0f172a; border: 1px solid #334155; color: white;
-            border-radius: 6px; box-sizing: border-box;
+            border-radius: 6px; box-sizing: border-box; font-size: 1rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Left Wall: Leaderboard -->
+    <!-- Full Screen Login Overlay -->
+    <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
+        <div class="modal-content">
+            <h2 style="margin-top: 0; color: var(--accent);">Tachyon Auth</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Login to access the Agent Hub</p>
+            
+            <div id="phone-input-section">
+                <input type="tel" id="phoneNumber" placeholder="+91 1234567890" value="+91">
+                <button class="post-btn" style="width: 100%;" onclick="sendOTP()">Send OTP</button>
+            </div>
+
+            <div id="otp-input-section" style="display:none; margin-top: 15px;">
+                <input type="text" id="otpCode" placeholder="Enter 6-digit OTP">
+                <button class="post-btn" style="width: 100%;" onclick="verifyOTP()">Verify & Login</button>
+            </div>
+            
+            <!-- Hidden container for reCAPTCHA -->
+            <div id="recaptcha-container"></div>
+        </div>
+    </div>
+
+    <!-- Main App Structure (Hidden behind login) -->
     <div class="left-wall">
         <h2>🏆 Wall of Fame</h2>
-        
         <div class="shoutout-card">
             <h3>President's Shoutout 🎙️</h3>
             <p><strong>Top Contributor:</strong> <span id="top-student">Loading...</span></p>
             <p style="font-size: 0.9rem; color: #cbd5e1;">Most agents built and community upvotes this month!</p>
         </div>
-
         <div style="margin-top: 10px;">
             <h3 style="color: #94a3b8; font-size: 1rem; border-bottom: 1px solid #334155; padding-bottom: 8px;">Live Leaderboard</h3>
-            <div id="leaderboard-list">
-                <!-- Populated via JS -->
-            </div>
+            <div id="leaderboard-list"></div>
         </div>
     </div>
 
-    <!-- Main Content Area -->
     <div class="main-hub">
         <div class="header-section">
             <div class="header-text">
@@ -115,20 +128,13 @@
             </div>
             <button class="post-btn" onclick="openModal()">+ Post Your Agent</button>
         </div>
-
-        <div class="agent-grid" id="agent-grid">
-            <!-- Populated via JS -->
-        </div>
+        <div class="agent-grid" id="agent-grid"></div>
     </div>
 
-    <!-- Bottom Right FAB -->
-    <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">
-        ✨ Build Your Own Agent
-    </a>
+    <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">✨ Build Your Own Agent</a>
 
-    <!-- Post Modal -->
     <div class="modal" id="postModal">
-        <div class="modal-content">
+        <div class="modal-content" style="text-align: left;">
             <h2 style="margin-top: 0;">Submit Your Agent</h2>
             <input type="text" id="agentName" placeholder="Agent Name (e.g. CodeHelper Bot)">
             <input type="text" id="studentName" placeholder="Your Name">
@@ -143,9 +149,10 @@
 
     <!-- Firebase Connection Script -->
     <script type="module">
-        // 1. Import Firebase tools
+        // 1. Import Firebase Firestore AND Authentication tools
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         // 2. YOUR PRE-FILLED FIREBASE CONFIG
         const firebaseConfig = {
@@ -158,15 +165,75 @@
             measurementId: "G-55ZB5JW4P9"
         };
 
-        // 3. Initialize Database
+        // 3. Initialize Database & Auth
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // Make functions globally available for your HTML buttons
+        // ==========================================
+        // AUTHENTICATION SYSTEM (OTP)
+        // ==========================================
+        
+        // Initialize invisible reCAPTCHA
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible'
+        });
+
+        window.sendOTP = () => {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            if (phoneNumber.length < 10) {
+                alert("Please enter a valid phone number with country code (e.g., +919876543210).");
+                return;
+            }
+            
+            signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+                .then((confirmationResult) => {
+                    // SMS sent
+                    window.confirmationResult = confirmationResult;
+                    document.getElementById('phone-input-section').style.display = 'none';
+                    document.getElementById('otp-input-section').style.display = 'block';
+                }).catch((error) => {
+                    console.error(error);
+                    alert("Error sending OTP. Make sure you included the +91 country code.");
+                });
+        };
+
+        window.verifyOTP = () => {
+            const code = document.getElementById('otpCode').value;
+            window.confirmationResult.confirm(code).then((result) => {
+                // User signed in successfully
+                const user = result.user;
+                
+                // Save this user's ID and Phone Number into the Firestore Database
+                setDoc(doc(db, "users", user.uid), {
+                    phoneNumber: user.phoneNumber,
+                    lastLogin: Date.now()
+                }, { merge: true });
+
+                document.getElementById('login-screen').style.display = 'none';
+            }).catch((error) => {
+                console.error(error);
+                alert("Invalid OTP code.");
+            });
+        };
+
+        // Listen for login state - auto-hide login screen if they already logged in recently
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-screen').style.display = 'none';
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+            }
+        });
+
+
+        // ==========================================
+        // MAIN APP LOGIC (Agents & Leaderboard)
+        // ==========================================
+
         window.openModal = function() { document.getElementById('postModal').style.display = 'flex'; }
         window.closeModal = function() { document.getElementById('postModal').style.display = 'none'; }
 
-        // 4. Function to save a new agent to the database
         window.submitAgent = async function() {
             const name = document.getElementById('agentName').value;
             const author = document.getElementById('studentName').value;
@@ -194,31 +261,24 @@
             }
         }
 
-        // 5. Function to upvote in the database
         window.upvote = async function(id) {
             const agentRef = doc(db, "agents", id);
-            await updateDoc(agentRef, {
-                upvotes: increment(1)
-            });
+            await updateDoc(agentRef, { upvotes: increment(1) });
         }
 
-        // 6. Listen for database changes LIVE and update the screen
         onSnapshot(collection(db, "agents"), (snapshot) => {
             let agents = [];
             snapshot.forEach((doc) => {
                 let data = doc.data();
-                data.id = doc.id; // Save the database ID
+                data.id = doc.id;
                 agents.push(data);
             });
             renderAgents(agents);
         });
 
-        // 7. Render UI
         function renderAgents(agents) {
             const grid = document.getElementById('agent-grid');
             grid.innerHTML = '';
-            
-            // Sort by upvotes
             agents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
                 grid.innerHTML += `
                     <div class="agent-card">
