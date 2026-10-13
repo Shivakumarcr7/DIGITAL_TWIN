@@ -18,17 +18,15 @@
         body {
             margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
             color: #f8fafc; display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
-            background-color: #020617; /* Fallback */
+            background-color: #020617;
         }
         *, *::before, *::after { box-sizing: inherit; }
 
-        /* Video Background */
         #bg-video {
             position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%;
-            z-index: -100; object-fit: cover; filter: brightness(0.35); /* Darkens video so text is readable */
+            z-index: -100; object-fit: cover; filter: brightness(0.35);
         }
         
-        /* Glassmorphism Left Leaderboard Wall */
         .left-wall {
             width: 350px; background: var(--glass-bg); backdrop-filter: blur(12px);
             border-right: 1px solid var(--glass-border); padding: 24px;
@@ -56,7 +54,6 @@
             border: 1px solid rgba(14, 165, 233, 0.3);
         }
         
-        /* Glassmorphism Main Hub Area */
         .main-hub {
             flex: 1; padding: 40px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 24px;
@@ -84,7 +81,6 @@
         }
         .agent-card:hover { border-color: var(--primary); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2); transform: translateY(-5px); }
         
-        /* Floating Build Button */
         .build-agent-fab {
             position: fixed; bottom: 30px; right: 30px;
             background: linear-gradient(135deg, #4f46e5, #0ea5e9); color: white; 
@@ -93,7 +89,6 @@
         }
         .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.7); }
         
-        /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 6, 23, 0.85); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
@@ -107,25 +102,21 @@
             width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8); 
             border: 1px solid var(--glass-border); color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem;
         }
-        .modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: var(--primary); }
-
         .google-btn {
             background-color: white; color: #1e293b; border: none; padding: 12px 24px; border-radius: 8px; 
             font-size: 1.05rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; 
             gap: 12px; width: 100%; transition: 0.2s;
         }
-        .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+        .google-btn:hover { background-color: #f1f5f9; transform: translateY(-2px); }
         .google-btn img { width: 24px; height: 24px; }
     </style>
 </head>
 <body>
 
-    <!-- VIDEO BACKGROUND -->
     <video autoplay loop muted playsinline id="bg-video">
         <source src="bg-video.mp4" type="video/mp4">
     </video>
 
-    <!-- Login Overlay -->
     <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
         <div class="modal-content">
             <h2 style="margin-top: 0; color: var(--accent); font-size: 2rem;">Tachyon Auth</h2>
@@ -137,22 +128,20 @@
         </div>
     </div>
 
-    <!-- Custom Username Modal -->
     <div id="username-modal" class="modal" style="display:none; z-index: 2500;">
         <div class="modal-content">
             <h2 style="margin-top: 0; color: var(--accent);">Create Identity</h2>
-            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard. (Permanent).</p>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard.</p>
             <input type="text" id="customUsernameInput" placeholder="e.g. Neo, Trinity, ZeroCool">
             <button class="post-btn" style="width: 100%; padding: 14px;" onclick="saveUsername()">Set Username</button>
         </div>
     </div>
 
-    <!-- Left Wall -->
     <div class="left-wall">
         <h2 style="margin-top:0;">🏆 Tachyon Rankings</h2>
         <div class="shoutout-card">
             <h3>Top Developer 👑</h3>
-            <div id="top-student" style="font-size: 1.6rem; font-weight: bold; color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3);">Loading...</div>
+            <div id="top-student" style="font-size: 1.6rem; font-weight: bold; color: white;">Loading...</div>
         </div>
         <div style="margin-top: 15px;">
             <h3 style="color: #cbd5e1; font-size: 1.05rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; display:flex; justify-content:space-between;">
@@ -160,24 +149,22 @@
             </h3>
             <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;"></div>
         </div>
-        <button style="margin-top: auto; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()" onmouseover="this.style.background='#ef4444'; this.style.color='white';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#ef4444';">Disconnect</button>
+        <button style="margin-top: auto; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; cursor: pointer; font-weight:bold; transition: 0.2s;" onclick="logout()">Disconnect</button>
     </div>
 
-    <!-- Main Hub -->
     <div class="main-hub">
         <div class="header-section">
             <div class="header-text">
                 <h1>TACHYON — AIML HUB</h1>
                 <p>Deploy and showcase your AI creations here. <br><strong style="color: var(--accent);">— Shivakumar Patil, President</strong></p>
             </div>
-            <button class="post-btn" onclick="openModal()" style="padding: 14px 28px; font-size:1.1rem;">+ Deploy Agent</button>
+            <button class="post-btn" onclick="openModal()" style="padding: 14px 28px;">+ Deploy Agent</button>
         </div>
         <div class="agent-grid" id="agent-grid"></div>
     </div>
 
     <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">✨ Build Your Own Agent</a>
 
-    <!-- Deploy Modal -->
     <div class="modal" id="postModal">
         <div class="modal-content" style="text-align: left;">
             <h2 style="margin-top: 0; color: var(--accent);">Deploy to Network</h2>
@@ -192,10 +179,8 @@
         </div>
     </div>
 
-    <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        // IMPORT arrayUnion for strict single-boost tracking
         import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
@@ -219,11 +204,8 @@
         let currentUserEmail = "";
         let currentCustomName = "";
 
-        // AUTHENTICATION LOGIC
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch((error) => {
-                alert("Error signing in. Check console/popups.");
-            });
+            signInWithPopup(auth, provider).catch(() => alert("Error signing in."));
         });
 
         onAuthStateChanged(auth, async (user) => {
@@ -237,7 +219,7 @@
                     document.getElementById('studentName').value = currentCustomName; 
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'none';
-                    renderAgents(); // Re-render to show accurate boost button states
+                    renderAgents();
                 } else {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'flex';
@@ -252,17 +234,10 @@
         window.saveUsername = async () => {
             const inputName = document.getElementById('customUsernameInput').value.trim();
             const lowerName = inputName.toLowerCase();
-            
             if(inputName.length < 3) { alert("Username must be at least 3 characters."); return; }
 
-            const usersRef = collection(db, "users");
-            const q = query(usersRef, where("customNameLower", "==", lowerName));
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                alert("This username is already taken! Please choose a different one.");
-                return;
-            }
+            const q = query(collection(db, "users"), where("customNameLower", "==", lowerName));
+            if (!(await getDocs(q)).empty) { alert("Username already taken!"); return; }
 
             const user = auth.currentUser;
             await setDoc(doc(db, "users", user.uid), {
@@ -281,7 +256,6 @@
         window.submitAgent = async () => {
             const name = document.getElementById('agentName').value;
             const desc = document.getElementById('agentDesc').value;
-            
             if(name) {
                 try {
                     await addDoc(collection(db, "agents"), {
@@ -290,7 +264,7 @@
                         authorEmail: currentUserEmail, 
                         desc: desc,
                         upvotes: 0,
-                        boostedBy: [], // Initialize tracking array
+                        boostedBy: [],
                         timestamp: Date.now()
                     });
                     closeModal();
@@ -300,25 +274,14 @@
             } else { alert("Please fill in the Agent Name."); }
         }
 
-        // STRICT ONE-BOOST LOGIC
         window.upvote = async (id, authorEmail) => {
-            if (!currentUserEmail) return;
-            if (currentUserEmail === authorEmail) {
-                alert("You cannot boost your own agent!");
-                return;
-            }
-            
-            const agentRef = doc(db, "agents", id);
-            try {
-                // Increment score AND securely log the user's email so they can't vote again
-                await updateDoc(agentRef, { 
-                    upvotes: increment(1),
-                    boostedBy: arrayUnion(currentUserEmail) 
-                });
-            } catch (e) { console.error("Error boosting:", e); }
+            if (!currentUserEmail || currentUserEmail === authorEmail) return;
+            await updateDoc(doc(db, "agents", id), { 
+                upvotes: increment(1),
+                boostedBy: arrayUnion(currentUserEmail) 
+            });
         }
 
-        // DATABASE LISTENERS
         onSnapshot(collection(db, "users"), (snapshot) => {
             allUsers = {};
             snapshot.forEach((doc) => { allUsers[doc.data().email] = doc.data(); });
@@ -334,40 +297,38 @@
             renderLeaderboard();
         });
 
-        // RENDER AGENTS WITH SMART BOOST BUTTON
         function renderAgents() {
             const grid = document.getElementById('agent-grid');
             grid.innerHTML = '';
-            
             if(allAgents.length === 0) return;
 
             allAgents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
-                
-                // Determine Boost Button State
                 let hasBoosted = agent.boostedBy && agent.boostedBy.includes(currentUserEmail);
                 let isOwner = agent.authorEmail === currentUserEmail;
                 let btnHTML = '';
                 
                 if (isOwner) {
-                    btnHTML = `<button style="background: rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:#94a3b8; padding:10px 16px; border-radius:8px; width:100%; cursor:not-allowed;">🔒 Your Agent (${agent.upvotes})</button>`;
+                    btnHTML = `<button style="background: rgba(255,255,255,0.05); border:1px solid var(--glass-border); color:#94a3b8; padding:10px; border-radius:8px; width:100%; cursor:not-allowed;">🔒 Your Agent (${agent.upvotes})</button>`;
                 } else if (hasBoosted) {
-                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.2); border:1px solid var(--primary); color:white; padding:10px 16px; border-radius:8px; width:100%; cursor:not-allowed;">✅ Boosted (${agent.upvotes})</button>`;
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.2); border:1px solid var(--primary); color:white; padding:10px; border-radius:8px; width:100%; cursor:not-allowed;">✅ Boosted (${agent.upvotes})</button>`;
                 } else {
-                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.15); border:1px solid var(--primary); color:var(--text-light); padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; transition: 0.2s;" onclick="upvote('${agent.id}', '${agent.authorEmail}')" onmouseover="this.style.background='var(--primary)'" onmouseout="this.style.background='rgba(14, 165, 233, 0.15)'">🚀 Boost (${agent.upvotes})</button>`;
+                    btnHTML = `<button style="background: rgba(14, 165, 233, 0.15); border:1px solid var(--primary); color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;" onclick="upvote('${agent.id}', '${agent.authorEmail}')">🚀 Boost (${agent.upvotes})</button>`;
                 }
 
+                let cardBorder = agent.isOfficial ? '2px solid var(--gold)' : '1px solid var(--glass-border)';
+                let cardBadge = agent.isOfficial ? '<span style="background:var(--gold); color:#020617; font-size:0.75rem; padding:2px 8px; border-radius:4px; font-weight:bold; margin-left:8px;">OFFICIAL</span>' : '';
+
                 grid.innerHTML += `
-                    <div class="agent-card">
-                        <h3 style="margin-top:0; color:var(--accent); font-size:1.4rem;">${agent.name}</h3>
-                        <p style="color:#cbd5e1; font-size:0.95rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
-                        <p style="line-height: 1.6; color:#f1f5f9;">${agent.desc}</p>
+                    <div class="agent-card" style="border: ${cardBorder};">
+                        <h3 style="margin-top:0; color:var(--accent); font-size:1.3rem;">${agent.name} ${cardBadge}</h3>
+                        <p style="color:#cbd5e1; font-size:0.9rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">Dev: <strong style="color:white;">@${agent.author}</strong></p>
+                        <p style="line-height: 1.5;">${agent.desc}</p>
                         ${btnHTML}
                     </div>
                 `;
             });
         }
 
-        // GAMIFIED LEADERBOARD
         function renderLeaderboard() {
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = '';
@@ -385,10 +346,9 @@
             });
 
             let sortedEmails = Object.keys(scores).sort((a,b) => scores[b].points - scores[a].points);
-            
             if(sortedEmails.length > 0) {
                 let top = scores[sortedEmails[0]];
-                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.2rem;">${top.points} XP</span>`;
+                document.getElementById('top-student').innerHTML = `@${top.name} <br><span style="color:var(--accent); font-size:1.1rem;">${top.points} XP</span>`;
             } else {
                 document.getElementById('top-student').innerText = `Awaiting Data...`;
             }
@@ -396,12 +356,10 @@
             sortedEmails.forEach((email, index) => {
                 let s = scores[email];
                 let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? 'var(--silver)' : (index === 2 ? 'var(--bronze)' : '#94a3b8'));
-                
                 list.innerHTML += `
                     <div class="leaderboard-item" style="border-left: 4px solid ${rankColor};">
-                        <span style="display:flex; align-items:center; gap:12px; font-weight:bold;">
-                            <span style="color:${rankColor}; width:24px; font-size:1.1rem;">#${index + 1}</span> 
-                            @${s.name}
+                        <span style="display:flex; align-items:center; gap:10px; font-weight:bold;">
+                            <span style="color:${rankColor}; width:20px;">#${index + 1}</span> @${s.name}
                         </span>
                         <span class="xp-badge">${s.points} XP</span>
                     </div>
