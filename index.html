@@ -93,7 +93,7 @@
         }
         .build-agent-fab:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(14, 165, 233, 0.6); }
         
-        /* Modal */
+        /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 6, 23, 0.95); justify-content: center; align-items: center; z-index: 1000; padding: 20px;
@@ -120,7 +120,7 @@
 </head>
 <body>
 
-    <!-- Full Screen Login Overlay -->
+    <!-- Step 1: Google Login Overlay -->
     <div id="login-screen" class="modal" style="display:flex; z-index: 2000;">
         <div class="modal-content">
             <h2 style="margin-top: 0; color: var(--accent);">Tachyon Secure Auth</h2>
@@ -130,6 +130,16 @@
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
                 Sign in with Google
             </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Custom Username Setup Modal (Hidden by default) -->
+    <div id="username-modal" class="modal" style="display:none; z-index: 2500;">
+        <div class="modal-content">
+            <h2 style="margin-top: 0; color: var(--accent);">Create Username</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 24px;">Choose a unique hacker name for the leaderboard. (Cannot be changed later).</p>
+            <input type="text" id="customUsernameInput" placeholder="e.g. Neo, Trinity, ZeroCool">
+            <button class="post-btn" style="width: 100%;" onclick="saveUsername()">Set Username</button>
         </div>
     </div>
 
@@ -178,8 +188,9 @@
 
     <!-- Firebase Scripts -->
     <script type="module">
+        // Added getDoc, getDocs, query, and where for database searching
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -197,44 +208,85 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Global Variables to hold data
+        // Global Variables
         let allUsers = {};
         let allAgents = [];
         let currentUserEmail = "";
-        let currentExtractedName = "";
+        let currentCustomName = "";
 
-        // AUTHENTICATION
+        // AUTHENTICATION LOGIC
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).then((result) => {
-                const user = result.user;
-                // EXTRACT NAME FROM EMAIL (e.g. shivakumarcr7@gmail.com -> shivakumarcr7)
-                const extractedName = user.email.split('@')[0];
-                
-                // Save to database
-                setDoc(doc(db, "users", user.uid), {
-                    name: extractedName,
-                    email: user.email,
-                    lastLogin: Date.now()
-                }, { merge: true });
-                
-                document.getElementById('login-screen').style.display = 'none';
-            }).catch((error) => {
+            signInWithPopup(auth, provider).catch((error) => {
                 console.error("Login Error: ", error);
                 alert("Error signing in. Check console/popups.");
             });
         });
 
-        window.logout = () => signOut(auth).then(() => document.getElementById('login-screen').style.display = 'flex');
-
-        onAuthStateChanged(auth, (user) => {
+        // Listen for Login State changes
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserEmail = user.email;
-                currentExtractedName = user.email.split('@')[0];
-                document.getElementById('studentName').value = currentExtractedName; // Lock in their hacker name
-                document.getElementById('login-screen').style.display = 'none';
+                
+                // Fetch user data from Database to see if they already picked a username
+                const userDocRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userDocRef);
+                
+                if (userSnap.exists() && userSnap.data().customName) {
+                    // They already have a username! Let them in.
+                    currentCustomName = userSnap.data().customName;
+                    document.getElementById('studentName').value = currentCustomName; 
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'none';
+                } else {
+                    // They are new! Show the Create Username screen.
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'flex';
+                }
             } else {
+                // Not logged in
                 document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('username-modal').style.display = 'none';
             }
+        });
+
+        // SAVE & VERIFY CUSTOM USERNAME
+        window.saveUsername = async () => {
+            const inputName = document.getElementById('customUsernameInput').value.trim();
+            const lowerName = inputName.toLowerCase(); // For strict comparison
+            
+            if(inputName.length < 3) {
+                alert("Username must be at least 3 characters long.");
+                return;
+            }
+
+            // 1. Search the database to see if this name is already taken
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("customNameLower", "==", lowerName));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                // Someone already has it!
+                alert("This username is already taken! Please choose a different one.");
+                return;
+            }
+
+            // 2. It is unique! Save it to the database for this specific user.
+            const user = auth.currentUser;
+            await setDoc(doc(db, "users", user.uid), {
+                customName: inputName,
+                customNameLower: lowerName, // Hidden lower case version for accurate searching
+                email: user.email,
+                lastLogin: Date.now()
+            }, { merge: true });
+
+            // 3. Let them into the Hub
+            currentCustomName = inputName;
+            document.getElementById('studentName').value = currentCustomName;
+            document.getElementById('username-modal').style.display = 'none';
+        };
+
+        window.logout = () => signOut(auth).then(() => {
+            document.getElementById('login-screen').style.display = 'flex';
         });
 
         // MODAL LOGIC
@@ -249,8 +301,8 @@
                 try {
                     await addDoc(collection(db, "agents"), {
                         name: name,
-                        author: currentExtractedName, // Use the extracted email name
-                        authorEmail: currentUserEmail, // Link it to calculate points later
+                        author: currentCustomName, // Lock to their custom username
+                        authorEmail: currentUserEmail, 
                         desc: desc,
                         upvotes: 0,
                         timestamp: Date.now()
@@ -322,12 +374,15 @@
             
             let scores = {};
             
-            // 1. Give Base Points to everyone who has logged in (10 XP)
+            // 1. Give Base Points to everyone who has successfully created a custom name (10 XP)
             for(let email in allUsers) {
-                scores[email] = {
-                    name: allUsers[email].name || email.split('@')[0],
-                    points: 10
-                };
+                let user = allUsers[email];
+                if(user.customName) {
+                    scores[email] = {
+                        name: user.customName,
+                        points: 10
+                    };
+                }
             }
             
             // 2. Add points from agents (50 XP per agent, 10 XP per upvote)
