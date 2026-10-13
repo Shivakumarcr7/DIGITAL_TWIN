@@ -94,7 +94,7 @@
         
         <div class="shoutout-card">
             <h3>President's Shoutout 🎙️</h3>
-            <p><strong>Top Contributor:</strong> <span id="top-student">Aditi (3rd Yr)</span></p>
+            <p><strong>Top Contributor:</strong> <span id="top-student">Loading...</span></p>
             <p style="font-size: 0.9rem; color: #cbd5e1;">Most agents built and community upvotes this month!</p>
         </div>
 
@@ -141,44 +141,111 @@
         </div>
     </div>
 
-    <script>
-        // Dummy data for initial showcase
-        let agents = [
-            { name: "Syllabus Tracker AI", author: "Aditi", desc: "Answers questions based on our 2nd-year CS syllabus.", upvotes: 24 },
-            { name: "Hackathon Idea Gen", author: "Rahul", desc: "Brainstorms IoT and AI project ideas.", upvotes: 18 }
-        ];
+    <!-- Firebase Connection Script -->
+    <script type="module">
+        // 1. Import Firebase tools
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        function renderAgents() {
+        // 2. YOUR PRE-FILLED FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
+            authDomain: "digital-twin-6c779.firebaseapp.com",
+            projectId: "digital-twin-6c779",
+            storageBucket: "digital-twin-6c779.firebasestorage.app",
+            messagingSenderId: "445832291229",
+            appId: "1:445832291229:web:00d7de2c4c4ade9646c574",
+            measurementId: "G-55ZB5JW4P9"
+        };
+
+        // 3. Initialize Database
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make functions globally available for your HTML buttons
+        window.openModal = function() { document.getElementById('postModal').style.display = 'flex'; }
+        window.closeModal = function() { document.getElementById('postModal').style.display = 'none'; }
+
+        // 4. Function to save a new agent to the database
+        window.submitAgent = async function() {
+            const name = document.getElementById('agentName').value;
+            const author = document.getElementById('studentName').value;
+            const desc = document.getElementById('agentDesc').value;
+            
+            if(name && author) {
+                try {
+                    await addDoc(collection(db, "agents"), {
+                        name: name,
+                        author: author,
+                        desc: desc,
+                        upvotes: 0,
+                        timestamp: Date.now()
+                    });
+                    closeModal();
+                    document.getElementById('agentName').value = '';
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('agentDesc').value = '';
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    alert("Error saving to database. Check the console.");
+                }
+            } else {
+                alert("Please fill in the Agent Name and Your Name.");
+            }
+        }
+
+        // 5. Function to upvote in the database
+        window.upvote = async function(id) {
+            const agentRef = doc(db, "agents", id);
+            await updateDoc(agentRef, {
+                upvotes: increment(1)
+            });
+        }
+
+        // 6. Listen for database changes LIVE and update the screen
+        onSnapshot(collection(db, "agents"), (snapshot) => {
+            let agents = [];
+            snapshot.forEach((doc) => {
+                let data = doc.data();
+                data.id = doc.id; // Save the database ID
+                agents.push(data);
+            });
+            renderAgents(agents);
+        });
+
+        // 7. Render UI
+        function renderAgents(agents) {
             const grid = document.getElementById('agent-grid');
             grid.innerHTML = '';
-            agents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent, index) => {
+            
+            // Sort by upvotes
+            agents.sort((a,b) => b.upvotes - a.upvotes).forEach((agent) => {
                 grid.innerHTML += `
                     <div class="agent-card">
                         <h3 style="margin-top:0; color:var(--accent);">${agent.name}</h3>
                         <p style="color:#94a3b8; font-size:0.9rem;">By: ${agent.author}</p>
                         <p>${agent.desc}</p>
-                        <button style="background:#334155; border:none; color:white; padding:6px 12px; border-radius:4px; cursor:pointer;" onclick="upvote(${index})">
+                        <button style="background:#334155; border:none; color:white; padding:6px 12px; border-radius:4px; cursor:pointer;" onclick="upvote('${agent.id}')">
                             👍 Upvote (${agent.upvotes})
                         </button>
                     </div>
                 `;
             });
-            renderLeaderboard();
+            renderLeaderboard(agents);
         }
 
-        function renderLeaderboard() {
+        function renderLeaderboard(agents) {
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = '';
             
-            // Tally scores by author
             let scores = {};
             agents.forEach(a => { scores[a.author] = (scores[a.author] || 0) + a.upvotes; });
-            
-            // Sort authors by score
             let sortedAuthors = Object.keys(scores).sort((a,b) => scores[b] - scores[a]);
             
             if(sortedAuthors.length > 0) {
                 document.getElementById('top-student').innerText = `${sortedAuthors[0]} (${scores[sortedAuthors[0]]} pts)`;
+            } else {
+                document.getElementById('top-student').innerText = `No agents yet!`;
             }
 
             sortedAuthors.forEach((author, index) => {
@@ -190,35 +257,6 @@
                 `;
             });
         }
-
-        function upvote(index) {
-            agents[index].upvotes++;
-            renderAgents();
-        }
-
-        function openModal() { document.getElementById('postModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('postModal').style.display = 'none'; }
-        
-        function submitAgent() {
-            const name = document.getElementById('agentName').value;
-            const author = document.getElementById('studentName').value;
-            const desc = document.getElementById('agentDesc').value;
-            
-            if(name && author) {
-                agents.push({ name: name, author: author, desc: desc, upvotes: 0 });
-                renderAgents();
-                closeModal();
-                // Reset fields
-                document.getElementById('agentName').value = '';
-                document.getElementById('studentName').value = '';
-                document.getElementById('agentDesc').value = '';
-            } else {
-                alert("Please fill in at least the Agent Name and Your Name.");
-            }
-        }
-
-        // Initial Load
-        renderAgents();
     </script>
 </body>
 </html>
