@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Twin — TACHYON AIML</title>
+    <style>
+        :root {
+            --cyan: #00f2fe;
+            --purple: #a855f7;
+            --emerald: #10b981;
+            --dark: #020617;
+            --glass: rgba(15, 23, 42, 0.72);
+            --border: rgba(255, 255, 255, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--dark);
+            color: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 32px 5vw;
+        }
+
+        /* Background Video */
+        #twin-bg-video {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.35) contrast(1.1);
+        }
+
+        /* Cyberpunk Grid Overlay */
+        .cyber-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+        }
+
+        /* Top Bar */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.8s ease;
+        }
+        .back-btn {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: var(--emerald);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Center Digital Twin Showcase */
+        .twin-stage {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr 1fr;
+            gap: 28px;
+            align-items: center;
+            my: auto;
+            animation: zoomIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .telemetry-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 26px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .telemetry-card h3 {
+            color: var(--cyan);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .stat-box {
+            background: rgba(2, 6, 23, 0.6);
+            padding: 14px;
+            border-radius: 10px;
+            border-left: 3px solid var(--purple);
+        }
+        .stat-box .label { font-size: 0.8rem; color: #94a3b8; }
+        .stat-box .value { font-size: 1.3rem; font-weight: 800; color: #fff; margin-top: 4px; }
+
+        /* Center Hologram Portal */
+        .hologram-portal {
+            position: relative;
+            height: 420px;
+            border-radius: 24px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(15, 23, 42, 0.85) 80%);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.2), inset 0 0 30px rgba(0, 242, 254, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+            padding: 24px;
+        }
+
+        /* Rotating Cyber Rings */
+        .holo-ring {
+            width: 220px; height: 220px;
+            border: 2px dashed var(--cyan);
+            border-radius: 50%;
+            position: absolute;
+            animation: spin 18s linear infinite;
+            opacity: 0.45;
+        }
+        .holo-ring-inner {
+            width: 160px; height: 160px;
+            border: 2px solid var(--purple);
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            animation: spinReverse 10s linear infinite;
+            opacity: 0.6;
+        }
+
+        /* Scanning Laser Line */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            box-shadow: 0 0 15px var(--cyan);
+            animation: scan 3.5s ease-in-out infinite;
+        }
+
+        .portal-content {
+            position: relative;
+            z-index: 2;
+            max-width: 360px;
+        }
+        .portal-content h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fff, var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .portal-content p {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Bottom Footer & Next Stage CTA */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .step-pill { height: 6px; border-radius: 10px; background: rgba(255,255,255,0.2); }
+        .step-pill.active { width: 45px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+        .step-pill.done { width: 18px; background: var(--purple); }
+        .step-pill.inactive { width: 18px; }
+
+        .launch-hub-btn {
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, var(--purple), #ec4899, var(--cyan));
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+            padding: 16px 38px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
+            transition: 0.3s;
+        }
+        .launch-hub-btn:hover {
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.6);
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+        @keyframes scan {
+            0%, 100% { top: 10%; opacity: 0.2; }
+            50% { top: 90%; opacity: 1; }
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @keyframes zoomIn {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 950px) {
+            .twin-stage { grid-template-columns: 1fr; }
+            .telemetry-card { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Walkthrough / Digital Twin Video Background -->
+    <video autoplay loop muted playsinline id="twin-bg-video">
+        <source src="twin-video.mp4" type="video/mp4">
+        <source src="bg-video.mp4" type="video/mp4">
+    </video>
+    <div class="cyber-grid"></div>
+
+    <!-- Top Navigation -->
+    <header>
+        <a href="index.html" class="back-btn">← Welcome Screen</a>
+        <div class="status-pill">● Digital Twin Core Online</div>
+    </header>
+
+    <!-- Center Interactive Stage -->
+    <section class="twin-stage">
+        <!-- Left Telemetry Panel -->
+        <div class="telemetry-card">
+            <h3>🏢 Spatial Architecture</h3>
+            <div class="stat-box">
+                <div class="label">Department Sector</div>
+                <div class="value">CSE (AI & ML)</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--cyan);">
+                <div class="label">Environment Sync</div>
+                <div class="value">Real-Time 3D Mapping</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--emerald);">
+                <div class="label">Neural Nodes</div>
+                <div class="value">Active & Connected</div>
+            </div>
+        </div>
+
+        <!-- Center Hologram / Digital Twin Viewport -->
+        <div class="hologram-portal">
+            <div class="holo-ring"></div>
+            <div class="holo-ring-inner"></div>
+            <div class="scan-line"></div>
+            
+            <div class="portal-content">
+                <span style="color: var(--cyan); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Interactive Simulation</span>
+                <h2>Tachyon Digital Twin</h2>
+                <p>Virtual replica of the AIML Department & Innovation Labs. Drop <strong>twin-video.mp4</strong> or your 3D embed here to stream the live virtual walkthrough.</p>
+            </div>
+        </div>
+
+        <!-- Right Telemetry Panel -->
+        <div class="telemetry-card">
+            <h3>⚡ System Capabilities</h3>
+            <div class="stat-box">
+                <div class="label">Next Module</div>
+                <div class="value">Autonomous Agent Hub</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--cyan);">
+                <div class="label">Student Network</div>
+                <div class="value">Live XP Leaderboard</div>
+            </div>
+            <div class="stat-box" style="border-left-color: var(--emerald);">
+                <div class="label">Club Leadership</div>
+                <div class="value">Shivakumar Patil</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <footer>
+        <div class="step-indicator">
+            <div class="step-pill done"></div>
+            <div class="step-pill active"></div>
+            <div class="step-pill inactive"></div>
+            <span style="margin-left: 10px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">02 / Digital Twin</span>
+        </div>
+
+        <a href="hub.html" class="launch-hub-btn">
+            Proceed to AI Agent Hub 🚀
+        </a>
+    </footer>
+
+</body>
+</html>
