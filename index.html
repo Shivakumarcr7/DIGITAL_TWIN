@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Welcome — TACHYON AIML Hub</title>
     <style>
         :root {
@@ -11,21 +11,23 @@
             --purple: #8b5cf6;
             --gold: #fbbf24;
             --dark: #030712;
-            --glass-bg: rgba(3, 7, 18, 0.32);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(3, 7, 18, 0.38);
+            --glass-border: rgba(255, 255, 255, 0.12);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--dark);
             color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 32px 5vw;
+            padding: 28px 5vw;
+            gap: 30px;
         }
 
         /* Fullscreen Video Background */
@@ -39,42 +41,42 @@
             width: 100%; height: 100%;
             object-fit: cover;
             object-position: center right;
-            filter: brightness(0.45) contrast(1.05);
+            filter: brightness(0.48) contrast(1.05);
         }
 
-        /* Subtle Vignette Overlay for Depth */
+        /* Responsive Vignette Overlay */
         .gradient-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: linear-gradient(90deg, 
-                rgba(3, 7, 18, 0.88) 0%, 
-                rgba(3, 7, 18, 0.55) 45%, 
-                rgba(3, 7, 18, 0.1) 75%, 
+                rgba(3, 7, 18, 0.9) 0%, 
+                rgba(3, 7, 18, 0.55) 48%, 
+                rgba(3, 7, 18, 0.1) 80%, 
                 rgba(3, 7, 18, 0.0) 100%);
         }
 
         /* Stage Navigation Breadcrumb */
         .stage-nav {
-            display: flex; gap: 12px; align-items: center; font-size: 0.85rem; font-weight: 600;
-            z-index: 10; animation: fadeInDown 0.8s ease;
+            display: flex; gap: 10px; align-items: center; font-size: 0.85rem; font-weight: 600;
+            z-index: 10; flex-wrap: wrap;
         }
         .stage-nav a {
-            color: #94a3b8; text-decoration: none; padding: 6px 14px; border-radius: 20px;
+            color: #94a3b8; text-decoration: none; padding: 7px 14px; border-radius: 20px;
             background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px);
-            transition: 0.3s;
+            -webkit-backdrop-filter: blur(12px); transition: 0.3s; white-space: nowrap;
         }
         .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
-        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.15); border-color: var(--cyan); }
+        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.18); border-color: var(--cyan); }
 
         /* Main Welcome Content Area */
         .welcome-panel {
-            width: 52%;
-            max-width: 700px;
+            width: 55%;
+            max-width: 680px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
-            animation: slideFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            gap: 22px;
+            animation: slideFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             margin: auto 0;
         }
 
@@ -83,14 +85,14 @@
             align-items: center;
             gap: 10px;
             width: fit-content;
-            padding: 8px 18px;
+            padding: 8px 16px;
             background: rgba(0, 242, 254, 0.12);
             border: 1px solid rgba(0, 242, 254, 0.35);
             border-radius: 50px;
             color: var(--cyan);
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
             backdrop-filter: blur(12px);
             box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
@@ -102,12 +104,13 @@
             border-radius: 50%;
             box-shadow: 0 0 12px var(--cyan);
             animation: pulse 1.8s infinite;
+            flex-shrink: 0;
         }
 
         h1 {
-            font-size: clamp(2.8rem, 5vw, 4.4rem);
+            font-size: clamp(2.2rem, 5vw, 4.3rem);
             font-weight: 800;
-            line-height: 1.08;
+            line-height: 1.1;
             letter-spacing: -1px;
         }
 
@@ -121,25 +124,25 @@
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            color: #cbd5e1;
-            line-height: 1.7;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: #e2e8f0;
+            line-height: 1.65;
             max-width: 520px;
             border-left: 3px solid var(--cyan);
-            padding-left: 18px;
-            background: rgba(3, 7, 18, 0.2);
-            backdrop-filter: blur(8px);
+            padding: 10px 16px;
+            background: rgba(3, 7, 18, 0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 0 12px 12px 0;
-            padding-top: 6px; padding-bottom: 6px;
         }
 
-        /* Glass Tag */
         .principal-tag {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 16px 22px;
+            padding: 16px 20px;
             border-radius: 14px;
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             max-width: 420px;
             display: flex;
             flex-direction: column;
@@ -148,75 +151,87 @@
         }
         .principal-tag span:first-child {
             color: var(--gold);
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
         .principal-tag span:last-child {
             color: #f8fafc;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             font-weight: 600;
         }
 
-        /* Action Button */
         .next-btn {
             text-decoration: none;
             color: #030712;
             background: linear-gradient(135deg, var(--cyan), var(--blue));
-            padding: 16px 36px;
+            padding: 16px 34px;
             border-radius: 50px;
             font-size: 1.05rem;
             font-weight: 800;
             letter-spacing: 0.5px;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 12px;
             box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.35s ease;
             width: fit-content;
         }
         .next-btn:hover {
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 15px 40px rgba(0, 242, 254, 0.65);
         }
-        .next-btn .arrow { transition: transform 0.3s ease; }
-        .next-btn:hover .arrow { transform: translateX(6px); }
 
-        /* Bottom Footer */
         footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 10;
-            animation: fadeInUp 0.8s ease;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        .step-indicator { display: flex; align-items: center; gap: 10px; }
+        .step-indicator { display: flex; align-items: center; gap: 8px; }
         .step-pill { height: 6px; border-radius: 10px; background: rgba(255, 255, 255, 0.2); }
-        .step-pill.active { width: 45px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
-        .step-pill.inactive { width: 18px; }
+        .step-pill.active { width: 40px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+        .step-pill.inactive { width: 16px; }
 
         @keyframes slideFadeIn {
-            0% { opacity: 0; transform: translateX(-35px); }
-            100% { opacity: 1; transform: translateX(0); }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.4); opacity: 0.5; }
         }
-        @keyframes fadeInDown {
-            0% { opacity: 0; transform: translateY(-15px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            0% { opacity: 0; transform: translateY(15px); }
-            100% { opacity: 1; transform: translateY(0); }
+
+        /* 📱 MOBILE PORTRAIT OPTIMIZATION */
+        @media (max-width: 850px) {
+            body { padding: 20px 5vw; }
+            #principal-video { object-position: center top; }
+            .gradient-overlay {
+                background: linear-gradient(180deg, 
+                    rgba(3, 7, 18, 0.25) 0%, 
+                    rgba(3, 7, 18, 0.75) 45%, 
+                    rgba(3, 7, 18, 0.95) 100%);
+            }
+            .stage-nav { justify-content: center; width: 100%; }
+            .stage-nav a { font-size: 0.75rem; padding: 6px 12px; }
+            .welcome-panel {
+                width: 100%;
+                margin-top: 18vh; /* Leaves top space clear for Principal video */
+                text-align: left;
+                gap: 18px;
+            }
+            .principal-tag { max-width: 100%; }
+            .next-btn { width: 100%; padding: 16px; font-size: 1.05rem; }
+            footer { flex-direction: column; align-items: flex-start; gap: 8px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Video Background -->
     <div class="video-wrapper">
         <video autoplay loop muted playsinline id="principal-video">
             <source src="principal-video.mp4" type="video/mp4">
@@ -225,14 +240,12 @@
     </div>
     <div class="gradient-overlay"></div>
 
-    <!-- Top Navigation Breadcrumb -->
     <nav class="stage-nav">
         <a href="index.html" class="active">01 / Welcome</a>
         <a href="twin.html">02 / Digital Twin</a>
         <a href="hub.html">03 / AI Agent Hub</a>
     </nav>
 
-    <!-- Center Left Content Panel -->
     <main class="welcome-panel">
         <div class="club-badge">
             <span class="pulse-dot"></span>
@@ -255,20 +268,19 @@
 
         <a href="twin.html" class="next-btn">
             Enter Digital Twin
-            <span class="arrow">→</span>
+            <span>→</span>
         </a>
     </main>
 
-    <!-- Bottom Indicator -->
     <footer>
         <div class="step-indicator">
             <div class="step-pill active"></div>
             <div class="step-pill inactive"></div>
             <div class="step-pill inactive"></div>
-            <span style="margin-left: 8px; font-size: 0.85rem; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase;">01 / Welcome Gate</span>
+            <span style="margin-left: 6px; font-size: 0.8rem; color: #cbd5e1; letter-spacing: 1px; text-transform: uppercase;">01 / Welcome Gate</span>
         </div>
-        <div style="font-size: 0.85rem; color: #64748b;">
-            Designed & Developed for AIML Dept
+        <div style="font-size: 0.8rem; color: #94a3b8;">
+            Tachyon AIML Hub
         </div>
     </footer>
 
