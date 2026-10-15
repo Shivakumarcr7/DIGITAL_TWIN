@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Welcome — TACHYON AIML Hub</title>
+    <title>Welcome — AIML X TACHYON HUB</title>
     <style>
         :root {
             --cyan: #00f2fe;
@@ -11,8 +11,8 @@
             --purple: #8b5cf6;
             --gold: #fbbf24;
             --dark: #030712;
-            --glass-bg: rgba(3, 7, 18, 0.38);
-            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(3, 7, 18, 0.42);
+            --glass-border: rgba(255, 255, 255, 0.14);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -26,149 +26,214 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 28px 5vw;
-            gap: 30px;
+            padding: 26px 4vw;
+            gap: 24px;
         }
 
-        /* Fullscreen Video Background */
+        /* Fullscreen Principal Video Background */
         .video-wrapper {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -2;
-            background: radial-gradient(circle at 75% 50%, #0f172a 0%, #030712 100%);
+            background: #030712;
         }
         #principal-video {
             width: 100%; height: 100%;
             object-fit: cover;
-            object-position: center right;
-            filter: brightness(0.48) contrast(1.05);
+            object-position: center 20%; /* Keeps Dr. Vinay's face & suit framed cleanly */
+            filter: brightness(0.85) contrast(1.05);
         }
 
-        /* Responsive Vignette Overlay */
+        /* Dual-Side Vignette: Darkened edges for text readability, crystal-clear center for Principal */
         .gradient-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             background: linear-gradient(90deg, 
-                rgba(3, 7, 18, 0.9) 0%, 
-                rgba(3, 7, 18, 0.55) 48%, 
-                rgba(3, 7, 18, 0.1) 80%, 
-                rgba(3, 7, 18, 0.0) 100%);
+                rgba(3, 7, 18, 0.88) 0%, 
+                rgba(3, 7, 18, 0.25) 28%, 
+                rgba(3, 7, 18, 0.05) 50%, 
+                rgba(3, 7, 18, 0.35) 72%, 
+                rgba(3, 7, 18, 0.92) 100%);
         }
 
-        /* Stage Navigation Breadcrumb */
+        /* Top Navigation Breadcrumb */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
         .stage-nav {
-            display: flex; gap: 10px; align-items: center; font-size: 0.85rem; font-weight: 600;
-            z-index: 10; flex-wrap: wrap;
+            display: flex; gap: 10px; align-items: center; font-size: 0.82rem; font-weight: 600; flex-wrap: wrap;
         }
         .stage-nav a {
-            color: #94a3b8; text-decoration: none; padding: 7px 14px; border-radius: 20px;
-            background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px); transition: 0.3s; white-space: nowrap;
+            color: #cbd5e1; text-decoration: none; padding: 7px 15px; border-radius: 20px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px); transition: 0.3s;
         }
         .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
-        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.18); border-color: var(--cyan); }
+        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.2); border-color: var(--cyan); }
 
-        /* Main Welcome Content Area */
-        .welcome-panel {
-            width: 55%;
-            max-width: 680px;
+        .college-pill {
+            padding: 7px 16px;
+            border-radius: 50px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: var(--gold);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            backdrop-filter: blur(12px);
+        }
+
+        /* Main Split Grid: Left (Principal Info) | Center (Open for Video) | Right (Welcome Title) */
+        .split-stage {
+            display: grid;
+            grid-template-columns: 360px 1fr 460px;
+            align-items: center;
+            gap: 24px;
+            margin: auto 0;
+            z-index: 10;
+        }
+
+        /* LEFT SIDE: Principal Dr. Vinay S. Profile Card */
+        .principal-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--gold);
+            border-radius: 20px;
+            padding: 26px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
             display: flex;
             flex-direction: column;
-            gap: 22px;
-            animation: slideFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            margin: auto 0;
+            gap: 14px;
+            animation: slideLeft 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .principal-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+        .principal-creds {
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: 700;
+            margin-top: -6px;
+        }
+        .college-name {
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .principal-bio {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        .Domain-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .domain-pill {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        /* RIGHT SIDE: Welcome to AIML X TACHYON HUB */
+        .welcome-right {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--cyan);
+            border-radius: 22px;
+            padding: 32px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            gap: 20px;
+            animation: slideRight 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .club-badge {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            width: fit-content;
-            padding: 8px 16px;
-            background: rgba(0, 242, 254, 0.12);
-            border: 1px solid rgba(0, 242, 254, 0.35);
+            padding: 7px 16px;
+            background: rgba(0, 242, 254, 0.14);
+            border: 1px solid rgba(0, 242, 254, 0.4);
             border-radius: 50px;
             color: var(--cyan);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
             text-transform: uppercase;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
         }
-
         .pulse-dot {
             width: 8px; height: 8px;
             background-color: var(--cyan);
             border-radius: 50%;
             box-shadow: 0 0 12px var(--cyan);
             animation: pulse 1.8s infinite;
-            flex-shrink: 0;
         }
 
         h1 {
-            font-size: clamp(2.2rem, 5vw, 4.3rem);
-            font-weight: 800;
-            line-height: 1.1;
+            font-size: clamp(2.1rem, 3.8vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1.08;
             letter-spacing: -1px;
         }
-
         .gradient-text {
-            background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 55%, var(--purple) 100%);
+            background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 50%, var(--purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: block;
             margin-top: 6px;
-            filter: drop-shadow(0 0 25px rgba(0, 242, 254, 0.3));
+            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.3));
         }
 
         .subtitle {
-            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-size: 0.96rem;
             color: #e2e8f0;
             line-height: 1.65;
-            max-width: 520px;
-            border-left: 3px solid var(--cyan);
-            padding: 10px 16px;
-            background: rgba(3, 7, 18, 0.35);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 0 12px 12px 0;
-        }
-
-        .principal-tag {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 16px 20px;
-            border-radius: 14px;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            max-width: 420px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .principal-tag span:first-child {
-            color: var(--gold);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-        .principal-tag span:last-child {
-            color: #f8fafc;
-            font-size: 0.95rem;
-            font-weight: 600;
         }
 
         .next-btn {
             text-decoration: none;
             color: #030712;
             background: linear-gradient(135deg, var(--cyan), var(--blue));
-            padding: 16px 34px;
+            padding: 15px 34px;
             border-radius: 50px;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 800;
             letter-spacing: 0.5px;
             display: inline-flex;
@@ -177,13 +242,13 @@
             gap: 12px;
             box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
             transition: all 0.35s ease;
-            width: fit-content;
         }
         .next-btn:hover {
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 15px 40px rgba(0, 242, 254, 0.65);
         }
 
+        /* Bottom Footer */
         footer {
             display: flex;
             justify-content: space-between;
@@ -197,9 +262,13 @@
         .step-pill.active { width: 40px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
         .step-pill.inactive { width: 16px; }
 
-        @keyframes slideFadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
+        @keyframes slideLeft {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideRight {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
@@ -207,26 +276,38 @@
         }
 
         /* 📱 MOBILE PORTRAIT OPTIMIZATION */
-        @media (max-width: 850px) {
-            body { padding: 20px 5vw; }
+        @media (max-width: 960px) {
+            body { padding: 18px 4vw; }
             #principal-video { object-position: center top; }
             .gradient-overlay {
                 background: linear-gradient(180deg, 
-                    rgba(3, 7, 18, 0.25) 0%, 
-                    rgba(3, 7, 18, 0.75) 45%, 
-                    rgba(3, 7, 18, 0.95) 100%);
+                    rgba(3, 7, 18, 0.15) 0%, 
+                    rgba(3, 7, 18, 0.5) 38%, 
+                    rgba(3, 7, 18, 0.92) 100%);
             }
+            header { justify-content: center; }
             .stage-nav { justify-content: center; width: 100%; }
-            .stage-nav a { font-size: 0.75rem; padding: 6px 12px; }
-            .welcome-panel {
-                width: 100%;
-                margin-top: 18vh; /* Leaves top space clear for Principal video */
-                text-align: left;
+            .split-stage {
+                grid-template-columns: 1fr;
+                margin-top: 28vh; /* Leaves top area open to see Dr. Vinay walking */
                 gap: 18px;
             }
-            .principal-tag { max-width: 100%; }
-            .next-btn { width: 100%; padding: 16px; font-size: 1.05rem; }
-            footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .center-spacer { display: none; }
+            /* Show Welcome Hub card first on mobile, Principal info right below */
+            .welcome-right {
+                order: 1;
+                align-items: flex-start;
+                text-align: left;
+                border-right: 1px solid var(--glass-border);
+                border-left: 4px solid var(--cyan);
+                padding: 24px;
+            }
+            .principal-card {
+                order: 2;
+                padding: 22px;
+            }
+            .next-btn { width: 100%; }
+            footer { flex-direction: column; align-items: center; text-align: center; }
         }
     </style>
 </head>
@@ -240,36 +321,56 @@
     </div>
     <div class="gradient-overlay"></div>
 
-    <nav class="stage-nav">
-        <a href="index.html" class="active">01 / Welcome</a>
-        <a href="twin.html">02 / Digital Twin</a>
-        <a href="hub.html">03 / AI Agent Hub</a>
-    </nav>
+    <header>
+        <nav class="stage-nav">
+            <a href="index.html" class="active">01 / Welcome</a>
+            <a href="twin.html">02 / Digital Twin</a>
+            <a href="hub.html">03 / AI Agent Hub</a>
+        </nav>
+        <div class="college-pill">🏛️ PESCE Mandya</div>
+    </header>
 
-    <main class="welcome-panel">
-        <div class="club-badge">
-            <span class="pulse-dot"></span>
-            Department of AIML — Official Portal
-        </div>
+    <main class="split-stage">
+        <!-- LEFT PANEL: Dr. Vinay S. Info -->
+        <aside class="principal-card">
+            <div class="role-tag">👑 Institutional Leadership</div>
+            <div class="principal-name">Dr. Vinay S.</div>
+            <div class="principal-creds">B.E., M.Tech., Ph.D. (Computer Science)</div>
+            <div class="college-name">Principal — P.E.S. College of Engineering, Mandya</div>
+            <p class="principal-bio">
+                Championing next-generation engineering education, autonomous systems research, and student-driven AI innovation across PESCE Mandya.
+            </p>
+            <div class="Domain-pills">
+                <span class="domain-pill">Machine Learning</span>
+                <span class="domain-pill">Software Engineering</span>
+                <span class="domain-pill">Cloud & Big Data</span>
+            </div>
+        </aside>
 
-        <h1>
-            Welcome to
-            <span class="gradient-text">Tachyon Hub AIML</span>
-        </h1>
+        <!-- CENTER SPACER: Leaves video of Dr. Vinay completely unobstructed -->
+        <div class="center-spacer"></div>
 
-        <p class="subtitle">
-            Step into our next-generation Artificial Intelligence & Machine Learning ecosystem. Experience our interactive Digital Twin and deploy autonomous AI agents.
-        </p>
+        <!-- RIGHT PANEL: Welcome to AIML X TACHYON HUB -->
+        <section class="welcome-right">
+            <div class="club-badge">
+                <span class="pulse-dot"></span>
+                Official Department Portal
+            </div>
 
-        <div class="principal-tag">
-            <span>✨ Executive Vision</span>
-            <span>Inaugural Welcome & Institutional Leadership</span>
-        </div>
+            <h1>
+                Welcome to
+                <span class="gradient-text">AIML X TACHYON HUB</span>
+            </h1>
 
-        <a href="twin.html" class="next-btn">
-            Enter Digital Twin
-            <span>→</span>
-        </a>
+            <p class="subtitle">
+                Step into PESCE Mandya's premier Artificial Intelligence & Machine Learning innovation ecosystem. Explore our virtual Digital Twin and deploy live AI agents.
+            </p>
+
+            <a href="twin.html" class="next-btn">
+                Enter Digital Twin
+                <span>→</span>
+            </a>
+        </section>
     </main>
 
     <footer>
@@ -277,10 +378,10 @@
             <div class="step-pill active"></div>
             <div class="step-pill inactive"></div>
             <div class="step-pill inactive"></div>
-            <span style="margin-left: 6px; font-size: 0.8rem; color: #cbd5e1; letter-spacing: 1px; text-transform: uppercase;">01 / Welcome Gate</span>
+            <span style="margin-left: 6px; font-size: 0.8rem; color: #cbd5e1; letter-spacing: 1px; text-transform: uppercase;">01 / Executive Welcome</span>
         </div>
-        <div style="font-size: 0.8rem; color: #94a3b8;">
-            Tachyon AIML Hub
+        <div style="font-size: 0.82rem; color: #94a3b8;">
+            PESCE Mandya — AIML X Tachyon Club
         </div>
     </footer>
 
