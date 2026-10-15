@@ -27,7 +27,6 @@
             position: relative;
         }
 
-        /* 3D Canvas Container */
         #canvas-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -36,7 +35,6 @@
         }
         #canvas-container:active { cursor: grabbing; }
 
-        /* Top HUD Header */
         header {
             position: absolute;
             top: 16px; left: 20px; right: 20px;
@@ -78,7 +76,6 @@
             box-shadow: 0 0 10px var(--emerald);
         }
 
-        /* Left Teleport / Zone Selector Bar */
         .zone-panel {
             position: absolute;
             top: 78px; left: 20px;
@@ -91,7 +88,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            width: 230px;
+            width: 235px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.45);
         }
         .zone-panel-title {
@@ -124,12 +121,11 @@
             transform: translateX(3px);
         }
 
-        /* Info Popup Card for Rooms / Markers */
         .info-card {
             position: absolute;
             top: 78px; right: 20px;
             z-index: 10;
-            width: 300px;
+            width: 310px;
             background: var(--glass);
             border: 1px solid var(--cyan);
             border-radius: 16px;
@@ -148,8 +144,18 @@
             font-size: 0.84rem;
             line-height: 1.5;
         }
+        .asset-status-bar {
+            margin-top: 10px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            font-size: 0.74rem;
+            font-weight: 600;
+        }
         .controls-hint {
-            margin-top: 12px;
+            margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid var(--border);
             font-size: 0.76rem;
@@ -168,7 +174,6 @@
             font-size: 0.72rem;
         }
 
-        /* Mobile On-Screen Touch D-Pad */
         .mobile-dpad {
             position: absolute;
             bottom: 85px; left: 20px;
@@ -193,7 +198,6 @@
         }
         .dpad-btn:active { background: var(--cyan); color: #000; }
 
-        /* Bottom Bar */
         footer {
             position: absolute;
             bottom: 18px; left: 20px; right: 20px;
@@ -286,6 +290,9 @@
         <p id="info-desc">
             Authentic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building featuring the cream & terracotta facade, entrance portico, rooftop solar arrays, and lush campus trees.
         </p>
+        <div class="asset-status-bar" id="actor-status">
+            ⏳ Loading rigged GLTF human actors...
+        </div>
         <div class="controls-hint">
             <div><span class="key-pill">W</span> <span class="key-pill">A</span> <span class="key-pill">S</span> <span class="key-pill">D</span> or <span class="key-pill">Arrows</span> Walk Around</div>
             <div><span class="key-pill">Mouse Drag</span> Look 360° | <span class="key-pill">1 - 6</span> Quick Teleport</div>
@@ -305,56 +312,68 @@
     <!-- Bottom Action Bar -->
     <footer>
         <div style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.8rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / Interactive WebGL Architecture
+            Stage 02 / Photorealistic PBR & Skeletal Animation Twin
         </div>
         <a href="hub.html" class="launch-hub-btn">
             Proceed to AI Agent Hub 🚀
         </a>
     </footer>
 
-    <!-- Three.js WebGL Engine -->
+    <!-- Three.js r128 Core + GLTFLoader + SkeletonUtils -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
+
     <script>
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87ceeb); // Natural daylight sky
-        scene.fog = new THREE.FogExp2(0x87ceeb, 0.008);
+        scene.background = new THREE.Color(0x9bc5e8);
+        scene.fog = new THREE.FogExp2(0x9bc5e8, 0.0065);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 250);
+        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 240);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.08;
         container.appendChild(renderer.domElement);
 
-        // --- LIGHTING (Natural Daylight + Soft Indoor Illumination) ---
-        const ambientLight = new THREE.AmbientLight(0xfff8e7, 0.68);
-        scene.add(ambientLight);
+        const clock = new THREE.Clock();
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 0.95);
-        sunLight.position.set(25, 42, 30);
+        // --- REALISTIC DAYLIGHT & INDOOR PBR ILLUMINATION ---
+        const hemiLight = new THREE.HemisphereLight(0xe2f1ff, 0x5c5346, 0.65);
+        hemiLight.position.set(0, 50, 0);
+        scene.add(hemiLight);
+
+        const sunLight = new THREE.DirectionalLight(0xfff7e8, 1.15);
+        sunLight.position.set(24, 44, 32);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.bias = -0.0004;
         sunLight.shadow.camera.near = 0.5;
         sunLight.shadow.camera.far = 120;
-        sunLight.shadow.camera.left = -35;
-        sunLight.shadow.camera.right = 35;
-        sunLight.shadow.camera.top = 35;
-        sunLight.shadow.camera.bottom = -35;
+        sunLight.shadow.camera.left = -34;
+        sunLight.shadow.camera.right = 34;
+        sunLight.shadow.camera.top = 34;
+        sunLight.shadow.camera.bottom = -34;
         scene.add(sunLight);
 
-        // Indoor Corridor & Lab Fill Lights
-        const corridorLight = new THREE.PointLight(0xfffdf5, 0.65, 25);
-        corridorLight.position.set(0, 6.8, -2);
-        scene.add(corridorLight);
+        // Warm-White Indoor Tube Light Sources (Corridor, Lab, Classroom)
+        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.55, 18);
+        corridorLight1.position.set(-4, 7.6, 0.2);
+        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.55, 18);
+        corridorLight2.position.set(6, 7.6, 0.2);
+        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.75, 22);
+        labRoomLight.position.set(-2, 7.6, -5.8);
+        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.75, 22);
+        classRoomLight.position.set(9.5, 7.6, -5.8);
+        scene.add(corridorLight1, corridorLight2, labRoomLight, classRoomLight);
 
-        const labLight = new THREE.PointLight(0xe0f2fe, 0.8, 20);
-        labLight.position.set(5, 6.8, -6);
-        scene.add(labLight);
-
-        // --- PROCEDURAL TEXTURE GENERATOR FOR SIGNBOARDS & TILES ---
+        // --- PROCEDURAL PBR TEXTURES & CONTACT SHADOWS ---
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -364,7 +383,6 @@
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = 10;
             ctx.strokeRect(8, 8, width - 16, height - 16);
-            ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             lines.forEach((line, i) => {
@@ -372,15 +390,23 @@
                 ctx.fillStyle = line.color || '#ffffff';
                 ctx.fillText(line.text, width / 2, (height / (lines.length + 1)) * (i + 1));
             });
-            return new THREE.CanvasTexture(canvas);
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.encoding = THREE.sRGBEncoding;
+            return tex;
         }
 
-        function createTileTexture(baseHex, groutHex, divisions = 8) {
+        function createTileTexture(baseHex, groutHex, divisions = 8, addGrain = true) {
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = baseHex;
             ctx.fillRect(0, 0, 512, 512);
+            if (addGrain) {
+                for (let i = 0; i < 3500; i++) {
+                    ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'rgba(0,0,0,0.03)';
+                    ctx.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
+                }
+            }
             ctx.strokeStyle = groutHex;
             ctx.lineWidth = 4;
             const step = 512 / divisions;
@@ -389,99 +415,159 @@
                 ctx.beginPath(); ctx.moveTo(0, i * step); ctx.lineTo(512, i * step); ctx.stroke();
             }
             const tex = new THREE.CanvasTexture(canvas);
+            tex.encoding = THREE.sRGBEncoding;
             tex.wrapS = THREE.RepeatWrapping;
             tex.wrapT = THREE.RepeatWrapping;
             return tex;
         }
 
-        // --- MATERIALS (Matched to Reference Photos) ---
-        const matCreamWall = new THREE.MeshStandardMaterial({ color: 0xf2edd7, roughness: 0.85 });
-        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x8c9094, roughness: 0.7 });
-        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0xb84a39, roughness: 0.75 });
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
-        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x22252a, roughness: 0.35, metalness: 0.1 });
-        const matGreySteps = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.8 });
-        const matWoodRack = new THREE.MeshStandardMaterial({ color: 0x3b1e14, roughness: 0.55 });
-        const matGlass = new THREE.MeshStandardMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.38, roughness: 0.1, metalness: 0.6 });
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.4, metalness: 0.7 });
-        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.6 });
+        function createContactShadowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
+            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.18)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 128, 128);
+            return new THREE.CanvasTexture(canvas);
+        }
+        const contactShadowMat = new THREE.MeshBasicMaterial({
+            map: createContactShadowTexture(),
+            transparent: true,
+            depthWrite: false
+        });
 
-        // Brown Corridor Tile Material (Ref Photo 1)
-        const corridorTileTex = createTileTexture('#5c4038', '#3e2b26', 4);
+        // Dynamic AI/ML Code & Neural Graph Canvas Texture for Lab Monitors
+        const screenCanvas = document.createElement('canvas');
+        screenCanvas.width = 256; screenCanvas.height = 160;
+        const screenCtx = screenCanvas.getContext('2d');
+        const liveMonitorTexture = new THREE.CanvasTexture(screenCanvas);
+        liveMonitorTexture.encoding = THREE.sRGBEncoding;
+
+        let screenTick = 0;
+        function updateLabMonitorScreen(dt) {
+            screenTick += dt;
+            screenCtx.fillStyle = '#091326';
+            screenCtx.fillRect(0, 0, 256, 160);
+            // IDE Sidebar
+            screenCtx.fillStyle = '#0f172a';
+            screenCtx.fillRect(0, 0, 44, 160);
+            // Code lines
+            const codeColors = ['#38bdf8', '#a78bfa', '#34d399', '#facc15', '#cbd5e1'];
+            for (let i = 0; i < 9; i++) {
+                screenCtx.fillStyle = codeColors[i % codeColors.length];
+                const w = 45 + ((i * 29 + Math.floor(screenTick * 2)) % 85);
+                screenCtx.fillRect(54, 14 + i * 14, w, 5);
+            }
+            // Live Neural Training Loss Curve on Right Pane
+            screenCtx.strokeStyle = '#00f2fe';
+            screenCtx.lineWidth = 2;
+            screenCtx.beginPath();
+            for (let x = 0; x < 80; x += 5) {
+                const y = 125 - Math.exp(-x * 0.035) * 65 - Math.sin(x * 0.2 + screenTick * 3) * 4;
+                if (x === 0) screenCtx.moveTo(165 + x, y);
+                else screenCtx.lineTo(165 + x, y);
+            }
+            screenCtx.stroke();
+            liveMonitorTexture.needsUpdate = true;
+        }
+
+        // --- PBR MATERIALS (Matched to PESCE Mandya Reference Photographs) ---
+        const wallGrainTex = createTileTexture('#f2edd7', '#ede7ce', 1, true);
+        const matCreamWall = new THREE.MeshStandardMaterial({ map: wallGrainTex, roughness: 0.86, metalness: 0.02 });
+        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x8a8f94, roughness: 0.68, metalness: 0.05 });
+        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0xb84a39, roughness: 0.76, metalness: 0.04 });
+        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.52, metalness: 0.08 });
+        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x1e2126, roughness: 0.26, metalness: 0.18 });
+        const matGreySteps = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.78, metalness: 0.05 });
+        const matWoodRack = new THREE.MeshStandardMaterial({ color: 0x3b1e14, roughness: 0.48, metalness: 0.08 });
+        const matDoorWood = new THREE.MeshStandardMaterial({ color: 0x5c3422, roughness: 0.52, metalness: 0.08 });
+        const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.36, roughness: 0.08, metalness: 0.75 });
+        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.35, metalness: 0.78 });
+        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.58, metalness: 0.15 });
+
+        const corridorTileTex = createTileTexture('#5c4038', '#3e2b26', 4, true);
         corridorTileTex.repeat.set(16, 4);
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTileTex, roughness: 0.55 });
+        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTileTex, roughness: 0.46, metalness: 0.06 });
 
-        // Courtyard Paver Material
-        const paverTex = createTileTexture('#9ca3af', '#6b7280', 8);
+        const paverTex = createTileTexture('#9ca3af', '#6b7280', 8, true);
         paverTex.repeat.set(30, 30);
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverTex, roughness: 0.85 });
+        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverTex, roughness: 0.84 });
 
-        // --- 1. CAMPUS GROUND & EXTERIOR SURROUNDINGS ---
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(140, 140), matCourtyard);
+        // --- 1. CAMPUS GROUND, RED SHED & WIND-ANIMATED TREES ---
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), matCourtyard);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // Red-Roofed Adjacent Shed on Left (Visible from 1st Floor Corridor in Ref Photo 1)
         const redShedGroup = new THREE.Group();
         const shedBase = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 14), matCreamWall);
         shedBase.position.set(-22, 1.6, 2);
+        shedBase.castShadow = true; shedBase.receiveShadow = true;
         redShedGroup.add(shedBase);
         const shedRoof = new THREE.Mesh(new THREE.ConeGeometry(8.5, 2.2, 4), matRedRoof);
         shedRoof.rotation.y = Math.PI / 4;
         shedRoof.scale.set(1, 1, 1.35);
         shedRoof.position.set(-22, 4.3, 2);
+        shedRoof.castShadow = true;
         redShedGroup.add(shedRoof);
         scene.add(redShedGroup);
 
-        // Campus Trees (Lush Green Canopy on Left & Right)
+        const animatedTreeCrowns = [];
         function createTree(x, z, scale = 1) {
             const tree = new THREE.Group();
             const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.35 * scale, 0.5 * scale, 4 * scale, 8),
-                new THREE.MeshStandardMaterial({ color: 0x4a3525, roughness: 0.9 })
+                new THREE.CylinderGeometry(0.32 * scale, 0.48 * scale, 4 * scale, 10),
+                new THREE.MeshStandardMaterial({ color: 0x4a3525, roughness: 0.92 })
             );
             trunk.position.y = 2 * scale;
+            trunk.castShadow = true;
             tree.add(trunk);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.8 });
-            const crown1 = new THREE.Mesh(new THREE.SphereGeometry(2.4 * scale, 12, 12), foliageMat);
-            crown1.position.set(0, 4.8 * scale, 0);
-            const crown2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 10, 10), foliageMat);
-            crown2.position.set(1.2 * scale, 4.2 * scale, 0.8 * scale);
-            const crown3 = new THREE.Mesh(new THREE.SphereGeometry(1.9 * scale, 10, 10), foliageMat);
-            crown3.position.set(-1.1 * scale, 4.4 * scale, -0.6 * scale);
-            tree.add(crown1, crown2, crown3);
+
+            const crownGroup = new THREE.Group();
+            crownGroup.position.set(0, 4.2 * scale, 0);
+            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.82 });
+            const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 14, 14), foliageMat);
+            c1.position.set(0, 0.6 * scale, 0);
+            const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 12, 12), foliageMat);
+            c2.position.set(1.2 * scale, 0, 0.8 * scale);
+            const c3 = new THREE.Mesh(new THREE.SphereGeometry(1.9 * scale, 12, 12), foliageMat);
+            c3.position.set(-1.1 * scale, 0.2 * scale, -0.6 * scale);
+            c1.castShadow = c2.castShadow = c3.castShadow = true;
+            crownGroup.add(c1, c2, c3);
+            tree.add(crownGroup);
             tree.position.set(x, 0, z);
             scene.add(tree);
+            animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
         }
         createTree(-16, 11, 1.3);
         createTree(-25, 14, 1.4);
         createTree(-18, -8, 1.2);
         createTree(20, 12, 1.1);
 
-        // --- 2. MAIN BUILDING STRUCTURE (G+1 Academic Block, Ref Photo 3) ---
-        // Building spans X: -15 to +15 (30m wide), Z: -10 to +2 (12m deep), Y: 0 to 8.4m
+        // --- 2. MAIN BUILDING STRUCTURE (G+1 Block) ---
         const building = new THREE.Group();
         scene.add(building);
 
-        // Ground Floor Slab & First Floor Slab (Y = 4.0m) & Roof Slab (Y = 8.0m)
         const gfSlab = new THREE.Mesh(new THREE.BoxGeometry(30, 0.2, 12), matGreySteps);
         gfSlab.position.set(0, 0.1, -4);
+        gfSlab.receiveShadow = true;
         building.add(gfSlab);
 
-        // First Floor Corridor Floor (With stair stairwell cutout on left X: -11 to -7)
         const ffCorridorFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.25, 3.6), matCorridorFloor);
         ffCorridorFloor.position.set(0, 4.0, 0.2);
         ffCorridorFloor.receiveShadow = true;
         building.add(ffCorridorFloor);
 
-        // Split-Level 3 Steps in Mid-Corridor (Ref Photo 1: 3 steps leading to slightly raised rear/right section)
+        // 3 Split-Level Steps in Mid-Corridor + Black Ribbed Doormat
         for (let s = 0; s < 3; s++) {
             const step = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12 * (s + 1), 3.4), matGreySteps);
             step.position.set(4.5 + s * 0.4, 4.06 + (0.06 * s), 0.2);
+            step.receiveShadow = true;
             building.add(step);
         }
-        // Black Ribbed Doormat at Top of 3 Steps (Ref Photo 1)
         const doormat = new THREE.Mesh(
             new THREE.BoxGeometry(0.9, 0.03, 1.4),
             new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.95 })
@@ -489,35 +575,31 @@
         doormat.position.set(6.0, 4.38, 0.2);
         building.add(doormat);
 
-        // Raised Corridor Platform (X: 5.5 to 15)
         const raisedFloor = new THREE.Mesh(new THREE.BoxGeometry(9.5, 0.25, 3.6), matCorridorFloor);
         raisedFloor.position.set(10.25, 4.24, 0.2);
+        raisedFloor.receiveShadow = true;
         building.add(raisedFloor);
 
-        // First Floor Classroom/Lab Interior Floor (Behind Corridor Z: -1.6 to -10)
         const ffLabFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.25, 8.4), matGreySteps);
         ffLabFloor.position.set(0, 4.0, -5.8);
+        ffLabFloor.receiveShadow = true;
         building.add(ffLabFloor);
 
-        // Roof Ceiling Slab (Y = 8.0m)
         const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(30.4, 0.3, 12.4), matCreamWall);
         roofSlab.position.set(0, 8.0, -4);
+        roofSlab.castShadow = true; roofSlab.receiveShadow = true;
         building.add(roofSlab);
 
-        // Top Parapet Wall & Red Terracotta Horizontal Bands (Ref Photo 3)
         const topParapet = new THREE.Mesh(new THREE.BoxGeometry(30.4, 1.1, 0.35), matCreamWall);
         topParapet.position.set(0, 8.6, 2.0);
         building.add(topParapet);
 
-        // Terracotta Red Horizontal Bands (Ground, 1st Floor, Parapet Top)
         [4.0, 8.0, 9.15].forEach(yPos => {
             const redBand = new THREE.Mesh(new THREE.BoxGeometry(30.5, 0.18, 0.42), matTerracotta);
             redBand.position.set(0, yPos, 2.0);
             building.add(redBand);
         });
 
-        // First Floor Front Parapet Wall (Half-height wall on left side of Ref Photo 1)
-        // Grey inside, Cream outside, White coping on top
         const ffParapetOuter = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.18), matCreamWall);
         ffParapetOuter.position.set(0, 4.65, 1.95);
         const ffParapetInner = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.12), matGreyDado);
@@ -526,21 +608,18 @@
         ffParapetCoping.position.set(0, 5.25, 1.88);
         building.add(ffParapetOuter, ffParapetInner, ffParapetCoping);
 
-        // Front Structural Pillars & Red Vertical Pilaster Stripes (7 bays across X = -14 to +14)
         for (let x = -14; x <= 14; x += 4.66) {
-            // Ground to Roof Pillar
             const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.55, 8.0, 0.55), matWhiteTrim);
             pillar.position.set(x, 4.0, 1.85);
-            pillar.castShadow = true;
+            pillar.castShadow = true; pillar.receiveShadow = true;
             building.add(pillar);
 
-            // Red Vertical Stripe on Exterior Face (Ref Photo 3)
             const redStripe = new THREE.Mesh(new THREE.BoxGeometry(0.28, 9.1, 0.1), matTerracotta);
             redStripe.position.set(x, 4.55, 2.12);
             building.add(redStripe);
         }
 
-        // --- 3. OFFICIAL BLUE DEPARTMENT SIGNBOARDS (Ref Photo 3) ---
+        // --- 3. OFFICIAL SIGNBOARDS & SOLAR ARRAYS ---
         const mainSignTex = createSignTexture('#2563eb', '#f8fafc', [
             { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 46px Arial' },
             { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 38px Arial' }
@@ -564,7 +643,6 @@
         vlsiSign.position.set(7.0, 2.6, 2.18);
         building.add(vlsiSign);
 
-        // Rooftop Solar Panel Arrays (Ref Photo 3)
         function createSolarArray(xStart, count) {
             const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.2, metalness: 0.8 });
             for (let i = 0; i < count; i++) {
@@ -577,35 +655,28 @@
         createSolarArray(-12, 4);
         createSolarArray(4, 5);
 
-        // --- 4. CENTRAL PITCHED-ROOF ENTRANCE PORTICO (Ref Photo 3) ---
+        // --- 4. CENTRAL ENTRANCE PORTICO ---
         const portico = new THREE.Group();
         portico.position.set(0, 0, 4.2);
         scene.add(portico);
 
-        // Portico Dark Granite Pillars
         [-2.1, 2.1].forEach(px => {
             const pCol = new THREE.Mesh(new THREE.BoxGeometry(0.45, 3.6, 0.45), matDarkGranite);
             pCol.position.set(px, 1.8, 1.2);
+            pCol.castShadow = true;
             portico.add(pCol);
         });
 
-        // Pitched Gable Roof Canopy with Red Terracotta Trim
         const roofLeft = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
-        roofLeft.position.set(-1.2, 4.1, 0);
-        roofLeft.rotation.z = 0.32;
+        roofLeft.position.set(-1.2, 4.1, 0); roofLeft.rotation.z = 0.32;
         const roofRight = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
-        roofRight.position.set(1.2, 4.1, 0);
-        roofRight.rotation.z = -0.32;
-
+        roofRight.position.set(1.2, 4.1, 0); roofRight.rotation.z = -0.32;
         const trimLeft = new THREE.Mesh(new THREE.BoxGeometry(3.05, 0.26, 0.15), matTerracotta);
-        trimLeft.position.set(-1.2, 4.1, 1.78);
-        trimLeft.rotation.z = 0.32;
+        trimLeft.position.set(-1.2, 4.1, 1.78); trimLeft.rotation.z = 0.32;
         const trimRight = new THREE.Mesh(new THREE.BoxGeometry(3.05, 0.26, 0.15), matTerracotta);
-        trimRight.position.set(1.2, 4.1, 1.78);
-        trimRight.rotation.z = -0.32;
+        trimRight.position.set(1.2, 4.1, 1.78); trimRight.rotation.z = -0.32;
         portico.add(roofLeft, roofRight, trimLeft, trimRight);
 
-        // Portico Entrance Banner
         const porticoSignTex = createSignTexture('#38bdf8', '#ffffff', [
             { text: 'PESCE MANDYA — AI & ML PORTAL', font: 'bold 38px Arial', color: '#030712' },
             { text: 'MAIN ENTRANCE FOYER', font: 'bold 32px Arial', color: '#030712' }
@@ -617,31 +688,28 @@
         porticoBanner.position.set(0, 3.35, 1.5);
         portico.add(porticoBanner);
 
-        // --- 5. SWITCHBACK (DOG-LEG) STAIRCASE (Ref Photo 2) ---
-        // Located at X: -12 to -7, connecting Ground Floor (Y=0) to 1st Floor (Y=4.0)
+        // --- 5. SWITCHBACK STAIRCASE ---
         const stairGroup = new THREE.Group();
         stairGroup.position.set(-10.5, 0, -1.2);
         scene.add(stairGroup);
 
-        // Lower Flight (Dark Black Granite Treads going up to Mid-Landing at Y=2.0)
         for (let i = 0; i < 10; i++) {
             const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.2, 0.32), matDarkGranite);
             tread.position.set(0.95, (i + 0.5) * 0.2, -i * 0.32);
+            tread.receiveShadow = true;
             stairGroup.add(tread);
         }
-        // Mid-Landing (Y = 2.0m)
         const midLanding = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.25, 1.6), matDarkGranite);
         midLanding.position.set(0, 2.0, -3.7);
         stairGroup.add(midLanding);
 
-        // Upper Flight (Light Grey Concrete Steps going from Mid-Landing Y=2.0 to 1st Floor Y=4.0, Ref Photo 2)
         for (let i = 0; i < 10; i++) {
             const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.2, 0.32), matGreySteps);
             tread.position.set(-0.95, 2.1 + i * 0.2, -2.9 + i * 0.32);
+            tread.receiveShadow = true;
             stairGroup.add(tread);
         }
 
-        // Black Metal Balusters & Weathered White Top Handrail (Ref Photo 2)
         const railMaterial = new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.7 });
         for (let i = 0; i < 10; i += 2) {
             const post1 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.95), matBlackMetal);
@@ -651,16 +719,11 @@
             stairGroup.add(post1, post2);
         }
         const handrailUpper = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 3.4), railMaterial);
-        handrailUpper.position.set(-0.05, 3.55, -1.45);
-        handrailUpper.rotation.x = 0.56;
-        stairGroup.add(handrailUpper);
-
+        handrailUpper.position.set(-0.05, 3.55, -1.45); handrailUpper.rotation.x = 0.56;
         const handrailLower = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 3.4), railMaterial);
-        handrailLower.position.set(0.05, 1.55, -1.45);
-        handrailLower.rotation.x = -0.56;
-        stairGroup.add(handrailLower);
+        handrailLower.position.set(0.05, 1.55, -1.45); handrailLower.rotation.x = -0.56;
+        stairGroup.add(handrailUpper, handrailLower);
 
-        // Stairwell Right Wall with Red Notice Board & Green "FIRE EXIT" Sign (Ref Photo 2)
         const stairWallRight = new THREE.Mesh(new THREE.BoxGeometry(0.2, 8.0, 6.2), matCreamWall);
         stairWallRight.position.set(1.95, 4.0, -1.8);
         stairGroup.add(stairWallRight);
@@ -680,17 +743,56 @@
         fireExitSign.position.set(1.83, 4.1, -1.2);
         stairGroup.add(fireExitSign);
 
-        // --- 6. FIRST-FLOOR CORRIDOR WALL, SHOE RACKS & FIRE EXTINGUISHER (Ref Photo 1) ---
-        // Right-side wall dividing Corridor (Z = 0.2) from Labs/Classrooms (Z = -1.6 to -10)
-        // Lower Grey Dado (1.2m high) + Upper Cream Wall
-        const corrWallLower = new THREE.Mesh(new THREE.BoxGeometry(26, 1.25, 0.25), matGreyDado);
-        corrWallLower.position.set(2, 4.62, -1.55);
-        const corrWallUpper = new THREE.Mesh(new THREE.BoxGeometry(26, 2.75, 0.25), matCreamWall);
-        corrWallUpper.position.set(2, 6.62, -1.55);
-        building.add(corrWallLower, corrWallUpper);
+        // --- 6. CORRIDOR WALLS, HINGED DOORS, SHOE RACKS & EXTINGUISHER ---
+        // Segmented Corridor Divider Wall (Z = -1.55) to create true walk-through doorways at X = -2.2 (Lab) and X = 6.2 (Classroom)
+        function addCorridorWallSegment(xStart, xEnd, yFloor = 4.0) {
+            const length = xEnd - xStart;
+            const centerX = (xStart + xEnd) / 2;
+            const lower = new THREE.Mesh(new THREE.BoxGeometry(length, 1.25, 0.25), matGreyDado);
+            lower.position.set(centerX, yFloor + 0.625, -1.55);
+            const upper = new THREE.Mesh(new THREE.BoxGeometry(length, 2.75, 0.25), matCreamWall);
+            upper.position.set(centerX, yFloor + 2.625, -1.55);
+            lower.castShadow = upper.castShadow = true;
+            lower.receiveShadow = upper.receiveShadow = true;
+            building.add(lower, upper);
+        }
+        addCorridorWallSegment(-8.5, -2.85, 4.0);
+        addCorridorWallSegment(-1.55, 5.55, 4.0);
+        addCorridorWallSegment(6.85, 14.85, 4.24);
 
-        // White-Framed Sliding Windows on Right Corridor Wall (Ref Photo 1)
-        [-4.5, 0.5, 8.5].forEach(wx => {
+        // Door Lintels above the 2 doorways
+        [ { x: -2.2, y: 4.0, label: 'AI & ML LAB - 01' }, { x: 6.2, y: 4.24, label: 'LECTURE HALL - 101' } ].forEach(d => {
+            const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.6, 0.25), matCreamWall);
+            lintel.position.set(d.x, d.y + 3.2, -1.55);
+            building.add(lintel);
+
+            const plateTex = createSignTexture('#0f172a', '#38bdf8', [{ text: d.label, font: 'bold 44px Arial' }], 512, 128);
+            const plate = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.22, 0.04), new THREE.MeshStandardMaterial({ map: plateTex }));
+            plate.position.set(d.x, d.y + 2.65, -1.41);
+            building.add(plate);
+        });
+
+        // Articulated Hinged Doors (Open smoothly when user or NPC approaches)
+        const hingedDoors = [];
+        function createHingedDoor(hingeX, baseY, zPos) {
+            const pivot = new THREE.Group();
+            pivot.position.set(hingeX, baseY, zPos);
+            const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.26, 2.35, 0.07), matDoorWood);
+            doorLeaf.position.set(0.63, 1.18, 0);
+            doorLeaf.castShadow = true;
+            const glassPane = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.85, 0.09), matGlass);
+            glassPane.position.set(0.63, 1.55, 0);
+            const handle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.16, 0.14), matWhiteTrim);
+            handle.position.set(1.12, 1.1, 0);
+            pivot.add(doorLeaf, glassPane, handle);
+            building.add(pivot);
+            hingedDoors.push({ pivot, center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos), currentAngle: 0.35 });
+        }
+        createHingedDoor(-2.83, 4.12, -1.55);
+        createHingedDoor(5.57, 4.36, -1.55);
+
+        // White-Framed Sliding Windows on Right Corridor Wall
+        [-5.2, 1.2, 10.2].forEach(wx => {
             const winFrame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 0.3), matWhiteTrim);
             winFrame.position.set(wx, 5.85, -1.55);
             const winGlass = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.1, 0.32), matGlass);
@@ -698,43 +800,70 @@
             building.add(winFrame, winGlass);
         });
 
-        // 3 Dark Wooden 3-Tier Shoe Racks Lined Along Right Corridor Wall (Ref Photo 1)
+        // 3 Dark Wooden 3-Tier Shoe Racks
         function createShoeRack(xPos) {
             const rack = new THREE.Group();
-            const top = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.05, 0.42), matWoodRack);
+            const top = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.05, 0.42), matWoodRack);
             top.position.y = 0.72;
-            const mid = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.04, 0.40), matWoodRack);
+            const mid = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.04, 0.40), matWoodRack);
             mid.position.y = 0.42;
-            const bot = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.04, 0.40), matWoodRack);
+            const bot = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.04, 0.40), matWoodRack);
             bot.position.y = 0.12;
             const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.65, 0.42), matWoodRack);
-            sideL.position.set(-0.87, 0.42, 0);
+            sideL.position.set(-0.85, 0.42, 0);
             const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.65, 0.42), matWoodRack);
-            sideR.position.set(0.87, 0.42, 0);
+            sideR.position.set(0.85, 0.42, 0);
             const div = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.65, 0.40), matWoodRack);
             div.position.set(0, 0.42, 0);
             rack.add(top, mid, bot, sideL, sideR, div);
             rack.position.set(xPos, 4.12, -1.18);
             building.add(rack);
         }
+        createShoeRack(-7.2);
         createShoeRack(-5.2);
-        createShoeRack(-3.2);
-        createShoeRack(-1.2);
+        createShoeRack(0.2);
 
-        // Red Fire Extinguisher Mounted on Corridor Pillar (Ref Photo 1)
+        // Red Fire Extinguisher on Pillar
         const extinguisher = new THREE.Group();
         const extTank = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.09, 0.09, 0.48, 12),
-            new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.3, metalness: 0.4 })
+            new THREE.CylinderGeometry(0.09, 0.09, 0.48, 14),
+            new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.28, metalness: 0.45 })
         );
         const extNozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12), matBlackMetal);
         extNozzle.position.y = 0.28;
         extinguisher.add(extTank, extNozzle);
-        extinguisher.position.set(2.3, 5.5, -1.36);
+        extinguisher.position.set(2.8, 5.5, -1.36);
         building.add(extinguisher);
 
-        // --- 7. INTERIOR ROOMS: AI & ML COMPUTER LAB + SMART CLASSROOM ---
-        // Back & Side Walls enclosing the Building Interior (Z = -10)
+        // --- 7. CEILING FANS, LAB WORKSTATIONS, CHAIRS & CLASSROOM ---
+        const ceilingFans = [];
+        function createCeilingFan(x, y, z) {
+            const fanGroup = new THREE.Group();
+            fanGroup.position.set(x, y, z);
+            const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.45, 8), matWhiteTrim);
+            rod.position.y = 0.22;
+            const rotor = new THREE.Group();
+            const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.07, 16), matWhiteTrim);
+            rotor.add(hub);
+            for (let b = 0; b < 3; b++) {
+                const blade = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.015, 0.14), matWhiteTrim);
+                blade.position.x = 0.42;
+                const bladePivot = new THREE.Group();
+                bladePivot.rotation.y = (b * Math.PI * 2) / 3;
+                bladePivot.add(blade);
+                rotor.add(bladePivot);
+            }
+            fanGroup.add(rod, rotor);
+            building.add(fanGroup);
+            ceilingFans.push(rotor);
+        }
+        createCeilingFan(-3.5, 7.55, 0.2);
+        createCeilingFan(3.5, 7.55, 0.2);
+        createCeilingFan(-3.5, 7.55, -5.5);
+        createCeilingFan(0.5, 7.55, -5.5);
+        createCeilingFan(8.0, 7.55, -5.5);
+        createCeilingFan(11.5, 7.55, -5.5);
+
         const backWall = new THREE.Mesh(new THREE.BoxGeometry(30, 8.0, 0.3), matCreamWall);
         backWall.position.set(0, 4.0, -10.0);
         const leftEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall);
@@ -745,61 +874,419 @@
         midRoomDivider.position.set(4.0, 6.0, -5.8);
         building.add(backWall, leftEndWall, rightEndWall, midRoomDivider);
 
-        // ROOM A: AI & ML Deep Learning Computer Lab (X: -8 to +3.8, Z: -1.8 to -9.8)
-        const monitorMat = new THREE.MeshStandardMaterial({ color: 0x0ea5e9, emissive: 0x0284c7, emissiveIntensity: 0.45 });
+        // Helper for Ergonomic Lab Chair
+        function createLabChair(x, y, z, rotY = Math.PI) {
+            const chair = new THREE.Group();
+            chair.position.set(x, y, z);
+            chair.rotation.y = rotY;
+            const seat = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.46), matBlackMetal);
+            seat.position.y = 0.46;
+            const back = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.48, 0.05), matBlackMetal);
+            back.position.set(0, 0.72, -0.21);
+            const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.45, 8), matBlackMetal);
+            ped.position.y = 0.23;
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.04, 6), matBlackMetal);
+            base.position.y = 0.02;
+            const shadow = new THREE.Mesh(new THREE.PlaneGeometry(0.75, 0.75), contactShadowMat);
+            shadow.rotation.x = -Math.PI / 2;
+            shadow.position.y = 0.01;
+            chair.add(seat, back, ped, base, shadow);
+            building.add(chair);
+        }
+
+        // ROOM A: AI & ML Deep Learning Lab Workstations + Live Monitors + Keyboards + Chairs
+        const monitorScreenMat = new THREE.MeshBasicMaterial({ map: liveMonitorTexture });
         for (let row = -3.8; row >= -8.2; row -= 2.2) {
             for (let col = -6.5; col <= 1.5; col += 2.6) {
-                const desk = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.75, 0.8), matWoodRack);
-                desk.position.set(col, 4.5, row);
-                const monitor = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.42, 0.05), monitorMat);
-                monitor.position.set(col - 0.4, 5.12, row);
-                const monitor2 = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.42, 0.05), monitorMat);
-                monitor2.position.set(col + 0.4, 5.12, row);
-                building.add(desk, monitor, monitor2);
+                const desk = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.74, 0.8), matWoodRack);
+                desk.position.set(col, 4.49, row);
+                desk.castShadow = true; desk.receiveShadow = true;
+                building.add(desk);
+
+                [-0.45, 0.45].forEach(offset => {
+                    const monFrame = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.40, 0.04), matBlackMetal);
+                    monFrame.position.set(col + offset, 5.10, row - 0.15);
+                    const monScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.34), monitorScreenMat);
+                    monScreen.position.set(col + offset, 5.10, row - 0.128);
+                    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.06), matBlackMetal);
+                    stand.position.set(col + offset, 4.88, row - 0.15);
+                    const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.02, 0.14), matBlackMetal);
+                    keyboard.position.set(col + offset, 4.87, row + 0.14);
+                    building.add(monFrame, monScreen, stand, keyboard);
+                });
+                createLabChair(col - 0.45, 4.12, row + 0.58, Math.PI);
+                createLabChair(col + 0.45, 4.12, row + 0.58, Math.PI);
             }
         }
-        // Lab Whiteboard / Projection Screen
+
         const labScreen = new THREE.Mesh(
             new THREE.BoxGeometry(4.2, 1.8, 0.08),
-            new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x1e293b, emissiveIntensity: 0.2 })
+            new THREE.MeshStandardMaterial({ map: liveMonitorTexture, roughness: 0.25 })
         );
         labScreen.position.set(-2.0, 6.1, -9.75);
         building.add(labScreen);
 
-        // ROOM B: Smart Classroom 101 (X: 4.5 to 14.5, Z: -1.8 to -9.8)
-        const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.65 });
-        for (let r = -3.8; r >= -8.2; r -= 1.5) {
-            for (let c = 6.5; c <= 12.5; c += 3.0) {
-                const bench = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.72, 0.65), benchMat);
-                bench.position.set(c, 4.6, r);
-                building.add(bench);
+        // ROOM B: Smart Classroom Desks, Benches & Board
+        const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.58 });
+        for (let r = -3.8; r >= -8.2; r -= 1.6) {
+            for (let c = 6.5; c <= 11.5; c += 2.6) {
+                const desk = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.74, 0.55), benchMat);
+                desk.position.set(c, 4.49, r);
+                desk.castShadow = true;
+                const seatBench = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.45, 0.38), benchMat);
+                seatBench.position.set(c - 0.52, 4.35, r);
+                seatBench.castShadow = true;
+                building.add(desk, seatBench);
             }
         }
-        // Classroom Chalkboard / Smartboard on East Wall
         const smartBoard = new THREE.Mesh(
             new THREE.BoxGeometry(0.08, 1.6, 4.0),
-            new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.4 })
+            new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.35 })
         );
         smartBoard.position.set(14.75, 6.0, -5.8);
         building.add(smartBoard);
 
-        // Subtle Human-Scale Academic Silhouettes (Requirement 7)
-        function createPersonSilhouette(x, y, z) {
-            const person = new THREE.Group();
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
-            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 1.35, 10), bodyMat);
-            torso.position.y = 0.68;
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 10), bodyMat);
-            head.position.y = 1.55;
-            person.add(torso, head);
-            person.position.set(x, y, z);
-            scene.add(person);
-        }
-        createPersonSilhouette(1.2, 4.12, 0.3);  // Student in 1st floor corridor
-        createPersonSilhouette(-2.5, 4.12, -5.0); // Researcher in AI & ML Lab
-        createPersonSilhouette(13.5, 4.25, -5.8); // Faculty at Smart Classroom board
+        // --- 8. RIGGED GLTF HUMAN CHARACTER & SKELETAL ANIMATION ENGINE ---
+        // Zero primitive fallbacks: Uses official rigged GLB human assets with full Mixamo skeletal hierarchies
+        const gltfLoader = new THREE.GLTFLoader();
+        const characterAgents = [];
 
-        // --- 8. NAVIGATION, CAMERA TELEPORTATION & USER CONTROLS ---
+        const ASSET_SOURCES = {
+            detailedHuman: [
+                './models/student_detailed.glb',
+                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Michelle.glb'
+            ],
+            articulatedActor: [
+                './models/faculty_actor.glb',
+                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb'
+            ]
+        };
+
+        function loadGLBWithFallback(urlList) {
+            return new Promise((resolve, reject) => {
+                let index = 0;
+                function tryNext() {
+                    if (index >= urlList.length) {
+                        reject(new Error('All GLB paths exhausted'));
+                        return;
+                    }
+                    const url = urlList[index++];
+                    gltfLoader.load(url, (gltf) => resolve({ gltf, url }), undefined, () => tryNext());
+                }
+                tryNext();
+            });
+        }
+
+        function findBone(root, partialName) {
+            let found = null;
+            const target = partialName.toLowerCase();
+            root.traverse((node) => {
+                if (node.isBone && !found && node.name.toLowerCase().includes(target)) {
+                    found = node;
+                }
+            });
+            return found;
+        }
+
+        function mapSkeletonBones(modelRoot) {
+            return {
+                hips: findBone(modelRoot, 'hips'),
+                spine: findBone(modelRoot, 'spine'),
+                spine1: findBone(modelRoot, 'spine1'),
+                neck: findBone(modelRoot, 'neck'),
+                head: findBone(modelRoot, 'head'),
+                leftUpLeg: findBone(modelRoot, 'leftupleg'),
+                rightUpLeg: findBone(modelRoot, 'rightupleg'),
+                leftLeg: findBone(modelRoot, 'leftleg'),
+                rightLeg: findBone(modelRoot, 'rightleg'),
+                leftFoot: findBone(modelRoot, 'leftfoot'),
+                rightFoot: findBone(modelRoot, 'rightfoot'),
+                leftArm: findBone(modelRoot, 'leftarm'),
+                rightArm: findBone(modelRoot, 'rightarm'),
+                leftForeArm: findBone(modelRoot, 'leftforearm'),
+                rightForeArm: findBone(modelRoot, 'rightforearm'),
+                leftHand: findBone(modelRoot, 'lefthand'),
+                rightHand: findBone(modelRoot, 'righthand')
+            };
+        }
+
+        function styleActorMaterials(clonedScene, outfitPalette) {
+            clonedScene.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    child.frustumCulled = false;
+                    if (outfitPalette && child.material && !child.material.map) {
+                        child.material = child.material.clone();
+                        if (child.name.toLowerCase().includes('surface')) {
+                            child.material.color.setHex(outfitPalette.primary);
+                            child.material.roughness = 0.65;
+                            child.material.metalness = 0.08;
+                        } else if (child.name.toLowerCase().includes('joints')) {
+                            child.material.color.setHex(outfitPalette.secondary);
+                            child.material.roughness = 0.55;
+                        }
+                    }
+                }
+            });
+        }
+
+        function getCorridorFloorY(xPos) {
+            if (xPos <= 4.3) return 4.12;
+            if (xPos >= 5.7) return 4.36;
+            const t = (xPos - 4.3) / (5.7 - 4.3);
+            return 4.12 + t * 0.24;
+        }
+
+        async function initializeDepartmentPopulation() {
+            const statusEl = document.getElementById('actor-status');
+            try {
+                const [humanData, actorData] = await Promise.all([
+                    loadGLBWithFallback(ASSET_SOURCES.detailedHuman),
+                    loadGLBWithFallback(ASSET_SOURCES.articulatedActor)
+                ]);
+
+                function spawnRiggedAgent(sourceData, config) {
+                    const wrapper = new THREE.Group();
+                    const clone = THREE.SkeletonUtils.clone(sourceData.gltf.scene);
+                    clone.scale.setScalar(config.scale || 1.0);
+                    styleActorMaterials(clone, config.palette);
+                    wrapper.add(clone);
+
+                    // Contact shadow directly beneath character feet
+                    const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
+                    shadowPlane.rotation.x = -Math.PI / 2;
+                    shadowPlane.position.y = 0.015;
+                    wrapper.add(shadowPlane);
+
+                    wrapper.position.copy(config.position);
+                    wrapper.rotation.y = config.rotationY || 0;
+                    scene.add(wrapper);
+
+                    const mixer = new THREE.AnimationMixer(clone);
+                    const clips = sourceData.gltf.animations;
+                    const actions = {};
+                    clips.forEach(c => { actions[c.name.toLowerCase()] = mixer.clipAction(c); });
+
+                    const bones = mapSkeletonBones(clone);
+                    const agent = {
+                        wrapper, clone, mixer, actions, bones,
+                        role: config.role,
+                        phase: Math.random() * Math.PI * 2,
+                        waypoints: config.waypoints || null,
+                        wpIndex: 0,
+                        pauseTimer: 0,
+                        state: 'idle',
+                        baseY: config.position.y
+                    };
+
+                    // Start base skeletal clip
+                    if (config.role === 'corridor_walker') {
+                        const walkClip = actions['walk'] || actions['run'] || Object.values(actions)[0];
+                        const idleClip = actions['idle'] || walkClip;
+                        agent.walkAction = walkClip;
+                        agent.idleAction = idleClip;
+                        if (walkClip) {
+                            walkClip.timeScale = 0.95;
+                            walkClip.play();
+                            agent.state = 'walk';
+                        }
+                    } else {
+                        const baseClip = actions['idle'] || actions['agree'] || Object.values(actions)[0];
+                        if (baseClip) {
+                            baseClip.timeScale = config.role === 'faculty' ? 0.85 : 0.45;
+                            baseClip.play();
+                        }
+                    }
+
+                    characterAgents.push(agent);
+                }
+
+                // 1. CORRIDOR WALKERS (Walk smoothly along 1st Floor Corridor & climb the 3 split-level steps)
+                spawnRiggedAgent(actorData, {
+                    role: 'corridor_walker',
+                    scale: 0.96,
+                    position: new THREE.Vector3(-6.2, 4.12, 0.35),
+                    rotationY: Math.PI / 2,
+                    palette: { primary: 0x1e3a8a, secondary: 0x334155 },
+                    waypoints: [
+                        { x: -6.2, z: 0.35, pause: 2.2 },
+                        { x: -2.2, z: -0.35, pause: 3.0 }, // Pauses near AI & ML Lab entrance
+                        { x: 3.8, z: 0.35, pause: 1.0 },
+                        { x: 8.5, z: 0.35, pause: 2.8 },  // Ascends split-level steps to raised corridor
+                        { x: 3.8, z: 0.35, pause: 0.5 }
+                    ]
+                });
+
+                spawnRiggedAgent(humanData, {
+                    role: 'corridor_talker',
+                    scale: 0.96,
+                    position: new THREE.Vector3(1.5, 4.12, 0.55),
+                    rotationY: -0.4,
+                    palette: null
+                });
+
+                // 2. AI & ML COMPUTER LAB SEATED STUDENTS (Typing on keyboards & looking at dual monitors)
+                const labSeats = [
+                    { x: -6.95, z: -3.22, palette: { primary: 0x0f766e, secondary: 0x1e293b } },
+                    { x: -3.45, z: -3.22, palette: { primary: 0x4338ca, secondary: 0x1e293b } },
+                    { x: -0.85, z: -5.42, palette: { primary: 0xb45309, secondary: 0x1e293b } },
+                    { x: 1.05,  z: -5.42, palette: { primary: 0xbe123c, secondary: 0x1e293b } }
+                ];
+                labSeats.forEach((seat, idx) => {
+                    spawnRiggedAgent(idx % 2 === 0 ? actorData : humanData, {
+                        role: 'seated_lab_typing',
+                        scale: 0.94,
+                        position: new THREE.Vector3(seat.x, 4.12, seat.z),
+                        rotationY: Math.PI, // Facing north toward the dual monitors (-Z)
+                        palette: seat.palette
+                    });
+                });
+
+                // 3. SMART CLASSROOM SEATED STUDENTS + HAND RAISER + LECTURING FACULTY
+                const classroomSeats = [
+                    { x: 5.98, z: -3.8, role: 'seated_classroom', palette: { primary: 0x1d4ed8, secondary: 0x0f172a } },
+                    { x: 5.98, z: -5.4, role: 'seated_hand_raise', palette: { primary: 0x047857, secondary: 0x0f172a } },
+                    { x: 8.58, z: -3.8, role: 'seated_classroom', palette: { primary: 0x6d28d9, secondary: 0x0f172a } },
+                    { x: 8.58, z: -7.0, role: 'seated_classroom', palette: { primary: 0x374151, secondary: 0x0f172a } }
+                ];
+                classroomSeats.forEach((seat, idx) => {
+                    spawnRiggedAgent(idx === 2 ? humanData : actorData, {
+                        role: seat.role,
+                        scale: 0.94,
+                        position: new THREE.Vector3(seat.x, 4.12, seat.z),
+                        rotationY: Math.PI / 2, // Facing East toward the Smartboard (+X)
+                        palette: seat.palette
+                    });
+                });
+
+                // Faculty Standing & Explaining at the Smartboard
+                spawnRiggedAgent(actorData, {
+                    role: 'faculty',
+                    scale: 0.98,
+                    position: new THREE.Vector3(13.6, 4.12, -5.6),
+                    rotationY: -Math.PI / 2, // Facing West toward students
+                    palette: { primary: 0x0f172a, secondary: 0x475569 }
+                });
+
+                statusEl.innerText = '✅ 11 Rigged GLTF Actors Active (Walking, Seated, Typing & Lecturing)';
+            } catch (err) {
+                statusEl.style.borderColor = '#f59e0b';
+                statusEl.style.color = '#fde68a';
+                statusEl.innerText = '⚠️ External GLTF character CDN unreachable. Architecture active.';
+            }
+        }
+        initializeDepartmentPopulation();
+
+        // Update Skeletal Mixers, Waypoint Locomotion, and Bone-Level Articulation
+        function updateCharacterAgents(dt, elapsed) {
+            characterAgents.forEach((agent) => {
+                // Distance LOD optimization: skip fine bone articulation if > 38m away from camera
+                const distToCam = agent.wrapper.position.distanceTo(camera.position);
+                if (distToCam > 45) return;
+
+                agent.mixer.update(dt);
+                const b = agent.bones;
+                const t = elapsed + agent.phase;
+
+                if (agent.role === 'corridor_walker' && agent.waypoints) {
+                    const targetWP = agent.waypoints[agent.wpIndex];
+                    if (agent.pauseTimer > 0) {
+                        agent.pauseTimer -= dt;
+                        // Subtle head look while paused at doorway
+                        if (b.head) b.head.rotation.y = Math.sin(t * 1.4) * 0.28;
+                        if (agent.pauseTimer <= 0) {
+                            agent.wpIndex = (agent.wpIndex + 1) % agent.waypoints.length;
+                            if (agent.walkAction && agent.idleAction && agent.walkAction !== agent.idleAction) {
+                                agent.idleAction.fadeOut(0.35);
+                                agent.walkAction.reset().fadeIn(0.35).play();
+                            }
+                            agent.state = 'walk';
+                        }
+                    } else {
+                        const dx = targetWP.x - agent.wrapper.position.x;
+                        const dz = targetWP.z - agent.wrapper.position.z;
+                        const dist = Math.hypot(dx, dz);
+                        if (dist < 0.18) {
+                            agent.pauseTimer = targetWP.pause || 1.5;
+                            if (agent.walkAction && agent.idleAction && agent.walkAction !== agent.idleAction) {
+                                agent.walkAction.fadeOut(0.35);
+                                agent.idleAction.reset().fadeIn(0.35).play();
+                            }
+                            agent.state = 'idle';
+                        } else {
+                            const walkSpeed = 1.15;
+                            const stepX = (dx / dist) * walkSpeed * dt;
+                            const stepZ = (dz / dist) * walkSpeed * dt;
+                            agent.wrapper.position.x += stepX;
+                            agent.wrapper.position.z += stepZ;
+                            // Follow corridor split-level steps smoothly
+                            agent.wrapper.position.y = getCorridorFloorY(agent.wrapper.position.x);
+                            // Smooth directional turning
+                            const desiredYaw = Math.atan2(dx, dz);
+                            let diff = desiredYaw - agent.wrapper.rotation.y;
+                            while (diff > Math.PI) diff -= Math.PI * 2;
+                            while (diff < -Math.PI) diff += Math.PI * 2;
+                            agent.wrapper.rotation.y += diff * Math.min(1, dt * 7);
+                        }
+                    }
+                } else if (agent.role === 'corridor_talker') {
+                    if (b.head) {
+                        b.head.rotation.y = Math.sin(t * 1.2) * 0.22;
+                        b.head.rotation.x = Math.sin(t * 2.1) * 0.06;
+                    }
+                } else if (agent.role === 'seated_lab_typing') {
+                    // Articulate Mixamo skeleton into seated workstation posture + typing hands
+                    if (b.hips) b.hips.position.y = 54;
+                    if (b.leftUpLeg) { b.leftUpLeg.rotation.x = -1.48; b.leftUpLeg.rotation.z = 0.08; }
+                    if (b.rightUpLeg) { b.rightUpLeg.rotation.x = -1.48; b.rightUpLeg.rotation.z = -0.08; }
+                    if (b.leftLeg) b.leftLeg.rotation.x = 1.48;
+                    if (b.rightLeg) b.rightLeg.rotation.x = 1.48;
+                    if (b.spine) b.spine.rotation.x = 0.14;
+                    if (b.leftArm) { b.leftArm.rotation.x = -0.68; b.leftArm.rotation.z = 0.25; }
+                    if (b.rightArm) { b.rightArm.rotation.x = -0.68; b.rightArm.rotation.z = -0.25; }
+                    if (b.leftForeArm) b.leftForeArm.rotation.x = -0.85 + Math.sin(t * 11) * 0.07;
+                    if (b.rightForeArm) b.rightForeArm.rotation.x = -0.85 + Math.cos(t * 11) * 0.07;
+                    if (b.head) {
+                        b.head.rotation.y = Math.sin(t * 0.85) * 0.22; // Scanning across dual monitors
+                        b.head.rotation.x = -0.08;
+                    }
+                } else if (agent.role === 'seated_classroom' || agent.role === 'seated_hand_raise') {
+                    if (b.hips) b.hips.position.y = 54;
+                    if (b.leftUpLeg) b.leftUpLeg.rotation.x = -1.46;
+                    if (b.rightUpLeg) b.rightUpLeg.rotation.x = -1.46;
+                    if (b.leftLeg) b.leftLeg.rotation.x = 1.46;
+                    if (b.rightLeg) b.rightLeg.rotation.x = 1.46;
+                    if (b.leftArm) { b.leftArm.rotation.x = -0.52; b.leftArm.rotation.z = 0.22; }
+                    if (b.leftForeArm) b.leftForeArm.rotation.x = -0.75;
+
+                    // Periodic student raising hand in classroom
+                    const raiseCycle = Math.max(0, Math.sin(t * 0.55));
+                    if (agent.role === 'seated_hand_raise' && raiseCycle > 0.35) {
+                        const lift = (raiseCycle - 0.35) / 0.65;
+                        if (b.rightArm) { b.rightArm.rotation.x = -2.45 * lift; b.rightArm.rotation.z = -0.15; }
+                        if (b.rightForeArm) b.rightForeArm.rotation.x = -0.35 * lift;
+                    } else {
+                        if (b.rightArm) { b.rightArm.rotation.x = -0.52; b.rightArm.rotation.z = -0.22; }
+                        if (b.rightForeArm) b.rightForeArm.rotation.x = -0.75;
+                    }
+                    if (b.head) {
+                        b.head.rotation.y = Math.sin(t * 0.6) * 0.16;
+                        b.head.rotation.x = Math.cos(t * 0.8) * 0.06;
+                    }
+                } else if (agent.role === 'faculty') {
+                    // Standing faculty gesturing toward smartboard and class
+                    if (b.rightArm) {
+                        b.rightArm.rotation.x = -0.75 + Math.sin(t * 2.2) * 0.25;
+                        b.rightArm.rotation.z = -0.35;
+                    }
+                    if (b.rightForeArm) b.rightForeArm.rotation.x = -0.6 + Math.cos(t * 2.2) * 0.2;
+                    if (b.head) b.head.rotation.y = Math.sin(t * 0.9) * 0.32;
+                }
+            });
+        }
+
+        // --- 9. CAMERA VIEWPOINTS, COLLISION & USER CONTROLS ---
         const viewpoints = {
             exterior: {
                 pos: { x: 0, y: 3.2, z: 22 },
@@ -823,19 +1310,19 @@
                 pos: { x: -7.5, y: 5.65, z: 0.25 },
                 yaw: -1.57, pitch: -0.02,
                 title: "🚶 1st Floor AI & ML Corridor",
-                desc: "Matches your reference photo: matte brown floor tiles, wooden shoe racks on the right, red fire extinguisher, 3 split-level steps ahead, and the red-roofed shed view on the left."
+                desc: "Watch students walk along the matte-brown floor tiles, climb the 3 split-level steps, and pause by the AI & ML Lab doorway."
             },
             lab: {
-                pos: { x: -2.0, y: 5.75, z: -2.5 },
-                yaw: 0, pitch: -0.05,
+                pos: { x: -2.0, y: 5.75, z: -2.3 },
+                yaw: 0.25, pitch: -0.08,
                 title: "💻 AI & ML Deep Learning Lab",
-                desc: "Equipped with dual-monitor AI/ML compute workstations, neural network projection screen, and collaborative research desks."
+                desc: "Rigged students sit in ergonomic chairs typing at dual-monitor workstations running live neural network training curves under rotating ceiling fans."
             },
             classroom: {
-                pos: { x: 7.5, y: 5.85, z: -5.8 },
-                yaw: -1.57, pitch: -0.04,
+                pos: { x: 7.2, y: 5.85, z: -5.6 },
+                yaw: -1.57, pitch: -0.05,
                 title: "🎓 Smart Lecture Classroom",
-                desc: "Academic lecture hall featuring ordered wooden student desk-benches, teaching podium, and wide green/smart board."
+                desc: "Students sit at wooden lecture benches while a faculty member explains concepts at the front smartboard."
             }
         };
 
@@ -860,7 +1347,6 @@
             }
         };
 
-        // Keyboard & Touch Movement State
         const keys = { forward: false, backward: false, left: false, right: false };
         window.addEventListener('keydown', (e) => {
             const k = e.key.toLowerCase();
@@ -883,7 +1369,6 @@
             if (k === 'd' || e.key === 'ArrowRight') keys.right = false;
         });
 
-        // Mobile Touch D-Pad Bindings
         function bindTouchBtn(id, dir) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -895,7 +1380,6 @@
         bindTouchBtn('btn-left', 'left');
         bindTouchBtn('btn-right', 'right');
 
-        // Mouse & Touch Look Rotation
         let isDragging = false;
         let prevX = 0, prevY = 0;
 
@@ -924,10 +1408,41 @@
             prevY = e.touches[0].clientY;
         }, { passive: true });
 
-        // Animation & Movement Loop
+        // --- 10. MASTER REAL-TIME ANIMATION LOOP ---
         function animate() {
             requestAnimationFrame(animate);
+            const dt = Math.min(clock.getDelta(), 0.1);
+            const elapsed = clock.getElapsedTime();
 
+            // 1. Rotate Ceiling Fans at realistic RPM
+            ceilingFans.forEach(rotor => { rotor.rotation.y -= dt * 6.5; });
+
+            // 2. Subtle Breeze Sway on Exterior Trees
+            animatedTreeCrowns.forEach(t => {
+                t.group.rotation.z = Math.sin(elapsed * 1.3 + t.phase) * 0.025;
+                t.group.rotation.x = Math.cos(elapsed * 1.0 + t.phase) * 0.018;
+            });
+
+            // 3. Update Live AI/ML Code & Neural Graph on Lab Monitors (~12 FPS throttle for efficiency)
+            if (Math.floor(elapsed * 12) !== Math.floor((elapsed - dt) * 12)) {
+                updateLabMonitorScreen(dt);
+            }
+
+            // 4. Proximity-Based Hinged Door Opening (User or Corridor Walker nearby)
+            hingedDoors.forEach(d => {
+                let near = camera.position.distanceTo(d.center) < 3.5;
+                characterAgents.forEach(a => {
+                    if (a.wrapper.position.distanceTo(d.center) < 2.8) near = true;
+                });
+                const targetAngle = near ? -1.45 : -0.25;
+                d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 4.5);
+                d.pivot.rotation.y = d.currentAngle;
+            });
+
+            // 5. Update Rigged GLTF Actors & Skeletal Animations
+            updateCharacterAgents(dt, elapsed);
+
+            // 6. Camera Movement & Wall/Doorway Collision
             if (targetTeleport) {
                 camera.position.x += (targetTeleport.x - camera.position.x) * 0.08;
                 camera.position.y += (targetTeleport.y - camera.position.y) * 0.08;
@@ -938,23 +1453,33 @@
                     targetTeleport = null;
                 }
             } else {
-                const speed = 0.14;
+                const speed = 0.13;
                 const forwardX = -Math.sin(camYaw);
                 const forwardZ = -Math.cos(camYaw);
                 const rightX = Math.cos(camYaw);
                 const rightZ = -Math.sin(camYaw);
 
-                if (keys.forward) { camera.position.x += forwardX * speed; camera.position.z += forwardZ * speed; }
-                if (keys.backward) { camera.position.x -= forwardX * speed; camera.position.z -= forwardZ * speed; }
-                if (keys.left) { camera.position.x -= rightX * speed; camera.position.z -= rightZ * speed; }
-                if (keys.right) { camera.position.x += rightX * speed; camera.position.z += rightZ * speed; }
+                let nextX = camera.position.x;
+                let nextZ = camera.position.z;
 
-                // Boundary clamping & automatic split-level elevation on 1st floor corridor
-                camera.position.x = Math.max(-28, Math.min(28, camera.position.x));
-                camera.position.z = Math.max(-9.2, Math.min(35, camera.position.z));
+                if (keys.forward) { nextX += forwardX * speed; nextZ += forwardZ * speed; }
+                if (keys.backward) { nextX -= forwardX * speed; nextZ -= forwardZ * speed; }
+                if (keys.left) { nextX -= rightX * speed; nextZ -= rightZ * speed; }
+                if (keys.right) { nextX += rightX * speed; nextZ += rightZ * speed; }
+
+                // Corridor-to-Room Wall Collision Check (Z = -1.55 wall, allowing passage through doorways at X = -2.2 and X = 6.2)
+                const crossingCorridorWall = (camera.position.z > -1.35 && nextZ <= -1.35) || (camera.position.z < -1.75 && nextZ >= -1.75);
+                const inDoorway = Math.abs(nextX - (-2.2)) < 0.65 || Math.abs(nextX - 6.2) < 0.65;
+                if (camera.position.y > 4.0 && crossingCorridorWall && !inDoorway) {
+                    nextZ = camera.position.z;
+                }
+
+                camera.position.x = Math.max(-28, Math.min(28, nextX));
+                camera.position.z = Math.max(-9.3, Math.min(35, nextZ));
+
+                // Automatic split-level step elevation on 1st floor
                 if (camera.position.y > 4.5 && camera.position.z > -1.4 && camera.position.z < 1.8) {
-                    // Automatically step up the 3 split-level steps in the corridor when walking past X = 4.5
-                    const targetY = camera.position.x > 5.2 ? 5.95 : 5.65;
+                    const targetY = camera.position.x > 5.2 ? 5.92 : 5.68;
                     camera.position.y += (targetY - camera.position.y) * 0.15;
                 }
             }
