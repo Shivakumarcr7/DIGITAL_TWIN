@@ -2,72 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TACHYON — Admin Control Center</title>
     <style>
         :root {
             --primary: #0ea5e9;
-            --accent: #38bdf8;
+            --accent: #00f2fe;
             --gold: #fbbf24;
-            --glass-bg: rgba(15, 23, 42, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(3, 7, 18, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.12);
         }
         body {
             margin: 0; font-family: 'Segoe UI', system-ui, sans-serif;
-            color: #f8fafc; display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            color: #f8fafc; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; box-sizing: border-box;
             background-color: #020617;
         }
         *, *::before, *::after { box-sizing: inherit; }
 
         #bg-video {
-            position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -100; object-fit: cover; filter: brightness(0.3);
         }
 
         .admin-container {
-            flex: 1; padding: 40px; overflow-y: auto; background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(8px);
-            display: flex; flex-direction: column; gap: 24px; max-width: 1000px; margin: 0 auto;
+            padding: 28px 5vw; min-height: 100dvh;
+            display: flex; flex-direction: column; gap: 24px; max-width: 1050px; margin: 0 auto;
         }
         .header-section {
             border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
         }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+
         .panel-card {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 25px; backdrop-filter: blur(10px);
+            border-radius: 18px; padding: 22px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: left; font-size: 0.95rem; }
+        .table-wrap { width: 100%; overflow-x: auto; }
+        .admin-table { width: 100%; min-width: 500px; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 0.92rem; }
         .admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid var(--glass-border); }
         .admin-table th { color: var(--gold); }
         
         .action-btn {
             background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white;
-            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); }
-
         .danger-btn {
             background: linear-gradient(135deg, #dc2626, #ef4444); color: white;
-            border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.2s;
         }
-        .danger-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6); }
         
-        .back-link { color: var(--accent); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-        .back-link:hover { text-decoration: underline; }
+        .back-link { color: var(--accent); text-decoration: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; }
 
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 6, 23, 0.9); justify-content: center; align-items: center; z-index: 2000; padding: 20px;
+            background: rgba(2, 6, 23, 0.88); justify-content: center; align-items: center; z-index: 2000; padding: 16px;
+            backdrop-filter: blur(10px);
         }
         .modal-content {
-            background: rgba(15, 23, 42, 0.95); padding: 35px; border-radius: 16px; width: 100%; max-width: 450px;
+            background: rgba(15, 23, 42, 0.95); padding: 28px 22px; border-radius: 18px; width: 100%; max-width: 440px;
             border: 1px solid var(--glass-border); text-align: center;
         }
         .modal-content input, .modal-content textarea {
-            width: 100%; padding: 14px; margin-bottom: 15px; background: rgba(2, 6, 23, 0.8);
-            border: 1px solid var(--glass-border); color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem;
+            width: 100%; padding: 13px; margin-bottom: 14px; background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--glass-border); color: white; border-radius: 10px; font-size: 0.95rem;
+        }
+
+        @media (max-width: 700px) {
+            .header-section { flex-direction: column; align-items: flex-start; }
+            .btn-group { width: 100%; flex-direction: column; }
+            .action-btn, .danger-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -82,19 +87,19 @@
             <h2 style="color: #ef4444; margin-top:0;">Restricted Access</h2>
             <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">You must sign in with the President account to access this terminal.</p>
             <button class="action-btn" id="adminLoginBtn" style="width: 100%;">Sign in as Admin</button>
-            <button class="action-btn" style="width: 100%; margin-top: 10px; background: #334155;" onclick="window.location.href='index.html'">Back to Hub</button>
+            <button class="action-btn" style="width: 100%; margin-top: 10px; background: #334155;" onclick="window.location.href='hub.html'">Back to Hub</button>
         </div>
     </div>
 
     <div class="admin-container" id="adminDashboard" style="display:none;">
         <div>
-            <a href="index.html" class="back-link">← Return to Student Hub</a>
+            <a href="hub.html" class="back-link">← Return to Student Hub</a>
             <div class="header-section">
                 <div>
-                    <h1 style="margin:0; font-size: 2.2rem; color: var(--gold);">👑 President's Command Center</h1>
-                    <p style="margin: 5px 0 0 0; color: #94a3b8;">Manage student telemetry and system broadcasts.</p>
+                    <h1 style="margin:0; font-size: clamp(1.6rem, 4vw, 2.2rem); color: var(--gold);">👑 President's Command Center</h1>
+                    <p style="margin: 5px 0 0 0; color: #94a3b8; font-size: 0.95rem;">Manage student telemetry and system broadcasts.</p>
                 </div>
-                <div style="display: flex; gap: 10px;">
+                <div class="btn-group">
                     <button class="action-btn" onclick="openBroadcastModal()">📢 Broadcast Official Post</button>
                     <button class="danger-btn" onclick="resetAllData()">⚠️ Reset All Data</button>
                 </div>
@@ -103,7 +108,7 @@
 
         <div class="panel-card">
             <h3 style="margin-top:0; color: var(--accent);">📊 Live Student Database & Login Logs</h3>
-            <div style="max-height: 450px; overflow-y: auto;">
+            <div class="table-wrap">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -122,13 +127,13 @@
 
     <div id="broadcastModal" class="modal">
         <div class="modal-content" style="text-align: left;">
-            <h2 style="margin-top: 0; color: var(--gold);">Broadcast Announcement</h2>
+            <h2 style="margin-top: 0; margin-bottom: 16px; color: var(--gold);">Broadcast Announcement</h2>
             <input type="text" id="broadcastName" placeholder="Announcement Title">
             <input type="text" id="broadcastLink" placeholder="Resource URL (Optional)">
             <textarea id="broadcastDesc" placeholder="Announcement message..." rows="4"></textarea>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="action-btn" style="background: #334155;" onclick="closeBroadcastModal()">Cancel</button>
-                <button class="action-btn" onclick="sendBroadcast()">Publish Official</button>
+                <button class="action-btn" style="background: #334155; flex: 1;" onclick="closeBroadcastModal()">Cancel</button>
+                <button class="action-btn" style="flex: 1;" onclick="sendBroadcast()">Publish Official</button>
             </div>
         </div>
     </div>
@@ -153,7 +158,6 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // ⚠️ PUT YOUR EXACT ADMIN GMAIL HERE ⚠️
         const ADMIN_EMAIL = "patilshivakumarcr7@gmail.com";
 
         document.getElementById('adminLoginBtn').addEventListener('click', () => {
@@ -167,7 +171,6 @@
                     document.getElementById('adminDashboard').style.display = 'flex';
                     loadUserData();
                 } else {
-                    // SECURE: Generic error message that does not leak the admin email address
                     alert("Access Denied: You are not authorized as the administrator.");
                     auth.signOut();
                 }
@@ -229,11 +232,10 @@
                     let userDeletes = usersSnapshot.docs.map(d => deleteDoc(doc(db, "users", d.id)));
 
                     await Promise.all([...agentDeletes, ...userDeletes]);
-                    alert("System successfully reset! All projects and user records have been wiped for the new month.");
+                    alert("System successfully reset! All projects and user records have been wiped.");
                     location.reload();
                 } catch (e) {
-                    console.error("Reset error:", e);
-                    alert("Error resetting database. Check console.");
+                    alert("Error resetting database.");
                 }
             }
         };
