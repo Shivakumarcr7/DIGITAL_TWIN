@@ -12,8 +12,8 @@
             --gold: #fbbf24;
             --emerald: #10b981;
             --dark: #030712;
-            --glass: rgba(15, 23, 42, 0.78);
-            --border: rgba(255, 255, 255, 0.15);
+            --glass: rgba(15, 23, 42, 0.80);
+            --border: rgba(255, 255, 255, 0.16);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
 
@@ -34,6 +34,86 @@
             cursor: grab;
         }
         #canvas-container:active { cursor: grabbing; }
+
+        /* Center Reticle for First-Person & Interactive Raycasting */
+        #reticle {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 8px; height: 8px;
+            transform: translate(-50%, -50%);
+            border: 1.5px solid rgba(255, 255, 255, 0.65);
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+            transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
+        }
+        #reticle.hover-active {
+            transform: translate(-50%, -50%) scale(1.8);
+            border-color: var(--cyan);
+            background-color: rgba(0, 242, 254, 0.35);
+            box-shadow: 0 0 12px var(--cyan);
+        }
+
+        /* Contextual Interaction Prompt ([E] / Click) */
+        #interact-prompt {
+            position: absolute;
+            bottom: 138px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 18;
+            background: rgba(3, 7, 18, 0.88);
+            border: 1px solid var(--cyan);
+            color: #fff;
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            pointer-events: auto;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55);
+        }
+        #interact-prompt:hover { background: rgba(0, 242, 254, 0.2); }
+        #interact-prompt span.key-badge {
+            background: var(--cyan);
+            color: #030712;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 0.75rem;
+        }
+
+        /* Faculty & Department Leadership Modal */
+        #profile-modal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 30;
+            width: 90%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 24px;
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.75);
+        }
+        #profile-modal h2 { color: var(--gold); font-size: 1.2rem; }
+        .profile-item {
+            background: rgba(2, 6, 23, 0.65);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--cyan);
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .profile-item h4 { color: #fff; font-size: 0.95rem; margin-bottom: 4px; }
+        .profile-item p { color: #cbd5e1; font-size: 0.8rem; line-height: 1.45; }
 
         /* Top Navigation & Settings Bar */
         header {
@@ -63,7 +143,7 @@
         .top-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             flex-wrap: wrap;
         }
         .hud-pill-btn, .hud-select {
@@ -72,7 +152,7 @@
             color: #f8fafc;
             padding: 7px 12px;
             border-radius: 12px;
-            font-size: 0.76rem;
+            font-size: 0.75rem;
             font-weight: 700;
             cursor: pointer;
             backdrop-filter: blur(14px);
@@ -84,7 +164,7 @@
             color: var(--cyan);
         }
         .hud-pill-btn.active-mode {
-            background: rgba(0, 242, 254, 0.2);
+            background: rgba(0, 242, 254, 0.22);
             border-color: var(--cyan);
             color: #fff;
         }
@@ -93,10 +173,10 @@
             color: #fff;
         }
 
-        /* Left Teleport & Camera Mode Bar */
+        /* Left Teleport & Walkthrough Bar */
         .zone-panel {
             position: absolute;
-            top: 72px; left: 18px;
+            top: 70px; left: 18px;
             z-index: 10;
             background: var(--glass);
             border: 1px solid var(--border);
@@ -142,9 +222,9 @@
         /* Right Context & Telemetry Panel */
         .info-card {
             position: absolute;
-            top: 72px; right: 18px;
+            top: 70px; right: 18px;
             z-index: 10;
-            width: 315px;
+            width: 320px;
             background: var(--glass);
             border: 1px solid var(--cyan);
             border-radius: 16px;
@@ -177,7 +257,7 @@
             margin-top: 9px;
             padding-top: 9px;
             border-top: 1px solid var(--border);
-            font-size: 0.74rem;
+            font-size: 0.73rem;
             color: #94a3b8;
             display: flex;
             flex-direction: column;
@@ -185,12 +265,12 @@
         }
         .key-pill {
             display: inline-block;
-            background: rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.14);
             color: #fff;
             padding: 1px 6px;
             border-radius: 4px;
             font-weight: 700;
-            font-size: 0.7rem;
+            font-size: 0.69rem;
         }
 
         /* Cinematic Intro Banner & Skip Button */
@@ -290,6 +370,7 @@
             .controls-hint { display: none; }
             .mobile-dpad { display: grid; bottom: 80px; left: 12px; }
             #cinematic-banner { bottom: 190px; width: 90%; justify-content: space-between; }
+            #interact-prompt { bottom: 185px; font-size: 0.76rem; padding: 8px 14px; }
             footer { justify-content: center; bottom: 12px; }
             .launch-hub-btn { width: 100%; justify-content: center; padding: 13px; }
         }
@@ -298,6 +379,33 @@
 <body>
 
     <div id="canvas-container"></div>
+    <div id="reticle"></div>
+
+    <!-- Contextual Interaction Prompt -->
+    <div id="interact-prompt" onclick="triggerActiveInteraction()">
+        <span class="key-badge">E / Click</span>
+        <span id="interact-label">Interact</span>
+    </div>
+
+    <!-- Department & Faculty Leadership Modal -->
+    <div id="profile-modal">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>🏛️ PESCE Mandya — AI & ML Leadership</h2>
+            <button class="skip-btn" onclick="closeProfileModal()">✕ Close</button>
+        </div>
+        <div class="profile-item">
+            <h4>Dr. Vinay S. — Principal, PESCE Mandya</h4>
+            <p>B.E., M.Tech., Ph.D. (Computer Science). Spearheading institutional excellence, autonomous systems research, and industry-aligned AI education at PES College of Engineering.</p>
+        </div>
+        <div class="profile-item">
+            <h4>Department of CSE (Artificial Intelligence & Machine Learning)</h4>
+            <p>Equipped with high-performance Deep Learning compute clusters, smart lecture halls, and active student research groups in Computer Vision, NLP, and Autonomous Agents.</p>
+        </div>
+        <div class="profile-item">
+            <h4>Shivakumar Patil — President, TACHYON AIML Club</h4>
+            <p>Leading student-driven AI agent deployments, hackathons, cloud computing workshops, and the PESCE Digital Twin initiative.</p>
+        </div>
+    </div>
 
     <!-- Top Navigation & Real-Time Environment Controls -->
     <header>
@@ -308,6 +416,7 @@
         </nav>
 
         <div class="top-controls">
+            <button class="hud-pill-btn" id="btn-viewmode" onclick="togglePerspectiveMode()">👁️ View: 1st Person</button>
             <button class="hud-pill-btn" id="btn-cinematic" onclick="startCinematicIntro()">🎬 Replay Intro</button>
             <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit Exterior</button>
             <button class="hud-pill-btn" id="btn-lighting" onclick="toggleLightingMode()">☀️ Daylight</button>
@@ -347,13 +456,13 @@
     <aside class="info-card" id="zone-info">
         <h3 id="info-title">🏛️ Department Exterior Elevation</h3>
         <p id="info-desc">
-            Photorealistic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building with GPU wind-driven grass, terracotta portico planters, rooftop solar arrays, and clickable 3D room markers.
+            Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, normal-mapped surfaces, solid collision, and interactive doors/boards.
         </p>
         <div class="asset-status-bar" id="actor-status">
             ⏳ Loading rigged GLTF human actors...
         </div>
         <div class="controls-hint">
-            <div><span class="key-pill">W</span> <span class="key-pill">A</span> <span class="key-pill">S</span> <span class="key-pill">D</span> Walk | <span class="key-pill">Scroll</span> Zoom | <span class="key-pill">Click Markers</span> Enter Room</div>
+            <div><span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> Walk | <span class="key-pill">E / Click</span> Open Doors & Boards | <span class="key-pill">V</span> 1P/3P</div>
             <div><span class="key-pill">Mouse Drag</span> Look 360° | <span class="key-pill">1 - 6</span> Quick Teleport</div>
         </div>
     </aside>
@@ -377,7 +486,7 @@
     <!-- Bottom Action Bar -->
     <footer>
         <div id="perf-badge" style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / GPU Wind Grass • PMREM IBL • Clickable 3D Hotspots
+            Stage 02 / PBR Normal Maps • 3D Cross-Tuft Wind Grass • Solid Collision
         </div>
         <a href="hub.html" class="launch-hub-btn">
             Proceed to AI Agent Hub 🚀
@@ -392,48 +501,86 @@
     <script>
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x90c2e7);
-        scene.fog = new THREE.FogExp2(0x90c2e7, 0.0055);
+        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0042);
 
-        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 260);
+        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 280);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.06;
+        renderer.toneMappingExposure = 1.05;
         container.appendChild(renderer.domElement);
 
         const clock = new THREE.Clock();
 
-        // --- 1. PROCEDURAL PMREM IMAGE-BASED LIGHTING (IBL) & NATURAL SUNLIGHT ---
+        // --- 1. ATMOSPHERIC SKY DOME SHADER & PMREM IMAGE-BASED LIGHTING ---
+        const skyVertexShader = `
+            varying vec3 vWorldPosition;
+            void main() {
+                vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                vWorldPosition = worldPosition.xyz;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+        const skyFragmentShader = `
+            uniform vec3 topColor;
+            uniform vec3 horizonColor;
+            uniform vec3 bottomColor;
+            uniform vec3 sunDir;
+            varying vec3 vWorldPosition;
+            void main() {
+                vec3 viewDir = normalize(vWorldPosition);
+                float h = clamp(viewDir.y, 0.0, 1.0);
+                vec3 col = mix(horizonColor, topColor, pow(h, 0.55));
+                if (viewDir.y < 0.0) {
+                    col = mix(horizonColor, bottomColor, clamp(-viewDir.y * 3.0, 0.0, 1.0));
+                }
+                float sunAmt = max(dot(viewDir, normalize(sunDir)), 0.0);
+                col += vec3(1.0, 0.92, 0.75) * pow(sunAmt, 60.0) * 0.5;
+                col += vec3(1.0, 0.85, 0.65) * pow(sunAmt, 8.0) * 0.12;
+                gl_FragColor = vec4(col, 1.0);
+            }
+        `;
+        const skyUniforms = {
+            topColor: { value: new THREE.Color(0x2b6cb0) },
+            horizonColor: { value: new THREE.Color(0xcbe4f9) },
+            bottomColor: { value: new THREE.Color(0x4a5546) },
+            sunDir: { value: new THREE.Vector3(26, 42, 30).normalize() }
+        };
+        const skyDome = new THREE.Mesh(
+            new THREE.SphereGeometry(210, 32, 16),
+            new THREE.ShaderMaterial({
+                vertexShader: skyVertexShader,
+                fragmentShader: skyFragmentShader,
+                uniforms: skyUniforms,
+                side: THREE.BackSide,
+                depthWrite: false
+            })
+        );
+        scene.add(skyDome);
+
         const pmremGenerator = new THREE.PMREMGenerator(renderer);
         pmremGenerator.compileEquirectangularShader();
 
-        function buildIBLScene(isGoldenHour) {
+        function buildIBLScene(isGolden) {
             const envScene = new THREE.Scene();
-            const skyGeo = new THREE.SphereGeometry(60, 32, 16);
-            const canvas = document.createElement('canvas');
-            canvas.width = 256; canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createLinearGradient(0, 0, 0, 256);
-            if (isGoldenHour) {
-                grad.addColorStop(0, '#1e3a8a');
-                grad.addColorStop(0.48, '#f97316');
-                grad.addColorStop(0.55, '#fde047');
-                grad.addColorStop(1, '#4a3525');
-            } else {
-                grad.addColorStop(0, '#38bdf8');
-                grad.addColorStop(0.5, '#bae6fd');
-                grad.addColorStop(0.55, '#e2e8f0');
-                grad.addColorStop(1, '#57534e');
-            }
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 256, 256);
-            const envTex = new THREE.CanvasTexture(canvas);
-            const skyMesh = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ map: envTex, side: THREE.BackSide }));
-            envScene.add(skyMesh);
+            const envSky = new THREE.Mesh(
+                new THREE.SphereGeometry(50, 24, 12),
+                new THREE.ShaderMaterial({
+                    vertexShader: skyVertexShader,
+                    fragmentShader: skyFragmentShader,
+                    uniforms: {
+                        topColor: { value: new THREE.Color(isGolden ? 0x1e3a8a : 0x2b6cb0) },
+                        horizonColor: { value: new THREE.Color(isGolden ? 0xfb923c : 0xcbe4f9) },
+                        bottomColor: { value: new THREE.Color(isGolden ? 0x452715 : 0x4a5546) },
+                        sunDir: { value: new THREE.Vector3(isGolden ? -34 : 26, isGolden ? 16 : 42, 28).normalize() }
+                    },
+                    side: THREE.BackSide
+                })
+            );
+            envScene.add(envSky);
             return pmremGenerator.fromScene(envScene, 0.04).texture;
         }
 
@@ -441,31 +588,31 @@
         const iblGoldenHour = buildIBLScene(true);
         scene.environment = iblDaylight;
 
-        const hemiLight = new THREE.HemisphereLight(0xe2f1ff, 0x4d5e3e, 0.62);
+        const hemiLight = new THREE.HemisphereLight(0xe6f2ff, 0x4d5e3e, 0.62);
         hemiLight.position.set(0, 50, 0);
         scene.add(hemiLight);
 
-        const sunLight = new THREE.DirectionalLight(0xfff8eb, 1.22);
+        const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.25);
         sunLight.position.set(26, 42, 30);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
         sunLight.shadow.bias = -0.0003;
         sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 130;
+        sunLight.shadow.camera.far = 135;
         sunLight.shadow.camera.left = -36;
         sunLight.shadow.camera.right = 36;
         sunLight.shadow.camera.top = 36;
         sunLight.shadow.camera.bottom = -36;
         scene.add(sunLight);
 
-        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.55, 18);
+        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.58, 18);
         corridorLight1.position.set(-4, 7.6, 0.2);
-        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.55, 18);
+        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.58, 18);
         corridorLight2.position.set(6, 7.6, 0.2);
-        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.78, 22);
+        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.8, 22);
         labRoomLight.position.set(-2, 7.6, -5.8);
-        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.78, 22);
+        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.8, 22);
         classRoomLight.position.set(9.5, 7.6, -5.8);
         scene.add(corridorLight1, corridorLight2, labRoomLight, classRoomLight);
 
@@ -474,29 +621,55 @@
             isGoldenHour = !isGoldenHour;
             const btn = document.getElementById('btn-lighting');
             if (isGoldenHour) {
-                scene.background.setHex(0xdfa06e);
-                scene.fog.color.setHex(0xdfa06e);
+                skyUniforms.topColor.value.setHex(0x1e3a8a);
+                skyUniforms.horizonColor.value.setHex(0xf97316);
+                skyUniforms.bottomColor.value.setHex(0x3b2314);
+                skyUniforms.sunDir.value.set(-34, 16, 26).normalize();
+                scene.fog.color.setHex(0xe59866);
                 scene.environment = iblGoldenHour;
                 sunLight.color.setHex(0xffa94d);
-                sunLight.intensity = 1.35;
+                sunLight.intensity = 1.38;
                 sunLight.position.set(-34, 16, 26);
                 hemiLight.color.setHex(0xffd8a8);
                 btn.innerText = '🌅 Golden Hour';
                 btn.classList.add('active-mode');
             } else {
-                scene.background.setHex(0x90c2e7);
-                scene.fog.color.setHex(0x90c2e7);
+                skyUniforms.topColor.value.setHex(0x2b6cb0);
+                skyUniforms.horizonColor.value.setHex(0xcbe4f9);
+                skyUniforms.bottomColor.value.setHex(0x4a5546);
+                skyUniforms.sunDir.value.set(26, 42, 30).normalize();
+                scene.fog.color.setHex(0xc8dff0);
                 scene.environment = iblDaylight;
-                sunLight.color.setHex(0xfff8eb);
-                sunLight.intensity = 1.22;
+                sunLight.color.setHex(0xfff9ed);
+                sunLight.intensity = 1.25;
                 sunLight.position.set(26, 42, 30);
-                hemiLight.color.setHex(0xe2f1ff);
+                hemiLight.color.setHex(0xe6f2ff);
                 btn.innerText = '☀️ Daylight';
                 btn.classList.remove('active-mode');
             }
         };
 
-        // --- 2. PROCEDURAL HIGH-RES PBR TEXTURES, BUMP MAPS & SIGNAGE ---
+        // --- 2. SOLID AABB COLLISION ENGINE ---
+        const colliders = [];
+        function addCollider(minX, maxX, minZ, maxZ, minY = 0, maxY = 12) {
+            colliders.push({ minX, maxX, minZ, maxZ, minY, maxY });
+        }
+
+        function checkCollision(x, y, z, radius = 0.38) {
+            const footY = y - 1.5;
+            const headY = y + 0.2;
+            for (let i = 0; i < colliders.length; i++) {
+                const c = colliders[i];
+                if (headY < c.minY || footY > c.maxY) continue;
+                if (x + radius > c.minX && x - radius < c.maxX &&
+                    z + radius > c.minZ && z - radius < c.maxZ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // --- 3. PROCEDURAL PBR TEXTURE ENGINE (ALBEDO + NORMAL + ROUGHNESS MAPS) ---
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -518,30 +691,66 @@
             return tex;
         }
 
-        function createTileTexture(baseHex, groutHex, divisions = 8, addWeathering = true) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512; canvas.height = 512;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = baseHex;
-            ctx.fillRect(0, 0, 512, 512);
-            if (addWeathering) {
-                for (let i = 0; i < 4500; i++) {
-                    ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.035)';
-                    ctx.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
+        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.04, repeatX = 1, repeatY = 1) {
+            const size = 512;
+            const diffCanvas = document.createElement('canvas');
+            const normCanvas = document.createElement('canvas');
+            const roughCanvas = document.createElement('canvas');
+            diffCanvas.width = normCanvas.width = roughCanvas.width = size;
+            diffCanvas.height = normCanvas.height = roughCanvas.height = size;
+
+            const dCtx = diffCanvas.getContext('2d');
+            const nCtx = normCanvas.getContext('2d');
+            const rCtx = roughCanvas.getContext('2d');
+
+            dCtx.fillStyle = baseHex;
+            dCtx.fillRect(0, 0, size, size);
+            nCtx.fillStyle = 'rgb(128, 128, 255)';
+            nCtx.fillRect(0, 0, size, size);
+            rCtx.fillStyle = 'rgb(190, 190, 190)';
+            rCtx.fillRect(0, 0, size, size);
+
+            for (let i = 0; i < 5500; i++) {
+                const x = Math.random() * size;
+                const y = Math.random() * size;
+                const w = 2 + Math.random() * 4;
+                const bright = i % 2 === 0;
+                dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
+                dCtx.fillRect(x, y, w, w);
+                nCtx.fillStyle = bright ? 'rgb(142, 142, 255)' : 'rgb(114, 114, 255)';
+                nCtx.fillRect(x, y, 2, 2);
+                rCtx.fillStyle = bright ? 'rgb(215, 215, 215)' : 'rgb(160, 160, 160)';
+                rCtx.fillRect(x, y, w, w);
+            }
+
+            if (divisions > 1) {
+                const step = size / divisions;
+                dCtx.strokeStyle = groutHex;
+                dCtx.lineWidth = 4;
+                nCtx.strokeStyle = 'rgb(90, 90, 220)';
+                nCtx.lineWidth = 5;
+                rCtx.strokeStyle = 'rgb(240, 240, 240)';
+                rCtx.lineWidth = 4;
+                for (let i = 0; i <= divisions; i++) {
+                    const p = i * step;
+                    [dCtx, nCtx, rCtx].forEach(ctx => {
+                        ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, size); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(size, p); ctx.stroke();
+                    });
                 }
             }
-            ctx.strokeStyle = groutHex;
-            ctx.lineWidth = 4;
-            const step = 512 / divisions;
-            for (let i = 0; i <= divisions; i++) {
-                ctx.beginPath(); ctx.moveTo(i * step, 0); ctx.lineTo(i * step, 512); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0, i * step); ctx.lineTo(512, i * step); ctx.stroke();
-            }
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            tex.wrapS = THREE.RepeatWrapping;
-            tex.wrapT = THREE.RepeatWrapping;
-            return tex;
+
+            const map = new THREE.CanvasTexture(diffCanvas);
+            map.encoding = THREE.sRGBEncoding;
+            const normalMap = new THREE.CanvasTexture(normCanvas);
+            const roughnessMap = new THREE.CanvasTexture(roughCanvas);
+
+            [map, normalMap, roughnessMap].forEach(t => {
+                t.wrapS = THREE.RepeatWrapping;
+                t.wrapT = THREE.RepeatWrapping;
+                t.repeat.set(repeatX, repeatY);
+            });
+            return { map, normalMap, roughnessMap };
         }
 
         function createContactShadowTexture() {
@@ -549,8 +758,8 @@
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
             const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.52)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.18)');
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
+            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.20)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 128, 128);
@@ -562,76 +771,201 @@
             depthWrite: false
         });
 
-        // Live AI/ML Code & Neural Graph Texture for Lab Monitors
+        const matAOStrip = new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            transparent: true,
+            opacity: 0.22,
+            depthWrite: false
+        });
+
+        // Interactive Lab Monitor & Smartboard Dynamic Canvas Textures
         const screenCanvas = document.createElement('canvas');
         screenCanvas.width = 256; screenCanvas.height = 160;
         const screenCtx = screenCanvas.getContext('2d');
         const liveMonitorTexture = new THREE.CanvasTexture(screenCanvas);
         liveMonitorTexture.encoding = THREE.sRGBEncoding;
 
+        let labWorkloadMode = 0; // 0: PyTorch Loss, 1: YOLOv8 Vision, 2: Multi-Agent Telemetry
+        const labModeTitles = ['PyTorch ResNet-50 Training', 'YOLOv8 Real-Time Vision', 'Tachyon Autonomous Agent Mesh'];
         let screenTick = 0;
+
         function updateLabMonitorScreen(dt) {
             screenTick += dt;
-            screenCtx.fillStyle = '#091326';
+            screenCtx.fillStyle = '#071022';
             screenCtx.fillRect(0, 0, 256, 160);
             screenCtx.fillStyle = '#0f172a';
-            screenCtx.fillRect(0, 0, 44, 160);
-            const codeColors = ['#38bdf8', '#a78bfa', '#34d399', '#facc15', '#cbd5e1'];
-            for (let i = 0; i < 9; i++) {
-                screenCtx.fillStyle = codeColors[i % codeColors.length];
-                const w = 45 + ((i * 29 + Math.floor(screenTick * 2)) % 85);
-                screenCtx.fillRect(54, 14 + i * 14, w, 5);
+            screenCtx.fillRect(0, 0, 42, 160);
+
+            screenCtx.fillStyle = '#1e293b';
+            screenCtx.fillRect(42, 0, 214, 20);
+            screenCtx.fillStyle = '#38bdf8';
+            screenCtx.font = 'bold 10px monospace';
+            screenCtx.fillText(labModeTitles[labWorkloadMode], 48, 13);
+
+            if (labWorkloadMode === 0) {
+                const codeColors = ['#38bdf8', '#a78bfa', '#34d399', '#facc15', '#cbd5e1'];
+                for (let i = 0; i < 8; i++) {
+                    screenCtx.fillStyle = codeColors[i % codeColors.length];
+                    const w = 40 + ((i * 29 + Math.floor(screenTick * 2)) % 80);
+                    screenCtx.fillRect(50, 28 + i * 15, w, 5);
+                }
+                screenCtx.strokeStyle = '#00f2fe';
+                screenCtx.lineWidth = 2;
+                screenCtx.beginPath();
+                for (let x = 0; x < 85; x += 5) {
+                    const y = 135 - Math.exp(-x * 0.035) * 65 - Math.sin(x * 0.2 + screenTick * 3) * 4;
+                    if (x === 0) screenCtx.moveTo(160 + x, y);
+                    else screenCtx.lineTo(160 + x, y);
+                }
+                screenCtx.stroke();
+            } else if (labWorkloadMode === 1) {
+                screenCtx.strokeStyle = '#10b981';
+                screenCtx.lineWidth = 2;
+                const bx = 65 + Math.sin(screenTick * 1.8) * 25;
+                screenCtx.strokeRect(bx, 42, 65, 75);
+                screenCtx.fillStyle = '#10b981';
+                screenCtx.fillText('person 0.98', bx, 38);
+                screenCtx.strokeStyle = '#f59e0b';
+                screenCtx.strokeRect(160, 58, 70, 60);
+                screenCtx.fillStyle = '#f59e0b';
+                screenCtx.fillText('workstation 0.94', 160, 54);
+            } else {
+                for (let b = 0; b < 6; b++) {
+                    const bh = 25 + Math.abs(Math.sin(screenTick * 2.5 + b)) * 75;
+                    screenCtx.fillStyle = b % 2 === 0 ? '#00f2fe' : '#ec4899';
+                    screenCtx.fillRect(60 + b * 28, 140 - bh, 18, bh);
+                }
             }
-            screenCtx.strokeStyle = '#00f2fe';
-            screenCtx.lineWidth = 2;
-            screenCtx.beginPath();
-            for (let x = 0; x < 80; x += 5) {
-                const y = 125 - Math.exp(-x * 0.035) * 65 - Math.sin(x * 0.2 + screenTick * 3) * 4;
-                if (x === 0) screenCtx.moveTo(165 + x, y);
-                else screenCtx.lineTo(165 + x, y);
-            }
-            screenCtx.stroke();
             liveMonitorTexture.needsUpdate = true;
         }
 
-        // --- PBR MATERIALS ---
-        const wallGrainTex = createTileTexture('#f2edd7', '#e8e0c5', 1, true);
-        const matCreamWall = new THREE.MeshStandardMaterial({ map: wallGrainTex, bumpMap: wallGrainTex, bumpScale: 0.015, roughness: 0.84, metalness: 0.02 });
-        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x8a8f94, roughness: 0.65, metalness: 0.05 });
-        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0xb84a39, roughness: 0.72, metalness: 0.04 });
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.48, metalness: 0.08 });
-        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x1e2126, roughness: 0.2, metalness: 0.25 });
-        const matGreySteps = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.75, metalness: 0.05 });
-        const matWoodRack = new THREE.MeshStandardMaterial({ color: 0x3b1e14, roughness: 0.45, metalness: 0.08 });
-        const matDoorWood = new THREE.MeshStandardMaterial({ color: 0x5c3422, roughness: 0.48, metalness: 0.08 });
-        const matGlass = new THREE.MeshStandardMaterial({ color: 0xdbeafe, transparent: true, opacity: 0.42, roughness: 0.05, metalness: 0.85, envMapIntensity: 1.4 });
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.3, metalness: 0.82 });
-        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.15 });
+        // Interactive Smartboard Slide Texture
+        const slideCanvas = document.createElement('canvas');
+        slideCanvas.width = 512; slideCanvas.height = 256;
+        const slideCtx = slideCanvas.getContext('2d');
+        const smartBoardTexture = new THREE.CanvasTexture(slideCanvas);
+        smartBoardTexture.encoding = THREE.sRGBEncoding;
 
-        const corridorTileTex = createTileTexture('#5c4038', '#3e2b26', 4, true);
-        corridorTileTex.repeat.set(16, 4);
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTileTex, bumpMap: corridorTileTex, bumpScale: 0.01, roughness: 0.42, metalness: 0.08 });
+        let currentSlideIndex = 0;
+        const lectureSlides = [
+            { title: 'CS701: DEEP LEARNING ARCHITECTURES', sub: 'Convolutional & Vision Transformer Backbones' },
+            { title: 'CS702: MULTI-HEAD SELF ATTENTION', sub: 'Scaled Dot-Product Attention: Q · K^T / sqrt(d_k)' },
+            { title: 'CS703: REINFORCEMENT LEARNING & AGENTS', sub: 'Markov Decision Processes & Policy Gradients' }
+        ];
+        function renderSmartBoardSlide() {
+            const s = lectureSlides[currentSlideIndex];
+            slideCtx.fillStyle = '#063f2e';
+            slideCtx.fillRect(0, 0, 512, 256);
+            slideCtx.strokeStyle = '#94a3b8';
+            slideCtx.lineWidth = 8;
+            slideCtx.strokeRect(4, 4, 504, 248);
+            slideCtx.fillStyle = '#fef08a';
+            slideCtx.font = 'bold 22px Segoe UI, Arial';
+            slideCtx.fillText(s.title, 28, 48);
+            slideCtx.fillStyle = '#e2e8f0';
+            slideCtx.font = '18px Segoe UI, Arial';
+            slideCtx.fillText(s.sub, 28, 82);
 
-        const paverTex = createTileTexture('#a8a29e', '#78716c', 10, true);
-        paverTex.repeat.set(14, 18);
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverTex, bumpMap: paverTex, bumpScale: 0.02, roughness: 0.82 });
+            slideCtx.strokeStyle = '#38bdf8';
+            slideCtx.lineWidth = 3;
+            for (let i = 0; i < 4; i++) {
+                slideCtx.strokeRect(45 + i * 110, 115, 75, 85);
+                if (i < 3) {
+                    slideCtx.beginPath();
+                    slideCtx.moveTo(120 + i * 110, 158);
+                    slideCtx.lineTo(155 + i * 110, 158);
+                    slideCtx.stroke();
+                }
+            }
+            slideCtx.fillStyle = '#6ee7b7';
+            slideCtx.font = 'bold 14px Arial';
+            slideCtx.fillText('[ Click Smartboard or Press E to Advance Lecture Slide ]', 28, 228);
+            smartBoardTexture.needsUpdate = true;
+        }
+        renderSmartBoardSlide();
 
-        const redBrickRunnerTex = createTileTexture('#994636', '#5c281e', 8, true);
-        redBrickRunnerTex.repeat.set(2, 16);
-        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: redBrickRunnerTex, roughness: 0.8 });
+        // --- 4. PHYSICALLY BASED MATERIALS (WITH NORMAL & ROUGHNESS MAPS) ---
+        const plasterPBR = createPBRSurfaceSet('#f2edd7', '#e6dec3', 1, 0.03, 4, 2);
+        const matCreamWall = new THREE.MeshStandardMaterial({
+            map: plasterPBR.map, normalMap: plasterPBR.normalMap, roughnessMap: plasterPBR.roughnessMap,
+            normalScale: new THREE.Vector2(0.25, 0.25), roughness: 0.85, metalness: 0.02
+        });
 
-        const soilTex = createTileTexture('#3f3224', '#2e2419', 2, true);
-        soilTex.repeat.set(20, 20);
-        const matRichSoil = new THREE.MeshStandardMaterial({ map: soilTex, roughness: 0.95 });
+        const dadoPBR = createPBRSurfaceSet('#8a8f94', '#7b8085', 1, 0.025, 4, 1);
+        const matGreyDado = new THREE.MeshStandardMaterial({
+            map: dadoPBR.map, normalMap: dadoPBR.normalMap,
+            normalScale: new THREE.Vector2(0.2, 0.2), roughness: 0.62, metalness: 0.06
+        });
 
-        // --- 3. EXTERIOR LANDSCAPING, COURTYARD PAVER PATHS & GPU WIND GRASS ---
-        // Natural Soil Base for Lawn Areas
-        const soilGround = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), matRichSoil);
+        const terracottaPBR = createPBRSurfaceSet('#b84a39', '#9e3b2b', 1, 0.035, 2, 2);
+        const matTerracotta = new THREE.MeshStandardMaterial({
+            map: terracottaPBR.map, normalMap: terracottaPBR.normalMap,
+            normalScale: new THREE.Vector2(0.3, 0.3), roughness: 0.74, metalness: 0.04
+        });
+
+        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45, metalness: 0.08 });
+
+        const granitePBR = createPBRSurfaceSet('#1e2126', '#111317', 2, 0.05, 2, 2);
+        const matDarkGranite = new THREE.MeshStandardMaterial({
+            map: granitePBR.map, normalMap: granitePBR.normalMap, roughnessMap: granitePBR.roughnessMap,
+            normalScale: new THREE.Vector2(0.15, 0.15), roughness: 0.22, metalness: 0.25
+        });
+
+        const concretePBR = createPBRSurfaceSet('#9aa0a6', '#7d838a', 1, 0.04, 2, 2);
+        const matGreySteps = new THREE.MeshStandardMaterial({
+            map: concretePBR.map, normalMap: concretePBR.normalMap,
+            normalScale: new THREE.Vector2(0.28, 0.28), roughness: 0.78, metalness: 0.04
+        });
+
+        const woodPBR = createPBRSurfaceSet('#3b1e14', '#29140d', 1, 0.03, 2, 1);
+        const matWoodRack = new THREE.MeshStandardMaterial({
+            map: woodPBR.map, normalMap: woodPBR.normalMap,
+            normalScale: new THREE.Vector2(0.2, 0.2), roughness: 0.42, metalness: 0.06
+        });
+        const matDoorWood = new THREE.MeshStandardMaterial({
+            color: 0x5c3422, normalMap: woodPBR.normalMap,
+            normalScale: new THREE.Vector2(0.22, 0.22), roughness: 0.46, metalness: 0.08
+        });
+
+        const matGlass = new THREE.MeshPhysicalMaterial({
+            color: 0xdbeafe, transparent: true, opacity: 0.46,
+            roughness: 0.06, metalness: 0.15, reflectivity: 0.92,
+            clearcoat: 1.0, clearcoatRoughness: 0.05, envMapIntensity: 1.5
+        });
+
+        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.28, metalness: 0.85 });
+        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.52, metalness: 0.18 });
+
+        const corridorTilePBR = createPBRSurfaceSet('#5c4038', '#382520', 4, 0.025, 16, 4);
+        const matCorridorFloor = new THREE.MeshStandardMaterial({
+            map: corridorTilePBR.map, normalMap: corridorTilePBR.normalMap, roughnessMap: corridorTilePBR.roughnessMap,
+            normalScale: new THREE.Vector2(0.22, 0.22), roughness: 0.40, metalness: 0.08
+        });
+
+        const paverPBR = createPBRSurfaceSet('#a8a29e', '#706964', 10, 0.045, 14, 18);
+        const matCourtyard = new THREE.MeshStandardMaterial({
+            map: paverPBR.map, normalMap: paverPBR.normalMap, roughnessMap: paverPBR.roughnessMap,
+            normalScale: new THREE.Vector2(0.35, 0.35), roughness: 0.82
+        });
+
+        const redBrickPBR = createPBRSurfaceSet('#994636', '#5c281e', 8, 0.04, 2, 16);
+        const matRedPaverStrip = new THREE.MeshStandardMaterial({
+            map: redBrickPBR.map, normalMap: redBrickPBR.normalMap,
+            normalScale: new THREE.Vector2(0.3, 0.3), roughness: 0.8
+        });
+
+        const soilPBR = createPBRSurfaceSet('#3f3224', '#2e2419', 1, 0.07, 24, 24);
+        const matRichSoil = new THREE.MeshStandardMaterial({
+            map: soilPBR.map, normalMap: soilPBR.normalMap,
+            normalScale: new THREE.Vector2(0.45, 0.45), roughness: 0.96
+        });
+
+        // --- 5. EXTERIOR LANDSCAPING, PAVER COURTYARD & CROSSED-TUFT GPU WIND GRASS ---
+        const soilGround = new THREE.Mesh(new THREE.PlaneGeometry(170, 170), matRichSoil);
         soilGround.rotation.x = -Math.PI / 2;
         soilGround.receiveShadow = true;
         scene.add(soilGround);
 
-        // Interlocking Paver Courtyard & Entrance Walkway (Matches Ref Photo 7)
         const mainDriveway = new THREE.Mesh(new THREE.PlaneGeometry(18, 36), matCourtyard);
         mainDriveway.rotation.x = -Math.PI / 2;
         mainDriveway.position.set(0, 0.02, 18);
@@ -644,7 +978,6 @@
         buildingApron.receiveShadow = true;
         scene.add(buildingApron);
 
-        // Red-Brick Decorative Paver Runner Strips leading to Portico (Matches Ref Photo 7)
         [-2.2, 2.2].forEach(rx => {
             const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 28), matRedPaverStrip);
             runner.rotation.x = -Math.PI / 2;
@@ -653,7 +986,6 @@
             scene.add(runner);
         });
 
-        // Red & White Painted Campus Curb Stones bordering the Lawns (Matches Ref Photo 1 & 7)
         function createCurbLine(xPos, zStart, zEnd) {
             const count = Math.floor(Math.abs(zEnd - zStart) / 0.8);
             for (let i = 0; i < count; i++) {
@@ -667,7 +999,6 @@
         createCurbLine(-9.1, 8, 34);
         createCurbLine(9.1, 8, 34);
 
-        // Terracotta Potted Plants Lining Portico & Front Wall (Matches Ref Photo 7)
         const shrubCrowns = [];
         function createTerracottaPotPlant(x, z, scale = 1.0) {
             const group = new THREE.Group();
@@ -678,7 +1009,7 @@
             rim.position.y = 0.40 * scale;
             const plantGroup = new THREE.Group();
             plantGroup.position.y = 0.45 * scale;
-            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2e6f3e, roughness: 0.75 });
+            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2e6f3e, roughness: 0.72 });
             for (let i = 0; i < 5; i++) {
                 const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.22 * scale, 8, 8), leafMat);
                 const ang = (i / 5) * Math.PI * 2;
@@ -691,18 +1022,14 @@
             scene.add(group);
             shrubCrowns.push({ group: plantGroup, phase: Math.random() * Math.PI * 2 });
         }
-        // Pots flanking the portico & front elevation
-        [-2.8, -3.8, -5.8, -8.2, 2.8, 3.8, 5.8, 8.2].forEach(px => {
-            createTerracottaPotPlant(px, 3.0, 0.95);
-        });
+        [-2.8, -3.8, -5.8, -8.2, 2.8, 3.8, 5.8, 8.2].forEach(px => createTerracottaPotPlant(px, 3.0, 0.95));
         createTerracottaPotPlant(-2.6, 5.6, 1.1);
         createTerracottaPotPlant(2.6, 5.6, 1.1);
 
-        // Natural Campus Shrubs & Hedges along Lawn Borders
         function createCampusShrub(x, z, radius = 0.85) {
             const sGroup = new THREE.Group();
             sGroup.position.set(x, 0.35, z);
-            const sMat = new THREE.MeshStandardMaterial({ color: 0x366938, roughness: 0.82 });
+            const sMat = new THREE.MeshStandardMaterial({ color: 0x366938, roughness: 0.8 });
             const main = new THREE.Mesh(new THREE.SphereGeometry(radius, 10, 10), sMat);
             main.scale.y = 0.72;
             main.castShadow = true; main.receiveShadow = true;
@@ -713,33 +1040,63 @@
         [-11.5, -14.5, -18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
         [11.5, 14.5, 18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
 
-        // --- GPU VERTEX-SHADER INSTANCED LIVING GRASS SYSTEM ---
+        // 3D Crossed-Tuft GPU Wind Grass Geometry
         const grassUniforms = {
             uTime: { value: 0 },
             uWindStrength: { value: 1.0 }
         };
 
-        // Tapered 3D Grass Tuft Geometry (Crossed blades per instance for volumetric density)
-        function createGrassTuftGeometry() {
-            const geo = new THREE.PlaneGeometry(0.11, 0.42, 1, 4);
-            geo.translate(0, 0.21, 0);
-            const pos = geo.attributes.position;
-            for (let i = 0; i < pos.count; i++) {
-                const y = pos.getY(i);
-                const heightRatio = y / 0.42;
-                // Taper width toward blade tip
-                pos.setX(i, pos.getX(i) * (1.0 - heightRatio * 0.75));
-                // Natural slight forward arch
-                pos.setZ(i, Math.pow(heightRatio, 2) * 0.05);
+        function createCrossedGrassGeometry() {
+            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4);
+            b1.translate(0, 0.22, 0);
+            const b2 = b1.clone();
+            b2.rotateY(Math.PI / 2.3);
+
+            const configureBlade = (geo, curveDir) => {
+                const pos = geo.attributes.position;
+                for (let i = 0; i < pos.count; i++) {
+                    const y = pos.getY(i);
+                    const hRatio = y / 0.44;
+                    pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
+                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * curveDir);
+                }
+            };
+            configureBlade(b1, 1);
+            configureBlade(b2, -1);
+
+            const merged = new THREE.BufferGeometry();
+            const pos1 = b1.attributes.position.array;
+            const pos2 = b2.attributes.position.array;
+            const norm1 = b1.attributes.normal.array;
+            const norm2 = b2.attributes.normal.array;
+            const idx1 = b1.index.array;
+            const idx2 = b2.index.array;
+
+            const combinedPos = new Float32Array(pos1.length + pos2.length);
+            combinedPos.set(pos1, 0);
+            combinedPos.set(pos2, pos1.length);
+
+            const combinedNorm = new Float32Array(norm1.length + norm2.length);
+            combinedNorm.set(norm1, 0);
+            combinedNorm.set(norm2, norm1.length);
+
+            const combinedIdx = new Uint16Array(idx1.length + idx2.length);
+            combinedIdx.set(idx1, 0);
+            const vertexOffset = pos1.length / 3;
+            for (let i = 0; i < idx2.length; i++) {
+                combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
             }
-            geo.computeVertexNormals();
-            return geo;
+
+            merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
+            merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
+            merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
+            return merged;
         }
 
-        const grassBladeGeo = createGrassTuftGeometry();
+        const grassBladeGeo = createCrossedGrassGeometry();
         const grassMat = new THREE.MeshStandardMaterial({
             color: 0x4a7c39,
-            roughness: 0.78,
+            roughness: 0.74,
             metalness: 0.04,
             side: THREE.DoubleSide
         });
@@ -750,21 +1107,35 @@
             shader.vertexShader = `
                 uniform float uTime;
                 uniform float uWindStrength;
+                varying float vHeightFactor;
             ` + shader.vertexShader;
 
             shader.vertexShader = shader.vertexShader.replace(
                 '#include <begin_vertex>',
                 `
                 #include <begin_vertex>
-                float hFactor = clamp(position.y / 0.42, 0.0, 1.0);
+                float hFactor = clamp(position.y / 0.44, 0.0, 1.0);
+                vHeightFactor = hFactor;
                 float bendWeight = hFactor * hFactor;
                 vec3 worldInstPos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-                float wave1 = sin(uTime * 2.1 + worldInstPos.x * 0.45 + worldInstPos.z * 0.35);
-                float wave2 = cos(uTime * 1.4 - worldInstPos.x * 0.25 + worldInstPos.z * 0.65) * 0.5;
-                float gust = max(0.0, sin(uTime * 0.65 + worldInstPos.x * 0.12)) * 0.08;
-                float totalSway = (wave1 * 0.065 + wave2 * 0.04 + gust) * uWindStrength * bendWeight;
+                float wave1 = sin(uTime * 2.15 + worldInstPos.x * 0.42 + worldInstPos.z * 0.38);
+                float wave2 = cos(uTime * 1.45 - worldInstPos.x * 0.28 + worldInstPos.z * 0.62) * 0.5;
+                float gust = max(0.0, sin(uTime * 0.7 + worldInstPos.x * 0.14 + worldInstPos.z * 0.1)) * 0.085;
+                float totalSway = (wave1 * 0.068 + wave2 * 0.042 + gust) * uWindStrength * bendWeight;
                 transformed.x += totalSway;
-                transformed.z += totalSway * 0.6;
+                transformed.z += totalSway * 0.65;
+                `
+            );
+
+            shader.fragmentShader = `
+                varying float vHeightFactor;
+            ` + shader.fragmentShader;
+
+            shader.fragmentShader = shader.fragmentShader.replace(
+                '#include <color_fragment>',
+                `
+                #include <color_fragment>
+                diffuseColor.rgb *= mix(0.48, 1.18, vHeightFactor);
                 `
             );
         };
@@ -784,20 +1155,17 @@
 
             let placed = 0;
             while (placed < bladeCount) {
-                // Distribute across Left Lawn (X: -36 to -9.3, Z: -12 to 34) and Right Lawn (X: 9.3 to 36, Z: -12 to 34)
                 const isLeft = Math.random() < 0.55;
-                const x = isLeft ? (-9.4 - Math.random() * 25) : (9.4 + Math.random() * 25);
+                const x = isLeft ? (-9.3 - Math.random() * 25) : (9.3 + Math.random() * 25);
                 const z = -10 + Math.random() * 44;
 
-                // Skip inside the Red Shed footprint (X: -27 to -17, Z: -5 to 9)
                 if (x > -27.5 && x < -16.5 && z > -5.5 && z < 9.5) continue;
-                // Skip inside Main Building footprint (X: -15.5 to 15.5, Z: -10.5 to 3.5)
                 if (x > -15.5 && x < 15.5 && z < 3.5) continue;
 
                 dummy.position.set(x, 0, z);
                 dummy.rotation.y = Math.random() * Math.PI * 2;
-                const scaleH = 0.75 + Math.random() * 0.65;
-                dummy.scale.set(0.9 + Math.random() * 0.4, scaleH, 1.0);
+                const scaleH = 0.72 + Math.random() * 0.72;
+                dummy.scale.set(0.88 + Math.random() * 0.45, scaleH, 0.88 + Math.random() * 0.45);
                 dummy.updateMatrix();
                 grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
 
@@ -811,7 +1179,7 @@
             scene.add(grassInstancedMesh);
         }
 
-        // Red-Roofed Adjacent Shed on Left (Ref Photo 1)
+        // Red-Roofed Adjacent Shed on Left
         const redShedGroup = new THREE.Group();
         const shedBase = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 14), matCreamWall);
         shedBase.position.set(-22, 1.6, 2);
@@ -824,8 +1192,9 @@
         shedRoof.castShadow = true;
         redShedGroup.add(shedRoof);
         scene.add(redShedGroup);
+        addCollider(-27, -17, -5, 9, 0, 5);
 
-        // Campus Trees with Wind-Synchronized Foliage
+        // Campus Trees & Background Coconut Palm
         const animatedTreeCrowns = [];
         function createTree(x, z, scale = 1) {
             const tree = new THREE.Group();
@@ -839,7 +1208,7 @@
 
             const crownGroup = new THREE.Group();
             crownGroup.position.set(0, 4.2 * scale, 0);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.8 });
+            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.78 });
             const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 14, 14), foliageMat);
             c1.position.set(0, 0.6 * scale, 0);
             const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 12, 12), foliageMat);
@@ -856,6 +1225,7 @@
             tree.position.set(x, 0, z);
             scene.add(tree);
             animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
+            addCollider(x - 0.5, x + 0.5, z - 0.5, z + 0.5, 0, 4);
         }
         createTree(-15.5, 11.5, 1.35);
         createTree(-24.5, 15.0, 1.45);
@@ -863,7 +1233,35 @@
         createTree(18.5, 12.5, 1.2);
         createTree(24.0, 20.0, 1.3);
 
-        // --- 4. MAIN DEPARTMENT BUILDING (PESCE Mandya Reference Architecture) ---
+        const rearCampusBlock = new THREE.Mesh(new THREE.BoxGeometry(9.5, 12.5, 7.0), matWhiteTrim);
+        rearCampusBlock.position.set(-7.5, 6.25, -15.5);
+        scene.add(rearCampusBlock);
+
+        const palmGroup = new THREE.Group();
+        const palmTrunk = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.18, 0.28, 11.5, 8),
+            new THREE.MeshStandardMaterial({ color: 0x5c4738, roughness: 0.9 })
+        );
+        palmTrunk.position.y = 5.75;
+        palmGroup.add(palmTrunk);
+        const palmCrown = new THREE.Group();
+        palmCrown.position.y = 11.4;
+        const frondMat = new THREE.MeshStandardMaterial({ color: 0x2f6f39, roughness: 0.7, side: THREE.DoubleSide });
+        for (let f = 0; f < 8; f++) {
+            const frond = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 0.45), frondMat);
+            frond.position.x = 1.2;
+            frond.rotation.z = -0.28;
+            const fPivot = new THREE.Group();
+            fPivot.rotation.y = (f / 8) * Math.PI * 2;
+            fPivot.add(frond);
+            palmCrown.add(fPivot);
+        }
+        palmGroup.add(palmCrown);
+        palmGroup.position.set(-3.2, 0, -11.5);
+        scene.add(palmGroup);
+        animatedTreeCrowns.push({ group: palmCrown, phase: 1.2 });
+
+        // --- 6. MAIN DEPARTMENT BUILDING (PESCE Mandya Reference Architecture) ---
         const building = new THREE.Group();
         scene.add(building);
 
@@ -872,12 +1270,32 @@
         gfSlab.receiveShadow = true;
         building.add(gfSlab);
 
+        const gfFrontWallLeft = new THREE.Mesh(new THREE.BoxGeometry(11.5, 3.8, 0.25), matCreamWall);
+        gfFrontWallLeft.position.set(-8.2, 2.0, 0.4);
+        const gfFrontWallRight = new THREE.Mesh(new THREE.BoxGeometry(12.5, 3.8, 0.25), matCreamWall);
+        gfFrontWallRight.position.set(8.2, 2.0, 0.4);
+        building.add(gfFrontWallLeft, gfFrontWallRight);
+        addCollider(-14.5, -2.2, 0.2, 0.6, 0, 3.9);
+        addCollider(2.0, 14.8, 0.2, 0.6, 0, 3.9);
+
+        [-6.5, 6.0, 11.0].forEach(gx => {
+            const gWinFrame = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 0.3), matBlackMetal);
+            gWinFrame.position.set(gx, 2.1, 0.42);
+            const gWinGlass = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.15, 0.32), matGlass);
+            gWinGlass.position.set(gx, 2.1, 0.42);
+            building.add(gWinFrame, gWinGlass);
+        });
+
         const ffCorridorFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.25, 3.6), matCorridorFloor);
         ffCorridorFloor.position.set(0, 4.0, 0.2);
         ffCorridorFloor.receiveShadow = true;
         building.add(ffCorridorFloor);
 
-        // 3 Split-Level Steps in Mid-Corridor + Black Ribbed Doormat (Ref Photo 1)
+        const corrAO = new THREE.Mesh(new THREE.PlaneGeometry(26, 0.35), matAOStrip);
+        corrAO.rotation.x = -Math.PI / 2;
+        corrAO.position.set(2, 4.135, -1.28);
+        building.add(corrAO);
+
         for (let s = 0; s < 3; s++) {
             const step = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12 * (s + 1), 3.4), matGreySteps);
             step.position.set(4.5 + s * 0.4, 4.06 + (0.06 * s), 0.2);
@@ -890,6 +1308,13 @@
         );
         doormat.position.set(6.0, 4.38, 0.2);
         building.add(doormat);
+
+        const blueBin = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.22, 0.18, 0.55, 14),
+            new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.4 })
+        );
+        blueBin.position.set(8.8, 4.64, -1.15);
+        building.add(blueBin);
 
         const raisedFloor = new THREE.Mesh(new THREE.BoxGeometry(9.5, 0.25, 3.6), matCorridorFloor);
         raisedFloor.position.set(10.25, 4.24, 0.2);
@@ -923,6 +1348,7 @@
         const ffParapetCoping = new THREE.Mesh(new THREE.BoxGeometry(30.2, 0.08, 0.36), matWhiteTrim);
         ffParapetCoping.position.set(0, 5.25, 1.88);
         building.add(ffParapetOuter, ffParapetInner, ffParapetCoping);
+        addCollider(-15, 15, 1.65, 2.15, 4.0, 7.8);
 
         for (let x = -14; x <= 14; x += 4.66) {
             const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.55, 8.0, 0.55), matWhiteTrim);
@@ -935,7 +1361,6 @@
             building.add(redStripe);
         }
 
-        // Official Department Signboards & Rooftop Solar Panels
         const mainSignTex = createSignTexture('#2563eb', '#f8fafc', [
             { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 46px Arial' },
             { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 38px Arial' }
@@ -971,7 +1396,7 @@
         createSolarArray(-12, 4);
         createSolarArray(4, 5);
 
-        // Central Entrance Portico with Ramp/Steps & Signboard (Ref Photo 7 & 10)
+        // Central Entrance Portico
         const portico = new THREE.Group();
         portico.position.set(0, 0, 4.2);
         scene.add(portico);
@@ -981,6 +1406,7 @@
             pCol.position.set(px, 1.8, 1.2);
             pCol.castShadow = true;
             portico.add(pCol);
+            addCollider(px - 0.35, px + 0.35, 5.05, 5.75, 0, 3.8);
         });
 
         const porticoRamp = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.18, 3.2), matRedPaverStrip);
@@ -998,18 +1424,29 @@
         trimRight.position.set(1.2, 4.1, 1.78); trimRight.rotation.z = -0.32;
         portico.add(roofLeft, roofRight, trimLeft, trimRight);
 
-        const porticoSignTex = createSignTexture('#2563eb', '#ffffff', [
-            { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 36px Arial', color: '#ffffff' },
-            { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 30px Arial', color: '#e0f2fe' }
+        const porticoSignTex = createSignTexture('#3b82f6', '#ffffff', [
+            { text: 'ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಮತ್ತು ಇಂಜಿನಿಯರಿಂಗ್ ವಿಭಾಗ (AI & ML)', font: 'bold 30px Segoe UI, Arial', color: '#ffffff' },
+            { text: 'COMPUTER SCIENCE & ENGINEERING (AI & ML)', font: 'bold 32px Arial', color: '#ffffff' }
         ], 1024, 200);
         const porticoBanner = new THREE.Mesh(
-            new THREE.BoxGeometry(4.1, 0.65, 0.1),
+            new THREE.BoxGeometry(4.1, 0.62, 0.1),
             new THREE.MeshStandardMaterial({ map: porticoSignTex })
         );
-        porticoBanner.position.set(0, 3.35, 1.5);
+        porticoBanner.position.set(0, 3.38, 1.5);
         portico.add(porticoBanner);
 
-        // --- 5. SWITCHBACK STAIRCASE, CORRIDOR, HINGED DOORS, LAB & CLASSROOM ---
+        const quoteSignTex = createSignTexture('#0f172a', '#64748b', [
+            { text: '"We commit ourselves to render service to provide engineering education to our', font: '22px Arial', color: '#cbd5e1' },
+            { text: 'students with exemplary professional excellence and high ethics."', font: '22px Arial', color: '#cbd5e1' }
+        ], 1024, 140);
+        const quoteBanner = new THREE.Mesh(
+            new THREE.BoxGeometry(3.2, 0.36, 0.06),
+            new THREE.MeshStandardMaterial({ map: quoteSignTex })
+        );
+        quoteBanner.position.set(0, 2.86, 1.2);
+        portico.add(quoteBanner);
+
+        // --- 7. SWITCHBACK STAIRCASE ---
         const stairGroup = new THREE.Group();
         stairGroup.position.set(-10.5, 0, -1.2);
         scene.add(stairGroup);
@@ -1056,6 +1493,12 @@
         redNoticeBoard.position.set(1.83, 3.3, -0.5);
         stairGroup.add(redNoticeBoard);
 
+        const switchBox = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.18), matWhiteTrim);
+        switchBox.position.set(1.83, 2.75, -1.25);
+        const conduitPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 2.6, 8), matWhiteTrim);
+        conduitPipe.position.set(1.83, 3.6, -1.9);
+        stairGroup.add(switchBox, conduitPipe);
+
         const fireExitTex = createSignTexture('#15803d', '#ffffff', [{ text: '⬅ FIRE EXIT', font: 'bold 54px Arial' }], 512, 180);
         const fireExitSign = new THREE.Mesh(
             new THREE.BoxGeometry(0.04, 0.28, 0.55),
@@ -1063,6 +1506,9 @@
         );
         fireExitSign.position.set(1.83, 4.1, -1.2);
         stairGroup.add(fireExitSign);
+
+        // --- 8. CORRIDOR WALLS, INTERACTIVE DOORS, FACULTY BOARD, LAB & CLASSROOM ---
+        const interactableObjects = [];
 
         function addCorridorWallSegment(xStart, xEnd, yFloor = 4.0) {
             const length = xEnd - xStart;
@@ -1074,6 +1520,7 @@
             lower.castShadow = upper.castShadow = true;
             lower.receiveShadow = upper.receiveShadow = true;
             building.add(lower, upper);
+            addCollider(xStart, xEnd, -1.72, -1.38, 4.0, 8.0);
         }
         addCorridorWallSegment(-8.5, -2.85, 4.0);
         addCorridorWallSegment(-1.55, 5.55, 4.0);
@@ -1090,8 +1537,27 @@
             building.add(plate);
         });
 
+        // Interactive Faculty & TACHYON Leadership Board in 1st-Floor Corridor
+        const facultyBoardTex = createSignTexture('#0f172a', '#fbbf24', [
+            { text: '🏛️ AI & ML FACULTY & TACHYON LEADERSHIP', font: 'bold 34px Segoe UI, Arial', color: '#fbbf24' },
+            { text: 'Dr. Vinay S. (Principal) • Shivakumar Patil (President)', font: 'bold 26px Arial', color: '#ffffff' },
+            { text: '[ Click or Press E to Inspect Profiles ]', font: '24px Arial', color: '#38bdf8' }
+        ], 1024, 256);
+        const facultyBoardMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(1.85, 0.95, 0.06),
+            new THREE.MeshStandardMaterial({ map: facultyBoardTex, roughness: 0.3 })
+        );
+        facultyBoardMesh.position.set(-3.9, 5.75, -1.39);
+        facultyBoardMesh.userData = {
+            interactType: 'faculty_modal',
+            promptText: 'Inspect AI & ML Faculty & Leadership Profiles'
+        };
+        building.add(facultyBoardMesh);
+        interactableObjects.push(facultyBoardMesh);
+
+        // Operable Hinged Doors
         const hingedDoors = [];
-        function createHingedDoor(hingeX, baseY, zPos) {
+        function createHingedDoor(hingeX, baseY, zPos, doorLabel) {
             const pivot = new THREE.Group();
             pivot.position.set(hingeX, baseY, zPos);
             const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.26, 2.35, 0.07), matDoorWood);
@@ -1103,17 +1569,33 @@
             handle.position.set(1.12, 1.1, 0);
             pivot.add(doorLeaf, glassPane, handle);
             building.add(pivot);
-            hingedDoors.push({ pivot, center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos), currentAngle: -0.25 });
-        }
-        createHingedDoor(-2.83, 4.12, -1.55);
-        createHingedDoor(5.57, 4.36, -1.55);
 
-        [-5.2, 1.2, 10.2].forEach(wx => {
-            const winFrame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 0.3), matWhiteTrim);
+            const doorObj = {
+                pivot,
+                center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos),
+                currentAngle: -0.25,
+                manualOpen: false
+            };
+            doorLeaf.userData = {
+                interactType: 'door_toggle',
+                doorRef: doorObj,
+                promptText: `Toggle ${doorLabel} Door (Open / Close)`
+            };
+            interactableObjects.push(doorLeaf);
+            hingedDoors.push(doorObj);
+        }
+        createHingedDoor(-2.83, 4.12, -1.55, 'AI & ML Lab');
+        createHingedDoor(5.57, 4.36, -1.55, 'Smart Classroom');
+
+        // White-Framed Sliding Windows with Center Mullions
+        [-5.6, 1.2, 10.2].forEach(wx => {
+            const winFrame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 0.28), matWhiteTrim);
             winFrame.position.set(wx, 5.85, -1.55);
-            const winGlass = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.1, 0.32), matGlass);
+            const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.26, 0.30), matWhiteTrim);
+            mullion.position.set(wx, 5.85, -1.55);
+            const winGlass = new THREE.Mesh(new THREE.BoxGeometry(2.04, 1.14, 0.31), matGlass);
             winGlass.position.set(wx, 5.85, -1.55);
-            building.add(winFrame, winGlass);
+            building.add(winFrame, mullion, winGlass);
         });
 
         function createShoeRack(xPos) {
@@ -1133,6 +1615,7 @@
             rack.add(top, mid, bot, sideL, sideR, div);
             rack.position.set(xPos, 4.12, -1.18);
             building.add(rack);
+            addCollider(xPos - 0.9, xPos + 0.9, -1.42, -0.92, 4.0, 5.2);
         }
         createShoeRack(-7.2);
         createShoeRack(-5.2);
@@ -1186,6 +1669,10 @@
         const midRoomDivider = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4.0, 8.4), matCreamWall);
         midRoomDivider.position.set(4.0, 6.0, -5.8);
         building.add(backWall, leftEndWall, rightEndWall, midRoomDivider);
+        addCollider(-15, 15, -10.2, -9.7, 0, 9);
+        addCollider(-15.2, -14.7, -10, 2, 0, 9);
+        addCollider(14.7, 15.2, -10, 2, 0, 9);
+        addCollider(3.8, 4.2, -10, -1.6, 4.0, 8.0);
 
         function createLabChair(x, y, z, rotY = Math.PI) {
             const chair = new THREE.Group();
@@ -1213,6 +1700,7 @@
                 desk.position.set(col, 4.49, row);
                 desk.castShadow = true; desk.receiveShadow = true;
                 building.add(desk);
+                addCollider(col - 1.0, col + 1.0, row - 0.42, row + 0.42, 4.0, 5.5);
 
                 [-0.45, 0.45].forEach(offset => {
                     const monFrame = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.40, 0.04), matBlackMetal);
@@ -1230,12 +1718,18 @@
             }
         }
 
+        // Interactive Lab Projection Screen (Cycles AI Training Workloads on Click / E)
         const labScreen = new THREE.Mesh(
             new THREE.BoxGeometry(4.2, 1.8, 0.08),
             new THREE.MeshStandardMaterial({ map: liveMonitorTexture, roughness: 0.25 })
         );
         labScreen.position.set(-2.0, 6.1, -9.75);
+        labScreen.userData = {
+            interactType: 'cycle_lab_mode',
+            promptText: 'Switch AI & ML Lab Compute Workload (PyTorch / YOLOv8 / Agent Mesh)'
+        };
         building.add(labScreen);
+        interactableObjects.push(labScreen);
 
         const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.58 });
         for (let r = -3.8; r >= -8.2; r -= 1.6) {
@@ -1247,16 +1741,24 @@
                 seatBench.position.set(c - 0.52, 4.35, r);
                 seatBench.castShadow = true;
                 building.add(desk, seatBench);
+                addCollider(c - 0.95, c + 0.95, r - 0.35, r + 0.35, 4.0, 5.5);
             }
         }
+
+        // Interactive Smartboard in Classroom (Advances Lecture Slides on Click / E)
         const smartBoard = new THREE.Mesh(
             new THREE.BoxGeometry(0.08, 1.6, 4.0),
-            new THREE.MeshStandardMaterial({ color: 0x064e3b, roughness: 0.35 })
+            new THREE.MeshStandardMaterial({ map: smartBoardTexture, roughness: 0.35 })
         );
         smartBoard.position.set(14.75, 6.0, -5.8);
+        smartBoard.userData = {
+            interactType: 'next_slide',
+            promptText: 'Advance Smartboard AI & ML Lecture Slide'
+        };
         building.add(smartBoard);
+        interactableObjects.push(smartBoard);
 
-        // --- 6. CLICKABLE 3D HOTSPOT MARKERS IN SCENE (Raycaster Interactive) ---
+        // --- 9. CLICKABLE 3D HOTSPOT MARKERS ---
         const hotspotMeshes = [];
         function createInteractiveHotspot(x, y, z, zoneKey, labelText) {
             const tex = createSignTexture('#0f172a', '#00f2fe', [
@@ -1267,9 +1769,10 @@
             const sprite = new THREE.Sprite(mat);
             sprite.position.set(x, y, z);
             sprite.scale.set(2.4, 0.75, 1);
-            sprite.userData = { zoneKey, baseY: y };
+            sprite.userData = { interactType: 'teleport', zoneKey, baseY: y, promptText: 'Teleport to ' + labelText };
             scene.add(sprite);
             hotspotMeshes.push(sprite);
+            interactableObjects.push(sprite);
         }
         createInteractiveHotspot(0, 2.5, 6.2, 'portico', 'Main Entrance Portico');
         createInteractiveHotspot(-10.2, 3.1, -0.5, 'stairs', 'Switchback Staircase');
@@ -1280,9 +1783,11 @@
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
 
-        // --- 7. RIGGED GLTF HUMAN CHARACTER & SKELETAL ANIMATION ENGINE ---
+        // --- 10. RIGGED GLTF HUMAN CHARACTER, 3RD-PERSON AVATAR & SKELETAL ENGINE ---
         const gltfLoader = new THREE.GLTFLoader();
         const characterAgents = [];
+        let playerAvatar = null;
+        let isThirdPerson = false;
 
         const ASSET_SOURCES = {
             detailedHuman: [
@@ -1374,6 +1879,27 @@
                     loadGLBWithFallback(ASSET_SOURCES.articulatedActor)
                 ]);
 
+                // Create Controllable 3rd-Person Player Avatar
+                const avatarWrap = new THREE.Group();
+                const avatarClone = THREE.SkeletonUtils.clone(actorData.gltf.scene);
+                avatarClone.scale.setScalar(0.96);
+                styleActorMaterials(avatarClone, { primary: 0x0284c7, secondary: 0x0f172a });
+                avatarWrap.add(avatarClone);
+                const avShadow = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
+                avShadow.rotation.x = -Math.PI / 2;
+                avShadow.position.y = 0.015;
+                avatarWrap.add(avShadow);
+                avatarWrap.visible = isThirdPerson;
+                scene.add(avatarWrap);
+
+                const avMixer = new THREE.AnimationMixer(avatarClone);
+                const avActions = {};
+                actorData.gltf.animations.forEach(c => { avActions[c.name.toLowerCase()] = avMixer.clipAction(c); });
+                const avIdle = avActions['idle'] || Object.values(avActions)[0];
+                const avWalk = avActions['walk'] || avActions['run'] || avIdle;
+                if (avIdle) avIdle.play();
+                playerAvatar = { wrapper: avatarWrap, mixer: avMixer, idle: avIdle, walk: avWalk, isMoving: false };
+
                 function spawnRiggedAgent(sourceData, config) {
                     const wrapper = new THREE.Group();
                     const clone = THREE.SkeletonUtils.clone(sourceData.gltf.scene);
@@ -1426,14 +1952,13 @@
                     characterAgents.push(agent);
                 }
 
-                // Exterior Courtyard Pathway Walker
+                // Exterior Courtyard Walker
                 spawnRiggedAgent(humanData, {
                     role: 'walker',
                     isGroundFloor: true,
                     scale: 0.96,
                     position: new THREE.Vector3(-1.5, 0.03, 18.0),
                     rotationY: Math.PI,
-                    palette: null,
                     waypoints: [
                         { x: -1.5, z: 18.0, pause: 1.5 },
                         { x: -1.2, z: 7.2,  pause: 2.8 },
@@ -1458,7 +1983,6 @@
                     ]
                 });
 
-                // 1st Floor Corridor Standing Student
                 spawnRiggedAgent(humanData, {
                     role: 'corridor_talker',
                     scale: 0.96,
@@ -1467,7 +1991,6 @@
                     optionalOnMobile: true
                 });
 
-                // AI & ML Lab Seated Students
                 const labSeats = [
                     { x: -6.95, z: -3.22, palette: { primary: 0x0f766e, secondary: 0x1e293b }, opt: false },
                     { x: -3.45, z: -3.22, palette: { primary: 0x4338ca, secondary: 0x1e293b }, opt: false },
@@ -1485,7 +2008,6 @@
                     });
                 });
 
-                // Smart Classroom Seated Students + Faculty
                 const classroomSeats = [
                     { x: 5.98, z: -3.8, role: 'seated_classroom', palette: { primary: 0x1d4ed8, secondary: 0x0f172a }, opt: false },
                     { x: 5.98, z: -5.4, role: 'seated_hand_raise', palette: { primary: 0x047857, secondary: 0x0f172a }, opt: false },
@@ -1511,7 +2033,7 @@
                     palette: { primary: 0x0f172a, secondary: 0x475569 }
                 });
 
-                statusEl.innerText = '✅ 12 Rigged GLTF Actors Active (Courtyard, Corridor, Lab & Classroom)';
+                statusEl.innerText = '✅ 12 Rigged GLTF Actors + 3P Avatar Active';
                 applyGraphicsPreset(currentPreset);
             } catch (err) {
                 statusEl.style.borderColor = '#f59e0b';
@@ -1618,7 +2140,7 @@
             });
         }
 
-        // --- 8. THREE GRAPHICS PRESETS (HIGH, BALANCED, MOBILE) ---
+        // --- 11. GRAPHICS PRESETS (HIGH, BALANCED, MOBILE) ---
         const isMobileDevice = window.innerWidth <= 850 || /Mobi|Android/i.test(navigator.userAgent);
         let currentPreset = isMobileDevice ? 'MOBILE' : 'HIGH';
         document.getElementById('PresetSelect').value = currentPreset;
@@ -1642,7 +2164,7 @@
         applyGraphicsPreset(currentPreset);
         initializeDepartmentPopulation();
 
-        // --- 9. SYNTHESIZED WEB AUDIO AMBIENCE (Outdoor Breeze & Indoor Lab Hum) ---
+        // --- 12. WEB AUDIO AMBIENCE ---
         let audioCtx = null;
         let audioGain = null;
         let audioEnabled = false;
@@ -1691,19 +2213,61 @@
             }
         };
 
-        // --- 10. CINEMATIC INTRO, ORBIT MODE & VIEWPOINT TELEPORTATION ---
+        // --- 13. INTERACTIVE CAMPUS ACTIONS, 1P/3P VIEW & TELEPORTATION ---
+        let activeHoveredTarget = null;
+
+        window.openProfileModal = function() {
+            document.getElementById('profile-modal').style.display = 'flex';
+        };
+        window.closeProfileModal = function() {
+            document.getElementById('profile-modal').style.display = 'none';
+        };
+
+        window.executeObjectInteraction = function(userData) {
+            if (!userData) return;
+            if (userData.interactType === 'teleport' && userData.zoneKey) {
+                window.teleportTo(userData.zoneKey);
+            } else if (userData.interactType === 'door_toggle' && userData.doorRef) {
+                userData.doorRef.manualOpen = !userData.doorRef.manualOpen;
+            } else if (userData.interactType === 'faculty_modal') {
+                window.openProfileModal();
+            } else if (userData.interactType === 'cycle_lab_mode') {
+                labWorkloadMode = (labWorkloadMode + 1) % 3;
+                updateLabMonitorScreen(0.1);
+                document.getElementById('info-title').innerText = '💻 ' + labModeTitles[labWorkloadMode];
+            } else if (userData.interactType === 'next_slide') {
+                currentSlideIndex = (currentSlideIndex + 1) % lectureSlides.length;
+                renderSmartBoardSlide();
+                document.getElementById('info-title').innerText = '🎓 ' + lectureSlides[currentSlideIndex].title;
+            }
+        };
+
+        window.triggerActiveInteraction = function() {
+            if (activeHoveredTarget && activeHoveredTarget.userData) {
+                window.executeObjectInteraction(activeHoveredTarget.userData);
+            }
+        };
+
+        window.togglePerspectiveMode = function() {
+            isThirdPerson = !isThirdPerson;
+            const btn = document.getElementById('btn-viewmode');
+            btn.innerText = isThirdPerson ? '🧍 View: 3rd Person' : '👁️ View: 1st Person';
+            btn.classList.toggle('active-mode', isThirdPerson);
+            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson && !cinematicActive && !orbitMode;
+        };
+
         const viewpoints = {
             exterior: {
                 pos: { x: 0, y: 2.2, z: 21 },
                 yaw: 0, pitch: 0.06,
                 title: "🏛️ Department Exterior Elevation",
-                desc: "Photorealistic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building featuring GPU wind-driven grass, terracotta planters, and rooftop solar panels."
+                desc: "Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, terracotta planters, and rooftop solar arrays."
             },
             portico: {
                 pos: { x: 0, y: 1.85, z: 8.5 },
                 yaw: 0, pitch: 0.04,
                 title: "🚪 Main Entrance Portico",
-                desc: "Gable-roofed entrance canopy flanked by terracotta flower pots. Walk inside and head left (-X) to climb the switchback staircase."
+                desc: "Gable-roofed entrance canopy with bilingual department signage. Walk inside and head left (-X) to climb the switchback staircase."
             },
             stairs: {
                 pos: { x: -10.4, y: 2.5, z: -0.2 },
@@ -1715,22 +2279,23 @@
                 pos: { x: -7.5, y: 5.68, z: 0.25 },
                 yaw: -1.57, pitch: -0.02,
                 title: "🚶 1st Floor AI & ML Corridor",
-                desc: "Matte-brown vitrified floor tiles, wooden shoe racks, red fire extinguisher, 3 split-level steps, and clickable room markers."
+                desc: "Matte-brown vitrified floor tiles, wooden shoe racks, fire extinguisher, and interactive Faculty Leadership board (Press E or Click)."
             },
             lab: {
                 pos: { x: -2.0, y: 5.75, z: -2.3 },
                 yaw: 0.25, pitch: -0.08,
                 title: "💻 AI & ML Deep Learning Lab",
-                desc: "Rigged students sit in ergonomic chairs typing at dual-monitor workstations running live neural network training curves."
+                desc: "Rigged students sit typing at dual-monitor workstations. Click the front projection screen or press E to switch live AI workloads."
             },
             classroom: {
                 pos: { x: 7.2, y: 5.88, z: -5.6 },
                 yaw: -1.57, pitch: -0.05,
                 title: "🎓 Smart Lecture Classroom",
-                desc: "Students sit at wooden lecture benches while a faculty member gestures and explains concepts at the front smartboard."
+                desc: "Students sit at wooden lecture benches while a faculty member lectures. Click the green smartboard or press E to advance slides."
             }
         };
 
+        const playerPos = new THREE.Vector3(0, 2.2, 21);
         let camYaw = 0;
         let camPitch = 0.06;
         let targetTeleport = null;
@@ -1747,6 +2312,7 @@
             cinematicActive = true;
             cinematicTime = 0;
             targetTeleport = null;
+            if (playerAvatar) playerAvatar.wrapper.visible = false;
             const banner = document.getElementById('cinematic-banner');
             banner.style.display = 'flex';
             banner.style.opacity = '1';
@@ -1767,6 +2333,7 @@
             targetTeleport = null;
             orbitMode = !orbitMode;
             const btn = document.getElementById('btn-orbit');
+            if (playerAvatar) playerAvatar.wrapper.visible = false;
             if (orbitMode) {
                 btn.classList.add('active-mode');
                 document.getElementById('info-title').innerText = '🔭 Exterior Orbit Inspection Mode';
@@ -1788,6 +2355,7 @@
                 x: v.pos.x, y: v.pos.y, z: v.pos.z,
                 yaw: v.yaw, pitch: v.pitch
             };
+            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson;
             document.getElementById('info-title').innerText = v.title;
             document.getElementById('info-desc').innerText = v.desc;
             document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
@@ -1797,16 +2365,21 @@
 
         const keys = { forward: false, backward: false, left: false, right: false };
         window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.closeProfileModal();
+                return;
+            }
             if (cinematicActive) window.skipCinematicIntro();
             const k = e.key.toLowerCase();
             if (k === 'w' || e.key === 'ArrowUp') keys.forward = true;
             if (k === 's' || e.key === 'ArrowDown') keys.backward = true;
             if (k === 'a' || e.key === 'ArrowLeft') keys.left = true;
             if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
+            if (k === 'e') window.triggerActiveInteraction();
+            if (k === 'v') window.togglePerspectiveMode();
             if (['1','2','3','4','5','6'].includes(k)) {
                 const map = ['exterior','portico','stairs','corridor','lab','classroom'];
-                const idx = parseInt(k) - 1;
-                window.teleportTo(map[idx]);
+                window.teleportTo(map[parseInt(k) - 1]);
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -1817,7 +2390,6 @@
             if (k === 'd' || e.key === 'ArrowRight') keys.right = false;
         });
 
-        // Mouse Wheel FOV / Orbit Zoom
         window.addEventListener('wheel', (e) => {
             if (orbitMode) {
                 orbitDistance = Math.max(12, Math.min(55, orbitDistance + e.deltaY * 0.02));
@@ -1843,7 +2415,6 @@
         bindTouchBtn('btn-left', 'left');
         bindTouchBtn('btn-right', 'right');
 
-        // Pointer Down / Drag / Click Raycasting for 3D Hotspots
         let isDragging = false;
         let pointerDownPos = { x: 0, y: 0 };
         let prevX = 0, prevY = 0;
@@ -1857,13 +2428,12 @@
         });
         window.addEventListener('mouseup', (e) => {
             if (isDragging && Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y) < 6) {
-                // Click Raycast against 3D Hotspot Sprites
                 pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
                 pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
                 raycaster.setFromCamera(pointer, camera);
-                const hits = raycaster.intersectObjects(hotspotMeshes);
-                if (hits.length > 0 && hits[0].object.userData.zoneKey) {
-                    window.teleportTo(hits[0].object.userData.zoneKey);
+                const hits = raycaster.intersectObjects(interactableObjects);
+                if (hits.length > 0 && hits[0].distance < 18) {
+                    window.executeObjectInteraction(hits[0].object.userData);
                 }
             }
             isDragging = false;
@@ -1906,86 +2476,108 @@
             prevY = e.touches[0].clientY;
         }, { passive: true });
 
-        // --- 11. MASTER REAL-TIME RENDER & PHYSICS LOOP ---
+        // --- 14. MASTER REAL-TIME RENDER, INTERACTION & PHYSICS LOOP ---
+        const reticleEl = document.getElementById('reticle');
+        const promptEl = document.getElementById('interact-prompt');
+        const promptLabelEl = document.getElementById('interact-label');
+
         function animate() {
             requestAnimationFrame(animate);
             const dt = Math.min(clock.getDelta(), 0.1);
             const elapsed = clock.getElapsedTime();
 
-            // 1. Update GPU Grass Wind Shader Uniforms
+            // 1. Update GPU Grass Wind Uniform
             grassUniforms.uTime.value = elapsed;
 
             // 2. Rotate Ceiling Fans
             ceilingFans.forEach(rotor => { rotor.rotation.y -= dt * 6.5; });
 
-            // 3. Synchronized Wind Sway on Trees & Potted Shrubs
+            // 3. Differentiated Wind Sway on Trees & Shrubs
             animatedTreeCrowns.forEach(t => {
-                t.group.rotation.z = Math.sin(elapsed * 1.3 + t.phase) * 0.026;
-                t.group.rotation.x = Math.cos(elapsed * 1.0 + t.phase) * 0.018;
+                t.group.rotation.z = Math.sin(elapsed * 1.25 + t.phase) * 0.026;
+                t.group.rotation.x = Math.cos(elapsed * 0.95 + t.phase) * 0.018;
             });
             shrubCrowns.forEach(s => {
-                s.group.rotation.z = Math.sin(elapsed * 2.0 + s.phase) * 0.032;
+                s.group.rotation.z = Math.sin(elapsed * 2.1 + s.phase) * 0.034;
             });
 
-            // 4. Gently Bob 3D Interactive Hotspot Sprites
+            // 4. Gently Bob 3D Hotspot Sprites
             hotspotMeshes.forEach((h, idx) => {
                 h.position.y = h.userData.baseY + Math.sin(elapsed * 2.4 + idx) * 0.08;
             });
 
-            // 5. Update Live AI/ML Code & Neural Graph on Lab Monitors
+            // 5. Update Live AI/ML Code & Telemetry on Lab Monitors
             if (Math.floor(elapsed * 12) !== Math.floor((elapsed - dt) * 12)) {
                 updateLabMonitorScreen(dt);
             }
 
-            // 6. Proximity-Based Hinged Door Opening
+            // 6. Hinged Doors (Open on Proximity or Manual Toggle)
             hingedDoors.forEach(d => {
-                let near = camera.position.distanceTo(d.center) < 3.5;
+                let near = playerPos.distanceTo(d.center) < 2.8;
                 characterAgents.forEach(a => {
-                    if (a.wrapper.visible && a.wrapper.position.distanceTo(d.center) < 2.8) near = true;
+                    if (a.wrapper.visible && a.wrapper.position.distanceTo(d.center) < 2.6) near = true;
                 });
-                const targetAngle = near ? -1.45 : -0.25;
-                d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 4.5);
+                const shouldOpen = near || d.manualOpen;
+                const targetAngle = shouldOpen ? -1.48 : -0.22;
+                d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 5.0);
                 d.pivot.rotation.y = d.currentAngle;
             });
 
             // 7. Update Rigged GLTF Actors
             updateCharacterAgents(dt, elapsed);
 
-            // 8. Automatic Indoor / Outdoor Exposure Adaptation
-            const isInsideBuilding = camera.position.z < 2.2 && Math.abs(camera.position.x) < 15;
-            const targetExposure = isInsideBuilding ? 1.22 : (isGoldenHour ? 1.12 : 1.04);
+            // 8. Center-Screen Raycaster for Interactive Prompts ([E / Click])
+            if (!cinematicActive && !orbitMode) {
+                raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+                const hits = raycaster.intersectObjects(interactableObjects);
+                if (hits.length > 0 && hits[0].distance < 7.5) {
+                    activeHoveredTarget = hits[0].object;
+                    reticleEl.classList.add('hover-active');
+                    promptLabelEl.innerText = activeHoveredTarget.userData.promptText || 'Interact';
+                    promptEl.style.display = 'flex';
+                } else {
+                    activeHoveredTarget = null;
+                    reticleEl.classList.remove('hover-active');
+                    promptEl.style.display = 'none';
+                }
+            } else {
+                promptEl.style.display = 'none';
+            }
+
+            // 9. Automatic Indoor / Outdoor Exposure Adaptation
+            const isInsideBuilding = playerPos.z < 2.2 && Math.abs(playerPos.x) < 15;
+            const targetExposure = isInsideBuilding ? 1.20 : (isGoldenHour ? 1.12 : 1.04);
             renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * Math.min(1, dt * 3.0);
 
-            // 9. Camera Modes: Cinematic Intro -> Orbit Mode -> First-Person Walkthrough
+            // 10. Camera & Player Locomotion with Sliding AABB Collision
             if (cinematicActive) {
                 cinematicTime += dt;
                 const duration = 9.5;
                 const p = Math.min(1.0, cinematicTime / duration);
                 const smooth = p * p * (3 - 2 * p);
-                // Sweep from wide aerial view (-14, 10.5, 34) down to exterior entrance viewpoint (0, 2.2, 21)
                 camera.position.x = -14 * (1 - smooth);
                 camera.position.y = 10.5 * (1 - smooth) + 2.2 * smooth;
                 camera.position.z = 34 * (1 - smooth) + 21 * smooth;
                 camera.lookAt(0, 4.2 * (1 - smooth) + 3.2 * smooth, 2.0);
+                playerPos.copy(camera.position);
                 camYaw = camera.rotation.y;
                 camPitch = camera.rotation.x;
-                if (p >= 1.0) {
-                    window.skipCinematicIntro();
-                }
+                if (p >= 1.0) window.skipCinematicIntro();
             } else if (orbitMode) {
                 camera.position.x = Math.sin(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
                 camera.position.y = Math.max(1.8, Math.sin(orbitElevation) * orbitDistance);
                 camera.position.z = Math.cos(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
                 camera.lookAt(0, 4.2, -2.0);
             } else if (targetTeleport) {
-                camera.position.x += (targetTeleport.x - camera.position.x) * 0.09;
-                camera.position.y += (targetTeleport.y - camera.position.y) * 0.09;
-                camera.position.z += (targetTeleport.z - camera.position.z) * 0.09;
-                camYaw += (targetTeleport.yaw - camYaw) * 0.09;
-                camPitch += (targetTeleport.pitch - camPitch) * 0.09;
-                if (Math.abs(targetTeleport.x - camera.position.x) < 0.05 && Math.abs(targetTeleport.z - camera.position.z) < 0.05) {
+                playerPos.x += (targetTeleport.x - playerPos.x) * 0.1;
+                playerPos.y += (targetTeleport.y - playerPos.y) * 0.1;
+                playerPos.z += (targetTeleport.z - playerPos.z) * 0.1;
+                camYaw += (targetTeleport.yaw - camYaw) * 0.1;
+                camPitch += (targetTeleport.pitch - camPitch) * 0.1;
+                if (Math.abs(targetTeleport.x - playerPos.x) < 0.05 && Math.abs(targetTeleport.z - playerPos.z) < 0.05) {
                     targetTeleport = null;
                 }
+                camera.position.copy(playerPos);
                 camera.rotation.order = 'YXZ';
                 camera.rotation.y = camYaw;
                 camera.rotation.x = camPitch;
@@ -1996,39 +2588,63 @@
                 const rightX = Math.cos(camYaw);
                 const rightZ = -Math.sin(camYaw);
 
-                let nextX = camera.position.x;
-                let nextZ = camera.position.z;
+                let moveX = 0, moveZ = 0;
+                if (keys.forward) { moveX += forwardX * speed; moveZ += forwardZ * speed; }
+                if (keys.backward) { moveX -= forwardX * speed; moveZ -= forwardZ * speed; }
+                if (keys.left) { moveX -= rightX * speed; moveZ -= rightZ * speed; }
+                if (keys.right) { moveX += rightX * speed; moveZ += rightZ * speed; }
 
-                if (keys.forward) { nextX += forwardX * speed; nextZ += forwardZ * speed; }
-                if (keys.backward) { nextX -= forwardX * speed; nextZ -= forwardZ * speed; }
-                if (keys.left) { nextX -= rightX * speed; nextZ -= rightZ * speed; }
-                if (keys.right) { nextX += rightX * speed; nextZ += rightZ * speed; }
-
-                // Corridor-to-Room Wall Collision Check (Z = -1.55 wall, doorways at X = -2.2 and X = 6.2)
-                const crossingCorridorWall = (camera.position.z > -1.35 && nextZ <= -1.35) || (camera.position.z < -1.75 && nextZ >= -1.75);
-                const inDoorway = Math.abs(nextX - (-2.2)) < 0.68 || Math.abs(nextX - 6.2) < 0.68;
-                if (camera.position.y > 4.0 && crossingCorridorWall && !inDoorway) {
-                    nextZ = camera.position.z;
+                // Sliding X & Z Collision Evaluation
+                const candX = Math.max(-32, Math.min(32, playerPos.x + moveX));
+                if (!checkCollision(candX, playerPos.y, playerPos.z)) {
+                    playerPos.x = candX;
                 }
-
-                camera.position.x = Math.max(-32, Math.min(32, nextX));
-                camera.position.z = Math.max(-9.3, Math.min(36, nextZ));
+                const candZ = Math.max(-9.3, Math.min(36, playerPos.z + moveZ));
+                if (!checkCollision(playerPos.x, playerPos.y, candZ)) {
+                    playerPos.z = candZ;
+                }
 
                 // Continuous Floor & Stairwell Elevation Solver
-                let targetEyeY = camera.position.y;
-                if (camera.position.z > 2.2) {
-                    // Exterior Courtyard
+                let targetEyeY = playerPos.y;
+                if (playerPos.z > 2.2) {
                     targetEyeY = 1.85;
-                } else if (camera.position.x < -8.2 && camera.position.z > -5.2 && camera.position.z < 1.5) {
-                    // Inside Switchback Stairwell: smoothly interpolate eye height with stair progress
-                    const stairFactor = Math.max(0, Math.min(1, (1.0 - camera.position.z) / 5.2));
+                } else if (playerPos.x < -8.2 && playerPos.z > -5.2 && playerPos.z < 1.5) {
+                    const stairFactor = Math.max(0, Math.min(1, (1.0 - playerPos.z) / 5.2));
                     targetEyeY = 1.85 + stairFactor * 3.83;
-                } else if (camera.position.y > 3.6) {
-                    // First Floor Corridor, Split-Level Steps & Labs
-                    targetEyeY = camera.position.x > 5.2 ? 5.92 : 5.68;
+                } else if (playerPos.y > 3.6) {
+                    targetEyeY = playerPos.x > 5.2 ? 5.92 : 5.68;
                 }
-                camera.position.y += (targetEyeY - camera.position.y) * 0.16;
+                playerPos.y += (targetEyeY - playerPos.y) * 0.16;
 
+                // Update 3rd-Person Avatar or 1st-Person Camera
+                if (playerAvatar) {
+                    playerAvatar.mixer.update(dt);
+                    const movingNow = Math.hypot(moveX, moveZ) > 0.001;
+                    if (movingNow !== playerAvatar.isMoving) {
+                        playerAvatar.isMoving = movingNow;
+                        if (movingNow && playerAvatar.walk && playerAvatar.idle) {
+                            playerAvatar.idle.fadeOut(0.2);
+                            playerAvatar.walk.reset().fadeIn(0.2).play();
+                        } else if (!movingNow && playerAvatar.walk && playerAvatar.idle) {
+                            playerAvatar.walk.fadeOut(0.2);
+                            playerAvatar.idle.reset().fadeIn(0.2).play();
+                        }
+                    }
+                    playerAvatar.wrapper.position.set(playerPos.x, playerPos.y - 1.65, playerPos.z);
+                    if (movingNow) {
+                        playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
+                    }
+                }
+
+                if (isThirdPerson) {
+                    camera.position.set(
+                        playerPos.x + Math.sin(camYaw) * 2.6,
+                        playerPos.y + 0.55,
+                        playerPos.z + Math.cos(camYaw) * 2.6
+                    );
+                } else {
+                    camera.position.copy(playerPos);
+                }
                 camera.rotation.order = 'YXZ';
                 camera.rotation.y = camYaw;
                 camera.rotation.x = camPitch;
