@@ -35,7 +35,7 @@
         }
         #canvas-container:active { cursor: grabbing; }
 
-        /* Center Reticle for First-Person & Interactive Raycasting */
+        /* Center Reticle for First-Person Interaction */
         #reticle {
             position: absolute;
             top: 50%; left: 50%;
@@ -224,7 +224,7 @@
             position: absolute;
             top: 70px; right: 18px;
             z-index: 10;
-            width: 320px;
+            width: 310px;
             background: var(--glass);
             border: 1px solid var(--cyan);
             border-radius: 16px;
@@ -243,19 +243,9 @@
             font-size: 0.82rem;
             line-height: 1.48;
         }
-        .asset-status-bar {
-            margin-top: 9px;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: #6ee7b7;
-            font-size: 0.72rem;
-            font-weight: 600;
-        }
         .controls-hint {
-            margin-top: 9px;
-            padding-top: 9px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid var(--border);
             font-size: 0.73rem;
             color: #94a3b8;
@@ -416,7 +406,6 @@
         </nav>
 
         <div class="top-controls">
-            <button class="hud-pill-btn" id="btn-viewmode" onclick="togglePerspectiveMode()">👁️ View: 1st Person</button>
             <button class="hud-pill-btn" id="btn-cinematic" onclick="startCinematicIntro()">🎬 Replay Intro</button>
             <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit Exterior</button>
             <button class="hud-pill-btn" id="btn-lighting" onclick="toggleLightingMode()">☀️ Daylight</button>
@@ -456,13 +445,10 @@
     <aside class="info-card" id="zone-info">
         <h3 id="info-title">🏛️ Department Exterior Elevation</h3>
         <p id="info-desc">
-            Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, bump-mapped surfaces, solid collision, and interactive doors/boards.
+            Real-world architectural reconstruction of the PESCE Mandya CSE (AI & ML) building featuring the cream & terracotta facade, entrance portico, rooftop solar panels, and living campus lawn.
         </p>
-        <div class="asset-status-bar" id="actor-status">
-            ⏳ Loading rigged GLTF human actors...
-        </div>
         <div class="controls-hint">
-            <div><span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> Walk | <span class="key-pill">E / Click</span> Open Doors & Boards | <span class="key-pill">V</span> 1P/3P</div>
+            <div><span class="key-pill">W</span><span class="key-pill">A</span><span class="key-pill">S</span><span class="key-pill">D</span> Walk | <span class="key-pill">E / Click</span> Open Doors & Boards</div>
             <div><span class="key-pill">Mouse Drag</span> Look 360° | <span class="key-pill">1 - 6</span> Quick Teleport</div>
         </div>
     </aside>
@@ -486,23 +472,21 @@
     <!-- Bottom Action Bar -->
     <footer>
         <div id="perf-badge" style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / Daylight PBR • 3D Cross-Tuft Wind Grass • Solid Collision
+            Stage 02 / Pure Architectural Digital Twin • Real-World View
         </div>
         <a href="hub.html" class="launch-hub-btn">
             Proceed to AI Agent Hub 🚀
         </a>
     </footer>
 
-    <!-- Three.js r128 Core + GLTFLoader + SkeletonUtils -->
+    <!-- Three.js r128 Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/SkeletonUtils.js"></script>
 
     <script>
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x9bc9e8);
-        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0038);
+        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0035);
 
         const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 280);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -511,12 +495,12 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.12;
+        renderer.toneMappingExposure = 1.10;
         container.appendChild(renderer.domElement);
 
         const clock = new THREE.Clock();
 
-        // --- 1. NAN-SAFE ATMOSPHERIC SKY DOME & BALANCED ARCHITECTURAL LIGHTING ---
+        // --- 1. NATURAL ATMOSPHERIC SKY DOME & ARCHITECTURAL DAYLIGHT ---
         const skyVertexShader = `
             varying vec3 vWorldPosition;
             void main() {
@@ -562,16 +546,14 @@
         );
         scene.add(skyDome);
 
-        // Multi-Layer Architectural Illumination (Eliminates black shadows on all faces)
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.68);
         scene.add(ambientLight);
 
         const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x6e6a5e, 0.72);
         hemiLight.position.set(0, 50, 0);
         scene.add(hemiLight);
 
-        // Primary Sun Directional Light
-        const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.25);
+        const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.22);
         sunLight.position.set(26, 44, 32);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
@@ -585,12 +567,10 @@
         sunLight.shadow.camera.bottom = -36;
         scene.add(sunLight);
 
-        // Opposite-Hemisphere Sky-Bounce Fill Light (Illuminates shaded walls, stairwells & interior faces)
-        const bounceLight = new THREE.DirectionalLight(0xdbeafe, 0.48);
+        const bounceLight = new THREE.DirectionalLight(0xdbeafe, 0.45);
         bounceLight.position.set(-24, 28, -26);
         scene.add(bounceLight);
 
-        // Indoor Point Lights (Corridor, Stairwell, AI & ML Lab, Smart Classroom)
         const stairLight = new THREE.PointLight(0xfff9eb, 0.65, 16);
         stairLight.position.set(-10.5, 4.5, -2.0);
         const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.65, 18);
@@ -629,7 +609,7 @@
                 scene.background.setHex(0x9bc9e8);
                 scene.fog.color.setHex(0xc8dff0);
                 sunLight.color.setHex(0xfff9ed);
-                sunLight.intensity = 1.25;
+                sunLight.intensity = 1.22;
                 sunLight.position.set(26, 44, 32);
                 hemiLight.color.setHex(0xeef6ff);
                 ambientLight.color.setHex(0xffffff);
@@ -644,7 +624,7 @@
             colliders.push({ minX, maxX, minZ, maxZ, minY, maxY });
         }
 
-        function checkCollision(x, y, z, radius = 0.38) {
+        function checkCollision(x, y, z, radius = 0.36) {
             const footY = y - 1.5;
             const headY = y + 0.2;
             for (let i = 0; i < colliders.length; i++) {
@@ -658,7 +638,7 @@
             return false;
         }
 
-        // --- 3. PROCEDURAL PBR TEXTURE ENGINE (ALBEDO + BUMP + ROUGHNESS MAPS) ---
+        // --- 3. CLEAN ARCHITECTURAL SURFACE TEXTURES ---
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -680,7 +660,7 @@
             return tex;
         }
 
-        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.035, repeatX = 1, repeatY = 1) {
+        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.02, repeatX = 1, repeatY = 1) {
             const size = 512;
             const diffCanvas = document.createElement('canvas');
             const bumpCanvas = document.createElement('canvas');
@@ -695,23 +675,25 @@
             bCtx.fillStyle = 'rgb(200, 200, 200)';
             bCtx.fillRect(0, 0, size, size);
 
-            for (let i = 0; i < 4500; i++) {
-                const x = Math.random() * size;
-                const y = Math.random() * size;
-                const w = 2 + Math.random() * 3;
-                const bright = i % 2 === 0;
-                dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
-                dCtx.fillRect(x, y, w, w);
-                bCtx.fillStyle = bright ? 'rgb(225, 225, 225)' : 'rgb(175, 175, 175)';
-                bCtx.fillRect(x, y, w, w);
+            if (grainIntensity > 0) {
+                for (let i = 0; i < 3000; i++) {
+                    const x = Math.random() * size;
+                    const y = Math.random() * size;
+                    const w = 2 + Math.random() * 2;
+                    const bright = i % 2 === 0;
+                    dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
+                    dCtx.fillRect(x, y, w, w);
+                    bCtx.fillStyle = bright ? 'rgb(212, 212, 212)' : 'rgb(188, 188, 188)';
+                    bCtx.fillRect(x, y, w, w);
+                }
             }
 
             if (divisions > 1) {
                 const step = size / divisions;
                 dCtx.strokeStyle = groutHex;
-                dCtx.lineWidth = 4;
-                bCtx.strokeStyle = 'rgb(90, 90, 90)';
-                bCtx.lineWidth = 4;
+                dCtx.lineWidth = 3;
+                bCtx.strokeStyle = 'rgb(110, 110, 110)';
+                bCtx.lineWidth = 3;
                 for (let i = 0; i <= divisions; i++) {
                     const p = i * step;
                     [dCtx, bCtx].forEach(ctx => {
@@ -738,8 +720,8 @@
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
             const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.50)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.18)');
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.15)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 128, 128);
@@ -754,7 +736,7 @@
         const matAOStrip = new THREE.MeshBasicMaterial({
             color: 0x000000,
             transparent: true,
-            opacity: 0.18,
+            opacity: 0.16,
             depthWrite: false
         });
 
@@ -804,11 +786,11 @@
                 const bx = 65 + Math.sin(screenTick * 1.8) * 25;
                 screenCtx.strokeRect(bx, 42, 65, 75);
                 screenCtx.fillStyle = '#10b981';
-                screenCtx.fillText('person 0.98', bx, 38);
+                screenCtx.fillText('object 0.98', bx, 38);
                 screenCtx.strokeStyle = '#f59e0b';
                 screenCtx.strokeRect(160, 58, 70, 60);
                 screenCtx.fillStyle = '#f59e0b';
-                screenCtx.fillText('workstation 0.94', 160, 54);
+                screenCtx.fillText('cluster 0.94', 160, 54);
             } else {
                 for (let b = 0; b < 6; b++) {
                     const bh = 25 + Math.abs(Math.sin(screenTick * 2.5 + b)) * 75;
@@ -864,40 +846,40 @@
         }
         renderSmartBoardSlide();
 
-        // --- 4. PHYSICALLY BASED ARCHITECTURAL MATERIALS (CLEAN ALBEDO + BUMP MAPS) ---
-        const plasterPBR = createPBRSurfaceSet('#f4efe0', '#e6dec5', 1, 0.025, 4, 2);
+        // --- 4. PHYSICALLY BASED ARCHITECTURAL MATERIALS ---
+        const plasterPBR = createPBRSurfaceSet('#f4efe0', '#e6dec5', 1, 0.02, 4, 2);
         const matCreamWall = new THREE.MeshStandardMaterial({
-            map: plasterPBR.map, bumpMap: plasterPBR.bumpMap, bumpScale: 0.012,
+            map: plasterPBR.map, bumpMap: plasterPBR.bumpMap, bumpScale: 0.01,
             roughness: 0.82, metalness: 0.02
         });
 
-        const dadoPBR = createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.02, 4, 1);
+        const dadoPBR = createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.018, 4, 1);
         const matGreyDado = new THREE.MeshStandardMaterial({
             map: dadoPBR.map, bumpMap: dadoPBR.bumpMap, bumpScale: 0.008,
             roughness: 0.65, metalness: 0.05
         });
 
-        const terracottaPBR = createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.03, 2, 2);
+        const terracottaPBR = createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.025, 2, 2);
         const matTerracotta = new THREE.MeshStandardMaterial({
-            map: terracottaPBR.map, bumpMap: terracottaPBR.bumpMap, bumpScale: 0.012,
+            map: terracottaPBR.map, bumpMap: terracottaPBR.bumpMap, bumpScale: 0.01,
             roughness: 0.72, metalness: 0.04
         });
 
         const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45, metalness: 0.05 });
 
-        const granitePBR = createPBRSurfaceSet('#2b3038', '#181b20', 2, 0.04, 2, 2);
+        const granitePBR = createPBRSurfaceSet('#2b3038', '#181b20', 2, 0.035, 2, 2);
         const matDarkGranite = new THREE.MeshStandardMaterial({
             map: granitePBR.map, bumpMap: granitePBR.bumpMap, bumpScale: 0.006,
             roughness: 0.28, metalness: 0.15
         });
 
-        const concretePBR = createPBRSurfaceSet('#a2a8ae', '#82888e', 1, 0.035, 2, 2);
+        const concretePBR = createPBRSurfaceSet('#a2a8ae', '#82888e', 1, 0.03, 2, 2);
         const matGreySteps = new THREE.MeshStandardMaterial({
             map: concretePBR.map, bumpMap: concretePBR.bumpMap, bumpScale: 0.012,
             roughness: 0.76, metalness: 0.04
         });
 
-        const woodPBR = createPBRSurfaceSet('#4a2619', '#32180f', 1, 0.025, 2, 1);
+        const woodPBR = createPBRSurfaceSet('#4a2619', '#32180f', 1, 0.02, 2, 1);
         const matWoodRack = new THREE.MeshStandardMaterial({
             map: woodPBR.map, bumpMap: woodPBR.bumpMap, bumpScale: 0.008,
             roughness: 0.48, metalness: 0.05
@@ -915,27 +897,27 @@
         const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.38, metalness: 0.45 });
         const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.10 });
 
-        const corridorTilePBR = createPBRSurfaceSet('#6b4b42', '#422c26', 4, 0.025, 16, 4);
+        const corridorTilePBR = createPBRSurfaceSet('#6b4b42', '#422c26', 4, 0.02, 16, 4);
         const matCorridorFloor = new THREE.MeshStandardMaterial({
             map: corridorTilePBR.map, bumpMap: corridorTilePBR.bumpMap, bumpScale: 0.01,
             roughness: 0.45, metalness: 0.06
         });
 
-        const paverPBR = createPBRSurfaceSet('#b5b0ab', '#78716c', 10, 0.04, 14, 18);
+        const paverPBR = createPBRSurfaceSet('#b5b0ab', '#78716c', 10, 0.035, 14, 18);
         const matCourtyard = new THREE.MeshStandardMaterial({
-            map: paverPBR.map, bumpMap: paverPBR.bumpMap, bumpScale: 0.018,
+            map: paverPBR.map, bumpMap: paverPBR.bumpMap, bumpScale: 0.016,
             roughness: 0.80, metalness: 0.04
         });
 
-        const redBrickPBR = createPBRSurfaceSet('#a84d3c', '#662b20', 8, 0.035, 2, 16);
+        const redBrickPBR = createPBRSurfaceSet('#a84d3c', '#662b20', 8, 0.03, 2, 16);
         const matRedPaverStrip = new THREE.MeshStandardMaterial({
-            map: redBrickPBR.map, bumpMap: redBrickPBR.bumpMap, bumpScale: 0.015,
+            map: redBrickPBR.map, bumpMap: redBrickPBR.bumpMap, bumpScale: 0.014,
             roughness: 0.78, metalness: 0.04
         });
 
-        const soilPBR = createPBRSurfaceSet('#4a3c2c', '#362b1f', 1, 0.06, 24, 24);
+        const soilPBR = createPBRSurfaceSet('#4a3c2c', '#362b1f', 1, 0.05, 24, 24);
         const matRichSoil = new THREE.MeshStandardMaterial({
-            map: soilPBR.map, bumpMap: soilPBR.bumpMap, bumpScale: 0.025,
+            map: soilPBR.map, bumpMap: soilPBR.bumpMap, bumpScale: 0.022,
             roughness: 0.94, metalness: 0.02
         });
 
@@ -1019,7 +1001,7 @@
         [-11.5, -14.5, -18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
         [11.5, 14.5, 18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
 
-        // 3D Crossed-Tuft GPU Wind Grass Geometry (Includes Position, Normal, and UV Attributes)
+        // 3D Crossed-Tuft GPU Wind Grass Geometry
         const grassUniforms = {
             uTime: { value: 0 },
             uWindStrength: { value: 1.0 }
@@ -1770,375 +1752,7 @@
         const raycaster = new THREE.Raycaster();
         const pointer = new THREE.Vector2();
 
-        // --- 10. RIGGED GLTF HUMAN CHARACTER, 3RD-PERSON AVATAR & SKELETAL ENGINE ---
-        // Fixed CDN URLs: Replaced blocked jsDelivr gh/mrdoob URLs (HTTP 403) with direct CORS-enabled raw.githubusercontent.com & threejs.org paths
-        const gltfLoader = new THREE.GLTFLoader();
-        const characterAgents = [];
-        let playerAvatar = null;
-        let isThirdPerson = false;
-
-        const ASSET_SOURCES = {
-            detailedHuman: [
-                './models/student_detailed.glb',
-                'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Michelle.glb',
-                'https://threejs.org/examples/models/gltf/Michelle.glb'
-            ],
-            articulatedActor: [
-                './models/faculty_actor.glb',
-                'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Xbot.glb',
-                'https://threejs.org/examples/models/gltf/Xbot.glb'
-            ]
-        };
-
-        function loadGLBWithFallback(urlList) {
-            return new Promise((resolve, reject) => {
-                let index = 0;
-                function tryNext() {
-                    if (index >= urlList.length) {
-                        reject(new Error('All GLB paths exhausted'));
-                        return;
-                    }
-                    const url = urlList[index++];
-                    gltfLoader.load(
-                        url,
-                        (gltf) => resolve({ gltf, url }),
-                        undefined,
-                        (err) => {
-                            console.warn('GLB fallback step failed for:', url, err);
-                            tryNext();
-                        }
-                    );
-                }
-                tryNext();
-            });
-        }
-
-        function findBone(root, partialName) {
-            let found = null;
-            const target = partialName.toLowerCase();
-            root.traverse((node) => {
-                if (node.isBone && !found && node.name.toLowerCase().includes(target)) {
-                    found = node;
-                }
-            });
-            return found;
-        }
-
-        function mapSkeletonBones(modelRoot) {
-            return {
-                hips: findBone(modelRoot, 'hips'),
-                spine: findBone(modelRoot, 'spine'),
-                neck: findBone(modelRoot, 'neck'),
-                head: findBone(modelRoot, 'head'),
-                leftUpLeg: findBone(modelRoot, 'leftupleg'),
-                rightUpLeg: findBone(modelRoot, 'rightupleg'),
-                leftLeg: findBone(modelRoot, 'leftleg'),
-                rightLeg: findBone(modelRoot, 'rightleg'),
-                leftArm: findBone(modelRoot, 'leftarm'),
-                rightArm: findBone(modelRoot, 'rightarm'),
-                leftForeArm: findBone(modelRoot, 'leftforearm'),
-                rightForeArm: findBone(modelRoot, 'rightforearm')
-            };
-        }
-
-        function styleActorMaterials(clonedScene, outfitPalette) {
-            clonedScene.traverse((child) => {
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                    child.frustumCulled = false;
-                    if (outfitPalette && child.material && !child.material.map) {
-                        child.material = child.material.clone();
-                        if (child.name.toLowerCase().includes('surface')) {
-                            child.material.color.setHex(outfitPalette.primary);
-                            child.material.roughness = 0.62;
-                            child.material.metalness = 0.08;
-                        } else if (child.name.toLowerCase().includes('joints')) {
-                            child.material.color.setHex(outfitPalette.secondary);
-                            child.material.roughness = 0.55;
-                        }
-                    }
-                }
-            });
-        }
-
-        function getCorridorFloorY(xPos) {
-            if (xPos <= 4.3) return 4.12;
-            if (xPos >= 5.7) return 4.36;
-            const t = (xPos - 4.3) / (5.7 - 4.3);
-            return 4.12 + t * 0.24;
-        }
-
-        async function initializeDepartmentPopulation() {
-            const statusEl = document.getElementById('actor-status');
-            try {
-                const [humanData, actorData] = await Promise.all([
-                    loadGLBWithFallback(ASSET_SOURCES.detailedHuman),
-                    loadGLBWithFallback(ASSET_SOURCES.articulatedActor)
-                ]);
-
-                // Create Controllable 3rd-Person Player Avatar
-                const avatarWrap = new THREE.Group();
-                const avatarClone = THREE.SkeletonUtils.clone(actorData.gltf.scene);
-                avatarClone.scale.setScalar(0.96);
-                styleActorMaterials(avatarClone, { primary: 0x0284c7, secondary: 0x0f172a });
-                avatarWrap.add(avatarClone);
-                const avShadow = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
-                avShadow.rotation.x = -Math.PI / 2;
-                avShadow.position.y = 0.015;
-                avatarWrap.add(avShadow);
-                avatarWrap.visible = isThirdPerson;
-                scene.add(avatarWrap);
-
-                const avMixer = new THREE.AnimationMixer(avatarClone);
-                const avActions = {};
-                actorData.gltf.animations.forEach(c => { avActions[c.name.toLowerCase()] = avMixer.clipAction(c); });
-                const avIdle = avActions['idle'] || Object.values(avActions)[0];
-                const avWalk = avActions['walk'] || avActions['run'] || avIdle;
-                if (avIdle) avIdle.play();
-                playerAvatar = { wrapper: avatarWrap, mixer: avMixer, idle: avIdle, walk: avWalk, isMoving: false };
-
-                function spawnRiggedAgent(sourceData, config) {
-                    const wrapper = new THREE.Group();
-                    const clone = THREE.SkeletonUtils.clone(sourceData.gltf.scene);
-                    clone.scale.setScalar(config.scale || 1.0);
-                    styleActorMaterials(clone, config.palette);
-                    wrapper.add(clone);
-
-                    const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
-                    shadowPlane.rotation.x = -Math.PI / 2;
-                    shadowPlane.position.y = 0.015;
-                    wrapper.add(shadowPlane);
-
-                    wrapper.position.copy(config.position);
-                    wrapper.rotation.y = config.rotationY || 0;
-                    scene.add(wrapper);
-
-                    const mixer = new THREE.AnimationMixer(clone);
-                    const clips = sourceData.gltf.animations;
-                    const actions = {};
-                    clips.forEach(c => { actions[c.name.toLowerCase()] = mixer.clipAction(c); });
-
-                    const bones = mapSkeletonBones(clone);
-                    const agent = {
-                        wrapper, clone, mixer, actions, bones,
-                        role: config.role,
-                        phase: Math.random() * Math.PI * 2,
-                        waypoints: config.waypoints || null,
-                        wpIndex: 0,
-                        pauseTimer: 0,
-                        isGroundFloor: !!config.isGroundFloor,
-                        optionalOnMobile: !!config.optionalOnMobile
-                    };
-
-                    if (config.role === 'walker') {
-                        const walkClip = actions['walk'] || actions['run'] || Object.values(actions)[0];
-                        const idleClip = actions['idle'] || walkClip;
-                        agent.walkAction = walkClip;
-                        agent.idleAction = idleClip;
-                        if (walkClip) {
-                            walkClip.timeScale = 0.95;
-                            walkClip.play();
-                        }
-                    } else {
-                        const baseClip = actions['idle'] || actions['agree'] || Object.values(actions)[0];
-                        if (baseClip) {
-                            baseClip.timeScale = config.role === 'faculty' ? 0.85 : 0.45;
-                            baseClip.play();
-                        }
-                    }
-                    characterAgents.push(agent);
-                }
-
-                // Exterior Courtyard Walker
-                spawnRiggedAgent(humanData, {
-                    role: 'walker',
-                    isGroundFloor: true,
-                    scale: 0.96,
-                    position: new THREE.Vector3(-1.5, 0.03, 18.0),
-                    rotationY: Math.PI,
-                    waypoints: [
-                        { x: -1.5, z: 18.0, pause: 1.5 },
-                        { x: -1.2, z: 7.2,  pause: 2.8 },
-                        { x: 1.5,  z: 10.0, pause: 1.0 },
-                        { x: 1.5,  z: 21.0, pause: 2.0 }
-                    ]
-                });
-
-                // 1st Floor Corridor Walker
-                spawnRiggedAgent(actorData, {
-                    role: 'walker',
-                    scale: 0.96,
-                    position: new THREE.Vector3(-6.2, 4.12, 0.35),
-                    rotationY: Math.PI / 2,
-                    palette: { primary: 0x1e3a8a, secondary: 0x334155 },
-                    waypoints: [
-                        { x: -6.2, z: 0.35, pause: 2.0 },
-                        { x: -2.2, z: -0.35, pause: 3.0 },
-                        { x: 3.8,  z: 0.35, pause: 1.0 },
-                        { x: 8.5,  z: 0.35, pause: 2.5 },
-                        { x: 3.8,  z: 0.35, pause: 0.5 }
-                    ]
-                });
-
-                spawnRiggedAgent(humanData, {
-                    role: 'corridor_talker',
-                    scale: 0.96,
-                    position: new THREE.Vector3(1.5, 4.12, 0.55),
-                    rotationY: -0.4,
-                    optionalOnMobile: true
-                });
-
-                const labSeats = [
-                    { x: -6.95, z: -3.22, palette: { primary: 0x0f766e, secondary: 0x1e293b }, opt: false },
-                    { x: -3.45, z: -3.22, palette: { primary: 0x4338ca, secondary: 0x1e293b }, opt: false },
-                    { x: -0.85, z: -5.42, palette: { primary: 0xb45309, secondary: 0x1e293b }, opt: true },
-                    { x: 1.05,  z: -5.42, palette: { primary: 0xbe123c, secondary: 0x1e293b }, opt: true }
-                ];
-                labSeats.forEach((seat, idx) => {
-                    spawnRiggedAgent(idx % 2 === 0 ? actorData : humanData, {
-                        role: 'seated_lab_typing',
-                        scale: 0.94,
-                        position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                        rotationY: Math.PI,
-                        palette: seat.palette,
-                        optionalOnMobile: seat.opt
-                    });
-                });
-
-                const classroomSeats = [
-                    { x: 5.98, z: -3.8, role: 'seated_classroom', palette: { primary: 0x1d4ed8, secondary: 0x0f172a }, opt: false },
-                    { x: 5.98, z: -5.4, role: 'seated_hand_raise', palette: { primary: 0x047857, secondary: 0x0f172a }, opt: false },
-                    { x: 8.58, z: -3.8, role: 'seated_classroom', palette: { primary: 0x6d28d9, secondary: 0x0f172a }, opt: true },
-                    { x: 8.58, z: -7.0, role: 'seated_classroom', palette: { primary: 0x374151, secondary: 0x0f172a }, opt: true }
-                ];
-                classroomSeats.forEach((seat, idx) => {
-                    spawnRiggedAgent(idx === 2 ? humanData : actorData, {
-                        role: seat.role,
-                        scale: 0.94,
-                        position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                        rotationY: Math.PI / 2,
-                        palette: seat.palette,
-                        optionalOnMobile: seat.opt
-                    });
-                });
-
-                spawnRiggedAgent(actorData, {
-                    role: 'faculty',
-                    scale: 0.98,
-                    position: new THREE.Vector3(13.6, 4.12, -5.6),
-                    rotationY: -Math.PI / 2,
-                    palette: { primary: 0x0f172a, secondary: 0x475569 }
-                });
-
-                statusEl.innerText = '✅ 12 Rigged GLTF Actors + 3P Avatar Active';
-                applyGraphicsPreset(currentPreset);
-            } catch (err) {
-                statusEl.style.borderColor = '#f59e0b';
-                statusEl.style.color = '#fde68a';
-                statusEl.innerText = '⚠️ Offline/CDN blocked: Add ./models/*.glb locally. Building active.';
-            }
-        }
-
-        function updateCharacterAgents(dt, elapsed) {
-            const maxDist = currentPreset === 'MOBILE' ? 28 : 50;
-            characterAgents.forEach((agent) => {
-                if (!agent.wrapper.visible) return;
-                const distToCam = agent.wrapper.position.distanceTo(camera.position);
-                if (distToCam > maxDist) return;
-
-                agent.mixer.update(dt);
-                const b = agent.bones;
-                const t = elapsed + agent.phase;
-
-                if (agent.role === 'walker' && agent.waypoints) {
-                    const targetWP = agent.waypoints[agent.wpIndex];
-                    if (agent.pauseTimer > 0) {
-                        agent.pauseTimer -= dt;
-                        if (b.head) b.head.rotation.y = Math.sin(t * 1.4) * 0.26;
-                        if (agent.pauseTimer <= 0) {
-                            agent.wpIndex = (agent.wpIndex + 1) % agent.waypoints.length;
-                            if (agent.walkAction && agent.idleAction && agent.walkAction !== agent.idleAction) {
-                                agent.idleAction.fadeOut(0.35);
-                                agent.walkAction.reset().fadeIn(0.35).play();
-                            }
-                        }
-                    } else {
-                        const dx = targetWP.x - agent.wrapper.position.x;
-                        const dz = targetWP.z - agent.wrapper.position.z;
-                        const dist = Math.hypot(dx, dz);
-                        if (dist < 0.18) {
-                            agent.pauseTimer = targetWP.pause || 1.5;
-                            if (agent.walkAction && agent.idleAction && agent.walkAction !== agent.idleAction) {
-                                agent.walkAction.fadeOut(0.35);
-                                agent.idleAction.reset().fadeIn(0.35).play();
-                            }
-                        } else {
-                            const walkSpeed = 1.15;
-                            agent.wrapper.position.x += (dx / dist) * walkSpeed * dt;
-                            agent.wrapper.position.z += (dz / dist) * walkSpeed * dt;
-                            agent.wrapper.position.y = agent.isGroundFloor ? 0.03 : getCorridorFloorY(agent.wrapper.position.x);
-                            const desiredYaw = Math.atan2(dx, dz);
-                            let diff = desiredYaw - agent.wrapper.rotation.y;
-                            while (diff > Math.PI) diff -= Math.PI * 2;
-                            while (diff < -Math.PI) diff += Math.PI * 2;
-                            agent.wrapper.rotation.y += diff * Math.min(1, dt * 7);
-                        }
-                    }
-                } else if (agent.role === 'corridor_talker') {
-                    if (b.head) {
-                        b.head.rotation.y = Math.sin(t * 1.2) * 0.22;
-                        b.head.rotation.x = Math.sin(t * 2.1) * 0.06;
-                    }
-                } else if (agent.role === 'seated_lab_typing') {
-                    if (b.hips) b.hips.position.y = 54;
-                    if (b.leftUpLeg) { b.leftUpLeg.rotation.x = -1.48; b.leftUpLeg.rotation.z = 0.08; }
-                    if (b.rightUpLeg) { b.rightUpLeg.rotation.x = -1.48; b.rightUpLeg.rotation.z = -0.08; }
-                    if (b.leftLeg) b.leftLeg.rotation.x = 1.48;
-                    if (b.rightLeg) b.rightLeg.rotation.x = 1.48;
-                    if (b.spine) b.spine.rotation.x = 0.14;
-                    if (b.leftArm) { b.leftArm.rotation.x = -0.68; b.leftArm.rotation.z = 0.25; }
-                    if (b.rightArm) { b.rightArm.rotation.x = -0.68; b.rightArm.rotation.z = -0.25; }
-                    if (b.leftForeArm) b.leftForeArm.rotation.x = -0.85 + Math.sin(t * 11) * 0.07;
-                    if (b.rightForeArm) b.rightForeArm.rotation.x = -0.85 + Math.cos(t * 11) * 0.07;
-                    if (b.head) {
-                        b.head.rotation.y = Math.sin(t * 0.85) * 0.22;
-                        b.head.rotation.x = -0.08;
-                    }
-                } else if (agent.role === 'seated_classroom' || agent.role === 'seated_hand_raise') {
-                    if (b.hips) b.hips.position.y = 54;
-                    if (b.leftUpLeg) b.leftUpLeg.rotation.x = -1.46;
-                    if (b.rightUpLeg) b.rightUpLeg.rotation.x = -1.46;
-                    if (b.leftLeg) b.leftLeg.rotation.x = 1.46;
-                    if (b.rightLeg) b.rightLeg.rotation.x = 1.46;
-                    if (b.leftArm) { b.leftArm.rotation.x = -0.52; b.leftArm.rotation.z = 0.22; }
-                    if (b.leftForeArm) b.leftForeArm.rotation.x = -0.75;
-
-                    const raiseCycle = Math.max(0, Math.sin(t * 0.55));
-                    if (agent.role === 'seated_hand_raise' && raiseCycle > 0.35) {
-                        const lift = (raiseCycle - 0.35) / 0.65;
-                        if (b.rightArm) { b.rightArm.rotation.x = -2.45 * lift; b.rightArm.rotation.z = -0.15; }
-                        if (b.rightForeArm) b.rightForeArm.rotation.x = -0.35 * lift;
-                    } else {
-                        if (b.rightArm) { b.rightArm.rotation.x = -0.52; b.rightArm.rotation.z = -0.22; }
-                        if (b.rightForeArm) b.rightForeArm.rotation.x = -0.75;
-                    }
-                    if (b.head) {
-                        b.head.rotation.y = Math.sin(t * 0.6) * 0.16;
-                        b.head.rotation.x = Math.cos(t * 0.8) * 0.06;
-                    }
-                } else if (agent.role === 'faculty') {
-                    if (b.rightArm) {
-                        b.rightArm.rotation.x = -0.75 + Math.sin(t * 2.2) * 0.25;
-                        b.rightArm.rotation.z = -0.35;
-                    }
-                    if (b.rightForeArm) b.rightForeArm.rotation.x = -0.6 + Math.cos(t * 2.2) * 0.2;
-                    if (b.head) b.head.rotation.y = Math.sin(t * 0.9) * 0.32;
-                }
-            });
-        }
-
-        // --- 11. GRAPHICS PRESETS (HIGH, BALANCED, MOBILE) ---
+        // --- 10. GRAPHICS PRESETS (HIGH, BALANCED, MOBILE) ---
         const isMobileDevice = window.innerWidth <= 850 || /Mobi|Android/i.test(navigator.userAgent);
         let currentPreset = isMobileDevice ? 'MOBILE' : 'HIGH';
         document.getElementById('PresetSelect').value = currentPreset;
@@ -2148,21 +1762,17 @@
             if (preset === 'HIGH') {
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
                 buildLivingGrassField(18000);
-                characterAgents.forEach(a => { a.wrapper.visible = true; });
             } else if (preset === 'BALANCED') {
                 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
                 buildLivingGrassField(9000);
-                characterAgents.forEach(a => { a.wrapper.visible = true; });
             } else {
                 renderer.setPixelRatio(1.0);
                 buildLivingGrassField(3500);
-                characterAgents.forEach(a => { a.wrapper.visible = !a.optionalOnMobile; });
             }
         };
         applyGraphicsPreset(currentPreset);
-        initializeDepartmentPopulation();
 
-        // --- 12. WEB AUDIO AMBIENCE ---
+        // --- 11. WEB AUDIO AMBIENCE ---
         let audioCtx = null;
         let audioGain = null;
         let audioEnabled = false;
@@ -2211,7 +1821,7 @@
             }
         };
 
-        // --- 13. INTERACTIVE CAMPUS ACTIONS, 1P/3P VIEW & TELEPORTATION ---
+        // --- 12. INTERACTIVE CAMPUS ACTIONS & TELEPORTATION ---
         let activeHoveredTarget = null;
 
         window.openProfileModal = function() {
@@ -2246,20 +1856,12 @@
             }
         };
 
-        window.togglePerspectiveMode = function() {
-            isThirdPerson = !isThirdPerson;
-            const btn = document.getElementById('btn-viewmode');
-            btn.innerText = isThirdPerson ? '🧍 View: 3rd Person' : '👁️ View: 1st Person';
-            btn.classList.toggle('active-mode', isThirdPerson);
-            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson && !cinematicActive && !orbitMode;
-        };
-
         const viewpoints = {
             exterior: {
                 pos: { x: 0, y: 2.2, z: 21 },
                 yaw: 0, pitch: 0.06,
                 title: "🏛️ Department Exterior Elevation",
-                desc: "Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, terracotta planters, and rooftop solar arrays."
+                desc: "Real-world architectural reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, terracotta planters, and rooftop solar arrays."
             },
             portico: {
                 pos: { x: 0, y: 1.85, z: 8.5 },
@@ -2283,13 +1885,13 @@
                 pos: { x: -2.0, y: 5.75, z: -2.3 },
                 yaw: 0.25, pitch: -0.08,
                 title: "💻 AI & ML Deep Learning Lab",
-                desc: "Rigged students sit typing at dual-monitor workstations. Click the front projection screen or press E to switch live AI workloads."
+                desc: "Equipped with dual-monitor AI/ML compute workstations. Click the front projection screen or press E to switch live AI workloads."
             },
             classroom: {
                 pos: { x: 7.2, y: 5.88, z: -5.6 },
                 yaw: -1.57, pitch: -0.05,
                 title: "🎓 Smart Lecture Classroom",
-                desc: "Students sit at wooden lecture benches while a faculty member lectures. Click the green smartboard or press E to advance slides."
+                desc: "Academic lecture hall with wooden desk-benches and rotating ceiling fans. Click the green smartboard or press E to advance slides."
             }
         };
 
@@ -2310,7 +1912,6 @@
             cinematicActive = true;
             cinematicTime = 0;
             targetTeleport = null;
-            if (playerAvatar) playerAvatar.wrapper.visible = false;
             const banner = document.getElementById('cinematic-banner');
             banner.style.display = 'flex';
             banner.style.opacity = '1';
@@ -2331,7 +1932,6 @@
             targetTeleport = null;
             orbitMode = !orbitMode;
             const btn = document.getElementById('btn-orbit');
-            if (playerAvatar) playerAvatar.wrapper.visible = false;
             if (orbitMode) {
                 btn.classList.add('active-mode');
                 document.getElementById('info-title').innerText = '🔭 Exterior Orbit Inspection Mode';
@@ -2353,7 +1953,6 @@
                 x: v.pos.x, y: v.pos.y, z: v.pos.z,
                 yaw: v.yaw, pitch: v.pitch
             };
-            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson;
             document.getElementById('info-title').innerText = v.title;
             document.getElementById('info-desc').innerText = v.desc;
             document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
@@ -2374,7 +1973,6 @@
             if (k === 'a' || e.key === 'ArrowLeft') keys.left = true;
             if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
             if (k === 'e') window.triggerActiveInteraction();
-            if (k === 'v') window.togglePerspectiveMode();
             if (['1','2','3','4','5','6'].includes(k)) {
                 const map = ['exterior','portico','stairs','corridor','lab','classroom'];
                 window.teleportTo(map[parseInt(k) - 1]);
@@ -2474,7 +2072,7 @@
             prevY = e.touches[0].clientY;
         }, { passive: true });
 
-        // --- 14. MASTER REAL-TIME RENDER, INTERACTION & PHYSICS LOOP ---
+        // --- 13. MASTER REAL-TIME RENDER, INTERACTION & PHYSICS LOOP ---
         const reticleEl = document.getElementById('reticle');
         const promptEl = document.getElementById('interact-prompt');
         const promptLabelEl = document.getElementById('interact-label');
@@ -2511,20 +2109,14 @@
 
             // 6. Hinged Doors (Open on Proximity or Manual Toggle)
             hingedDoors.forEach(d => {
-                let near = playerPos.distanceTo(d.center) < 2.8;
-                characterAgents.forEach(a => {
-                    if (a.wrapper.visible && a.wrapper.position.distanceTo(d.center) < 2.6) near = true;
-                });
+                const near = playerPos.distanceTo(d.center) < 2.8;
                 const shouldOpen = near || d.manualOpen;
                 const targetAngle = shouldOpen ? -1.48 : -0.22;
                 d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 5.0);
                 d.pivot.rotation.y = d.currentAngle;
             });
 
-            // 7. Update Rigged GLTF Actors
-            updateCharacterAgents(dt, elapsed);
-
-            // 8. Center-Screen Raycaster for Interactive Prompts ([E / Click])
+            // 7. Center-Screen Raycaster for Interactive Prompts ([E / Click])
             if (!cinematicActive && !orbitMode) {
                 raycaster.setFromCamera({ x: 0, y: 0 }, camera);
                 const hits = raycaster.intersectObjects(interactableObjects);
@@ -2542,12 +2134,12 @@
                 promptEl.style.display = 'none';
             }
 
-            // 9. Smooth Indoor / Outdoor Exposure Adaptation
+            // 8. Smooth Indoor / Outdoor Exposure Adaptation
             const isInsideBuilding = playerPos.z < 2.2 && Math.abs(playerPos.x) < 15;
-            const targetExposure = isInsideBuilding ? 1.24 : (isGoldenHour ? 1.15 : 1.10);
+            const targetExposure = isInsideBuilding ? 1.22 : (isGoldenHour ? 1.14 : 1.10);
             renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * Math.min(1, dt * 3.0);
 
-            // 10. Camera & Player Locomotion with Sliding AABB Collision
+            // 9. Camera & Player Locomotion with Sliding AABB Collision
             if (cinematicActive) {
                 cinematicTime += dt;
                 const duration = 9.5;
@@ -2612,34 +2204,7 @@
                 }
                 playerPos.y += (targetEyeY - playerPos.y) * 0.16;
 
-                if (playerAvatar) {
-                    playerAvatar.mixer.update(dt);
-                    const movingNow = Math.hypot(moveX, moveZ) > 0.001;
-                    if (movingNow !== playerAvatar.isMoving) {
-                        playerAvatar.isMoving = movingNow;
-                        if (movingNow && playerAvatar.walk && playerAvatar.idle) {
-                            playerAvatar.idle.fadeOut(0.2);
-                            playerAvatar.walk.reset().fadeIn(0.2).play();
-                        } else if (!movingNow && playerAvatar.walk && playerAvatar.idle) {
-                            playerAvatar.walk.fadeOut(0.2);
-                            playerAvatar.idle.reset().fadeIn(0.2).play();
-                        }
-                    }
-                    playerAvatar.wrapper.position.set(playerPos.x, playerPos.y - 1.65, playerPos.z);
-                    if (movingNow) {
-                        playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
-                    }
-                }
-
-                if (isThirdPerson) {
-                    camera.position.set(
-                        playerPos.x + Math.sin(camYaw) * 2.6,
-                        playerPos.y + 0.55,
-                        playerPos.z + Math.cos(camYaw) * 2.6
-                    );
-                } else {
-                    camera.position.copy(playerPos);
-                }
+                camera.position.copy(playerPos);
                 camera.rotation.order = 'YXZ';
                 camera.rotation.y = camYaw;
                 camera.rotation.x = camPitch;
