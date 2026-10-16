@@ -35,9 +35,10 @@
         }
         #canvas-container:active { cursor: grabbing; }
 
+        /* Top Navigation & Settings Bar */
         header {
             position: absolute;
-            top: 16px; left: 20px; right: 20px;
+            top: 14px; left: 18px; right: 18px;
             z-index: 10;
             display: flex;
             justify-content: space-between;
@@ -49,52 +50,69 @@
         header > * { pointer-events: auto; }
 
         .stage-nav {
-            display: flex; gap: 8px; align-items: center; font-size: 0.82rem; font-weight: 600; flex-wrap: wrap;
+            display: flex; gap: 8px; align-items: center; font-size: 0.8rem; font-weight: 600; flex-wrap: wrap;
         }
         .stage-nav a {
-            color: #cbd5e1; text-decoration: none; padding: 8px 16px; border-radius: 20px;
+            color: #cbd5e1; text-decoration: none; padding: 7px 14px; border-radius: 20px;
             background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(14px);
             transition: 0.25s;
         }
         .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
         .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.22); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,242,254,0.3); }
 
-        .hud-title-box {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--gold);
-            padding: 8px 16px;
-            border-radius: 12px;
-            backdrop-filter: blur(14px);
+        .top-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        .status-dot {
-            width: 9px; height: 9px; border-radius: 50%;
-            background: var(--emerald);
-            box-shadow: 0 0 10px var(--emerald);
+        .hud-pill-btn, .hud-select {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: #f8fafc;
+            padding: 7px 12px;
+            border-radius: 12px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            transition: 0.2s;
+            outline: none;
+        }
+        .hud-pill-btn:hover, .hud-select:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .hud-pill-btn.active-mode {
+            background: rgba(0, 242, 254, 0.2);
+            border-color: var(--cyan);
+            color: #fff;
+        }
+        .hud-select option {
+            background: #0f172a;
+            color: #fff;
         }
 
+        /* Left Teleport & Camera Mode Bar */
         .zone-panel {
             position: absolute;
-            top: 78px; left: 20px;
+            top: 72px; left: 18px;
             z-index: 10;
             background: var(--glass);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 14px;
+            padding: 13px;
             backdrop-filter: blur(16px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            width: 235px;
+            gap: 6px;
+            width: 240px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.45);
         }
         .zone-panel-title {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.4px;
             color: var(--cyan);
             font-weight: 800;
             margin-bottom: 2px;
@@ -103,13 +121,13 @@
             background: rgba(2, 6, 23, 0.65);
             border: 1px solid var(--border);
             color: #e2e8f0;
-            padding: 10px 12px;
+            padding: 8px 11px;
             border-radius: 10px;
-            font-size: 0.84rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-align: left;
             cursor: pointer;
-            transition: 0.25s;
+            transition: 0.22s;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -121,44 +139,45 @@
             transform: translateX(3px);
         }
 
+        /* Right Context & Telemetry Panel */
         .info-card {
             position: absolute;
-            top: 78px; right: 20px;
+            top: 72px; right: 18px;
             z-index: 10;
-            width: 310px;
+            width: 315px;
             background: var(--glass);
             border: 1px solid var(--cyan);
             border-radius: 16px;
-            padding: 18px;
+            padding: 16px;
             backdrop-filter: blur(16px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.5);
             transition: 0.3s;
         }
         .info-card h3 {
             color: var(--gold);
-            font-size: 1.05rem;
-            margin-bottom: 6px;
+            font-size: 1.02rem;
+            margin-bottom: 5px;
         }
         .info-card p {
             color: #cbd5e1;
-            font-size: 0.84rem;
-            line-height: 1.5;
+            font-size: 0.82rem;
+            line-height: 1.48;
         }
         .asset-status-bar {
-            margin-top: 10px;
+            margin-top: 9px;
             padding: 6px 10px;
             border-radius: 8px;
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.35);
             color: #6ee7b7;
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             font-weight: 600;
         }
         .controls-hint {
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 9px;
+            padding-top: 9px;
             border-top: 1px solid var(--border);
-            font-size: 0.76rem;
+            font-size: 0.74rem;
             color: #94a3b8;
             display: flex;
             flex-direction: column;
@@ -171,12 +190,43 @@
             padding: 1px 6px;
             border-radius: 4px;
             font-weight: 700;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
         }
 
+        /* Cinematic Intro Banner & Skip Button */
+        #cinematic-banner {
+            position: absolute;
+            bottom: 84px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(3, 7, 18, 0.85);
+            border: 1px solid var(--gold);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: opacity 0.35s ease;
+        }
+        .skip-btn {
+            background: var(--gold);
+            color: #030712;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .skip-btn:hover { background: #fde047; }
+
+        /* Mobile On-Screen Touch D-Pad */
         .mobile-dpad {
             position: absolute;
-            bottom: 85px; left: 20px;
+            bottom: 82px; left: 16px;
             z-index: 15;
             display: none;
             grid-template-columns: repeat(3, 46px);
@@ -198,9 +248,10 @@
         }
         .dpad-btn:active { background: var(--cyan); color: #000; }
 
+        /* Bottom Action Bar */
         footer {
             position: absolute;
-            bottom: 18px; left: 20px; right: 20px;
+            bottom: 16px; left: 18px; right: 18px;
             z-index: 10;
             display: flex;
             justify-content: space-between;
@@ -215,10 +266,10 @@
             text-decoration: none;
             color: white;
             background: linear-gradient(135deg, var(--purple), #ec4899, var(--cyan));
-            padding: 13px 28px;
+            padding: 12px 26px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -229,18 +280,18 @@
 
         @media (max-width: 850px) {
             .zone-panel {
-                top: auto; bottom: 82px; right: 14px; left: auto;
-                width: 175px; padding: 10px; gap: 5px;
+                top: auto; bottom: 80px; right: 12px; left: auto;
+                width: 172px; padding: 9px; gap: 4px;
             }
-            .zone-btn { padding: 7px 10px; font-size: 0.75rem; }
+            .zone-btn { padding: 6px 9px; font-size: 0.72rem; }
             .info-card {
-                top: 68px; left: 14px; right: 14px; width: auto; padding: 12px;
+                top: 105px; left: 12px; right: 12px; width: auto; padding: 11px;
             }
             .controls-hint { display: none; }
-            .mobile-dpad { display: grid; bottom: 82px; left: 14px; }
-            .hud-title-box { display: none; }
-            footer { justify-content: center; bottom: 14px; }
-            .launch-hub-btn { width: 100%; justify-content: center; padding: 14px; }
+            .mobile-dpad { display: grid; bottom: 80px; left: 12px; }
+            #cinematic-banner { bottom: 190px; width: 90%; justify-content: space-between; }
+            footer { justify-content: center; bottom: 12px; }
+            .launch-hub-btn { width: 100%; justify-content: center; padding: 13px; }
         }
     </style>
 </head>
@@ -248,38 +299,46 @@
 
     <div id="canvas-container"></div>
 
-    <!-- Top Navigation -->
+    <!-- Top Navigation & Real-Time Environment Controls -->
     <header>
         <nav class="stage-nav">
             <a href="index.html">01 / Welcome</a>
             <a href="twin.html" class="active">02 / 3D Digital Twin</a>
             <a href="hub.html">03 / AI Agent Hub</a>
         </nav>
-        <div class="hud-title-box">
-            <span class="status-dot"></span>
-            <span style="font-size: 0.82rem; font-weight: 700;">PESCE Mandya — CSE (AI & ML) Digital Twin</span>
+
+        <div class="top-controls">
+            <button class="hud-pill-btn" id="btn-cinematic" onclick="startCinematicIntro()">🎬 Replay Intro</button>
+            <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit Exterior</button>
+            <button class="hud-pill-btn" id="btn-lighting" onclick="toggleLightingMode()">☀️ Daylight</button>
+            <button class="hud-pill-btn" id="btn-audio" onclick="toggleAmbienceAudio()">🔇 Audio: Off</button>
+            <select class="hud-select" id="PresetSelect" onchange="applyGraphicsPreset(this.value)" aria-label="Graphics Quality Preset">
+                <option value="HIGH">⚡ Preset: HIGH</option>
+                <option value="BALANCED">⚖️ Preset: BALANCED</option>
+                <option value="MOBILE">📱 Preset: MOBILE</option>
+            </select>
         </div>
     </header>
 
     <!-- Camera Teleport & Walkthrough Views -->
     <aside class="zone-panel">
         <div class="zone-panel-title">📍 Walkthrough Zones</div>
-        <button class="zone-btn active" onclick="teleportTo('exterior', this)">
+        <button class="zone-btn active" id="zbtn-exterior" onclick="teleportTo('exterior', this)">
             <span>🏛️ Exterior Facade</span> <span>1</span>
         </button>
-        <button class="zone-btn" onclick="teleportTo('portico', this)">
-            <span>🚪 Main Entrance</span> <span>2</span>
+        <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)">
+            <span>🚪 Return to Entrance</span> <span>2</span>
         </button>
-        <button class="zone-btn" onclick="teleportTo('stairs', this)">
+        <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)">
             <span>🪜 Switchback Stairs</span> <span>3</span>
         </button>
-        <button class="zone-btn" onclick="teleportTo('corridor', this)">
+        <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)">
             <span>🚶 1st Floor Corridor</span> <span>4</span>
         </button>
-        <button class="zone-btn" onclick="teleportTo('lab', this)">
+        <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)">
             <span>💻 AI & ML Lab</span> <span>5</span>
         </button>
-        <button class="zone-btn" onclick="teleportTo('classroom', this)">
+        <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)">
             <span>🎓 Smart Classroom</span> <span>6</span>
         </button>
     </aside>
@@ -288,16 +347,22 @@
     <aside class="info-card" id="zone-info">
         <h3 id="info-title">🏛️ Department Exterior Elevation</h3>
         <p id="info-desc">
-            Authentic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building featuring the cream & terracotta facade, entrance portico, rooftop solar arrays, and lush campus trees.
+            Photorealistic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building with GPU wind-driven grass, terracotta portico planters, rooftop solar arrays, and clickable 3D room markers.
         </p>
         <div class="asset-status-bar" id="actor-status">
             ⏳ Loading rigged GLTF human actors...
         </div>
         <div class="controls-hint">
-            <div><span class="key-pill">W</span> <span class="key-pill">A</span> <span class="key-pill">S</span> <span class="key-pill">D</span> or <span class="key-pill">Arrows</span> Walk Around</div>
+            <div><span class="key-pill">W</span> <span class="key-pill">A</span> <span class="key-pill">S</span> <span class="key-pill">D</span> Walk | <span class="key-pill">Scroll</span> Zoom | <span class="key-pill">Click Markers</span> Enter Room</div>
             <div><span class="key-pill">Mouse Drag</span> Look 360° | <span class="key-pill">1 - 6</span> Quick Teleport</div>
         </div>
     </aside>
+
+    <!-- Skippable Cinematic Intro Overlay -->
+    <div id="cinematic-banner">
+        <span style="font-size: 0.82rem; font-weight: 700; color: #f8fafc;">🎬 Cinematic Approach — PESCE Mandya AI & ML Dept</span>
+        <button class="skip-btn" onclick="skipCinematicIntro()">⏭ Skip Intro</button>
+    </div>
 
     <!-- Mobile Touch D-Pad -->
     <div class="mobile-dpad">
@@ -311,8 +376,8 @@
 
     <!-- Bottom Action Bar -->
     <footer>
-        <div style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.8rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / Photorealistic PBR & Skeletal Animation Twin
+        <div id="perf-badge" style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; color: #cbd5e1; backdrop-filter: blur(10px);">
+            Stage 02 / GPU Wind Grass • PMREM IBL • Clickable 3D Hotspots
         </div>
         <a href="hub.html" class="launch-hub-btn">
             Proceed to AI Agent Hub 🚀
@@ -327,53 +392,111 @@
     <script>
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x9bc5e8);
-        scene.fog = new THREE.FogExp2(0x9bc5e8, 0.0065);
+        scene.background = new THREE.Color(0x90c2e7);
+        scene.fog = new THREE.FogExp2(0x90c2e7, 0.0055);
 
-        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 240);
+        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 260);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.08;
+        renderer.toneMappingExposure = 1.06;
         container.appendChild(renderer.domElement);
 
         const clock = new THREE.Clock();
 
-        // --- REALISTIC DAYLIGHT & INDOOR PBR ILLUMINATION ---
-        const hemiLight = new THREE.HemisphereLight(0xe2f1ff, 0x5c5346, 0.65);
+        // --- 1. PROCEDURAL PMREM IMAGE-BASED LIGHTING (IBL) & NATURAL SUNLIGHT ---
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        pmremGenerator.compileEquirectangularShader();
+
+        function buildIBLScene(isGoldenHour) {
+            const envScene = new THREE.Scene();
+            const skyGeo = new THREE.SphereGeometry(60, 32, 16);
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createLinearGradient(0, 0, 0, 256);
+            if (isGoldenHour) {
+                grad.addColorStop(0, '#1e3a8a');
+                grad.addColorStop(0.48, '#f97316');
+                grad.addColorStop(0.55, '#fde047');
+                grad.addColorStop(1, '#4a3525');
+            } else {
+                grad.addColorStop(0, '#38bdf8');
+                grad.addColorStop(0.5, '#bae6fd');
+                grad.addColorStop(0.55, '#e2e8f0');
+                grad.addColorStop(1, '#57534e');
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 256, 256);
+            const envTex = new THREE.CanvasTexture(canvas);
+            const skyMesh = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ map: envTex, side: THREE.BackSide }));
+            envScene.add(skyMesh);
+            return pmremGenerator.fromScene(envScene, 0.04).texture;
+        }
+
+        const iblDaylight = buildIBLScene(false);
+        const iblGoldenHour = buildIBLScene(true);
+        scene.environment = iblDaylight;
+
+        const hemiLight = new THREE.HemisphereLight(0xe2f1ff, 0x4d5e3e, 0.62);
         hemiLight.position.set(0, 50, 0);
         scene.add(hemiLight);
 
-        const sunLight = new THREE.DirectionalLight(0xfff7e8, 1.15);
-        sunLight.position.set(24, 44, 32);
+        const sunLight = new THREE.DirectionalLight(0xfff8eb, 1.22);
+        sunLight.position.set(26, 42, 30);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.bias = -0.0004;
+        sunLight.shadow.bias = -0.0003;
         sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 120;
-        sunLight.shadow.camera.left = -34;
-        sunLight.shadow.camera.right = 34;
-        sunLight.shadow.camera.top = 34;
-        sunLight.shadow.camera.bottom = -34;
+        sunLight.shadow.camera.far = 130;
+        sunLight.shadow.camera.left = -36;
+        sunLight.shadow.camera.right = 36;
+        sunLight.shadow.camera.top = 36;
+        sunLight.shadow.camera.bottom = -36;
         scene.add(sunLight);
 
-        // Warm-White Indoor Tube Light Sources (Corridor, Lab, Classroom)
         const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.55, 18);
         corridorLight1.position.set(-4, 7.6, 0.2);
         const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.55, 18);
         corridorLight2.position.set(6, 7.6, 0.2);
-        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.75, 22);
+        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.78, 22);
         labRoomLight.position.set(-2, 7.6, -5.8);
-        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.75, 22);
+        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.78, 22);
         classRoomLight.position.set(9.5, 7.6, -5.8);
         scene.add(corridorLight1, corridorLight2, labRoomLight, classRoomLight);
 
-        // --- PROCEDURAL PBR TEXTURES & CONTACT SHADOWS ---
+        let isGoldenHour = false;
+        window.toggleLightingMode = function() {
+            isGoldenHour = !isGoldenHour;
+            const btn = document.getElementById('btn-lighting');
+            if (isGoldenHour) {
+                scene.background.setHex(0xdfa06e);
+                scene.fog.color.setHex(0xdfa06e);
+                scene.environment = iblGoldenHour;
+                sunLight.color.setHex(0xffa94d);
+                sunLight.intensity = 1.35;
+                sunLight.position.set(-34, 16, 26);
+                hemiLight.color.setHex(0xffd8a8);
+                btn.innerText = '🌅 Golden Hour';
+                btn.classList.add('active-mode');
+            } else {
+                scene.background.setHex(0x90c2e7);
+                scene.fog.color.setHex(0x90c2e7);
+                scene.environment = iblDaylight;
+                sunLight.color.setHex(0xfff8eb);
+                sunLight.intensity = 1.22;
+                sunLight.position.set(26, 42, 30);
+                hemiLight.color.setHex(0xe2f1ff);
+                btn.innerText = '☀️ Daylight';
+                btn.classList.remove('active-mode');
+            }
+        };
+
+        // --- 2. PROCEDURAL HIGH-RES PBR TEXTURES, BUMP MAPS & SIGNAGE ---
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -395,15 +518,15 @@
             return tex;
         }
 
-        function createTileTexture(baseHex, groutHex, divisions = 8, addGrain = true) {
+        function createTileTexture(baseHex, groutHex, divisions = 8, addWeathering = true) {
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = baseHex;
             ctx.fillRect(0, 0, 512, 512);
-            if (addGrain) {
-                for (let i = 0; i < 3500; i++) {
-                    ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.025)' : 'rgba(0,0,0,0.03)';
+            if (addWeathering) {
+                for (let i = 0; i < 4500; i++) {
+                    ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.035)';
                     ctx.fillRect(Math.random() * 512, Math.random() * 512, 3, 3);
                 }
             }
@@ -426,7 +549,7 @@
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
             const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.52)');
             grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.18)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
             ctx.fillStyle = grad;
@@ -439,7 +562,7 @@
             depthWrite: false
         });
 
-        // Dynamic AI/ML Code & Neural Graph Canvas Texture for Lab Monitors
+        // Live AI/ML Code & Neural Graph Texture for Lab Monitors
         const screenCanvas = document.createElement('canvas');
         screenCanvas.width = 256; screenCanvas.height = 160;
         const screenCtx = screenCanvas.getContext('2d');
@@ -451,17 +574,14 @@
             screenTick += dt;
             screenCtx.fillStyle = '#091326';
             screenCtx.fillRect(0, 0, 256, 160);
-            // IDE Sidebar
             screenCtx.fillStyle = '#0f172a';
             screenCtx.fillRect(0, 0, 44, 160);
-            // Code lines
             const codeColors = ['#38bdf8', '#a78bfa', '#34d399', '#facc15', '#cbd5e1'];
             for (let i = 0; i < 9; i++) {
                 screenCtx.fillStyle = codeColors[i % codeColors.length];
                 const w = 45 + ((i * 29 + Math.floor(screenTick * 2)) % 85);
                 screenCtx.fillRect(54, 14 + i * 14, w, 5);
             }
-            // Live Neural Training Loss Curve on Right Pane
             screenCtx.strokeStyle = '#00f2fe';
             screenCtx.lineWidth = 2;
             screenCtx.beginPath();
@@ -474,34 +594,224 @@
             liveMonitorTexture.needsUpdate = true;
         }
 
-        // --- PBR MATERIALS (Matched to PESCE Mandya Reference Photographs) ---
-        const wallGrainTex = createTileTexture('#f2edd7', '#ede7ce', 1, true);
-        const matCreamWall = new THREE.MeshStandardMaterial({ map: wallGrainTex, roughness: 0.86, metalness: 0.02 });
-        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x8a8f94, roughness: 0.68, metalness: 0.05 });
-        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0xb84a39, roughness: 0.76, metalness: 0.04 });
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.52, metalness: 0.08 });
-        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x1e2126, roughness: 0.26, metalness: 0.18 });
-        const matGreySteps = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.78, metalness: 0.05 });
-        const matWoodRack = new THREE.MeshStandardMaterial({ color: 0x3b1e14, roughness: 0.48, metalness: 0.08 });
-        const matDoorWood = new THREE.MeshStandardMaterial({ color: 0x5c3422, roughness: 0.52, metalness: 0.08 });
-        const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.36, roughness: 0.08, metalness: 0.75 });
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.35, metalness: 0.78 });
-        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.58, metalness: 0.15 });
+        // --- PBR MATERIALS ---
+        const wallGrainTex = createTileTexture('#f2edd7', '#e8e0c5', 1, true);
+        const matCreamWall = new THREE.MeshStandardMaterial({ map: wallGrainTex, bumpMap: wallGrainTex, bumpScale: 0.015, roughness: 0.84, metalness: 0.02 });
+        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x8a8f94, roughness: 0.65, metalness: 0.05 });
+        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0xb84a39, roughness: 0.72, metalness: 0.04 });
+        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.48, metalness: 0.08 });
+        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x1e2126, roughness: 0.2, metalness: 0.25 });
+        const matGreySteps = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.75, metalness: 0.05 });
+        const matWoodRack = new THREE.MeshStandardMaterial({ color: 0x3b1e14, roughness: 0.45, metalness: 0.08 });
+        const matDoorWood = new THREE.MeshStandardMaterial({ color: 0x5c3422, roughness: 0.48, metalness: 0.08 });
+        const matGlass = new THREE.MeshStandardMaterial({ color: 0xdbeafe, transparent: true, opacity: 0.42, roughness: 0.05, metalness: 0.85, envMapIntensity: 1.4 });
+        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.3, metalness: 0.82 });
+        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.15 });
 
         const corridorTileTex = createTileTexture('#5c4038', '#3e2b26', 4, true);
         corridorTileTex.repeat.set(16, 4);
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTileTex, roughness: 0.46, metalness: 0.06 });
+        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTileTex, bumpMap: corridorTileTex, bumpScale: 0.01, roughness: 0.42, metalness: 0.08 });
 
-        const paverTex = createTileTexture('#9ca3af', '#6b7280', 8, true);
-        paverTex.repeat.set(30, 30);
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverTex, roughness: 0.84 });
+        const paverTex = createTileTexture('#a8a29e', '#78716c', 10, true);
+        paverTex.repeat.set(14, 18);
+        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverTex, bumpMap: paverTex, bumpScale: 0.02, roughness: 0.82 });
 
-        // --- 1. CAMPUS GROUND, RED SHED & WIND-ANIMATED TREES ---
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(150, 150), matCourtyard);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
+        const redBrickRunnerTex = createTileTexture('#994636', '#5c281e', 8, true);
+        redBrickRunnerTex.repeat.set(2, 16);
+        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: redBrickRunnerTex, roughness: 0.8 });
 
+        const soilTex = createTileTexture('#3f3224', '#2e2419', 2, true);
+        soilTex.repeat.set(20, 20);
+        const matRichSoil = new THREE.MeshStandardMaterial({ map: soilTex, roughness: 0.95 });
+
+        // --- 3. EXTERIOR LANDSCAPING, COURTYARD PAVER PATHS & GPU WIND GRASS ---
+        // Natural Soil Base for Lawn Areas
+        const soilGround = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), matRichSoil);
+        soilGround.rotation.x = -Math.PI / 2;
+        soilGround.receiveShadow = true;
+        scene.add(soilGround);
+
+        // Interlocking Paver Courtyard & Entrance Walkway (Matches Ref Photo 7)
+        const mainDriveway = new THREE.Mesh(new THREE.PlaneGeometry(18, 36), matCourtyard);
+        mainDriveway.rotation.x = -Math.PI / 2;
+        mainDriveway.position.set(0, 0.02, 18);
+        mainDriveway.receiveShadow = true;
+        scene.add(mainDriveway);
+
+        const buildingApron = new THREE.Mesh(new THREE.PlaneGeometry(36, 8), matCourtyard);
+        buildingApron.rotation.x = -Math.PI / 2;
+        buildingApron.position.set(0, 0.02, 5.5);
+        buildingApron.receiveShadow = true;
+        scene.add(buildingApron);
+
+        // Red-Brick Decorative Paver Runner Strips leading to Portico (Matches Ref Photo 7)
+        [-2.2, 2.2].forEach(rx => {
+            const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 28), matRedPaverStrip);
+            runner.rotation.x = -Math.PI / 2;
+            runner.position.set(rx, 0.026, 18);
+            runner.receiveShadow = true;
+            scene.add(runner);
+        });
+
+        // Red & White Painted Campus Curb Stones bordering the Lawns (Matches Ref Photo 1 & 7)
+        function createCurbLine(xPos, zStart, zEnd) {
+            const count = Math.floor(Math.abs(zEnd - zStart) / 0.8);
+            for (let i = 0; i < count; i++) {
+                const curbMat = i % 2 === 0 ? matTerracotta : matWhiteTrim;
+                const curb = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.16, 0.78), curbMat);
+                curb.position.set(xPos, 0.08, zStart + i * 0.8);
+                curb.castShadow = true; curb.receiveShadow = true;
+                scene.add(curb);
+            }
+        }
+        createCurbLine(-9.1, 8, 34);
+        createCurbLine(9.1, 8, 34);
+
+        // Terracotta Potted Plants Lining Portico & Front Wall (Matches Ref Photo 7)
+        const shrubCrowns = [];
+        function createTerracottaPotPlant(x, z, scale = 1.0) {
+            const group = new THREE.Group();
+            const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.28 * scale, 0.2 * scale, 0.42 * scale, 12), matTerracotta);
+            pot.position.y = 0.21 * scale;
+            pot.castShadow = true;
+            const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.31 * scale, 0.29 * scale, 0.06 * scale, 12), matTerracotta);
+            rim.position.y = 0.40 * scale;
+            const plantGroup = new THREE.Group();
+            plantGroup.position.y = 0.45 * scale;
+            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2e6f3e, roughness: 0.75 });
+            for (let i = 0; i < 5; i++) {
+                const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.22 * scale, 8, 8), leafMat);
+                const ang = (i / 5) * Math.PI * 2;
+                leaf.position.set(Math.cos(ang) * 0.12 * scale, (i % 2) * 0.1 * scale, Math.sin(ang) * 0.12 * scale);
+                leaf.castShadow = true;
+                plantGroup.add(leaf);
+            }
+            group.add(pot, rim, plantGroup);
+            group.position.set(x, 0.02, z);
+            scene.add(group);
+            shrubCrowns.push({ group: plantGroup, phase: Math.random() * Math.PI * 2 });
+        }
+        // Pots flanking the portico & front elevation
+        [-2.8, -3.8, -5.8, -8.2, 2.8, 3.8, 5.8, 8.2].forEach(px => {
+            createTerracottaPotPlant(px, 3.0, 0.95);
+        });
+        createTerracottaPotPlant(-2.6, 5.6, 1.1);
+        createTerracottaPotPlant(2.6, 5.6, 1.1);
+
+        // Natural Campus Shrubs & Hedges along Lawn Borders
+        function createCampusShrub(x, z, radius = 0.85) {
+            const sGroup = new THREE.Group();
+            sGroup.position.set(x, 0.35, z);
+            const sMat = new THREE.MeshStandardMaterial({ color: 0x366938, roughness: 0.82 });
+            const main = new THREE.Mesh(new THREE.SphereGeometry(radius, 10, 10), sMat);
+            main.scale.y = 0.72;
+            main.castShadow = true; main.receiveShadow = true;
+            sGroup.add(main);
+            scene.add(sGroup);
+            shrubCrowns.push({ group: sGroup, phase: Math.random() * Math.PI * 2 });
+        }
+        [-11.5, -14.5, -18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
+        [11.5, 14.5, 18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
+
+        // --- GPU VERTEX-SHADER INSTANCED LIVING GRASS SYSTEM ---
+        const grassUniforms = {
+            uTime: { value: 0 },
+            uWindStrength: { value: 1.0 }
+        };
+
+        // Tapered 3D Grass Tuft Geometry (Crossed blades per instance for volumetric density)
+        function createGrassTuftGeometry() {
+            const geo = new THREE.PlaneGeometry(0.11, 0.42, 1, 4);
+            geo.translate(0, 0.21, 0);
+            const pos = geo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                const y = pos.getY(i);
+                const heightRatio = y / 0.42;
+                // Taper width toward blade tip
+                pos.setX(i, pos.getX(i) * (1.0 - heightRatio * 0.75));
+                // Natural slight forward arch
+                pos.setZ(i, Math.pow(heightRatio, 2) * 0.05);
+            }
+            geo.computeVertexNormals();
+            return geo;
+        }
+
+        const grassBladeGeo = createGrassTuftGeometry();
+        const grassMat = new THREE.MeshStandardMaterial({
+            color: 0x4a7c39,
+            roughness: 0.78,
+            metalness: 0.04,
+            side: THREE.DoubleSide
+        });
+
+        grassMat.onBeforeCompile = (shader) => {
+            shader.uniforms.uTime = grassUniforms.uTime;
+            shader.uniforms.uWindStrength = grassUniforms.uWindStrength;
+            shader.vertexShader = `
+                uniform float uTime;
+                uniform float uWindStrength;
+            ` + shader.vertexShader;
+
+            shader.vertexShader = shader.vertexShader.replace(
+                '#include <begin_vertex>',
+                `
+                #include <begin_vertex>
+                float hFactor = clamp(position.y / 0.42, 0.0, 1.0);
+                float bendWeight = hFactor * hFactor;
+                vec3 worldInstPos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+                float wave1 = sin(uTime * 2.1 + worldInstPos.x * 0.45 + worldInstPos.z * 0.35);
+                float wave2 = cos(uTime * 1.4 - worldInstPos.x * 0.25 + worldInstPos.z * 0.65) * 0.5;
+                float gust = max(0.0, sin(uTime * 0.65 + worldInstPos.x * 0.12)) * 0.08;
+                float totalSway = (wave1 * 0.065 + wave2 * 0.04 + gust) * uWindStrength * bendWeight;
+                transformed.x += totalSway;
+                transformed.z += totalSway * 0.6;
+                `
+            );
+        };
+
+        let grassInstancedMesh = null;
+        function buildLivingGrassField(bladeCount) {
+            if (grassInstancedMesh) {
+                scene.remove(grassInstancedMesh);
+                grassInstancedMesh.dispose();
+            }
+            grassInstancedMesh = new THREE.InstancedMesh(grassBladeGeo, grassMat, bladeCount);
+            grassInstancedMesh.receiveShadow = true;
+
+            const dummy = new THREE.Object3D();
+            const color = new THREE.Color();
+            const greenPalette = [0x3b6e2c, 0x4d7c3f, 0x2e5a22, 0x558b3e, 0x3f6a2e];
+
+            let placed = 0;
+            while (placed < bladeCount) {
+                // Distribute across Left Lawn (X: -36 to -9.3, Z: -12 to 34) and Right Lawn (X: 9.3 to 36, Z: -12 to 34)
+                const isLeft = Math.random() < 0.55;
+                const x = isLeft ? (-9.4 - Math.random() * 25) : (9.4 + Math.random() * 25);
+                const z = -10 + Math.random() * 44;
+
+                // Skip inside the Red Shed footprint (X: -27 to -17, Z: -5 to 9)
+                if (x > -27.5 && x < -16.5 && z > -5.5 && z < 9.5) continue;
+                // Skip inside Main Building footprint (X: -15.5 to 15.5, Z: -10.5 to 3.5)
+                if (x > -15.5 && x < 15.5 && z < 3.5) continue;
+
+                dummy.position.set(x, 0, z);
+                dummy.rotation.y = Math.random() * Math.PI * 2;
+                const scaleH = 0.75 + Math.random() * 0.65;
+                dummy.scale.set(0.9 + Math.random() * 0.4, scaleH, 1.0);
+                dummy.updateMatrix();
+                grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
+
+                color.setHex(greenPalette[placed % greenPalette.length]);
+                color.offsetHSL((Math.random() - 0.5) * 0.04, 0, (Math.random() - 0.5) * 0.08);
+                grassInstancedMesh.setColorAt(placed, color);
+                placed++;
+            }
+            grassInstancedMesh.instanceMatrix.needsUpdate = true;
+            if (grassInstancedMesh.instanceColor) grassInstancedMesh.instanceColor.needsUpdate = true;
+            scene.add(grassInstancedMesh);
+        }
+
+        // Red-Roofed Adjacent Shed on Left (Ref Photo 1)
         const redShedGroup = new THREE.Group();
         const shedBase = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 14), matCreamWall);
         shedBase.position.set(-22, 1.6, 2);
@@ -515,6 +825,7 @@
         redShedGroup.add(shedRoof);
         scene.add(redShedGroup);
 
+        // Campus Trees with Wind-Synchronized Foliage
         const animatedTreeCrowns = [];
         function createTree(x, z, scale = 1) {
             const tree = new THREE.Group();
@@ -528,7 +839,7 @@
 
             const crownGroup = new THREE.Group();
             crownGroup.position.set(0, 4.2 * scale, 0);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.82 });
+            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.8 });
             const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 14, 14), foliageMat);
             c1.position.set(0, 0.6 * scale, 0);
             const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 12, 12), foliageMat);
@@ -537,17 +848,22 @@
             c3.position.set(-1.1 * scale, 0.2 * scale, -0.6 * scale);
             c1.castShadow = c2.castShadow = c3.castShadow = true;
             crownGroup.add(c1, c2, c3);
-            tree.add(crownGroup);
+
+            const treeShadow = new THREE.Mesh(new THREE.PlaneGeometry(5.5 * scale, 5.5 * scale), contactShadowMat);
+            treeShadow.rotation.x = -Math.PI / 2;
+            treeShadow.position.y = 0.02;
+            tree.add(crownGroup, treeShadow);
             tree.position.set(x, 0, z);
             scene.add(tree);
             animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
         }
-        createTree(-16, 11, 1.3);
-        createTree(-25, 14, 1.4);
-        createTree(-18, -8, 1.2);
-        createTree(20, 12, 1.1);
+        createTree(-15.5, 11.5, 1.35);
+        createTree(-24.5, 15.0, 1.45);
+        createTree(-18.0, -7.5, 1.25);
+        createTree(18.5, 12.5, 1.2);
+        createTree(24.0, 20.0, 1.3);
 
-        // --- 2. MAIN BUILDING STRUCTURE (G+1 Block) ---
+        // --- 4. MAIN DEPARTMENT BUILDING (PESCE Mandya Reference Architecture) ---
         const building = new THREE.Group();
         scene.add(building);
 
@@ -561,7 +877,7 @@
         ffCorridorFloor.receiveShadow = true;
         building.add(ffCorridorFloor);
 
-        // 3 Split-Level Steps in Mid-Corridor + Black Ribbed Doormat
+        // 3 Split-Level Steps in Mid-Corridor + Black Ribbed Doormat (Ref Photo 1)
         for (let s = 0; s < 3; s++) {
             const step = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.12 * (s + 1), 3.4), matGreySteps);
             step.position.set(4.5 + s * 0.4, 4.06 + (0.06 * s), 0.2);
@@ -619,14 +935,14 @@
             building.add(redStripe);
         }
 
-        // --- 3. OFFICIAL SIGNBOARDS & SOLAR ARRAYS ---
+        // Official Department Signboards & Rooftop Solar Panels
         const mainSignTex = createSignTexture('#2563eb', '#f8fafc', [
             { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 46px Arial' },
             { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 38px Arial' }
         ], 1024, 256);
         const mainSign = new THREE.Mesh(
             new THREE.BoxGeometry(5.2, 1.45, 0.15),
-            new THREE.MeshStandardMaterial({ map: mainSignTex, roughness: 0.4 })
+            new THREE.MeshStandardMaterial({ map: mainSignTex, roughness: 0.35 })
         );
         mainSign.position.set(0, 8.65, 2.22);
         building.add(mainSign);
@@ -644,7 +960,7 @@
         building.add(vlsiSign);
 
         function createSolarArray(xStart, count) {
-            const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.2, metalness: 0.8 });
+            const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.15, metalness: 0.85 });
             for (let i = 0; i < count; i++) {
                 const panel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 1.2), solarMat);
                 panel.position.set(xStart + i * 2.0, 8.6, -1.5);
@@ -655,7 +971,7 @@
         createSolarArray(-12, 4);
         createSolarArray(4, 5);
 
-        // --- 4. CENTRAL ENTRANCE PORTICO ---
+        // Central Entrance Portico with Ramp/Steps & Signboard (Ref Photo 7 & 10)
         const portico = new THREE.Group();
         portico.position.set(0, 0, 4.2);
         scene.add(portico);
@@ -667,6 +983,11 @@
             portico.add(pCol);
         });
 
+        const porticoRamp = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.18, 3.2), matRedPaverStrip);
+        porticoRamp.position.set(0, 0.09, 0.2);
+        porticoRamp.receiveShadow = true;
+        portico.add(porticoRamp);
+
         const roofLeft = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
         roofLeft.position.set(-1.2, 4.1, 0); roofLeft.rotation.z = 0.32;
         const roofRight = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
@@ -677,9 +998,9 @@
         trimRight.position.set(1.2, 4.1, 1.78); trimRight.rotation.z = -0.32;
         portico.add(roofLeft, roofRight, trimLeft, trimRight);
 
-        const porticoSignTex = createSignTexture('#38bdf8', '#ffffff', [
-            { text: 'PESCE MANDYA — AI & ML PORTAL', font: 'bold 38px Arial', color: '#030712' },
-            { text: 'MAIN ENTRANCE FOYER', font: 'bold 32px Arial', color: '#030712' }
+        const porticoSignTex = createSignTexture('#2563eb', '#ffffff', [
+            { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 36px Arial', color: '#ffffff' },
+            { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 30px Arial', color: '#e0f2fe' }
         ], 1024, 200);
         const porticoBanner = new THREE.Mesh(
             new THREE.BoxGeometry(4.1, 0.65, 0.1),
@@ -688,7 +1009,7 @@
         porticoBanner.position.set(0, 3.35, 1.5);
         portico.add(porticoBanner);
 
-        // --- 5. SWITCHBACK STAIRCASE ---
+        // --- 5. SWITCHBACK STAIRCASE, CORRIDOR, HINGED DOORS, LAB & CLASSROOM ---
         const stairGroup = new THREE.Group();
         stairGroup.position.set(-10.5, 0, -1.2);
         scene.add(stairGroup);
@@ -743,8 +1064,6 @@
         fireExitSign.position.set(1.83, 4.1, -1.2);
         stairGroup.add(fireExitSign);
 
-        // --- 6. CORRIDOR WALLS, HINGED DOORS, SHOE RACKS & EXTINGUISHER ---
-        // Segmented Corridor Divider Wall (Z = -1.55) to create true walk-through doorways at X = -2.2 (Lab) and X = 6.2 (Classroom)
         function addCorridorWallSegment(xStart, xEnd, yFloor = 4.0) {
             const length = xEnd - xStart;
             const centerX = (xStart + xEnd) / 2;
@@ -760,7 +1079,6 @@
         addCorridorWallSegment(-1.55, 5.55, 4.0);
         addCorridorWallSegment(6.85, 14.85, 4.24);
 
-        // Door Lintels above the 2 doorways
         [ { x: -2.2, y: 4.0, label: 'AI & ML LAB - 01' }, { x: 6.2, y: 4.24, label: 'LECTURE HALL - 101' } ].forEach(d => {
             const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.6, 0.25), matCreamWall);
             lintel.position.set(d.x, d.y + 3.2, -1.55);
@@ -772,7 +1090,6 @@
             building.add(plate);
         });
 
-        // Articulated Hinged Doors (Open smoothly when user or NPC approaches)
         const hingedDoors = [];
         function createHingedDoor(hingeX, baseY, zPos) {
             const pivot = new THREE.Group();
@@ -786,12 +1103,11 @@
             handle.position.set(1.12, 1.1, 0);
             pivot.add(doorLeaf, glassPane, handle);
             building.add(pivot);
-            hingedDoors.push({ pivot, center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos), currentAngle: 0.35 });
+            hingedDoors.push({ pivot, center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos), currentAngle: -0.25 });
         }
         createHingedDoor(-2.83, 4.12, -1.55);
         createHingedDoor(5.57, 4.36, -1.55);
 
-        // White-Framed Sliding Windows on Right Corridor Wall
         [-5.2, 1.2, 10.2].forEach(wx => {
             const winFrame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 0.3), matWhiteTrim);
             winFrame.position.set(wx, 5.85, -1.55);
@@ -800,7 +1116,6 @@
             building.add(winFrame, winGlass);
         });
 
-        // 3 Dark Wooden 3-Tier Shoe Racks
         function createShoeRack(xPos) {
             const rack = new THREE.Group();
             const top = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.05, 0.42), matWoodRack);
@@ -823,7 +1138,6 @@
         createShoeRack(-5.2);
         createShoeRack(0.2);
 
-        // Red Fire Extinguisher on Pillar
         const extinguisher = new THREE.Group();
         const extTank = new THREE.Mesh(
             new THREE.CylinderGeometry(0.09, 0.09, 0.48, 14),
@@ -835,7 +1149,6 @@
         extinguisher.position.set(2.8, 5.5, -1.36);
         building.add(extinguisher);
 
-        // --- 7. CEILING FANS, LAB WORKSTATIONS, CHAIRS & CLASSROOM ---
         const ceilingFans = [];
         function createCeilingFan(x, y, z) {
             const fanGroup = new THREE.Group();
@@ -874,7 +1187,6 @@
         midRoomDivider.position.set(4.0, 6.0, -5.8);
         building.add(backWall, leftEndWall, rightEndWall, midRoomDivider);
 
-        // Helper for Ergonomic Lab Chair
         function createLabChair(x, y, z, rotY = Math.PI) {
             const chair = new THREE.Group();
             chair.position.set(x, y, z);
@@ -894,7 +1206,6 @@
             building.add(chair);
         }
 
-        // ROOM A: AI & ML Deep Learning Lab Workstations + Live Monitors + Keyboards + Chairs
         const monitorScreenMat = new THREE.MeshBasicMaterial({ map: liveMonitorTexture });
         for (let row = -3.8; row >= -8.2; row -= 2.2) {
             for (let col = -6.5; col <= 1.5; col += 2.6) {
@@ -926,7 +1237,6 @@
         labScreen.position.set(-2.0, 6.1, -9.75);
         building.add(labScreen);
 
-        // ROOM B: Smart Classroom Desks, Benches & Board
         const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.58 });
         for (let r = -3.8; r >= -8.2; r -= 1.6) {
             for (let c = 6.5; c <= 11.5; c += 2.6) {
@@ -946,8 +1256,31 @@
         smartBoard.position.set(14.75, 6.0, -5.8);
         building.add(smartBoard);
 
-        // --- 8. RIGGED GLTF HUMAN CHARACTER & SKELETAL ANIMATION ENGINE ---
-        // Zero primitive fallbacks: Uses official rigged GLB human assets with full Mixamo skeletal hierarchies
+        // --- 6. CLICKABLE 3D HOTSPOT MARKERS IN SCENE (Raycaster Interactive) ---
+        const hotspotMeshes = [];
+        function createInteractiveHotspot(x, y, z, zoneKey, labelText) {
+            const tex = createSignTexture('#0f172a', '#00f2fe', [
+                { text: '📍 ' + labelText, font: 'bold 44px Segoe UI, Arial', color: '#00f2fe' },
+                { text: 'Click to Enter / Inspect', font: 'bold 28px Segoe UI, Arial', color: '#f8fafc' }
+            ], 512, 160);
+            const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+            const sprite = new THREE.Sprite(mat);
+            sprite.position.set(x, y, z);
+            sprite.scale.set(2.4, 0.75, 1);
+            sprite.userData = { zoneKey, baseY: y };
+            scene.add(sprite);
+            hotspotMeshes.push(sprite);
+        }
+        createInteractiveHotspot(0, 2.5, 6.2, 'portico', 'Main Entrance Portico');
+        createInteractiveHotspot(-10.2, 3.1, -0.5, 'stairs', 'Switchback Staircase');
+        createInteractiveHotspot(-5.0, 5.5, 0.3, 'corridor', '1st Floor AIML Corridor');
+        createInteractiveHotspot(-2.2, 5.4, -1.2, 'lab', 'Enter AI & ML Lab');
+        createInteractiveHotspot(6.2, 5.6, -1.2, 'classroom', 'Enter Smart Classroom');
+
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        // --- 7. RIGGED GLTF HUMAN CHARACTER & SKELETAL ANIMATION ENGINE ---
         const gltfLoader = new THREE.GLTFLoader();
         const characterAgents = [];
 
@@ -992,21 +1325,16 @@
             return {
                 hips: findBone(modelRoot, 'hips'),
                 spine: findBone(modelRoot, 'spine'),
-                spine1: findBone(modelRoot, 'spine1'),
                 neck: findBone(modelRoot, 'neck'),
                 head: findBone(modelRoot, 'head'),
                 leftUpLeg: findBone(modelRoot, 'leftupleg'),
                 rightUpLeg: findBone(modelRoot, 'rightupleg'),
                 leftLeg: findBone(modelRoot, 'leftleg'),
                 rightLeg: findBone(modelRoot, 'rightleg'),
-                leftFoot: findBone(modelRoot, 'leftfoot'),
-                rightFoot: findBone(modelRoot, 'rightfoot'),
                 leftArm: findBone(modelRoot, 'leftarm'),
                 rightArm: findBone(modelRoot, 'rightarm'),
                 leftForeArm: findBone(modelRoot, 'leftforearm'),
-                rightForeArm: findBone(modelRoot, 'rightforearm'),
-                leftHand: findBone(modelRoot, 'lefthand'),
-                rightHand: findBone(modelRoot, 'righthand')
+                rightForeArm: findBone(modelRoot, 'rightforearm')
             };
         }
 
@@ -1020,7 +1348,7 @@
                         child.material = child.material.clone();
                         if (child.name.toLowerCase().includes('surface')) {
                             child.material.color.setHex(outfitPalette.primary);
-                            child.material.roughness = 0.65;
+                            child.material.roughness = 0.62;
                             child.material.metalness = 0.08;
                         } else if (child.name.toLowerCase().includes('joints')) {
                             child.material.color.setHex(outfitPalette.secondary);
@@ -1053,7 +1381,6 @@
                     styleActorMaterials(clone, config.palette);
                     wrapper.add(clone);
 
-                    // Contact shadow directly beneath character feet
                     const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
                     shadowPlane.rotation.x = -Math.PI / 2;
                     shadowPlane.position.y = 0.015;
@@ -1076,12 +1403,11 @@
                         waypoints: config.waypoints || null,
                         wpIndex: 0,
                         pauseTimer: 0,
-                        state: 'idle',
-                        baseY: config.position.y
+                        isGroundFloor: !!config.isGroundFloor,
+                        optionalOnMobile: !!config.optionalOnMobile
                     };
 
-                    // Start base skeletal clip
-                    if (config.role === 'corridor_walker') {
+                    if (config.role === 'walker') {
                         const walkClip = actions['walk'] || actions['run'] || Object.values(actions)[0];
                         const idleClip = actions['idle'] || walkClip;
                         agent.walkAction = walkClip;
@@ -1089,7 +1415,6 @@
                         if (walkClip) {
                             walkClip.timeScale = 0.95;
                             walkClip.play();
-                            agent.state = 'walk';
                         }
                     } else {
                         const baseClip = actions['idle'] || actions['agree'] || Object.values(actions)[0];
@@ -1098,110 +1423,125 @@
                             baseClip.play();
                         }
                     }
-
                     characterAgents.push(agent);
                 }
 
-                // 1. CORRIDOR WALKERS (Walk smoothly along 1st Floor Corridor & climb the 3 split-level steps)
+                // Exterior Courtyard Pathway Walker
+                spawnRiggedAgent(humanData, {
+                    role: 'walker',
+                    isGroundFloor: true,
+                    scale: 0.96,
+                    position: new THREE.Vector3(-1.5, 0.03, 18.0),
+                    rotationY: Math.PI,
+                    palette: null,
+                    waypoints: [
+                        { x: -1.5, z: 18.0, pause: 1.5 },
+                        { x: -1.2, z: 7.2,  pause: 2.8 },
+                        { x: 1.5,  z: 10.0, pause: 1.0 },
+                        { x: 1.5,  z: 21.0, pause: 2.0 }
+                    ]
+                });
+
+                // 1st Floor Corridor Walker
                 spawnRiggedAgent(actorData, {
-                    role: 'corridor_walker',
+                    role: 'walker',
                     scale: 0.96,
                     position: new THREE.Vector3(-6.2, 4.12, 0.35),
                     rotationY: Math.PI / 2,
                     palette: { primary: 0x1e3a8a, secondary: 0x334155 },
                     waypoints: [
-                        { x: -6.2, z: 0.35, pause: 2.2 },
-                        { x: -2.2, z: -0.35, pause: 3.0 }, // Pauses near AI & ML Lab entrance
-                        { x: 3.8, z: 0.35, pause: 1.0 },
-                        { x: 8.5, z: 0.35, pause: 2.8 },  // Ascends split-level steps to raised corridor
-                        { x: 3.8, z: 0.35, pause: 0.5 }
+                        { x: -6.2, z: 0.35, pause: 2.0 },
+                        { x: -2.2, z: -0.35, pause: 3.0 },
+                        { x: 3.8,  z: 0.35, pause: 1.0 },
+                        { x: 8.5,  z: 0.35, pause: 2.5 },
+                        { x: 3.8,  z: 0.35, pause: 0.5 }
                     ]
                 });
 
+                // 1st Floor Corridor Standing Student
                 spawnRiggedAgent(humanData, {
                     role: 'corridor_talker',
                     scale: 0.96,
                     position: new THREE.Vector3(1.5, 4.12, 0.55),
                     rotationY: -0.4,
-                    palette: null
+                    optionalOnMobile: true
                 });
 
-                // 2. AI & ML COMPUTER LAB SEATED STUDENTS (Typing on keyboards & looking at dual monitors)
+                // AI & ML Lab Seated Students
                 const labSeats = [
-                    { x: -6.95, z: -3.22, palette: { primary: 0x0f766e, secondary: 0x1e293b } },
-                    { x: -3.45, z: -3.22, palette: { primary: 0x4338ca, secondary: 0x1e293b } },
-                    { x: -0.85, z: -5.42, palette: { primary: 0xb45309, secondary: 0x1e293b } },
-                    { x: 1.05,  z: -5.42, palette: { primary: 0xbe123c, secondary: 0x1e293b } }
+                    { x: -6.95, z: -3.22, palette: { primary: 0x0f766e, secondary: 0x1e293b }, opt: false },
+                    { x: -3.45, z: -3.22, palette: { primary: 0x4338ca, secondary: 0x1e293b }, opt: false },
+                    { x: -0.85, z: -5.42, palette: { primary: 0xb45309, secondary: 0x1e293b }, opt: true },
+                    { x: 1.05,  z: -5.42, palette: { primary: 0xbe123c, secondary: 0x1e293b }, opt: true }
                 ];
                 labSeats.forEach((seat, idx) => {
                     spawnRiggedAgent(idx % 2 === 0 ? actorData : humanData, {
                         role: 'seated_lab_typing',
                         scale: 0.94,
                         position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                        rotationY: Math.PI, // Facing north toward the dual monitors (-Z)
-                        palette: seat.palette
+                        rotationY: Math.PI,
+                        palette: seat.palette,
+                        optionalOnMobile: seat.opt
                     });
                 });
 
-                // 3. SMART CLASSROOM SEATED STUDENTS + HAND RAISER + LECTURING FACULTY
+                // Smart Classroom Seated Students + Faculty
                 const classroomSeats = [
-                    { x: 5.98, z: -3.8, role: 'seated_classroom', palette: { primary: 0x1d4ed8, secondary: 0x0f172a } },
-                    { x: 5.98, z: -5.4, role: 'seated_hand_raise', palette: { primary: 0x047857, secondary: 0x0f172a } },
-                    { x: 8.58, z: -3.8, role: 'seated_classroom', palette: { primary: 0x6d28d9, secondary: 0x0f172a } },
-                    { x: 8.58, z: -7.0, role: 'seated_classroom', palette: { primary: 0x374151, secondary: 0x0f172a } }
+                    { x: 5.98, z: -3.8, role: 'seated_classroom', palette: { primary: 0x1d4ed8, secondary: 0x0f172a }, opt: false },
+                    { x: 5.98, z: -5.4, role: 'seated_hand_raise', palette: { primary: 0x047857, secondary: 0x0f172a }, opt: false },
+                    { x: 8.58, z: -3.8, role: 'seated_classroom', palette: { primary: 0x6d28d9, secondary: 0x0f172a }, opt: true },
+                    { x: 8.58, z: -7.0, role: 'seated_classroom', palette: { primary: 0x374151, secondary: 0x0f172a }, opt: true }
                 ];
                 classroomSeats.forEach((seat, idx) => {
                     spawnRiggedAgent(idx === 2 ? humanData : actorData, {
                         role: seat.role,
                         scale: 0.94,
                         position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                        rotationY: Math.PI / 2, // Facing East toward the Smartboard (+X)
-                        palette: seat.palette
+                        rotationY: Math.PI / 2,
+                        palette: seat.palette,
+                        optionalOnMobile: seat.opt
                     });
                 });
 
-                // Faculty Standing & Explaining at the Smartboard
                 spawnRiggedAgent(actorData, {
                     role: 'faculty',
                     scale: 0.98,
                     position: new THREE.Vector3(13.6, 4.12, -5.6),
-                    rotationY: -Math.PI / 2, // Facing West toward students
+                    rotationY: -Math.PI / 2,
                     palette: { primary: 0x0f172a, secondary: 0x475569 }
                 });
 
-                statusEl.innerText = '✅ 11 Rigged GLTF Actors Active (Walking, Seated, Typing & Lecturing)';
+                statusEl.innerText = '✅ 12 Rigged GLTF Actors Active (Courtyard, Corridor, Lab & Classroom)';
+                applyGraphicsPreset(currentPreset);
             } catch (err) {
                 statusEl.style.borderColor = '#f59e0b';
                 statusEl.style.color = '#fde68a';
                 statusEl.innerText = '⚠️ External GLTF character CDN unreachable. Architecture active.';
             }
         }
-        initializeDepartmentPopulation();
 
-        // Update Skeletal Mixers, Waypoint Locomotion, and Bone-Level Articulation
         function updateCharacterAgents(dt, elapsed) {
+            const maxDist = currentPreset === 'MOBILE' ? 28 : 50;
             characterAgents.forEach((agent) => {
-                // Distance LOD optimization: skip fine bone articulation if > 38m away from camera
+                if (!agent.wrapper.visible) return;
                 const distToCam = agent.wrapper.position.distanceTo(camera.position);
-                if (distToCam > 45) return;
+                if (distToCam > maxDist) return;
 
                 agent.mixer.update(dt);
                 const b = agent.bones;
                 const t = elapsed + agent.phase;
 
-                if (agent.role === 'corridor_walker' && agent.waypoints) {
+                if (agent.role === 'walker' && agent.waypoints) {
                     const targetWP = agent.waypoints[agent.wpIndex];
                     if (agent.pauseTimer > 0) {
                         agent.pauseTimer -= dt;
-                        // Subtle head look while paused at doorway
-                        if (b.head) b.head.rotation.y = Math.sin(t * 1.4) * 0.28;
+                        if (b.head) b.head.rotation.y = Math.sin(t * 1.4) * 0.26;
                         if (agent.pauseTimer <= 0) {
                             agent.wpIndex = (agent.wpIndex + 1) % agent.waypoints.length;
                             if (agent.walkAction && agent.idleAction && agent.walkAction !== agent.idleAction) {
                                 agent.idleAction.fadeOut(0.35);
                                 agent.walkAction.reset().fadeIn(0.35).play();
                             }
-                            agent.state = 'walk';
                         }
                     } else {
                         const dx = targetWP.x - agent.wrapper.position.x;
@@ -1213,16 +1553,11 @@
                                 agent.walkAction.fadeOut(0.35);
                                 agent.idleAction.reset().fadeIn(0.35).play();
                             }
-                            agent.state = 'idle';
                         } else {
                             const walkSpeed = 1.15;
-                            const stepX = (dx / dist) * walkSpeed * dt;
-                            const stepZ = (dz / dist) * walkSpeed * dt;
-                            agent.wrapper.position.x += stepX;
-                            agent.wrapper.position.z += stepZ;
-                            // Follow corridor split-level steps smoothly
-                            agent.wrapper.position.y = getCorridorFloorY(agent.wrapper.position.x);
-                            // Smooth directional turning
+                            agent.wrapper.position.x += (dx / dist) * walkSpeed * dt;
+                            agent.wrapper.position.z += (dz / dist) * walkSpeed * dt;
+                            agent.wrapper.position.y = agent.isGroundFloor ? 0.03 : getCorridorFloorY(agent.wrapper.position.x);
                             const desiredYaw = Math.atan2(dx, dz);
                             let diff = desiredYaw - agent.wrapper.rotation.y;
                             while (diff > Math.PI) diff -= Math.PI * 2;
@@ -1236,7 +1571,6 @@
                         b.head.rotation.x = Math.sin(t * 2.1) * 0.06;
                     }
                 } else if (agent.role === 'seated_lab_typing') {
-                    // Articulate Mixamo skeleton into seated workstation posture + typing hands
                     if (b.hips) b.hips.position.y = 54;
                     if (b.leftUpLeg) { b.leftUpLeg.rotation.x = -1.48; b.leftUpLeg.rotation.z = 0.08; }
                     if (b.rightUpLeg) { b.rightUpLeg.rotation.x = -1.48; b.rightUpLeg.rotation.z = -0.08; }
@@ -1248,7 +1582,7 @@
                     if (b.leftForeArm) b.leftForeArm.rotation.x = -0.85 + Math.sin(t * 11) * 0.07;
                     if (b.rightForeArm) b.rightForeArm.rotation.x = -0.85 + Math.cos(t * 11) * 0.07;
                     if (b.head) {
-                        b.head.rotation.y = Math.sin(t * 0.85) * 0.22; // Scanning across dual monitors
+                        b.head.rotation.y = Math.sin(t * 0.85) * 0.22;
                         b.head.rotation.x = -0.08;
                     }
                 } else if (agent.role === 'seated_classroom' || agent.role === 'seated_hand_raise') {
@@ -1260,7 +1594,6 @@
                     if (b.leftArm) { b.leftArm.rotation.x = -0.52; b.leftArm.rotation.z = 0.22; }
                     if (b.leftForeArm) b.leftForeArm.rotation.x = -0.75;
 
-                    // Periodic student raising hand in classroom
                     const raiseCycle = Math.max(0, Math.sin(t * 0.55));
                     if (agent.role === 'seated_hand_raise' && raiseCycle > 0.35) {
                         const lift = (raiseCycle - 0.35) / 0.65;
@@ -1275,7 +1608,6 @@
                         b.head.rotation.x = Math.cos(t * 0.8) * 0.06;
                     }
                 } else if (agent.role === 'faculty') {
-                    // Standing faculty gesturing toward smartboard and class
                     if (b.rightArm) {
                         b.rightArm.rotation.x = -0.75 + Math.sin(t * 2.2) * 0.25;
                         b.rightArm.rotation.z = -0.35;
@@ -1286,53 +1618,170 @@
             });
         }
 
-        // --- 9. CAMERA VIEWPOINTS, COLLISION & USER CONTROLS ---
+        // --- 8. THREE GRAPHICS PRESETS (HIGH, BALANCED, MOBILE) ---
+        const isMobileDevice = window.innerWidth <= 850 || /Mobi|Android/i.test(navigator.userAgent);
+        let currentPreset = isMobileDevice ? 'MOBILE' : 'HIGH';
+        document.getElementById('PresetSelect').value = currentPreset;
+
+        window.applyGraphicsPreset = function(preset) {
+            currentPreset = preset;
+            if (preset === 'HIGH') {
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                buildLivingGrassField(18000);
+                characterAgents.forEach(a => { a.wrapper.visible = true; });
+            } else if (preset === 'BALANCED') {
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                buildLivingGrassField(9000);
+                characterAgents.forEach(a => { a.wrapper.visible = true; });
+            } else {
+                renderer.setPixelRatio(1.0);
+                buildLivingGrassField(3500);
+                characterAgents.forEach(a => { a.wrapper.visible = !a.optionalOnMobile; });
+            }
+        };
+        applyGraphicsPreset(currentPreset);
+        initializeDepartmentPopulation();
+
+        // --- 9. SYNTHESIZED WEB AUDIO AMBIENCE (Outdoor Breeze & Indoor Lab Hum) ---
+        let audioCtx = null;
+        let audioGain = null;
+        let audioEnabled = false;
+
+        window.toggleAmbienceAudio = function() {
+            const btn = document.getElementById('btn-audio');
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                const bufferSize = audioCtx.sampleRate * 2;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                let lastOut = 0.0;
+                for (let i = 0; i < bufferSize; i++) {
+                    const white = Math.random() * 2 - 1;
+                    output[i] = (lastOut + (0.02 * white)) / 1.02;
+                    lastOut = output[i];
+                    output[i] *= 0.15;
+                }
+                const whiteNoise = audioCtx.createBufferSource();
+                whiteNoise.buffer = noiseBuffer;
+                whiteNoise.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 420;
+
+                audioGain = audioCtx.createGain();
+                audioGain.gain.value = 0.0;
+
+                whiteNoise.connect(filter);
+                filter.connect(audioGain);
+                audioGain.connect(audioCtx.destination);
+                whiteNoise.start(0);
+            }
+            audioEnabled = !audioEnabled;
+            if (audioEnabled) {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                audioGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.3);
+                btn.innerText = '🔊 Audio: On';
+                btn.classList.add('active-mode');
+            } else {
+                audioGain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.2);
+                btn.innerText = '🔇 Audio: Off';
+                btn.classList.remove('active-mode');
+            }
+        };
+
+        // --- 10. CINEMATIC INTRO, ORBIT MODE & VIEWPOINT TELEPORTATION ---
         const viewpoints = {
             exterior: {
-                pos: { x: 0, y: 3.2, z: 22 },
-                yaw: 0, pitch: 0.08,
+                pos: { x: 0, y: 2.2, z: 21 },
+                yaw: 0, pitch: 0.06,
                 title: "🏛️ Department Exterior Elevation",
-                desc: "Authentic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building featuring the cream & terracotta facade, entrance portico, and rooftop solar panels."
+                desc: "Photorealistic 3D reconstruction of the PESCE Mandya CSE (AI & ML) building featuring GPU wind-driven grass, terracotta planters, and rooftop solar panels."
             },
             portico: {
-                pos: { x: 0, y: 1.8, z: 8.5 },
-                yaw: 0, pitch: 0.05,
+                pos: { x: 0, y: 1.85, z: 8.5 },
+                yaw: 0, pitch: 0.04,
                 title: "🚪 Main Entrance Portico",
-                desc: "Gable-roofed entrance canopy supported by dark granite pillars. Walk inside and head left toward the switchback staircase."
+                desc: "Gable-roofed entrance canopy flanked by terracotta flower pots. Walk inside and head left (-X) to climb the switchback staircase."
             },
             stairs: {
-                pos: { x: -10.4, y: 2.3, z: -0.2 },
+                pos: { x: -10.4, y: 2.5, z: -0.2 },
                 yaw: 0.25, pitch: 0.12,
                 title: "🪜 Switchback Staircase",
-                desc: "Features black granite lower steps, grey concrete upper treads, black metal grille railings with weathered white handrail, and the FIRE EXIT sign."
+                desc: "Walk forward up the black granite lower flight and grey concrete upper treads onto the 1st-floor corridor."
             },
             corridor: {
-                pos: { x: -7.5, y: 5.65, z: 0.25 },
+                pos: { x: -7.5, y: 5.68, z: 0.25 },
                 yaw: -1.57, pitch: -0.02,
                 title: "🚶 1st Floor AI & ML Corridor",
-                desc: "Watch students walk along the matte-brown floor tiles, climb the 3 split-level steps, and pause by the AI & ML Lab doorway."
+                desc: "Matte-brown vitrified floor tiles, wooden shoe racks, red fire extinguisher, 3 split-level steps, and clickable room markers."
             },
             lab: {
                 pos: { x: -2.0, y: 5.75, z: -2.3 },
                 yaw: 0.25, pitch: -0.08,
                 title: "💻 AI & ML Deep Learning Lab",
-                desc: "Rigged students sit in ergonomic chairs typing at dual-monitor workstations running live neural network training curves under rotating ceiling fans."
+                desc: "Rigged students sit in ergonomic chairs typing at dual-monitor workstations running live neural network training curves."
             },
             classroom: {
-                pos: { x: 7.2, y: 5.85, z: -5.6 },
+                pos: { x: 7.2, y: 5.88, z: -5.6 },
                 yaw: -1.57, pitch: -0.05,
                 title: "🎓 Smart Lecture Classroom",
-                desc: "Students sit at wooden lecture benches while a faculty member explains concepts at the front smartboard."
+                desc: "Students sit at wooden lecture benches while a faculty member gestures and explains concepts at the front smartboard."
             }
         };
 
-        let camYaw = viewpoints.exterior.yaw;
-        let camPitch = viewpoints.exterior.pitch;
-        camera.position.set(viewpoints.exterior.pos.x, viewpoints.exterior.pos.y, viewpoints.exterior.pos.z);
-
+        let camYaw = 0;
+        let camPitch = 0.06;
         let targetTeleport = null;
+        let cinematicActive = true;
+        let cinematicTime = 0;
+        let orbitMode = false;
+        let orbitAngle = 0.45;
+        let orbitElevation = 0.32;
+        let orbitDistance = 30;
+
+        window.startCinematicIntro = function() {
+            orbitMode = false;
+            document.getElementById('btn-orbit').classList.remove('active-mode');
+            cinematicActive = true;
+            cinematicTime = 0;
+            targetTeleport = null;
+            const banner = document.getElementById('cinematic-banner');
+            banner.style.display = 'flex';
+            banner.style.opacity = '1';
+        };
+
+        window.skipCinematicIntro = function() {
+            if (!cinematicActive) return;
+            cinematicActive = false;
+            const banner = document.getElementById('cinematic-banner');
+            banner.style.opacity = '0';
+            setTimeout(() => { banner.style.display = 'none'; }, 350);
+            window.teleportTo('exterior', document.getElementById('zbtn-exterior'));
+        };
+
+        window.toggleOrbitMode = function() {
+            cinematicActive = false;
+            document.getElementById('cinematic-banner').style.display = 'none';
+            targetTeleport = null;
+            orbitMode = !orbitMode;
+            const btn = document.getElementById('btn-orbit');
+            if (orbitMode) {
+                btn.classList.add('active-mode');
+                document.getElementById('info-title').innerText = '🔭 Exterior Orbit Inspection Mode';
+                document.getElementById('info-desc').innerText = 'Drag with mouse or touch to orbit 360° around the PESCE Mandya AI & ML building. Scroll to zoom.';
+            } else {
+                btn.classList.remove('active-mode');
+                window.teleportTo('exterior', document.getElementById('zbtn-exterior'));
+            }
+        };
 
         window.teleportTo = function(zoneKey, btnEl) {
+            cinematicActive = false;
+            orbitMode = false;
+            document.getElementById('btn-orbit').classList.remove('active-mode');
+            document.getElementById('cinematic-banner').style.display = 'none';
             const v = viewpoints[zoneKey];
             if (!v) return;
             targetTeleport = {
@@ -1341,14 +1790,14 @@
             };
             document.getElementById('info-title').innerText = v.title;
             document.getElementById('info-desc').innerText = v.desc;
-            if (btnEl) {
-                document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
-                btnEl.classList.add('active');
-            }
+            document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+            const matchBtn = btnEl || document.getElementById('zbtn-' + zoneKey);
+            if (matchBtn) matchBtn.classList.add('active');
         };
 
         const keys = { forward: false, backward: false, left: false, right: false };
         window.addEventListener('keydown', (e) => {
+            if (cinematicActive) window.skipCinematicIntro();
             const k = e.key.toLowerCase();
             if (k === 'w' || e.key === 'ArrowUp') keys.forward = true;
             if (k === 's' || e.key === 'ArrowDown') keys.backward = true;
@@ -1356,9 +1805,8 @@
             if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
             if (['1','2','3','4','5','6'].includes(k)) {
                 const map = ['exterior','portico','stairs','corridor','lab','classroom'];
-                const btns = document.querySelectorAll('.zone-btn');
                 const idx = parseInt(k) - 1;
-                window.teleportTo(map[idx], btns[idx]);
+                window.teleportTo(map[idx]);
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -1369,10 +1817,25 @@
             if (k === 'd' || e.key === 'ArrowRight') keys.right = false;
         });
 
+        // Mouse Wheel FOV / Orbit Zoom
+        window.addEventListener('wheel', (e) => {
+            if (orbitMode) {
+                orbitDistance = Math.max(12, Math.min(55, orbitDistance + e.deltaY * 0.02));
+            } else {
+                camera.fov = Math.max(38, Math.min(72, camera.fov + e.deltaY * 0.015));
+                camera.updateProjectionMatrix();
+            }
+        }, { passive: true });
+
         function bindTouchBtn(id, dir) {
             const el = document.getElementById(id);
             if (!el) return;
-            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[dir] = true; targetTeleport = null; });
+            el.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (cinematicActive) window.skipCinematicIntro();
+                keys[dir] = true;
+                targetTeleport = null;
+            });
             el.addEventListener('touchend', (e) => { e.preventDefault(); keys[dir] = false; });
         }
         bindTouchBtn('btn-up', 'forward');
@@ -1380,15 +1843,42 @@
         bindTouchBtn('btn-left', 'left');
         bindTouchBtn('btn-right', 'right');
 
+        // Pointer Down / Drag / Click Raycasting for 3D Hotspots
         let isDragging = false;
+        let pointerDownPos = { x: 0, y: 0 };
         let prevX = 0, prevY = 0;
 
-        container.addEventListener('mousedown', (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; targetTeleport = null; });
-        window.addEventListener('mouseup', () => isDragging = false);
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            pointerDownPos = { x: e.clientX, y: e.clientY };
+            prevX = e.clientX; prevY = e.clientY;
+            if (cinematicActive) window.skipCinematicIntro();
+            targetTeleport = null;
+        });
+        window.addEventListener('mouseup', (e) => {
+            if (isDragging && Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y) < 6) {
+                // Click Raycast against 3D Hotspot Sprites
+                pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+                pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(pointer, camera);
+                const hits = raycaster.intersectObjects(hotspotMeshes);
+                if (hits.length > 0 && hits[0].object.userData.zoneKey) {
+                    window.teleportTo(hits[0].object.userData.zoneKey);
+                }
+            }
+            isDragging = false;
+        });
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            camYaw -= (e.clientX - prevX) * 0.0045;
-            camPitch = Math.max(-1.1, Math.min(1.1, camPitch - (e.clientY - prevY) * 0.0045));
+            const dx = e.clientX - prevX;
+            const dy = e.clientY - prevY;
+            if (orbitMode) {
+                orbitAngle -= dx * 0.006;
+                orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005));
+            } else {
+                camYaw -= dx * 0.0045;
+                camPitch = Math.max(-1.1, Math.min(1.1, camPitch - dy * 0.0045));
+            }
             prevX = e.clientX; prevY = e.clientY;
         });
 
@@ -1397,63 +1887,110 @@
                 isDragging = true;
                 prevX = e.touches[0].clientX;
                 prevY = e.touches[0].clientY;
+                if (cinematicActive) window.skipCinematicIntro();
             }
         }, { passive: true });
         window.addEventListener('touchend', () => isDragging = false);
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || e.touches.length !== 1) return;
-            camYaw -= (e.touches[0].clientX - prevX) * 0.005;
-            camPitch = Math.max(-1.0, Math.min(1.0, camPitch - (e.touches[0].clientY - prevY) * 0.005));
+            const dx = e.touches[0].clientX - prevX;
+            const dy = e.touches[0].clientY - prevY;
+            if (orbitMode) {
+                orbitAngle -= dx * 0.006;
+                orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005));
+            } else {
+                camYaw -= dx * 0.005;
+                camPitch = Math.max(-1.0, Math.min(1.0, camPitch - dy * 0.005));
+            }
             prevX = e.touches[0].clientX;
             prevY = e.touches[0].clientY;
         }, { passive: true });
 
-        // --- 10. MASTER REAL-TIME ANIMATION LOOP ---
+        // --- 11. MASTER REAL-TIME RENDER & PHYSICS LOOP ---
         function animate() {
             requestAnimationFrame(animate);
             const dt = Math.min(clock.getDelta(), 0.1);
             const elapsed = clock.getElapsedTime();
 
-            // 1. Rotate Ceiling Fans at realistic RPM
+            // 1. Update GPU Grass Wind Shader Uniforms
+            grassUniforms.uTime.value = elapsed;
+
+            // 2. Rotate Ceiling Fans
             ceilingFans.forEach(rotor => { rotor.rotation.y -= dt * 6.5; });
 
-            // 2. Subtle Breeze Sway on Exterior Trees
+            // 3. Synchronized Wind Sway on Trees & Potted Shrubs
             animatedTreeCrowns.forEach(t => {
-                t.group.rotation.z = Math.sin(elapsed * 1.3 + t.phase) * 0.025;
+                t.group.rotation.z = Math.sin(elapsed * 1.3 + t.phase) * 0.026;
                 t.group.rotation.x = Math.cos(elapsed * 1.0 + t.phase) * 0.018;
             });
+            shrubCrowns.forEach(s => {
+                s.group.rotation.z = Math.sin(elapsed * 2.0 + s.phase) * 0.032;
+            });
 
-            // 3. Update Live AI/ML Code & Neural Graph on Lab Monitors (~12 FPS throttle for efficiency)
+            // 4. Gently Bob 3D Interactive Hotspot Sprites
+            hotspotMeshes.forEach((h, idx) => {
+                h.position.y = h.userData.baseY + Math.sin(elapsed * 2.4 + idx) * 0.08;
+            });
+
+            // 5. Update Live AI/ML Code & Neural Graph on Lab Monitors
             if (Math.floor(elapsed * 12) !== Math.floor((elapsed - dt) * 12)) {
                 updateLabMonitorScreen(dt);
             }
 
-            // 4. Proximity-Based Hinged Door Opening (User or Corridor Walker nearby)
+            // 6. Proximity-Based Hinged Door Opening
             hingedDoors.forEach(d => {
                 let near = camera.position.distanceTo(d.center) < 3.5;
                 characterAgents.forEach(a => {
-                    if (a.wrapper.position.distanceTo(d.center) < 2.8) near = true;
+                    if (a.wrapper.visible && a.wrapper.position.distanceTo(d.center) < 2.8) near = true;
                 });
                 const targetAngle = near ? -1.45 : -0.25;
                 d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 4.5);
                 d.pivot.rotation.y = d.currentAngle;
             });
 
-            // 5. Update Rigged GLTF Actors & Skeletal Animations
+            // 7. Update Rigged GLTF Actors
             updateCharacterAgents(dt, elapsed);
 
-            // 6. Camera Movement & Wall/Doorway Collision
-            if (targetTeleport) {
-                camera.position.x += (targetTeleport.x - camera.position.x) * 0.08;
-                camera.position.y += (targetTeleport.y - camera.position.y) * 0.08;
-                camera.position.z += (targetTeleport.z - camera.position.z) * 0.08;
-                camYaw += (targetTeleport.yaw - camYaw) * 0.08;
-                camPitch += (targetTeleport.pitch - camPitch) * 0.08;
+            // 8. Automatic Indoor / Outdoor Exposure Adaptation
+            const isInsideBuilding = camera.position.z < 2.2 && Math.abs(camera.position.x) < 15;
+            const targetExposure = isInsideBuilding ? 1.22 : (isGoldenHour ? 1.12 : 1.04);
+            renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * Math.min(1, dt * 3.0);
+
+            // 9. Camera Modes: Cinematic Intro -> Orbit Mode -> First-Person Walkthrough
+            if (cinematicActive) {
+                cinematicTime += dt;
+                const duration = 9.5;
+                const p = Math.min(1.0, cinematicTime / duration);
+                const smooth = p * p * (3 - 2 * p);
+                // Sweep from wide aerial view (-14, 10.5, 34) down to exterior entrance viewpoint (0, 2.2, 21)
+                camera.position.x = -14 * (1 - smooth);
+                camera.position.y = 10.5 * (1 - smooth) + 2.2 * smooth;
+                camera.position.z = 34 * (1 - smooth) + 21 * smooth;
+                camera.lookAt(0, 4.2 * (1 - smooth) + 3.2 * smooth, 2.0);
+                camYaw = camera.rotation.y;
+                camPitch = camera.rotation.x;
+                if (p >= 1.0) {
+                    window.skipCinematicIntro();
+                }
+            } else if (orbitMode) {
+                camera.position.x = Math.sin(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
+                camera.position.y = Math.max(1.8, Math.sin(orbitElevation) * orbitDistance);
+                camera.position.z = Math.cos(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
+                camera.lookAt(0, 4.2, -2.0);
+            } else if (targetTeleport) {
+                camera.position.x += (targetTeleport.x - camera.position.x) * 0.09;
+                camera.position.y += (targetTeleport.y - camera.position.y) * 0.09;
+                camera.position.z += (targetTeleport.z - camera.position.z) * 0.09;
+                camYaw += (targetTeleport.yaw - camYaw) * 0.09;
+                camPitch += (targetTeleport.pitch - camPitch) * 0.09;
                 if (Math.abs(targetTeleport.x - camera.position.x) < 0.05 && Math.abs(targetTeleport.z - camera.position.z) < 0.05) {
                     targetTeleport = null;
                 }
+                camera.rotation.order = 'YXZ';
+                camera.rotation.y = camYaw;
+                camera.rotation.x = camPitch;
             } else {
-                const speed = 0.13;
+                const speed = 0.135;
                 const forwardX = -Math.sin(camYaw);
                 const forwardZ = -Math.cos(camYaw);
                 const rightX = Math.cos(camYaw);
@@ -1467,26 +2004,35 @@
                 if (keys.left) { nextX -= rightX * speed; nextZ -= rightZ * speed; }
                 if (keys.right) { nextX += rightX * speed; nextZ += rightZ * speed; }
 
-                // Corridor-to-Room Wall Collision Check (Z = -1.55 wall, allowing passage through doorways at X = -2.2 and X = 6.2)
+                // Corridor-to-Room Wall Collision Check (Z = -1.55 wall, doorways at X = -2.2 and X = 6.2)
                 const crossingCorridorWall = (camera.position.z > -1.35 && nextZ <= -1.35) || (camera.position.z < -1.75 && nextZ >= -1.75);
-                const inDoorway = Math.abs(nextX - (-2.2)) < 0.65 || Math.abs(nextX - 6.2) < 0.65;
+                const inDoorway = Math.abs(nextX - (-2.2)) < 0.68 || Math.abs(nextX - 6.2) < 0.68;
                 if (camera.position.y > 4.0 && crossingCorridorWall && !inDoorway) {
                     nextZ = camera.position.z;
                 }
 
-                camera.position.x = Math.max(-28, Math.min(28, nextX));
-                camera.position.z = Math.max(-9.3, Math.min(35, nextZ));
+                camera.position.x = Math.max(-32, Math.min(32, nextX));
+                camera.position.z = Math.max(-9.3, Math.min(36, nextZ));
 
-                // Automatic split-level step elevation on 1st floor
-                if (camera.position.y > 4.5 && camera.position.z > -1.4 && camera.position.z < 1.8) {
-                    const targetY = camera.position.x > 5.2 ? 5.92 : 5.68;
-                    camera.position.y += (targetY - camera.position.y) * 0.15;
+                // Continuous Floor & Stairwell Elevation Solver
+                let targetEyeY = camera.position.y;
+                if (camera.position.z > 2.2) {
+                    // Exterior Courtyard
+                    targetEyeY = 1.85;
+                } else if (camera.position.x < -8.2 && camera.position.z > -5.2 && camera.position.z < 1.5) {
+                    // Inside Switchback Stairwell: smoothly interpolate eye height with stair progress
+                    const stairFactor = Math.max(0, Math.min(1, (1.0 - camera.position.z) / 5.2));
+                    targetEyeY = 1.85 + stairFactor * 3.83;
+                } else if (camera.position.y > 3.6) {
+                    // First Floor Corridor, Split-Level Steps & Labs
+                    targetEyeY = camera.position.x > 5.2 ? 5.92 : 5.68;
                 }
-            }
+                camera.position.y += (targetEyeY - camera.position.y) * 0.16;
 
-            camera.rotation.order = 'YXZ';
-            camera.rotation.y = camYaw;
-            camera.rotation.x = camPitch;
+                camera.rotation.order = 'YXZ';
+                camera.rotation.y = camYaw;
+                camera.rotation.x = camPitch;
+            }
 
             renderer.render(scene, camera);
         }
