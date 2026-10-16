@@ -456,7 +456,7 @@
     <aside class="info-card" id="zone-info">
         <h3 id="info-title">🏛️ Department Exterior Elevation</h3>
         <p id="info-desc">
-            Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, normal-mapped surfaces, solid collision, and interactive doors/boards.
+            Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, bump-mapped surfaces, solid collision, and interactive doors/boards.
         </p>
         <div class="asset-status-bar" id="actor-status">
             ⏳ Loading rigged GLTF human actors...
@@ -486,7 +486,7 @@
     <!-- Bottom Action Bar -->
     <footer>
         <div id="perf-badge" style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / PBR Normal Maps • 3D Cross-Tuft Wind Grass • Solid Collision
+            Stage 02 / Daylight PBR • 3D Cross-Tuft Wind Grass • Solid Collision
         </div>
         <a href="hub.html" class="launch-hub-btn">
             Proceed to AI Agent Hub 🚀
@@ -501,7 +501,8 @@
     <script>
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0042);
+        scene.background = new THREE.Color(0x9bc9e8);
+        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0038);
 
         const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 280);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -510,12 +511,12 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
+        renderer.toneMappingExposure = 1.12;
         container.appendChild(renderer.domElement);
 
         const clock = new THREE.Clock();
 
-        // --- 1. ATMOSPHERIC SKY DOME SHADER & PMREM IMAGE-BASED LIGHTING ---
+        // --- 1. NAN-SAFE ATMOSPHERIC SKY DOME & BALANCED ARCHITECTURAL LIGHTING ---
         const skyVertexShader = `
             varying vec3 vWorldPosition;
             void main() {
@@ -531,22 +532,22 @@
             uniform vec3 sunDir;
             varying vec3 vWorldPosition;
             void main() {
-                vec3 viewDir = normalize(vWorldPosition);
-                float h = clamp(viewDir.y, 0.0, 1.0);
+                vec3 viewDir = normalize(vWorldPosition + vec3(0.0, 0.0001, 0.0));
+                float h = clamp(viewDir.y, 0.0001, 1.0);
                 vec3 col = mix(horizonColor, topColor, pow(h, 0.55));
                 if (viewDir.y < 0.0) {
                     col = mix(horizonColor, bottomColor, clamp(-viewDir.y * 3.0, 0.0, 1.0));
                 }
-                float sunAmt = max(dot(viewDir, normalize(sunDir)), 0.0);
-                col += vec3(1.0, 0.92, 0.75) * pow(sunAmt, 60.0) * 0.5;
-                col += vec3(1.0, 0.85, 0.65) * pow(sunAmt, 8.0) * 0.12;
+                float sunAmt = clamp(dot(viewDir, normalize(sunDir)), 0.0001, 1.0);
+                col += vec3(1.0, 0.94, 0.80) * pow(sunAmt, 48.0) * 0.45;
+                col += vec3(1.0, 0.88, 0.68) * pow(sunAmt, 8.0) * 0.12;
                 gl_FragColor = vec4(col, 1.0);
             }
         `;
         const skyUniforms = {
             topColor: { value: new THREE.Color(0x2b6cb0) },
             horizonColor: { value: new THREE.Color(0xcbe4f9) },
-            bottomColor: { value: new THREE.Color(0x4a5546) },
+            bottomColor: { value: new THREE.Color(0x5c6456) },
             sunDir: { value: new THREE.Vector3(26, 42, 30).normalize() }
         };
         const skyDome = new THREE.Mesh(
@@ -561,43 +562,21 @@
         );
         scene.add(skyDome);
 
-        const pmremGenerator = new THREE.PMREMGenerator(renderer);
-        pmremGenerator.compileEquirectangularShader();
+        // Multi-Layer Architectural Illumination (Eliminates black shadows on all faces)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+        scene.add(ambientLight);
 
-        function buildIBLScene(isGolden) {
-            const envScene = new THREE.Scene();
-            const envSky = new THREE.Mesh(
-                new THREE.SphereGeometry(50, 24, 12),
-                new THREE.ShaderMaterial({
-                    vertexShader: skyVertexShader,
-                    fragmentShader: skyFragmentShader,
-                    uniforms: {
-                        topColor: { value: new THREE.Color(isGolden ? 0x1e3a8a : 0x2b6cb0) },
-                        horizonColor: { value: new THREE.Color(isGolden ? 0xfb923c : 0xcbe4f9) },
-                        bottomColor: { value: new THREE.Color(isGolden ? 0x452715 : 0x4a5546) },
-                        sunDir: { value: new THREE.Vector3(isGolden ? -34 : 26, isGolden ? 16 : 42, 28).normalize() }
-                    },
-                    side: THREE.BackSide
-                })
-            );
-            envScene.add(envSky);
-            return pmremGenerator.fromScene(envScene, 0.04).texture;
-        }
-
-        const iblDaylight = buildIBLScene(false);
-        const iblGoldenHour = buildIBLScene(true);
-        scene.environment = iblDaylight;
-
-        const hemiLight = new THREE.HemisphereLight(0xe6f2ff, 0x4d5e3e, 0.62);
+        const hemiLight = new THREE.HemisphereLight(0xeef6ff, 0x6e6a5e, 0.72);
         hemiLight.position.set(0, 50, 0);
         scene.add(hemiLight);
 
+        // Primary Sun Directional Light
         const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.25);
-        sunLight.position.set(26, 42, 30);
+        sunLight.position.set(26, 44, 32);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.bias = -0.0003;
+        sunLight.shadow.bias = -0.0004;
         sunLight.shadow.camera.near = 0.5;
         sunLight.shadow.camera.far = 135;
         sunLight.shadow.camera.left = -36;
@@ -606,15 +585,23 @@
         sunLight.shadow.camera.bottom = -36;
         scene.add(sunLight);
 
-        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.58, 18);
-        corridorLight1.position.set(-4, 7.6, 0.2);
-        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.58, 18);
-        corridorLight2.position.set(6, 7.6, 0.2);
-        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.8, 22);
-        labRoomLight.position.set(-2, 7.6, -5.8);
-        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.8, 22);
-        classRoomLight.position.set(9.5, 7.6, -5.8);
-        scene.add(corridorLight1, corridorLight2, labRoomLight, classRoomLight);
+        // Opposite-Hemisphere Sky-Bounce Fill Light (Illuminates shaded walls, stairwells & interior faces)
+        const bounceLight = new THREE.DirectionalLight(0xdbeafe, 0.48);
+        bounceLight.position.set(-24, 28, -26);
+        scene.add(bounceLight);
+
+        // Indoor Point Lights (Corridor, Stairwell, AI & ML Lab, Smart Classroom)
+        const stairLight = new THREE.PointLight(0xfff9eb, 0.65, 16);
+        stairLight.position.set(-10.5, 4.5, -2.0);
+        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.65, 18);
+        corridorLight1.position.set(-4, 7.4, 0.2);
+        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.65, 18);
+        corridorLight2.position.set(6, 7.4, 0.2);
+        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.85, 24);
+        labRoomLight.position.set(-2, 7.4, -5.8);
+        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.85, 24);
+        classRoomLight.position.set(9.5, 7.4, -5.8);
+        scene.add(stairLight, corridorLight1, corridorLight2, labRoomLight, classRoomLight);
 
         let isGoldenHour = false;
         window.toggleLightingMode = function() {
@@ -625,25 +612,27 @@
                 skyUniforms.horizonColor.value.setHex(0xf97316);
                 skyUniforms.bottomColor.value.setHex(0x3b2314);
                 skyUniforms.sunDir.value.set(-34, 16, 26).normalize();
+                scene.background.setHex(0xe59866);
                 scene.fog.color.setHex(0xe59866);
-                scene.environment = iblGoldenHour;
                 sunLight.color.setHex(0xffa94d);
-                sunLight.intensity = 1.38;
+                sunLight.intensity = 1.35;
                 sunLight.position.set(-34, 16, 26);
                 hemiLight.color.setHex(0xffd8a8);
+                ambientLight.color.setHex(0xffe8cc);
                 btn.innerText = '🌅 Golden Hour';
                 btn.classList.add('active-mode');
             } else {
                 skyUniforms.topColor.value.setHex(0x2b6cb0);
                 skyUniforms.horizonColor.value.setHex(0xcbe4f9);
-                skyUniforms.bottomColor.value.setHex(0x4a5546);
+                skyUniforms.bottomColor.value.setHex(0x5c6456);
                 skyUniforms.sunDir.value.set(26, 42, 30).normalize();
+                scene.background.setHex(0x9bc9e8);
                 scene.fog.color.setHex(0xc8dff0);
-                scene.environment = iblDaylight;
                 sunLight.color.setHex(0xfff9ed);
                 sunLight.intensity = 1.25;
-                sunLight.position.set(26, 42, 30);
-                hemiLight.color.setHex(0xe6f2ff);
+                sunLight.position.set(26, 44, 32);
+                hemiLight.color.setHex(0xeef6ff);
+                ambientLight.color.setHex(0xffffff);
                 btn.innerText = '☀️ Daylight';
                 btn.classList.remove('active-mode');
             }
@@ -669,7 +658,7 @@
             return false;
         }
 
-        // --- 3. PROCEDURAL PBR TEXTURE ENGINE (ALBEDO + NORMAL + ROUGHNESS MAPS) ---
+        // --- 3. PROCEDURAL PBR TEXTURE ENGINE (ALBEDO + BUMP + ROUGHNESS MAPS) ---
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
             canvas.width = width; canvas.height = height;
@@ -691,49 +680,41 @@
             return tex;
         }
 
-        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.04, repeatX = 1, repeatY = 1) {
+        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.035, repeatX = 1, repeatY = 1) {
             const size = 512;
             const diffCanvas = document.createElement('canvas');
-            const normCanvas = document.createElement('canvas');
-            const roughCanvas = document.createElement('canvas');
-            diffCanvas.width = normCanvas.width = roughCanvas.width = size;
-            diffCanvas.height = normCanvas.height = roughCanvas.height = size;
+            const bumpCanvas = document.createElement('canvas');
+            diffCanvas.width = bumpCanvas.width = size;
+            diffCanvas.height = bumpCanvas.height = size;
 
             const dCtx = diffCanvas.getContext('2d');
-            const nCtx = normCanvas.getContext('2d');
-            const rCtx = roughCanvas.getContext('2d');
+            const bCtx = bumpCanvas.getContext('2d');
 
             dCtx.fillStyle = baseHex;
             dCtx.fillRect(0, 0, size, size);
-            nCtx.fillStyle = 'rgb(128, 128, 255)';
-            nCtx.fillRect(0, 0, size, size);
-            rCtx.fillStyle = 'rgb(190, 190, 190)';
-            rCtx.fillRect(0, 0, size, size);
+            bCtx.fillStyle = 'rgb(200, 200, 200)';
+            bCtx.fillRect(0, 0, size, size);
 
-            for (let i = 0; i < 5500; i++) {
+            for (let i = 0; i < 4500; i++) {
                 const x = Math.random() * size;
                 const y = Math.random() * size;
-                const w = 2 + Math.random() * 4;
+                const w = 2 + Math.random() * 3;
                 const bright = i % 2 === 0;
                 dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
                 dCtx.fillRect(x, y, w, w);
-                nCtx.fillStyle = bright ? 'rgb(142, 142, 255)' : 'rgb(114, 114, 255)';
-                nCtx.fillRect(x, y, 2, 2);
-                rCtx.fillStyle = bright ? 'rgb(215, 215, 215)' : 'rgb(160, 160, 160)';
-                rCtx.fillRect(x, y, w, w);
+                bCtx.fillStyle = bright ? 'rgb(225, 225, 225)' : 'rgb(175, 175, 175)';
+                bCtx.fillRect(x, y, w, w);
             }
 
             if (divisions > 1) {
                 const step = size / divisions;
                 dCtx.strokeStyle = groutHex;
                 dCtx.lineWidth = 4;
-                nCtx.strokeStyle = 'rgb(90, 90, 220)';
-                nCtx.lineWidth = 5;
-                rCtx.strokeStyle = 'rgb(240, 240, 240)';
-                rCtx.lineWidth = 4;
+                bCtx.strokeStyle = 'rgb(90, 90, 90)';
+                bCtx.lineWidth = 4;
                 for (let i = 0; i <= divisions; i++) {
                     const p = i * step;
-                    [dCtx, nCtx, rCtx].forEach(ctx => {
+                    [dCtx, bCtx].forEach(ctx => {
                         ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, size); ctx.stroke();
                         ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(size, p); ctx.stroke();
                     });
@@ -742,15 +723,14 @@
 
             const map = new THREE.CanvasTexture(diffCanvas);
             map.encoding = THREE.sRGBEncoding;
-            const normalMap = new THREE.CanvasTexture(normCanvas);
-            const roughnessMap = new THREE.CanvasTexture(roughCanvas);
+            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
 
-            [map, normalMap, roughnessMap].forEach(t => {
+            [map, bumpMap].forEach(t => {
                 t.wrapS = THREE.RepeatWrapping;
                 t.wrapT = THREE.RepeatWrapping;
                 t.repeat.set(repeatX, repeatY);
             });
-            return { map, normalMap, roughnessMap };
+            return { map, bumpMap };
         }
 
         function createContactShadowTexture() {
@@ -758,8 +738,8 @@
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
             const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.20)');
+            grad.addColorStop(0, 'rgba(0, 0, 0, 0.50)');
+            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.18)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 128, 128);
@@ -774,7 +754,7 @@
         const matAOStrip = new THREE.MeshBasicMaterial({
             color: 0x000000,
             transparent: true,
-            opacity: 0.22,
+            opacity: 0.18,
             depthWrite: false
         });
 
@@ -785,7 +765,7 @@
         const liveMonitorTexture = new THREE.CanvasTexture(screenCanvas);
         liveMonitorTexture.encoding = THREE.sRGBEncoding;
 
-        let labWorkloadMode = 0; // 0: PyTorch Loss, 1: YOLOv8 Vision, 2: Multi-Agent Telemetry
+        let labWorkloadMode = 0;
         const labModeTitles = ['PyTorch ResNet-50 Training', 'YOLOv8 Real-Time Vision', 'Tachyon Autonomous Agent Mesh'];
         let screenTick = 0;
 
@@ -884,80 +864,79 @@
         }
         renderSmartBoardSlide();
 
-        // --- 4. PHYSICALLY BASED MATERIALS (WITH NORMAL & ROUGHNESS MAPS) ---
-        const plasterPBR = createPBRSurfaceSet('#f2edd7', '#e6dec3', 1, 0.03, 4, 2);
+        // --- 4. PHYSICALLY BASED ARCHITECTURAL MATERIALS (CLEAN ALBEDO + BUMP MAPS) ---
+        const plasterPBR = createPBRSurfaceSet('#f4efe0', '#e6dec5', 1, 0.025, 4, 2);
         const matCreamWall = new THREE.MeshStandardMaterial({
-            map: plasterPBR.map, normalMap: plasterPBR.normalMap, roughnessMap: plasterPBR.roughnessMap,
-            normalScale: new THREE.Vector2(0.25, 0.25), roughness: 0.85, metalness: 0.02
+            map: plasterPBR.map, bumpMap: plasterPBR.bumpMap, bumpScale: 0.012,
+            roughness: 0.82, metalness: 0.02
         });
 
-        const dadoPBR = createPBRSurfaceSet('#8a8f94', '#7b8085', 1, 0.025, 4, 1);
+        const dadoPBR = createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.02, 4, 1);
         const matGreyDado = new THREE.MeshStandardMaterial({
-            map: dadoPBR.map, normalMap: dadoPBR.normalMap,
-            normalScale: new THREE.Vector2(0.2, 0.2), roughness: 0.62, metalness: 0.06
+            map: dadoPBR.map, bumpMap: dadoPBR.bumpMap, bumpScale: 0.008,
+            roughness: 0.65, metalness: 0.05
         });
 
-        const terracottaPBR = createPBRSurfaceSet('#b84a39', '#9e3b2b', 1, 0.035, 2, 2);
+        const terracottaPBR = createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.03, 2, 2);
         const matTerracotta = new THREE.MeshStandardMaterial({
-            map: terracottaPBR.map, normalMap: terracottaPBR.normalMap,
-            normalScale: new THREE.Vector2(0.3, 0.3), roughness: 0.74, metalness: 0.04
+            map: terracottaPBR.map, bumpMap: terracottaPBR.bumpMap, bumpScale: 0.012,
+            roughness: 0.72, metalness: 0.04
         });
 
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45, metalness: 0.08 });
+        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45, metalness: 0.05 });
 
-        const granitePBR = createPBRSurfaceSet('#1e2126', '#111317', 2, 0.05, 2, 2);
+        const granitePBR = createPBRSurfaceSet('#2b3038', '#181b20', 2, 0.04, 2, 2);
         const matDarkGranite = new THREE.MeshStandardMaterial({
-            map: granitePBR.map, normalMap: granitePBR.normalMap, roughnessMap: granitePBR.roughnessMap,
-            normalScale: new THREE.Vector2(0.15, 0.15), roughness: 0.22, metalness: 0.25
+            map: granitePBR.map, bumpMap: granitePBR.bumpMap, bumpScale: 0.006,
+            roughness: 0.28, metalness: 0.15
         });
 
-        const concretePBR = createPBRSurfaceSet('#9aa0a6', '#7d838a', 1, 0.04, 2, 2);
+        const concretePBR = createPBRSurfaceSet('#a2a8ae', '#82888e', 1, 0.035, 2, 2);
         const matGreySteps = new THREE.MeshStandardMaterial({
-            map: concretePBR.map, normalMap: concretePBR.normalMap,
-            normalScale: new THREE.Vector2(0.28, 0.28), roughness: 0.78, metalness: 0.04
+            map: concretePBR.map, bumpMap: concretePBR.bumpMap, bumpScale: 0.012,
+            roughness: 0.76, metalness: 0.04
         });
 
-        const woodPBR = createPBRSurfaceSet('#3b1e14', '#29140d', 1, 0.03, 2, 1);
+        const woodPBR = createPBRSurfaceSet('#4a2619', '#32180f', 1, 0.025, 2, 1);
         const matWoodRack = new THREE.MeshStandardMaterial({
-            map: woodPBR.map, normalMap: woodPBR.normalMap,
-            normalScale: new THREE.Vector2(0.2, 0.2), roughness: 0.42, metalness: 0.06
+            map: woodPBR.map, bumpMap: woodPBR.bumpMap, bumpScale: 0.008,
+            roughness: 0.48, metalness: 0.05
         });
         const matDoorWood = new THREE.MeshStandardMaterial({
-            color: 0x5c3422, normalMap: woodPBR.normalMap,
-            normalScale: new THREE.Vector2(0.22, 0.22), roughness: 0.46, metalness: 0.08
+            map: woodPBR.map, bumpMap: woodPBR.bumpMap, bumpScale: 0.01,
+            color: 0xd9b38c, roughness: 0.48, metalness: 0.05
         });
 
-        const matGlass = new THREE.MeshPhysicalMaterial({
-            color: 0xdbeafe, transparent: true, opacity: 0.46,
-            roughness: 0.06, metalness: 0.15, reflectivity: 0.92,
-            clearcoat: 1.0, clearcoatRoughness: 0.05, envMapIntensity: 1.5
+        const matGlass = new THREE.MeshStandardMaterial({
+            color: 0x93c5fd, transparent: true, opacity: 0.45,
+            roughness: 0.12, metalness: 0.25
         });
 
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.28, metalness: 0.85 });
-        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.52, metalness: 0.18 });
+        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.38, metalness: 0.45 });
+        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.10 });
 
-        const corridorTilePBR = createPBRSurfaceSet('#5c4038', '#382520', 4, 0.025, 16, 4);
+        const corridorTilePBR = createPBRSurfaceSet('#6b4b42', '#422c26', 4, 0.025, 16, 4);
         const matCorridorFloor = new THREE.MeshStandardMaterial({
-            map: corridorTilePBR.map, normalMap: corridorTilePBR.normalMap, roughnessMap: corridorTilePBR.roughnessMap,
-            normalScale: new THREE.Vector2(0.22, 0.22), roughness: 0.40, metalness: 0.08
+            map: corridorTilePBR.map, bumpMap: corridorTilePBR.bumpMap, bumpScale: 0.01,
+            roughness: 0.45, metalness: 0.06
         });
 
-        const paverPBR = createPBRSurfaceSet('#a8a29e', '#706964', 10, 0.045, 14, 18);
+        const paverPBR = createPBRSurfaceSet('#b5b0ab', '#78716c', 10, 0.04, 14, 18);
         const matCourtyard = new THREE.MeshStandardMaterial({
-            map: paverPBR.map, normalMap: paverPBR.normalMap, roughnessMap: paverPBR.roughnessMap,
-            normalScale: new THREE.Vector2(0.35, 0.35), roughness: 0.82
+            map: paverPBR.map, bumpMap: paverPBR.bumpMap, bumpScale: 0.018,
+            roughness: 0.80, metalness: 0.04
         });
 
-        const redBrickPBR = createPBRSurfaceSet('#994636', '#5c281e', 8, 0.04, 2, 16);
+        const redBrickPBR = createPBRSurfaceSet('#a84d3c', '#662b20', 8, 0.035, 2, 16);
         const matRedPaverStrip = new THREE.MeshStandardMaterial({
-            map: redBrickPBR.map, normalMap: redBrickPBR.normalMap,
-            normalScale: new THREE.Vector2(0.3, 0.3), roughness: 0.8
+            map: redBrickPBR.map, bumpMap: redBrickPBR.bumpMap, bumpScale: 0.015,
+            roughness: 0.78, metalness: 0.04
         });
 
-        const soilPBR = createPBRSurfaceSet('#3f3224', '#2e2419', 1, 0.07, 24, 24);
+        const soilPBR = createPBRSurfaceSet('#4a3c2c', '#362b1f', 1, 0.06, 24, 24);
         const matRichSoil = new THREE.MeshStandardMaterial({
-            map: soilPBR.map, normalMap: soilPBR.normalMap,
-            normalScale: new THREE.Vector2(0.45, 0.45), roughness: 0.96
+            map: soilPBR.map, bumpMap: soilPBR.bumpMap, bumpScale: 0.025,
+            roughness: 0.94, metalness: 0.02
         });
 
         // --- 5. EXTERIOR LANDSCAPING, PAVER COURTYARD & CROSSED-TUFT GPU WIND GRASS ---
@@ -1040,7 +1019,7 @@
         [-11.5, -14.5, -18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
         [11.5, 14.5, 18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
 
-        // 3D Crossed-Tuft GPU Wind Grass Geometry
+        // 3D Crossed-Tuft GPU Wind Grass Geometry (Includes Position, Normal, and UV Attributes)
         const grassUniforms = {
             uTime: { value: 0 },
             uWindStrength: { value: 1.0 }
@@ -1060,6 +1039,7 @@
                     pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
                     pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * curveDir);
                 }
+                geo.computeVertexNormals();
             };
             configureBlade(b1, 1);
             configureBlade(b2, -1);
@@ -1069,6 +1049,8 @@
             const pos2 = b2.attributes.position.array;
             const norm1 = b1.attributes.normal.array;
             const norm2 = b2.attributes.normal.array;
+            const uv1 = b1.attributes.uv.array;
+            const uv2 = b2.attributes.uv.array;
             const idx1 = b1.index.array;
             const idx2 = b2.index.array;
 
@@ -1080,6 +1062,10 @@
             combinedNorm.set(norm1, 0);
             combinedNorm.set(norm2, norm1.length);
 
+            const combinedUV = new Float32Array(uv1.length + uv2.length);
+            combinedUV.set(uv1, 0);
+            combinedUV.set(uv2, uv1.length);
+
             const combinedIdx = new Uint16Array(idx1.length + idx2.length);
             combinedIdx.set(idx1, 0);
             const vertexOffset = pos1.length / 3;
@@ -1089,15 +1075,16 @@
 
             merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
             merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
+            merged.setAttribute('uv', new THREE.BufferAttribute(combinedUV, 2));
             merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
             return merged;
         }
 
         const grassBladeGeo = createCrossedGrassGeometry();
         const grassMat = new THREE.MeshStandardMaterial({
-            color: 0x4a7c39,
+            color: 0x4d823b,
             roughness: 0.74,
-            metalness: 0.04,
+            metalness: 0.02,
             side: THREE.DoubleSide
         });
 
@@ -1135,7 +1122,7 @@
                 '#include <color_fragment>',
                 `
                 #include <color_fragment>
-                diffuseColor.rgb *= mix(0.48, 1.18, vHeightFactor);
+                diffuseColor.rgb *= mix(0.55, 1.18, vHeightFactor);
                 `
             );
         };
@@ -1385,7 +1372,7 @@
         building.add(vlsiSign);
 
         function createSolarArray(xStart, count) {
-            const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.15, metalness: 0.85 });
+            const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.25, metalness: 0.35 });
             for (let i = 0; i < count; i++) {
                 const panel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 1.2), solarMat);
                 panel.position.set(xStart + i * 2.0, 8.6, -1.5);
@@ -1624,7 +1611,7 @@
         const extinguisher = new THREE.Group();
         const extTank = new THREE.Mesh(
             new THREE.CylinderGeometry(0.09, 0.09, 0.48, 14),
-            new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.28, metalness: 0.45 })
+            new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.28, metalness: 0.35 })
         );
         const extNozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12), matBlackMetal);
         extNozzle.position.y = 0.28;
@@ -1718,7 +1705,7 @@
             }
         }
 
-        // Interactive Lab Projection Screen (Cycles AI Training Workloads on Click / E)
+        // Interactive Lab Projection Screen
         const labScreen = new THREE.Mesh(
             new THREE.BoxGeometry(4.2, 1.8, 0.08),
             new THREE.MeshStandardMaterial({ map: liveMonitorTexture, roughness: 0.25 })
@@ -1745,7 +1732,7 @@
             }
         }
 
-        // Interactive Smartboard in Classroom (Advances Lecture Slides on Click / E)
+        // Interactive Smartboard in Classroom
         const smartBoard = new THREE.Mesh(
             new THREE.BoxGeometry(0.08, 1.6, 4.0),
             new THREE.MeshStandardMaterial({ map: smartBoardTexture, roughness: 0.35 })
@@ -1784,6 +1771,7 @@
         const pointer = new THREE.Vector2();
 
         // --- 10. RIGGED GLTF HUMAN CHARACTER, 3RD-PERSON AVATAR & SKELETAL ENGINE ---
+        // Fixed CDN URLs: Replaced blocked jsDelivr gh/mrdoob URLs (HTTP 403) with direct CORS-enabled raw.githubusercontent.com & threejs.org paths
         const gltfLoader = new THREE.GLTFLoader();
         const characterAgents = [];
         let playerAvatar = null;
@@ -1792,11 +1780,13 @@
         const ASSET_SOURCES = {
             detailedHuman: [
                 './models/student_detailed.glb',
-                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Michelle.glb'
+                'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Michelle.glb',
+                'https://threejs.org/examples/models/gltf/Michelle.glb'
             ],
             articulatedActor: [
                 './models/faculty_actor.glb',
-                'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/models/gltf/Xbot.glb'
+                'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Xbot.glb',
+                'https://threejs.org/examples/models/gltf/Xbot.glb'
             ]
         };
 
@@ -1809,7 +1799,15 @@
                         return;
                     }
                     const url = urlList[index++];
-                    gltfLoader.load(url, (gltf) => resolve({ gltf, url }), undefined, () => tryNext());
+                    gltfLoader.load(
+                        url,
+                        (gltf) => resolve({ gltf, url }),
+                        undefined,
+                        (err) => {
+                            console.warn('GLB fallback step failed for:', url, err);
+                            tryNext();
+                        }
+                    );
                 }
                 tryNext();
             });
@@ -2038,7 +2036,7 @@
             } catch (err) {
                 statusEl.style.borderColor = '#f59e0b';
                 statusEl.style.color = '#fde68a';
-                statusEl.innerText = '⚠️ External GLTF character CDN unreachable. Architecture active.';
+                statusEl.innerText = '⚠️ Offline/CDN blocked: Add ./models/*.glb locally. Building active.';
             }
         }
 
@@ -2544,9 +2542,9 @@
                 promptEl.style.display = 'none';
             }
 
-            // 9. Automatic Indoor / Outdoor Exposure Adaptation
+            // 9. Smooth Indoor / Outdoor Exposure Adaptation
             const isInsideBuilding = playerPos.z < 2.2 && Math.abs(playerPos.x) < 15;
-            const targetExposure = isInsideBuilding ? 1.20 : (isGoldenHour ? 1.12 : 1.04);
+            const targetExposure = isInsideBuilding ? 1.24 : (isGoldenHour ? 1.15 : 1.10);
             renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * Math.min(1, dt * 3.0);
 
             // 10. Camera & Player Locomotion with Sliding AABB Collision
@@ -2594,7 +2592,6 @@
                 if (keys.left) { moveX -= rightX * speed; moveZ -= rightZ * speed; }
                 if (keys.right) { moveX += rightX * speed; moveZ += rightZ * speed; }
 
-                // Sliding X & Z Collision Evaluation
                 const candX = Math.max(-32, Math.min(32, playerPos.x + moveX));
                 if (!checkCollision(candX, playerPos.y, playerPos.z)) {
                     playerPos.x = candX;
@@ -2604,7 +2601,6 @@
                     playerPos.z = candZ;
                 }
 
-                // Continuous Floor & Stairwell Elevation Solver
                 let targetEyeY = playerPos.y;
                 if (playerPos.z > 2.2) {
                     targetEyeY = 1.85;
@@ -2616,7 +2612,6 @@
                 }
                 playerPos.y += (targetEyeY - playerPos.y) * 0.16;
 
-                // Update 3rd-Person Avatar or 1st-Person Camera
                 if (playerAvatar) {
                     playerAvatar.mixer.update(dt);
                     const movingNow = Math.hypot(moveX, moveZ) > 0.001;
