@@ -3,945 +3,1216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TACHYON — Gamified AI Agent Arena</title>
+    <title>TACHYON 2.0 — AI Agent Arena & Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700;800&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cyan: #00f2fe;
-            --blue: #4facfe;
-            --purple: #a855f7;
-            --pink: #ec4899;
-            --gold: #fbbf24;
-            --emerald: #10b981;
-            --crimson: #f43f5e;
-            --bg-dark: #030712;
-            --glass-bg: rgba(10, 15, 30, 0.55);
-            --glass-heavy: rgba(6, 10, 22, 0.78);
-            --glass-border: rgba(0, 242, 254, 0.22);
+            --obsidian: #0B1020;
+            --deep-space: #11182B;
+            --surface-card: rgba(17, 24, 43, 0.84);
+            --surface-elevated: rgba(24, 34, 60, 0.92);
+            --cyan: #29E7F2;
+            --violet: #9B5CFF;
+            --magenta: #FF4FD8;
+            --gold: #FFC857;
+            --mint: #5CFFB1;
+            --soft-white: #F3F6FF;
+            --slate: #9AA8C2;
+            --danger: #FF5C77;
+            --border-subtle: rgba(154, 168, 194, 0.16);
+            --border-cyan: rgba(41, 231, 242, 0.38);
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Rajdhani', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-dark);
-            color: #f8fafc;
-            display: flex;
-            height: 100dvh;
+            font-family: var(--font-body);
+            background-color: var(--obsidian);
+            color: var(--soft-white);
+            min-height: 100dvh;
             width: 100vw;
-            overflow: hidden;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
-        /* Background Video + Interactive Neural Particle Canvas */
+        /* Background Video & Atmospheric Layers */
         #bg-video {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -3;
             object-fit: cover;
-            filter: brightness(0.28) contrast(1.15) saturate(1.2);
+            filter: brightness(0.22) contrast(1.1) saturate(1.15);
         }
 
-        #neural-canvas {
+        .atmo-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -2;
+            background:
+                radial-gradient(circle at 18% 15%, rgba(155, 92, 255, 0.14) 0%, transparent 42%),
+                radial-gradient(circle at 82% 20%, rgba(41, 231, 242, 0.12) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(11, 16, 32, 0.78) 0%, rgba(11, 16, 32, 0.94) 100%);
             pointer-events: none;
         }
 
-        /* Subtle CRT Cyber Scanline Overlay */
-        .cyber-grid-overlay {
+        .orbital-grid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
+            background-image:
+                linear-gradient(rgba(154, 168, 194, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(154, 168, 194, 0.04) 1px, transparent 1px);
+            background-size: 44px 44px;
             pointer-events: none;
-            background-image: 
-                linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
-            background-size: 38px 38px;
         }
 
-        /* Custom Cyber Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(3, 7, 18, 0.6); }
-        ::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--obsidian); }
+        ::-webkit-scrollbar-thumb { background: rgba(154, 168, 194, 0.3); border-radius: 8px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
-        /* =========================================================
-           LEFT WALL: GAMIFIED LEADERBOARD & CHAMPION PODIUM
-           ========================================================= */
-        .left-wall {
-            width: 375px;
-            flex-shrink: 0;
-            background: var(--glass-heavy);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            border-right: 1px solid var(--glass-border);
-            padding: 24px 22px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            box-shadow: 12px 0 50px rgba(0, 0, 0, 0.65);
-            position: relative;
+        button, a, input, textarea, select {
+            font-family: inherit;
+        }
+        button:focus-visible, a:focus-visible, input:focus-visible {
+            outline: 2px solid var(--cyan);
+            outline-offset: 2px;
         }
 
-        .wall-header {
+        /* ==========================================================================
+           TOP ACADEMY NAVIGATION BAR
+           ========================================================================== */
+        .top-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 16, 32, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
         }
-        .wall-title {
-            font-family: 'Orbitron', sans-serif;
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .tachyon-emblem {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(41, 231, 242, 0.2), rgba(155, 92, 255, 0.25));
+            border: 1px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(41, 231, 242, 0.25);
+        }
+        .brand-text-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        .brand-title {
+            font-family: var(--font-display);
             font-size: 1.05rem;
             font-weight: 900;
             letter-spacing: 1.5px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
+            color: var(--soft-white);
         }
-        .live-pulse-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem;
-            color: var(--emerald);
-            background: rgba(16, 185, 129, 0.14);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 3px 8px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .live-dot {
-            width: 6px; height: 6px;
-            background: var(--emerald);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--emerald);
-            animation: blink 1.4s infinite;
-        }
-
-        /* #1 Champion Hologram Podium Card */
-        .champion-podium {
-            position: relative;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.16) 0%, rgba(168, 85, 247, 0.14) 50%, rgba(0, 242, 254, 0.12) 100%);
-            border: 1.5px solid rgba(251, 191, 36, 0.65);
-            border-radius: 18px;
-            padding: 20px 18px;
-            text-align: center;
-            overflow: hidden;
-            box-shadow: 0 0 35px rgba(251, 191, 36, 0.2), inset 0 0 20px rgba(251, 191, 36, 0.08);
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-        }
-        .champion-podium::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, rgba(251, 191, 36, 0.18), transparent 30%);
-            animation: rotateAura 6s linear infinite;
-            pointer-events: none;
-        }
-        .champion-crown {
-            font-size: 0.78rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            color: var(--gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
-        }
-        .champion-name {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.75rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 18px rgba(251, 191, 36, 0.6);
-            position: relative;
-            z-index: 1;
-        }
-        .champion-xp {
-            display: inline-block;
-            margin-top: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #030712;
-            background: linear-gradient(90deg, var(--gold), #fde047);
-            padding: 4px 14px;
-            border-radius: 30px;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-        .champion-title-tag {
-            display: block;
-            margin-top: 6px;
-            font-size: 0.76rem;
-            color: #cbd5e1;
+        .brand-sub {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--cyan);
             letter-spacing: 1px;
-            text-transform: uppercase;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Leaderboard List Items */
-        .leaderboard-header {
+        .nav-links-group {
             display: flex;
-            justify-content: space-between;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.72rem;
-            color: #94a3b8;
-            letter-spacing: 1.5px;
-            padding: 0 6px 8px 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
         }
-        #leaderboard-list {
+
+        .nav-tab, .nav-ext-link {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--slate);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .nav-ext-link {
+            border-color: rgba(154, 168, 194, 0.14);
+            background: rgba(17, 24, 43, 0.5);
+        }
+        .nav-tab:hover, .nav-ext-link:hover {
+            color: var(--soft-white);
+            background: rgba(41, 231, 242, 0.08);
+        }
+        .nav-tab.active {
+            color: var(--obsidian);
+            background: var(--cyan);
+            font-weight: 700;
+            box-shadow: 0 0 18px rgba(41, 231, 242, 0.35);
+        }
+        .nav-pill-count {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: rgba(11, 16, 32, 0.25);
+            color: inherit;
+        }
+
+        .nav-utility-cluster {
             display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+        .icon-btn {
+            background: var(--deep-space);
+            border: 1px solid var(--border-subtle);
+            color: var(--soft-white);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            transition: 0.2s;
+        }
+        .icon-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .notif-dot {
+            position: absolute;
+            top: -4px; right: -4px;
+            background: var(--magenta);
+            color: #fff;
+            font-size: 0.62rem;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        /* Notification Dropdown Drawer */
+        #notif-drawer {
+            display: none;
+            position: absolute;
+            top: 48px; right: 0;
+            width: 320px;
+            max-height: 380px;
+            overflow-y: auto;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-cyan);
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            z-index: 250;
             flex-direction: column;
             gap: 10px;
         }
-        .leaderboard-item {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .notif-item {
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(11, 16, 32, 0.7);
+            border-left: 3px solid var(--cyan);
+            font-size: 0.78rem;
+            line-height: 1.4;
+        }
+        .notif-item time {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--slate);
+            margin-top: 4px;
+        }
+
+        /* ==========================================================================
+           MAIN WORKSPACE LAYOUT (CONTENT + COLLAPSIBLE LEADERBOARD RAIL)
+           ========================================================================== */
+        .academy-workspace {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            flex: 1;
+            max-width: 1680px;
+            width: 100%;
+            margin: 0 auto;
+            gap: 24px;
+            padding: 24px 28px 90px 28px;
+        }
+
+        .primary-stage {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            min-width: 0;
+        }
+
+        .view-section {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+            animation: viewFadeIn 0.28s ease forwards;
+        }
+        .view-section.active { display: flex; }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           ARENA HERO LOBBY & PLAYER PROGRESSION BANNER
+           ========================================================================== */
+        .hero-lobby-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(17, 24, 43, 0.92) 0%, rgba(22, 18, 48, 0.88) 100%);
+            border: 1px solid var(--border-cyan);
+            border-radius: 20px;
+            padding: 28px;
+            display: grid;
+            grid-template-columns: 1.35fr 0.95fr;
+            gap: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 18px;
+            z-index: 2;
+        }
+
+        .operative-greeting {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .avatar-circle {
+            width: 48px; height: 48px;
             border-radius: 12px;
-            padding: 11px 14px;
+            background: linear-gradient(135deg, var(--deep-space), rgba(155, 92, 255, 0.3));
+            border: 1.5px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+        .greeting-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .greeting-line {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--soft-white);
+        }
+        .equipped-title-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: fit-content;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--gold);
+            background: rgba(255, 200, 87, 0.12);
+            border: 1px solid rgba(255, 200, 87, 0.35);
+            padding: 2px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-headline h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.65rem, 3vw, 2.45rem);
+            font-weight: 900;
+            letter-spacing: 1px;
+            line-height: 1.15;
+            color: var(--soft-white);
+        }
+        .hero-headline h1 span {
+            color: var(--cyan);
+        }
+        .hero-headline p {
+            color: var(--slate);
+            font-size: 0.95rem;
+            line-height: 1.55;
+            margin-top: 8px;
+            max-width: 600px;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-primary-cyan {
+            background: var(--cyan);
+            color: var(--obsidian);
+            border: none;
+            padding: 13px 24px;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 24px rgba(41, 231, 242, 0.3);
+        }
+        .btn-primary-cyan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(41, 231, 242, 0.5);
+        }
+        .btn-secondary-violet {
+            background: rgba(155, 92, 255, 0.16);
+            color: var(--soft-white);
+            border: 1px solid var(--violet);
+            padding: 13px 22px;
+            border-radius: 12px;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-secondary-violet:hover {
+            background: var(--violet);
+            color: #fff;
+        }
+
+        /* Hero Right: Animated AI Core + Progression Telemetry + Featured Daily Mission */
+        .hero-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            background: rgba(11, 16, 32, 0.65);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 18px;
+            z-index: 2;
+        }
+
+        .core-progression-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .holo-ai-core {
+            width: 68px; height: 68px;
+            flex-shrink: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .holo-ai-core svg {
+            width: 100%; height: 100%;
+            animation: slowSpin 18s linear infinite;
+        }
+
+        .progression-stats {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 6px;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
         }
-        .leaderboard-item:hover {
-            transform: translateX(6px) scale(1.01);
-            background: rgba(15, 23, 42, 0.9);
-            border-color: var(--cyan);
-            box-shadow: 0 0 22px rgba(0, 242, 254, 0.22);
-        }
-        .lb-top-row {
+        .lvl-rank-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .lb-user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .lb-rank-num {
-            font-family: 'Orbitron', sans-serif;
+        .lvl-pill {
+            font-family: var(--font-display);
+            font-size: 0.82rem;
             font-weight: 900;
-            font-size: 0.9rem;
-            width: 28px;
-        }
-        .lb-handle {
-            font-weight: 700;
-            font-size: 1.02rem;
-            color: #f8fafc;
-        }
-        .lb-lvl-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            padding: 1px 6px;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #cbd5e1;
-        }
-        .xp-badge {
-            font-family: 'JetBrains Mono', monospace;
-            background: rgba(0, 242, 254, 0.14);
-            color: var(--cyan);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 0.78rem;
-            border: 1px solid rgba(0, 242, 254, 0.35);
-        }
-        .lb-mini-bar-bg {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .lb-mini-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.6s ease;
-        }
-
-        .disconnect-btn {
-            margin-top: auto;
-            background: rgba(244, 63, 94, 0.12);
-            border: 1px solid rgba(244, 63, 94, 0.45);
-            color: #fb7185;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: 0.25s;
-        }
-        .disconnect-btn:hover {
-            background: rgba(244, 63, 94, 0.28);
+            color: var(--obsidian);
+            background: var(--violet);
+            padding: 3px 10px;
+            border-radius: 6px;
             color: #fff;
-            box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
+        }
+        .streak-pill {
+            font-family: var(--font-mono);
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--gold);
+            background: rgba(255, 200, 87, 0.12);
+            border: 1px solid rgba(255, 200, 87, 0.3);
+            padding: 3px 9px;
+            border-radius: 20px;
         }
 
-        /* =========================================================
-           MAIN ARENA: PLAYER HUD, FILTERS & HOLOGRAPHIC AGENT GRID
-           ========================================================= */
-        .main-hub {
-            flex: 1;
-            padding: 24px 36px 110px 36px;
-            overflow-y: auto;
+        .xp-bar-container {
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 4px;
+        }
+        .xp-numbers-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--slate);
+        }
+        .xp-track {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(155, 92, 255, 0.3);
+        }
+        .xp-fill {
+            height: 100%;
+            width: 10%;
+            background: linear-gradient(90deg, var(--violet), var(--cyan));
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .next-lvl-preview {
+            font-size: 0.72rem;
+            color: var(--mint);
+            font-family: var(--font-mono);
         }
 
-        /* Top Bar: Stage Breadcrumbs + SFX & Telemetry Ticker */
-        .top-utility-bar {
+        /* Featured Daily Mission Box */
+        .featured-mission-box {
+            background: rgba(24, 34, 60, 0.75);
+            border: 1px solid rgba(92, 255, 177, 0.3);
+            border-left: 3px solid var(--mint);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .fm-info h4 {
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            color: var(--mint);
+            letter-spacing: 0.6px;
+        }
+        .fm-info p {
+            font-size: 0.78rem;
+            color: var(--soft-white);
+            margin-top: 2px;
+        }
+        .fm-btn {
+            background: rgba(92, 255, 177, 0.15);
+            border: 1px solid var(--mint);
+            color: var(--mint);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .fm-btn:hover { background: var(--mint); color: var(--obsidian); }
+
+        /* ==========================================================================
+           COLLECTIBLE AI AGENT CARDS & ARENA CONTROLS
+           ========================================================================== */
+        .section-toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
         }
-        .stage-nav {
+        .filter-pill-group {
             display: flex;
-            gap: 10px;
-            align-items: center;
+            gap: 8px;
             flex-wrap: wrap;
         }
-        .stage-nav a {
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 7px 15px;
-            border-radius: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.74rem;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            transition: 0.25s;
-        }
-        .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
-        .stage-nav a.active {
-            color: #fff;
-            background: rgba(0, 242, 254, 0.18);
-            border-color: var(--cyan);
-            box-shadow: 0 0 18px rgba(0, 242, 254, 0.3);
-        }
-
-        .utility-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .sfx-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--cyan);
-            padding: 7px 14px;
-            border-radius: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.74rem;
+        .filter-pill {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--slate);
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 0.78rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
         }
-        .sfx-btn:hover { background: rgba(0, 242, 254, 0.2); }
-
-        /* Hero Command Header */
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 18px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(0, 242, 254, 0.18);
-        }
-        .header-text h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.9rem, 3.6vw, 2.75rem);
-            font-weight: 900;
-            letter-spacing: 1px;
-            background: linear-gradient(90deg, #ffffff 0%, var(--cyan) 50%, var(--purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.25));
-        }
-        .header-text p {
-            color: #cbd5e1;
-            font-size: 1.05rem;
-            font-weight: 600;
-            margin-top: 4px;
+        .filter-pill:hover { color: var(--soft-white); border-color: var(--cyan); }
+        .filter-pill.active {
+            background: rgba(41, 231, 242, 0.16);
+            border-color: var(--cyan);
+            color: var(--cyan);
         }
 
-        .deploy-cta-btn {
-            background: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 50%, var(--purple) 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 4s ease infinite;
-            color: #030712;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.92rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(0, 242, 254, 0.45);
-            transition: 0.3s;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        .search-input-wrap {
+            position: relative;
+            min-width: 240px;
         }
-        .deploy-cta-btn:hover {
-            transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 0 42px rgba(0, 242, 254, 0.75);
+        .search-input-wrap input {
+            width: 100%;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--soft-white);
+            padding: 9px 14px 9px 34px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+        .search-input-wrap span {
+            position: absolute;
+            left: 11px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate);
+            font-size: 0.82rem;
         }
 
-        /* GAMIFIED PLAYER COMMAND DECK (Personal Level, XP Bar & Badges) */
-        .player-command-deck {
+        .agent-cards-grid {
             display: grid;
-            grid-template-columns: 1.3fr 1fr;
-            gap: 18px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(8, 12, 26, 0.88));
-            border: 1px solid var(--glass-border);
-            border-left: 4px solid var(--cyan);
-            border-radius: 18px;
-            padding: 18px 22px;
-            backdrop-filter: blur(18px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45);
+            grid-template-columns: repeat(auto-fill, minmax(305px, 1fr));
+            gap: 20px;
         }
-        .deck-left {
+
+        .unit-agent-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
+            gap: 14px;
+            transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
-        .deck-identity-row {
+        .unit-agent-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--cyan);
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+        }
+        .unit-agent-card.card-featured {
+            border-color: var(--gold);
+            background: linear-gradient(160deg, rgba(40, 31, 14, 0.78) 0%, rgba(17, 24, 43, 0.92) 100%);
+        }
+        .unit-agent-card.card-high-perf {
+            border-color: var(--violet);
+        }
+
+        .unit-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .unit-avatar-title {
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
         }
-        .lvl-hexagon {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.82rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--cyan), var(--blue));
-            color: #030712;
-            padding: 4px 12px;
-            border-radius: 6px;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-        }
-        .player-handle-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #fff;
-        }
-        .player-rank-class {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.76rem;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(251, 191, 36, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.35);
-            padding: 2px 10px;
-            border-radius: 20px;
-        }
-        .xp-progress-wrapper {
-            margin-top: 4px;
-        }
-        .xp-progress-labels {
+        .unit-emblem {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(41, 231, 242, 0.1);
+            border: 1px solid rgba(41, 231, 242, 0.35);
             display: flex;
-            justify-content: space-between;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.74rem;
-            color: #94a3b8;
-            margin-bottom: 5px;
-        }
-        .xp-bar-track {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .xp-bar-fill {
-            height: 100%;
-            width: 25%;
-            background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
-            background-size: 200% 100%;
-            animation: gradientShift 3s linear infinite;
-            border-radius: 20px;
-            box-shadow: 0 0 15px var(--cyan);
-            transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* Achievement Badges Grid */
-        .deck-right {
-            display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            gap: 8px;
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
-            padding-left: 18px;
+            flex-shrink: 0;
         }
-        .deck-right-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            color: #94a3b8;
-            text-transform: uppercase;
+        .card-featured .unit-emblem {
+            background: rgba(255, 200, 87, 0.15);
+            border-color: var(--gold);
         }
-        .badges-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .unit-name {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--soft-white);
+            line-height: 1.2;
         }
-        .cyber-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 11px;
-            border-radius: 10px;
+        .unit-creator {
             font-size: 0.78rem;
+            color: var(--slate);
+            margin-top: 2px;
+        }
+        .unit-creator strong { color: var(--cyan); }
+
+        .status-badge {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #64748b;
-            transition: 0.3s;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
-        .cyber-badge.unlocked {
-            background: rgba(0, 242, 254, 0.12);
-            border-color: rgba(0, 242, 254, 0.45);
-            color: #f8fafc;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.18);
-        }
-        .cyber-badge.unlocked.gold-badge {
-            background: rgba(251, 191, 36, 0.15);
-            border-color: rgba(251, 191, 36, 0.55);
-            color: var(--gold);
-            box-shadow: 0 0 18px rgba(251, 191, 36, 0.25);
+        .status-running { background: rgba(92, 255, 177, 0.14); color: var(--mint); border: 1px solid rgba(92, 255, 177, 0.4); }
+        .status-featured { background: var(--gold); color: var(--obsidian); font-weight: 800; }
+        .status-ready { background: rgba(41, 231, 242, 0.14); color: var(--cyan); border: 1px solid rgba(41, 231, 242, 0.35); }
+
+        .unit-purpose {
+            font-size: 0.88rem;
+            color: #D7E0F2;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        /* Filter Tabs & Search Bar */
-        .arena-controls-bar {
+        .unit-skills-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 6px;
             flex-wrap: wrap;
-            gap: 14px;
         }
-        .filter-tabs {
+        .skill-chip {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(155, 92, 255, 0.14);
+            border: 1px solid rgba(155, 92, 255, 0.3);
+            color: #D8B4FE;
+        }
+
+        .unit-telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            padding: 8px 10px;
+            background: rgba(11, 16, 32, 0.65);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+        }
+        .tele-cell span:first-child { color: var(--slate); display: block; font-size: 0.6rem; }
+        .tele-cell span:last-child { color: var(--soft-white); font-weight: 700; }
+
+        .unit-actions-row {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
         }
-        .filter-tab {
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #cbd5e1;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.74rem;
+        .unit-btn {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-family: var(--font-display);
+            font-size: 0.72rem;
             font-weight: 700;
-            letter-spacing: 0.8px;
             cursor: pointer;
-            transition: 0.25s;
+            transition: 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-        .filter-tab:hover { border-color: var(--cyan); color: #fff; }
-        .filter-tab.active {
-            background: rgba(0, 242, 254, 0.2);
-            border-color: var(--cyan);
+        .unit-btn-inspect {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: var(--soft-white);
+        }
+        .unit-btn-inspect:hover { border-color: var(--cyan); color: var(--cyan); }
+        .unit-btn-boost {
+            background: rgba(41, 231, 242, 0.16);
+            border: 1px solid var(--cyan);
             color: var(--cyan);
-            box-shadow: 0 0 18px rgba(0, 242, 254, 0.25);
+        }
+        .unit-btn-boost:hover { background: var(--cyan); color: var(--obsidian); }
+        .unit-btn-disabled {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--slate);
+            cursor: default;
         }
 
-        .search-box {
-            position: relative;
-            min-width: 250px;
-        }
-        .search-box input {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            color: #fff;
-            padding: 9px 16px 9px 36px;
-            border-radius: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
-            outline: none;
-            transition: 0.25s;
-        }
-        .search-box input:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 16px rgba(0, 242, 254, 0.25);
-        }
-        .search-icon {
-            position: absolute;
-            left: 12px; top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-
-        /* =========================================================
-           HOLOGRAPHIC 3D AGENT CARDS GRID
-           ========================================================= */
-        .agent-grid {
+        /* ==========================================================================
+           MISSION CONTROL VIEW (QUESTS & VERIFIED CHALLENGES)
+           ========================================================================== */
+        .missions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 22px;
-            perspective: 1000px;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 20px;
         }
-
-        .agent-card {
-            position: relative;
-            background: linear-gradient(160deg, rgba(15, 23, 42, 0.72) 0%, rgba(5, 10, 24, 0.86) 100%);
-            border: 1px solid rgba(0, 242, 254, 0.25);
+        .mission-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 16px;
             padding: 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             gap: 16px;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
-            transition: transform 0.18s ease-out, box-shadow 0.25s ease, border-color 0.25s ease;
-            transform-style: preserve-3d;
-            overflow: hidden;
-            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+            position: relative;
+            transition: 0.2s;
         }
-
-        /* Rarity Styling */
-        .agent-card.rarity-mythic {
-            border: 1.5px solid var(--gold);
-            background: linear-gradient(160deg, rgba(45, 32, 8, 0.72) 0%, rgba(12, 15, 30, 0.9) 100%);
-            box-shadow: 0 15px 40px rgba(251, 191, 36, 0.18);
+        .mission-card:hover { border-color: var(--violet); }
+        .mission-card.mission-completed {
+            border-color: rgba(92, 255, 177, 0.5);
+            background: linear-gradient(160deg, rgba(16, 42, 35, 0.65), rgba(17, 24, 43, 0.9));
         }
-        .agent-card.rarity-legendary {
-            border: 1.5px solid var(--purple);
-            box-shadow: 0 15px 40px rgba(168, 85, 247, 0.2);
-        }
-        .agent-card:hover {
-            border-color: var(--cyan);
-            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.3);
-        }
-        .agent-card.rarity-mythic:hover {
-            border-color: #fde047;
-            box-shadow: 0 20px 50px rgba(251, 191, 36, 0.4);
-        }
-
-        /* Card Top Telemetry Header */
-        .card-top-meta {
+        .mission-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.68rem;
-            letter-spacing: 1px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
         }
-        .rarity-pill {
-            padding: 3px 9px;
+        .diff-tag {
+            padding: 2px 8px;
             border-radius: 6px;
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
         }
-        .pill-mythic { background: var(--gold); color: #030712; box-shadow: 0 0 12px rgba(251,191,36,0.5); }
-        .pill-legendary { background: rgba(168, 85, 247, 0.25); color: #e9d5ff; border: 1px solid var(--purple); }
-        .pill-rare { background: rgba(0, 242, 254, 0.16); color: var(--cyan); border: 1px solid rgba(0, 242, 254, 0.4); }
-        .pill-common { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+        .diff-easy { background: rgba(92, 255, 177, 0.15); color: var(--mint); }
+        .diff-medium { background: rgba(41, 231, 242, 0.15); color: var(--cyan); }
+        .diff-hard { background: rgba(255, 79, 216, 0.15); color: var(--magenta); }
 
-        .node-id-tag { color: #64748b; }
-
-        .card-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
+        .mission-title {
+            font-family: var(--font-display);
+            font-size: 1.08rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--soft-white);
             margin-top: 6px;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-
-        .card-dev-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            background: rgba(2, 6, 23, 0.55);
-            border-radius: 8px;
-            border-left: 3px solid var(--cyan);
-            margin-top: 8px;
-            font-size: 0.9rem;
-        }
-        .rarity-mythic .card-dev-row { border-left-color: var(--gold); }
-
-        .card-desc {
-            color: #cbd5e1;
-            font-size: 0.98rem;
+        .mission-narrative {
+            font-size: 0.86rem;
+            color: var(--slate);
             line-height: 1.5;
-            margin-top: 10px;
-            word-break: break-word;
+            margin-top: 4px;
+        }
+        .mission-rewards-box {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .reward-pill {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(255, 200, 87, 0.14);
+            border: 1px solid rgba(255, 200, 87, 0.35);
+            color: var(--gold);
+        }
+        .mission-prog-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .mission-prog-bar {
+            width: 100%;
+            height: 7px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .mission-prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), var(--mint));
+            border-radius: 8px;
+            transition: width 0.4s ease;
         }
 
-        /* Card Action Buttons */
-        .card-actions {
+        /* ==========================================================================
+           TROPHY ROOM & COLLECTIBLE BADGE GALLERY
+           ========================================================================== */
+        .badge-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+            gap: 18px;
+        }
+        .collectible-badge-card {
+            background: var(--surface-card);
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            position: relative;
+        }
+        .collectible-badge-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        .collectible-badge-card.locked-badge {
+            opacity: 0.58;
+            filter: grayscale(0.75);
+        }
+        .collectible-badge-card.rarity-Common { border-color: #9AA8C2; }
+        .collectible-badge-card.rarity-Uncommon { border-color: #29E7F2; }
+        .collectible-badge-card.rarity-Rare { border-color: #9B5CFF; }
+        .collectible-badge-card.rarity-Epic { border-color: #FF4FD8; box-shadow: 0 8px 25px rgba(255, 79, 216, 0.15); }
+        .collectible-badge-card.rarity-Legendary { border-color: #FFC857; box-shadow: 0 8px 28px rgba(255, 200, 87, 0.22); }
+
+        .badge-medallion-wrap {
+            width: 78px; height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .badge-rarity-tag {
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .tag-Common { background: rgba(154, 168, 194, 0.2); color: #9AA8C2; }
+        .tag-Uncommon { background: rgba(41, 231, 242, 0.18); color: #29E7F2; }
+        .tag-Rare { background: rgba(155, 92, 255, 0.22); color: #C4B5FD; }
+        .tag-Epic { background: rgba(255, 79, 216, 0.22); color: #FF4FD8; }
+        .tag-Legendary { background: rgba(255, 200, 87, 0.25); color: #FFC857; }
+
+        .badge-card-name {
+            font-family: var(--font-display);
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--soft-white);
+        }
+        .badge-card-desc {
+            font-size: 0.76rem;
+            color: var(--slate);
+            line-height: 1.4;
+        }
+
+        /* ==========================================================================
+           PROFILE & CHARACTER LOADOUT VIEW
+           ========================================================================== */
+        .loadout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 24px;
+        }
+        .loadout-panel {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .loadout-panel h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--cyan);
+            letter-spacing: 1px;
+        }
+        .avatar-picker-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .avatar-opt-btn {
+            width: 46px; height: 46px;
+            border-radius: 12px;
+            background: var(--deep-space);
+            border: 1.5px solid var(--border-subtle);
+            font-size: 1.35rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .avatar-opt-btn.selected {
+            border-color: var(--cyan);
+            background: rgba(41, 231, 242, 0.18);
+            box-shadow: 0 0 14px rgba(41, 231, 242, 0.35);
+        }
+        .title-selector-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 10px;
+        }
+        .title-choice-btn {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: var(--deep-space);
+            border: 1px solid var(--border-subtle);
+            color: var(--soft-white);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .title-choice-btn.equipped {
+            border-color: var(--gold);
+            background: rgba(255, 200, 87, 0.14);
+            color: var(--gold);
+        }
+        .title-choice-btn.locked-title {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================================================
+           RIGHT RAIL: COMPETITIVE LEADERBOARD & PODIUM
+           ========================================================================== */
+        .leaderboard-rail {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: fit-content;
+            max-height: calc(100dvh - 105px);
+            position: sticky;
+            top: 78px;
+            overflow-y: auto;
+        }
+
+        .podium-top-three {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr 1fr;
+            gap: 8px;
+            align-items: flex-end;
+            padding-top: 8px;
+        }
+        .podium-spot {
+            background: rgba(11, 16, 32, 0.78);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .podium-1 {
+            border-color: var(--gold);
+            background: linear-gradient(180deg, rgba(255, 200, 87, 0.16), rgba(11, 16, 32, 0.88));
+            padding-bottom: 18px;
+        }
+        .podium-2 { border-color: #CBD5E1; }
+        .podium-3 { border-color: #F97316; }
+
+        .podium-rank-tag {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 900;
+        }
+        .podium-handle {
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--soft-white);
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .podium-xp {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--cyan);
+            font-weight: 700;
+        }
+
+        .lb-entries-container {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-top: 4px;
         }
-        .launch-agent-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 9px 14px;
+        .lb-row {
+            background: rgba(11, 16, 32, 0.65);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 10px;
-            background: rgba(0, 242, 254, 0.1);
-            border: 1px solid rgba(0, 242, 254, 0.35);
-            color: var(--cyan);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-decoration: none;
-            letter-spacing: 1px;
-            transition: 0.25s;
-        }
-        .launch-agent-link:hover {
-            background: var(--cyan);
-            color: #030712;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-        }
-
-        .boost-btn {
-            width: 100%;
-            padding: 11px 16px;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.25s;
+            padding: 10px 12px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            transition: 0.2s;
         }
-        .boost-btn.ready {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.22), rgba(168, 85, 247, 0.25));
-            border: 1px solid var(--cyan);
-            color: #ffffff;
-            box-shadow: 0 0 18px rgba(0, 242, 254, 0.2);
+        .lb-row.is-me {
+            border-color: var(--cyan);
+            background: rgba(41, 231, 242, 0.1);
         }
-        .boost-btn.ready:hover {
-            background: linear-gradient(135deg, var(--cyan), var(--blue));
-            color: #030712;
-            box-shadow: 0 0 28px rgba(0, 242, 254, 0.65);
-            transform: translateY(-2px);
-        }
-        .boost-btn.boosted {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.5);
-            color: var(--emerald);
-            cursor: not-allowed;
-        }
-        .boost-btn.owned {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        /* Floating +10 XP Popup Animation */
-        .xp-float-popup {
-            position: fixed;
-            pointer-events: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: var(--gold);
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
-            z-index: 9999;
-            animation: floatUpFade 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* Floating Build Your Own Agent FAB */
-        .build-agent-fab {
-            position: fixed;
-            bottom: 26px; right: 28px;
-            background: linear-gradient(135deg, var(--purple), var(--pink), var(--cyan));
-            background-size: 200% 200%;
-            animation: gradientShift 4s ease infinite;
-            color: white;
-            padding: 15px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 800;
-            font-size: 0.86rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            box-shadow: 0 12px 35px rgba(236, 72, 153, 0.5);
+        .lb-row-left {
             display: flex;
             align-items: center;
             gap: 10px;
-            z-index: 100;
-            transition: 0.3s;
         }
-        .build-agent-fab:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 18px 45px rgba(0, 242, 254, 0.75);
+        .lb-pos {
+            font-family: var(--font-display);
+            font-size: 0.78rem;
+            font-weight: 800;
+            width: 24px;
+            color: var(--slate);
+        }
+        .lb-name-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        .lb-name { font-size: 0.88rem; font-weight: 700; color: var(--soft-white); }
+        .lb-sub-title { font-family: var(--font-mono); font-size: 0.64rem; color: var(--slate); }
+        .lb-xp-val {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--cyan);
         }
 
-        /* Modals */
-        .modal {
+        /* ==========================================================================
+           MODALS (DEPLOY, BADGE DETAIL, BADGE UNLOCK REVEAL, CHALLENGE VERIFIER)
+           ========================================================================== */
+        .modal-backdrop {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.86);
-            justify-content: center;
-            align-items: center;
+            background: rgba(11, 16, 32, 0.86);
+            backdrop-filter: blur(12px);
             z-index: 2000;
-            padding: 16px;
-            backdrop-filter: blur(14px);
-        }
-        .modal-content {
-            background: rgba(12, 18, 36, 0.95);
-            padding: 32px 28px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 440px;
-            border: 1.5px solid var(--cyan);
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0, 242, 254, 0.25);
-            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-        }
-        .modal-content h2 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--cyan);
-            font-size: 1.6rem;
-            margin-bottom: 10px;
-        }
-        .modal-content input, .modal-content textarea {
-            width: 100%;
-            padding: 13px 16px;
-            margin-bottom: 14px;
-            background: rgba(3, 7, 18, 0.8);
-            border: 1px solid rgba(0, 242, 254, 0.25);
-            color: white;
-            border-radius: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            outline: none;
-        }
-        .modal-content input:focus, .modal-content textarea:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-        }
-
-        .google-btn {
-            background: #ffffff;
-            color: #030712;
-            border: none;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 12px;
+            align-items: center;
+            padding: 16px;
+        }
+        .modal-box {
+            background: var(--deep-space);
+            border: 1.5px solid var(--border-cyan);
+            border-radius: 20px;
+            padding: 28px;
             width: 100%;
-            transition: 0.25s;
+            max-width: 500px;
+            max-height: 90dvh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
         }
-        .google-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,255,255,0.3); }
-        .google-btn img { width: 20px; height: 20px; }
+        .modal-box h2 {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            color: var(--soft-white);
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background: var(--obsidian);
+            border: 1px solid var(--border-subtle);
+            color: var(--soft-white);
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        /* Floating XP & Toast Notifications */
+        .xp-float {
+            position: fixed;
+            pointer-events: none;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.15rem;
+            color: var(--gold);
+            text-shadow: 0 0 14px rgba(255, 200, 87, 0.75);
+            z-index: 9999;
+            animation: xpFloatAnim 1.2s ease-out forwards;
         }
-        @keyframes rotateAura {
-            0% { transform: rotate(0deg); }
+        @keyframes xpFloatAnim {
+            0% { opacity: 1; transform: translateY(0) scale(0.9); }
+            100% { opacity: 0; transform: translateY(-55px) scale(1.2); }
+        }
+        @keyframes slowSpin {
             100% { transform: rotate(360deg); }
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.35; }
-        }
-        @keyframes floatUpFade {
-            0% { opacity: 1; transform: translateY(0) scale(0.9); }
-            100% { opacity: 0; transform: translateY(-55px) scale(1.25); }
-        }
 
-        /* 📱 MOBILE PORTRAIT OPTIMIZATION */
-        @media (max-width: 920px) {
-            body {
-                flex-direction: column;
-                height: auto;
-                min-height: 100dvh;
-                overflow-y: auto;
-            }
-            .main-hub {
-                order: 1;
-                padding: 18px 4vw 30px 4vw;
-                overflow-y: visible;
-            }
-            .left-wall {
-                order: 2;
-                width: 100%;
-                border-right: none;
-                border-top: 1px solid var(--glass-border);
-                padding: 24px 4vw 110px 4vw;
-                overflow-y: visible;
-            }
-            .player-command-deck {
-                grid-template-columns: 1fr;
-            }
-            .deck-right {
-                border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.08);
-                padding-left: 0;
-                padding-top: 12px;
-            }
-            .header-section { flex-direction: column; align-items: stretch; text-align: center; }
-            .deploy-cta-btn { width: 100%; }
-            .search-box { width: 100%; }
-            .build-agent-fab {
-                bottom: 14px; right: 14px; left: 14px;
-                justify-content: center;
+        /* Mobile Bottom Navigation Bar */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: rgba(11, 16, 32, 0.96);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-subtle);
+            z-index: 150;
+            justify-content: space-around;
+            padding: 8px 6px;
+        }
+        .mob-nav-btn {
+            background: none;
+            border: none;
+            color: var(--slate);
+            font-size: 0.68rem;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+        }
+        .mob-nav-btn.active { color: var(--cyan); }
+
+        @media (max-width: 1100px) {
+            .academy-workspace { grid-template-columns: 1fr; }
+            .leaderboard-rail { position: static; max-height: none; }
+            .hero-lobby-card { grid-template-columns: 1fr; }
+            .loadout-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .top-navbar { padding: 10px 16px; }
+            .nav-links-group { display: none; }
+            .mobile-bottom-nav { display: flex; }
+            .academy-workspace { padding: 16px 14px 95px 14px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -951,299 +1222,365 @@
     <video autoplay loop muted playsinline id="bg-video">
         <source src="bg-video.mp4" type="video/mp4">
     </video>
-    <canvas id="neural-canvas"></canvas>
-    <div class="cyber-grid-overlay"></div>
+    <div class="atmo-backdrop"></div>
+    <div class="orbital-grid-bg"></div>
 
-    <!-- Login Overlay -->
-    <div id="login-screen" class="modal" style="display:flex; z-index: 3000;">
-        <div class="modal-content">
-            <h2>⚡ TACHYON NEXUS</h2>
-            <p style="color: #94a3b8; font-size: 0.98rem; margin-bottom: 24px;">Authenticate with your Google ID to enter the PESCE AIML Agent Arena</p>
-            <button class="google-btn" id="googleLoginBtn">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
-                INITIALIZE GOOGLE AUTH
+    <!-- ==========================================================================
+         AUTHENTICATION & CALLSIGN MODALS
+         ========================================================================== -->
+    <div id="login-screen" class="modal-backdrop" style="display:flex; z-index: 3000;">
+        <div class="modal-box" style="text-align: center; max-width: 420px;">
+            <h2>⚡ TACHYON ACADEMY 2.0</h2>
+            <p style="color: var(--slate); font-size: 0.9rem;">Sign in with your Google account to access your AI Agent Arena, Missions, and Trophy Room.</p>
+            <button class="btn-primary-cyan" id="googleLoginBtn" style="width:100%; justify-content:center; padding:14px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="G" style="width:18px; height:18px;">
+                AUTHENTICATE WITH GOOGLE
             </button>
         </div>
     </div>
 
-    <!-- Username Modal -->
-    <div id="username-modal" class="modal" style="display:none; z-index: 3500;">
-        <div class="modal-content">
-            <h2>🛡️FORGE CALLSIGN</h2>
-            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px;">Select your unique hacker callsign for the department leaderboard.</p>
-            <input type="text" id="customUsernameInput" placeholder="e.g. Neo, Shivu, ZeroCool">
-            <button class="deploy-cta-btn" style="width: 100%;" onclick="saveUsername()">LOCK IN CALLSIGN</button>
+    <div id="username-modal" class="modal-backdrop" style="display:none; z-index: 3500;">
+        <div class="modal-box" style="text-align: center; max-width: 420px;">
+            <h2>🛡️ REGISTER OPERATIVE CALLSIGN</h2>
+            <p style="color: var(--slate); font-size: 0.88rem;">Choose your unique callsign for the PESCE AI & ML leaderboard.</p>
+            <input type="text" id="customUsernameInput" class="form-input" placeholder="e.g. Shivu, Neo, Axlr8r">
+            <button class="btn-primary-cyan" style="width: 100%; justify-content:center;" onclick="saveUsername()">INITIALIZE PROFILE</button>
         </div>
     </div>
 
-    <!-- =========================================================
-         LEFT WALL: APEX LEADERBOARD & CHAMPION PODIUM
-         ========================================================= -->
-    <aside class="left-wall">
-        <div class="wall-header">
-            <div class="wall-title">🏆 Tachyon Rankings</div>
-            <div class="live-pulse-tag"><span class="live-dot"></span> LIVE SYNC</div>
-        </div>
-
-        <!-- #1 Champion Hologram Podium -->
-        <div class="champion-podium">
-            <div class="champion-crown">👑 APEX DEVELOPER // RANK #1</div>
-            <div class="champion-name" id="top-student">@Loading...</div>
-            <div class="champion-xp" id="top-student-xp">0 XP</div>
-            <span class="champion-title-tag" id="top-student-tier">Awaiting Telemetry...</span>
-        </div>
-
-        <div>
-            <div class="leaderboard-header">
-                <span>OPERATIVE CALLSIGN</span>
-                <span>POWER XP</span>
+    <!-- ==========================================================================
+         TOP ACADEMY NAVIGATION
+         ========================================================================== -->
+    <header class="top-navbar">
+        <div class="brand-cluster">
+            <div class="tachyon-emblem">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#29E7F2" stroke-width="2.2">
+                    <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                    <circle cx="12" cy="12" r="3.5" fill="#9B5CFF" stroke="none"/>
+                </svg>
             </div>
-            <div id="leaderboard-list"></div>
-        </div>
-
-        <button class="disconnect-btn" onclick="logout()">⏻ Disconnect Terminal</button>
-    </aside>
-
-    <!-- =========================================================
-         MAIN ARENA: PLAYER HUD, FILTERS & AGENT ARSENAL
-         ========================================================= -->
-    <main class="main-hub">
-        <!-- Top Navigation & Sound Toggle -->
-        <div class="top-utility-bar">
-            <nav class="stage-nav">
-                <a href="index.html">01 / Welcome</a>
-                <a href="twin.html">02 / Digital Twin</a>
-                <a href="hub.html" class="active">03 / AI Agent Arena</a>
-            </nav>
-            <div class="utility-right">
-                <button class="sfx-btn" id="sfxToggleBtn" onclick="toggleSoundFX()">🔊 SFX: ON</button>
+            <div class="brand-text-wrap">
+                <span class="brand-title">TACHYON</span>
+                <span class="brand-sub">PESCE AI & ML ACADEMY</span>
             </div>
         </div>
 
-        <!-- Hero Header -->
-        <div class="header-section">
-            <div class="header-text">
-                <h1>TACHYON — AIML HUB</h1>
-                <p>Deploy autonomous AI creations, earn XP boosts, and dominate the PESCE network. <strong style="color: var(--cyan);">— Shivakumar Patil, President</strong></p>
-            </div>
-            <button class="deploy-cta-btn" onclick="openModal()">⚡ + Deploy Agent (+50 XP)</button>
-        </div>
+        <nav class="nav-links-group" aria-label="Primary Navigation">
+            <a href="index.html" class="nav-ext-link">01 / Welcome</a>
+            <a href="twin.html" class="nav-ext-link">02 / Digital Twin</a>
+            <button class="nav-tab active" id="tab-arena" onclick="switchArenaView('arena')">
+                ⚡ AI Agent Arena <span class="nav-pill-count" id="nav-agent-count">0</span>
+            </button>
+            <button class="nav-tab" id="tab-missions" onclick="switchArenaView('missions')">
+                🎯 Missions <span class="nav-pill-count" id="nav-mission-count">6</span>
+            </button>
+            <button class="nav-tab" id="tab-trophies" onclick="switchArenaView('trophies')">
+                🏆 Trophy Room <span class="nav-pill-count" id="nav-badge-count">0/15</span>
+            </button>
+            <button class="nav-tab" id="tab-profile" onclick="switchArenaView('profile')">
+                🧑‍🚀 Profile & Loadout
+            </button>
+        </nav>
 
-        <!-- GAMIFIED PLAYER COMMAND DECK -->
-        <section class="player-command-deck">
-            <div class="deck-left">
-                <div class="deck-identity-row">
-                    <span class="lvl-hexagon" id="my-lvl-badge">LVL 01</span>
-                    <span class="player-handle-title" id="my-callsign-display">@Operative</span>
-                    <span class="player-rank-class" id="my-rank-title">Cyber Initiate</span>
+        <div class="nav-utility-cluster">
+            <button class="icon-btn" onclick="toggleNotifDrawer()" aria-label="Notifications">
+                🔔 <span class="notif-dot" id="notif-count">1</span>
+            </button>
+            <button class="icon-btn" id="sfxToggleBtn" onclick="toggleSoundFX()">🔇 SFX: OFF</button>
+
+            <div id="notif-drawer">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="font-family:var(--font-display); font-size:0.78rem; color:var(--cyan);">ACADEMY TELEMETRY LOG</strong>
+                    <button style="background:none; border:none; color:var(--slate); cursor:pointer; font-size:0.75rem;" onclick="toggleNotifDrawer()">✕</button>
                 </div>
-                <div class="xp-progress-wrapper">
-                    <div class="xp-progress-labels">
-                        <span id="my-xp-text">0 XP EARNED</span>
-                        <span id="my-next-lvl-text">100 XP TO NEXT TIER</span>
-                    </div>
-                    <div class="xp-bar-track">
-                        <div class="xp-bar-fill" id="my-xp-bar"></div>
+                <div id="notif-list" style="display:flex; flex-direction:column; gap:8px;">
+                    <div class="notif-item">
+                        Welcome to TACHYON 2.0! Complete missions and deploy AI agents to unlock collectible badges.
+                        <time>System Initialized</time>
                     </div>
                 </div>
             </div>
+        </div>
+    </header>
 
-            <div class="deck-right">
-                <div class="deck-right-label">🎖️ Unlocked Combat & Dev Badges</div>
-                <div class="badges-row">
-                    <div class="cyber-badge unlocked" id="badge-verified" title="Authenticated Tachyon Operative">🛡️ Verified Node</div>
-                    <div class="cyber-badge" id="badge-creator" title="Deploy at least 1 AI Agent">🚀 First Blood</div>
-                    <div class="cyber-badge" id="badge-architect" title="Deploy 3+ AI Agents">🧠 Swarm Architect</div>
-                    <div class="cyber-badge gold-badge" id="badge-apex" title="Reach #1 on the Leaderboard">👑 Apex Champion</div>
+    <!-- ==========================================================================
+         MAIN ACADEMY WORKSPACE
+         ========================================================================== -->
+    <div class="academy-workspace">
+        <main class="primary-stage">
+
+            <!-- ==================================================================
+                 VIEW 1: AI AGENT ARENA (HOME LOBBY + AGENT CARDS)
+                 ================================================================== -->
+            <section id="view-arena" class="view-section active">
+
+                <!-- Hero Game Lobby -->
+                <div class="hero-lobby-card">
+                    <div class="hero-left">
+                        <div class="operative-greeting">
+                            <div class="avatar-circle" id="hero-avatar-icon">🤖</div>
+                            <div class="greeting-meta">
+                                <span class="greeting-line" id="hero-greeting-text">Welcome back, @Operative</span>
+                                <span class="equipped-title-pill" id="hero-title-pill">★ Rookie Coder</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-headline">
+                            <h1>TACHYON // <span>AI AGENT ARENA</span></h1>
+                            <p>Build autonomous AI agents, complete verified machine learning & coding missions, unlock holographic badges, and climb the PESCE department leaderboard. <strong style="color:var(--cyan);">— Shivakumar Patil, President</strong></p>
+                        </div>
+
+                        <div class="hero-cta-row">
+                            <button class="btn-primary-cyan" onclick="openDeployModal()">🚀 DEPLOY YOUR AGENT (+50 XP)</button>
+                            <button class="btn-secondary-violet" onclick="switchArenaView('missions')">🎯 EXPLORE MISSIONS</button>
+                            <a href="https://aistudio.google.com/" target="_blank" class="nav-ext-link" style="padding:12px 16px; border-color:var(--magenta); color:var(--soft-white);">✨ Build in AI Studio ↗</a>
+                        </div>
+                    </div>
+
+                    <div class="hero-right">
+                        <div class="core-progression-top">
+                            <div class="holo-ai-core" aria-hidden="true">
+                                <svg viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="44" fill="none" stroke="#29E7F2" stroke-width="2" stroke-dasharray="10 6"/>
+                                    <circle cx="50" cy="50" r="32" fill="none" stroke="#9B5CFF" stroke-width="2" stroke-dasharray="18 8"/>
+                                    <polygon points="50,18 78,34 78,66 50,82 22,66 22,34" fill="rgba(41,231,242,0.12)" stroke="#5CFFB1" stroke-width="2"/>
+                                    <circle cx="50" cy="50" r="10" fill="#FFC857"/>
+                                </svg>
+                            </div>
+                            <div class="progression-stats">
+                                <div class="lvl-rank-row">
+                                    <span class="lvl-pill" id="hero-lvl-badge">LVL 01</span>
+                                    <span class="streak-pill" id="hero-streak-badge">🔥 1-Day Streak</span>
+                                </div>
+                                <div class="xp-bar-container">
+                                    <div class="xp-numbers-row">
+                                        <span id="hero-xp-current">0 XP</span>
+                                        <span id="hero-xp-target">Next: 100 XP</span>
+                                    </div>
+                                    <div class="xp-track">
+                                        <div class="xp-fill" id="hero-xp-fill"></div>
+                                    </div>
+                                </div>
+                                <span class="next-lvl-preview" id="hero-lvl-preview">100 XP remaining to Level 2</span>
+                            </div>
+                        </div>
+
+                        <div class="featured-mission-box">
+                            <div class="fm-info">
+                                <h4>⚡ FEATURED MISSION: DEBUG THE MATRIX</h4>
+                                <p>Pass 3 interactive AI/coding verification tasks (+100 XP)</p>
+                            </div>
+                            <button class="fm-btn" onclick="openChallengeModal()">START QUEST →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Filter & Search Bar -->
+                <div class="section-toolbar">
+                    <div class="filter-pill-group">
+                        <button class="filter-pill active" onclick="setAgentFilter('all', this)">🌐 All Units (<span id="count-all-units">0</span>)</button>
+                        <button class="filter-pill" onclick="setAgentFilter('running', this)">🟢 High-Performing</button>
+                        <button class="filter-pill" onclick="setAgentFilter('official', this)">👑 Official Broadcasts</button>
+                        <button class="filter-pill" onclick="setAgentFilter('mine', this)">⚡ My Deployed Units</button>
+                    </div>
+                    <div class="search-input-wrap">
+                        <span>🔍</span>
+                        <input type="text" id="agentSearchInput" placeholder="Search agent name, skill, or @creator..." oninput="renderAgents()">
+                    </div>
+                </div>
+
+                <!-- Collectible AI Agent Cards Grid -->
+                <div class="agent-cards-grid" id="agent-grid"></div>
+            </section>
+
+            <!-- ==================================================================
+                 VIEW 2: MISSION CONTROL (QUESTS & VERIFIED CHALLENGES)
+                 ================================================================== -->
+            <section id="view-missions" class="view-section">
+                <div class="section-toolbar">
+                    <div>
+                        <h2 style="font-family:var(--font-display); font-size:1.5rem; color:var(--soft-white);">🎯 MISSION CONTROL // ACTIVE QUESTS</h2>
+                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Complete verified coding, AI/ML, and Digital Twin exploration quests. Rewards are validated and persisted once per completion.</p>
+                    </div>
+                    <button class="btn-primary-cyan" onclick="openChallengeModal()">💻 LAUNCH VERIFICATION LAB</button>
+                </div>
+
+                <div class="filter-pill-group">
+                    <button class="filter-pill active" onclick="setMissionFilter('all', this)">All Missions</button>
+                    <button class="filter-pill" onclick="setMissionFilter('agent', this)">🚀 Agent Building</button>
+                    <button class="filter-pill" onclick="setMissionFilter('coding', this)">💻 Coding & AI/ML</button>
+                    <button class="filter-pill" onclick="setMissionFilter('exploration', this)">🏛️ Digital Twin</button>
+                    <button class="filter-pill" onclick="setMissionFilter('streak', this)">🔥 Streaks & Social</button>
+                </div>
+
+                <div class="missions-grid" id="missions-grid"></div>
+            </section>
+
+            <!-- ==================================================================
+                 VIEW 3: TROPHY ROOM & COLLECTIBLE BADGE GALLERY
+                 ================================================================== -->
+            <section id="view-trophies" class="view-section">
+                <div class="section-toolbar">
+                    <div>
+                        <h2 style="font-family:var(--font-display); font-size:1.5rem; color:var(--gold);">🏆 COLLECTIBLE TROPHY ROOM</h2>
+                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Click any medallion to inspect its lore, unlock requirements, XP bounty, and acquisition timestamp.</p>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <select id="badgeSortSelect" class="form-select" style="width:auto;" onchange="renderBadgesGallery()">
+                            <option value="rarity">Sort: Rarity Tier</option>
+                            <option value="earned">Sort: Earned First</option>
+                            <option value="locked">Sort: Locked First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-pill-group">
+                    <button class="filter-pill active" onclick="setBadgeCategory('all', this)">All Emblems (15)</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('aiml', this)">🧠 AI & ML</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('coding', this)">💻 Coding</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('collaboration', this)">🤝 Collaboration</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('exploration', this)">🏛️ Exploration</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('events', this)">👑 Special & Elite</button>
+                </div>
+
+                <div class="badge-gallery-grid" id="badge-gallery-grid"></div>
+            </section>
+
+            <!-- ==================================================================
+                 VIEW 4: PLAYER PROFILE & CHARACTER LOADOUT
+                 ================================================================== -->
+            <section id="view-profile" class="view-section">
+                <div class="loadout-grid">
+                    <!-- Left Column: Identity, Avatar & Title Loadout -->
+                    <div class="loadout-panel">
+                        <h3>🧑‍🚀 OPERATIVE IDENTITY & LOADOUT</h3>
+                        <div style="display:flex; align-items:center; gap:16px;">
+                            <div class="avatar-circle" id="profile-big-avatar" style="width:68px; height:68px; font-size:2rem;">🤖</div>
+                            <div>
+                                <div style="font-family:var(--font-display); font-size:1.3rem; font-weight:800;" id="profile-callsign">@Operative</div>
+                                <div class="equipped-title-pill" id="profile-equipped-title" style="margin-top:4px;">★ Rookie Coder</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:6px;">Select Operative Avatar Emblem:</label>
+                            <div class="avatar-picker-row" id="avatar-picker"></div>
+                        </div>
+
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:6px;">Update Display Callsign:</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" id="editCallsignInput" class="form-input" placeholder="New Callsign">
+                                <button class="btn-primary-cyan" onclick="updateOperativeCallsign()">SAVE</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Equip Earned Academy Title (Unlocked via Achievements):</label>
+                            <div class="title-selector-list" id="title-selector-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Showcase Badges & Verified XP Ledger -->
+                    <div class="loadout-panel">
+                        <h3>🎖️ SHOWCASE MEDALLIONS & XP LEDGER</h3>
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Equipped Showcase Badges (Click Earned Badges in Trophy Room to Pin):</label>
+                            <div id="profile-showcase-badges" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;"></div>
+                        </div>
+
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Auditable XP Transaction & Contribution Ledger:</label>
+                            <div id="profile-xp-ledger" style="display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ======================================================================
+             RIGHT RAIL: COMPETITIVE LEADERBOARD & PODIUM
+             ====================================================================== -->
+        <aside class="leaderboard-rail" aria-label="Student Leaderboard">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-family:var(--font-display); font-size:0.95rem; font-weight:900;">🏆 TACHYON RANKINGS</span>
+                <div style="display:flex; gap:4px;">
+                    <button class="filter-pill active" id="lb-tab-all" style="padding:4px 9px; font-size:0.68rem;" onclick="setLeaderboardMode('all')">All-Time</button>
+                    <button class="filter-pill" id="lb-tab-weekly" style="padding:4px 9px; font-size:0.68rem;" onclick="setLeaderboardMode('weekly')">Weekly</button>
                 </div>
             </div>
-        </section>
 
-        <!-- Filter Tabs & Search Bar -->
-        <div class="arena-controls-bar">
-            <div class="filter-tabs">
-                <button class="filter-tab active" onclick="setArenaFilter('all', this)">🌐 ALL NODES (<span id="count-all">0</span>)</button>
-                <button class="filter-tab" onclick="setArenaFilter('trending', this)">🔥 OVERCLOCKED</button>
-                <button class="filter-tab" onclick="setArenaFilter('official', this)">👑 OFFICIAL BROADCASTS</button>
-                <button class="filter-tab" onclick="setArenaFilter('mine', this)">⚡ MY AGENTS</button>
-            </div>
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="agentSearchInput" placeholder="Search agents or @developer..." oninput="renderAgents()">
-            </div>
-        </div>
+            <!-- Top 3 Podium -->
+            <div class="podium-top-three" id="leaderboard-podium"></div>
 
-        <!-- 3D Holographic Agent Cards Grid -->
-        <div class="agent-grid" id="agent-grid"></div>
-    </main>
+            <!-- Search by Student -->
+            <input type="text" id="lbSearchInput" class="form-input" style="padding:8px 12px; font-size:0.8rem;" placeholder="🔍 Find student @callsign..." oninput="renderLeaderboard()">
 
-    <a href="https://aistudio.google.com/" target="_blank" class="build-agent-fab">✨ Build Your Own Agent</a>
+            <!-- Ranked Operatives List -->
+            <div class="lb-entries-container" id="leaderboard-list"></div>
 
-    <!-- Deploy Modal -->
-    <div class="modal" id="postModal">
-        <div class="modal-content" style="text-align: left;">
-            <h2>🚀 DEPLOY AI AGENT</h2>
-            <p style="color:#94a3b8; font-size:0.88rem; margin-bottom:14px;">Deploying a new agent grants <strong style="color:var(--cyan);">+50 XP</strong> immediately.</p>
-            <input type="text" id="agentName" placeholder="Agent Codename (e.g. Jarvis Vision Bot)">
-            <input type="text" id="studentName" placeholder="Your Callsign" readonly style="background: rgba(255,255,255,0.04); color: #94a3b8;">
-            <input type="text" id="agentLink" placeholder="Live Agent / GitHub / AI Studio URL (Optional)">
-            <textarea id="agentDesc" placeholder="Describe your agent's neural capabilities..." rows="3"></textarea>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px;">
-                <button class="sfx-btn" style="flex: 1; padding: 12px;" onclick="closeModal()">ABORT</button>
-                <button class="deploy-cta-btn" style="flex: 1; padding: 12px; font-size: 0.82rem;" onclick="submitAgent()">LAUNCH (+50 XP)</button>
+            <button class="unit-btn unit-btn-inspect" style="margin-top:auto; color:var(--danger); border-color:rgba(255,92,119,0.35);" onclick="logout()">⏻ Disconnect Session</button>
+        </aside>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+        <button class="mob-nav-btn active" id="mob-arena" onclick="switchArenaView('arena')"><span>⚡</span><span>Arena</span></button>
+        <button class="mob-nav-btn" id="mob-missions" onclick="switchArenaView('missions')"><span>🎯</span><span>Missions</span></button>
+        <button class="mob-nav-btn" id="mob-trophies" onclick="switchArenaView('trophies')"><span>🏆</span><span>Trophies</span></button>
+        <button class="mob-nav-btn" id="mob-profile" onclick="switchArenaView('profile')"><span>🧑‍🚀</span><span>Profile</span></button>
+        <a href="twin.html" class="mob-nav-btn" style="text-decoration:none;"><span>🏛️</span><span>3D Twin</span></a>
+    </nav>
+
+    <!-- ==========================================================================
+         MODAL 1: DEPLOY NEW AI AGENT
+         ========================================================================== -->
+    <div class="modal-backdrop" id="deployModal">
+        <div class="modal-box">
+            <h2>🚀 DEPLOY AI AGENT UNIT</h2>
+            <p style="color:var(--slate); font-size:0.84rem;">Deploying a verified working agent awards <strong style="color:var(--cyan);">+50 XP</strong> and progresses your <strong>FIRST BOOT</strong> & <strong>SWARM ARCHITECT</strong> badges.</p>
+            <input type="text" id="agentName" class="form-input" placeholder="Agent Name (e.g. CodeSentinel v2)">
+            <input type="text" id="studentName" class="form-input" readonly style="opacity:0.7;">
+            <input type="text" id="agentLink" class="form-input" placeholder="Agent URL / GitHub / Google AI Studio Link">
+            <input type="text" id="agentSkills" class="form-input" placeholder="Skills (comma-separated: Python, RAG, Vision, PyTorch)">
+            <textarea id="agentDesc" class="form-textarea" rows="3" placeholder="Describe what your AI agent accomplishes..."></textarea>
+            <div style="display:flex; gap:10px;">
+                <button class="unit-btn unit-btn-inspect" onclick="closeDeployModal()">Cancel</button>
+                <button class="btn-primary-cyan" id="deploySubmitBtn" style="flex:1; justify-content:center;" onclick="submitAgent()">LAUNCH AGENT (+50 XP)</button>
             </div>
         </div>
     </div>
 
-    <!-- Interactive Background Particle Constellation + Web Audio SFX Engine -->
-    <script>
-        // --- 1. WEB AUDIO SCI-FI UI SOUND SYNTHESIZER ---
-        let sfxEnabled = true;
-        let uiAudioCtx = null;
+    <!-- ==========================================================================
+         MODAL 2: AGENT INSPECTION & DIAGNOSTIC LOGS
+         ========================================================================== -->
+    <div class="modal-backdrop" id="agentInspectModal">
+        <div class="modal-box" id="agentInspectContent"></div>
+    </div>
 
-        function playCyberSound(type) {
-            if (!sfxEnabled) return;
-            try {
-                if (!uiAudioCtx) uiAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (uiAudioCtx.state === 'suspended') uiAudioCtx.resume();
-                const osc = uiAudioCtx.createOscillator();
-                const gain = uiAudioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(uiAudioCtx.destination);
+    <!-- ==========================================================================
+         MODAL 3: BADGE INSPECTION & UNLOCK CELEBRATION
+         ========================================================================== -->
+    <div class="modal-backdrop" id="badgeInspectModal">
+        <div class="modal-box" id="badgeInspectContent" style="text-align:center; align-items:center;"></div>
+    </div>
 
-                const now = uiAudioCtx.currentTime;
-                if (type === 'hover') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(520, now);
-                    osc.frequency.exponentialRampToValueAtTime(780, now + 0.045);
-                    gain.gain.setValueAtTime(0.03, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-                    osc.start(now);
-                    osc.stop(now + 0.045);
-                } else if (type === 'boost') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(320, now);
-                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.18);
-                    gain.gain.setValueAtTime(0.12, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-                    osc.start(now);
-                    osc.stop(now + 0.22);
-                } else if (type === 'deploy') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(220, now);
-                    osc.frequency.exponentialRampToValueAtTime(660, now + 0.28);
-                    gain.gain.setValueAtTime(0.10, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.30);
-                    osc.start(now);
-                    osc.stop(now + 0.30);
-                }
-            } catch (e) {}
-        }
+    <!-- ==========================================================================
+         MODAL 4: INTERACTIVE AI / CODING VERIFICATION LAB
+         ========================================================================== -->
+    <div class="modal-backdrop" id="challengeModal">
+        <div class="modal-box">
+            <h2>💻 TACHYON VERIFICATION LAB</h2>
+            <p style="color:var(--slate); font-size:0.84rem;">Solve these verified AI & Coding challenges to unlock <strong>PROMPT ENGINEER</strong>, <strong>BUG HUNTER</strong>, <strong>MODEL TRAINER</strong>, and mission XP.</p>
+            <div id="challenge-body" style="display:flex; flex-direction:column; gap:12px;"></div>
+            <button class="unit-btn unit-btn-inspect" onclick="closeChallengeModal()">Close Lab</button>
+        </div>
+    </div>
 
-        window.toggleSoundFX = function() {
-            sfxEnabled = !sfxEnabled;
-            const btn = document.getElementById('sfxToggleBtn');
-            btn.innerText = sfxEnabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
-        };
-
-        // --- 2. INTERACTIVE NEURAL PARTICLE MATRIX CANVAS ---
-        const canvas = document.getElementById('neural-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouse = { x: -500, y: -500 };
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        for (let i = 0; i < 55; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.65,
-                vy: (Math.random() - 0.5) * 0.65,
-                r: 1.5 + Math.random() * 1.8
-            });
-        }
-
-        function animateNeuralCanvas() {
-            requestAnimationFrame(animateNeuralCanvas);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 242, 254, 0.55)';
-                ctx.fill();
-
-                for (let j = i + 1; j < particles.length; j++) {
-                    const p2 = particles[j];
-                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 130) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(0, 242, 254, ${(1 - dist / 130) * 0.18})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-
-                const mDist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-                if (mDist < 160) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(mouse.x, mouse.y);
-                    ctx.strokeStyle = `rgba(168, 85, 247, ${(1 - mDist / 160) * 0.45})`;
-                    ctx.lineWidth = 1.2;
-                    ctx.stroke();
-                }
-            }
-        }
-        animateNeuralCanvas();
-
-        // --- 3. 3D HOLOGRAPHIC CARD TILT & FLOATING XP BURST ---
-        window.handleCardTilt = function(e, cardEl) {
-            const rect = cardEl.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -7;
-            const rotateY = ((x - centerX) / centerX) * 7;
-            cardEl.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-        };
-
-        window.resetCardTilt = function(cardEl) {
-            cardEl.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-        };
-
-        window.spawnXPFloat = function(x, y, text = '+10 XP ⚡') {
-            const el = document.createElement('div');
-            el.className = 'xp-float-popup';
-            el.innerText = text;
-            el.style.left = (x - 30) + 'px';
-            el.style.top = (y - 20) + 'px';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1100);
-        };
-    </script>
-
-    <!-- Firebase Logic & Gamification Engine -->
+    <!-- ==========================================================================
+         APPLICATION LOGIC, FIREBASE SYNC & GAMIFICATION ENGINE
+         ========================================================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, updateDoc, doc, setDoc, getDoc, getDocs, query, where, increment, arrayUnion, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -1264,46 +1601,231 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        let allUsers = {};
-        let allAgents = [];
-        let currentUserEmail = "";
-        let currentCustomName = "";
-        let activeFilter = "all";
-
-        // RPG Rank Tier Calculator based on XP
-        function getRankInfo(xp) {
-            const level = Math.floor(xp / 100) + 1;
-            const progress = xp % 100;
-            let title = "Cyber Initiate";
-            if (xp >= 500) title = "Singularity Overlord";
-            else if (xp >= 350) title = "Tachyon Commander";
-            else if (xp >= 200) title = "Synapse Architect";
-            else if (xp >= 100) title = "Neural Rebel";
-            return { level, progress, title, nextXP: level * 100 };
+        // --- SOUND SYNTHESIZER (Explicit Toggle, Default OFF) ---
+        let sfxEnabled = false;
+        let audioCtx = null;
+        window.toggleSoundFX = function() {
+            sfxEnabled = !sfxEnabled;
+            document.getElementById('sfxToggleBtn').innerText = sfxEnabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+            if (sfxEnabled) playSound('blip');
+        };
+        function playSound(type) {
+            if (!sfxEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                if (type === 'blip') {
+                    osc.frequency.setValueAtTime(580, now);
+                    osc.frequency.exponentialRampToValueAtTime(840, now + 0.05);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'fanfare') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(330, now);
+                    osc.frequency.setValueAtTime(440, now + 0.08);
+                    osc.frequency.setValueAtTime(660, now + 0.16);
+                    gain.gain.setValueAtTime(0.10, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now); osc.stop(now + 0.35);
+                }
+            } catch (e) {}
         }
 
+        // --- DOCUMENTED LEVEL & XP PROGRESSION FORMULA ---
+        // Level L requires 100 * (L - 1) total XP. Each level spans 100 XP.
+        function calculateProgression(totalXP) {
+            const xp = Math.max(0, totalXP || 0);
+            const level = Math.floor(xp / 100) + 1;
+            const currentLevelProgress = xp % 100;
+            const nextLevelXP = level * 100;
+            const remainingXP = nextLevelXP - xp;
+            return { level, xp, currentLevelProgress, nextLevelXP, remainingXP };
+        }
+
+        // --- 15 COLLECTIBLE STARTER BADGES DEFINITION ---
+        const BADGE_CATALOG = [
+            { id: 'first_boot', name: 'FIRST BOOT', rarity: 'Common', category: 'aiml', xp: 25, icon: '🚀', desc: 'Deploy your first working AI agent to the Tachyon network.', reqText: 'Deploy 1 AI Agent' },
+            { id: 'early_access', name: 'EARLY ACCESS', rarity: 'Common', category: 'events', xp: 20, icon: '⚡', desc: 'Participate in the official PESCE Tachyon 2.0 launch season.', reqText: 'Authenticate & join Tachyon 2.0' },
+            { id: 'prompt_engineer', name: 'PROMPT ENGINEER', rarity: 'Uncommon', category: 'aiml', xp: 40, icon: '✨', desc: 'Complete the verified Prompt Engineering system challenge.', reqText: 'Pass Prompt Challenge in Lab' },
+            { id: 'bug_hunter', name: 'BUG HUNTER', rarity: 'Uncommon', category: 'coding', xp: 40, icon: '🐛', desc: 'Identify and fix a verified neural pipeline bug in the Verification Lab.', reqText: 'Pass Bug Hunter Challenge' },
+            { id: 'campus_explorer', name: 'CAMPUS EXPLORER', rarity: 'Uncommon', category: 'exploration', xp: 50, icon: '🏛️', desc: 'Visit the PESCE AI & ML Digital Twin virtual campus.', reqText: 'Explore Digital Twin zones' },
+            { id: 'team_player', name: 'TEAM PLAYER', rarity: 'Uncommon', category: 'collaboration', xp: 45, icon: '🤝', desc: 'Support fellow students by boosting/overclocking 3 peer AI agents.', reqText: 'Overclock 3 peer AI agents' },
+            { id: 'code_warrior', name: 'CODE WARRIOR', rarity: 'Rare', category: 'coding', xp: 75, icon: '⚔️', desc: 'Pass all verified coding & AI evaluation challenges in the Lab.', reqText: 'Complete all 3 Lab Challenges' },
+            { id: 'model_trainer', name: 'MODEL TRAINER', rarity: 'Rare', category: 'aiml', xp: 70, icon: '🧠', desc: 'Complete the supervised ML loss-convergence evaluation mission.', reqText: 'Pass ML Evaluation Challenge' },
+            { id: 'swarm_architect', name: 'SWARM ARCHITECT', rarity: 'Rare', category: 'aiml', xp: 100, icon: '🐝', desc: 'Deploy and manage 3 functional AI agents in the arena.', reqText: 'Deploy 3 AI Agents' },
+            { id: 'knowledge_seeker', name: 'KNOWLEDGE SEEKER', rarity: 'Rare', category: 'exploration', xp: 80, icon: '📚', desc: 'Complete at least 4 Academy Missions in Mission Control.', reqText: 'Complete 4 Missions' },
+            { id: 'overclocked', name: 'OVERCLOCKED', rarity: 'Epic', category: 'aiml', xp: 110, icon: '🔥', desc: 'Earn at least 3 community boosts/overclocks across your deployed agents.', reqText: 'Receive 3+ Agent Boosts' },
+            { id: 'streak_master', name: 'STREAK MASTER', rarity: 'Epic', category: 'events', xp: 120, icon: '📅', desc: 'Maintain an active learning and contribution streak.', reqText: 'Reach a 3+ Day Streak or 250+ XP' },
+            { id: 'innovator', name: 'INNOVATOR', rarity: 'Epic', category: 'collaboration', xp: 125, icon: '💡', desc: 'Deploy an agent with a live external URL / AI Studio link.', reqText: 'Deploy Agent with Live URL' },
+            { id: 'arena_champion', name: 'ARENA CHAMPION', rarity: 'Legendary', category: 'events', xp: 200, icon: '👑', desc: 'Reach the #1 top developer rank on the TACHYON Leaderboard.', reqText: 'Hold Rank #1 on Leaderboard' },
+            { id: 'legend_of_tachyon', name: 'LEGEND OF TACHYON', rarity: 'Legendary', category: 'events', xp: 250, icon: '🌌', desc: 'Unlock at least 8 achievements across the TACHYON Academy.', reqText: 'Earn 8+ Collectible Badges' }
+        ];
+
+        // --- UNLOCKABLE PLAYER TITLES ---
+        const TITLE_CATALOG = [
+            { id: 'Rookie Coder', reqBadge: null, desc: 'Default Academy Operative Title' },
+            { id: 'Prompt Alchemist', reqBadge: 'prompt_engineer', desc: 'Requires PROMPT ENGINEER Badge' },
+            { id: 'Neural Architect', reqBadge: 'model_trainer', desc: 'Requires MODEL TRAINER Badge' },
+            { id: 'Swarm Commander', reqBadge: 'swarm_architect', desc: 'Requires SWARM ARCHITECT Badge' },
+            { id: 'Arena Champion', reqBadge: 'arena_champion', desc: 'Requires ARENA CHAMPION Badge' },
+            { id: 'Legend of Tachyon', reqBadge: 'legend_of_tachyon', desc: 'Requires LEGEND OF TACHYON Badge' }
+        ];
+
+        // --- 6 CORE ACADEMY MISSIONS ---
+        const MISSIONS_CATALOG = [
+            { id: 'm_first_contact', title: 'MISSION: FIRST CONTACT', category: 'agent', diff: 'easy', xp: 50, badgeId: 'first_boot', duration: '5 mins', desc: 'Deploy a functioning AI agent to the TACHYON Arena.', target: 1, getProgress: (stats) => Math.min(1, stats.myAgentCount) },
+            { id: 'm_debug_matrix', title: 'MISSION: DEBUG THE MATRIX', category: 'coding', diff: 'medium', xp: 100, badgeId: 'code_warrior', duration: '10 mins', desc: 'Solve all 3 validated coding & AI tasks in the Verification Lab.', target: 3, getProgress: (stats) => Math.min(3, stats.solvedCount) },
+            { id: 'm_model_forge', title: 'MISSION: MODEL FORGE', category: 'coding', diff: 'medium', xp: 150, badgeId: 'model_trainer', duration: '8 mins', desc: 'Complete the supervised machine learning evaluation exercise in the Lab.', target: 1, getProgress: (stats) => stats.hasSolvedML ? 1 : 0 },
+            { id: 'm_campus_scout', title: 'MISSION: CAMPUS SCOUT', category: 'exploration', diff: 'easy', xp: 75, badgeId: 'campus_explorer', duration: '5 mins', desc: 'Explore the PESCE 3D Digital Twin campus or launch the Digital Twin walkthrough.', target: 1, getProgress: (stats) => stats.twinVisited ? 1 : 0 },
+            { id: 'm_swarm_protocol', title: 'MISSION: SWARM PROTOCOL', category: 'agent', diff: 'hard', xp: 200, badgeId: 'swarm_architect', duration: '15 mins', desc: 'Create and deploy 3 working AI agents to the network.', target: 3, getProgress: (stats) => Math.min(3, stats.myAgentCount) },
+            { id: 'm_peer_synergy', title: 'MISSION: NEURAL SYNERGY', category: 'streak', diff: 'easy', xp: 100, badgeId: 'team_player', duration: '5 mins', desc: 'Test and overclock (boost) 3 peer AI agents in the Arena.', target: 3, getProgress: (stats) => Math.min(3, stats.myBoostsGiven) }
+        ];
+
+        // --- INTERACTIVE VERIFICATION LAB CHALLENGES ---
+        const LAB_CHALLENGES = [
+            {
+                id: 'ch_prompt',
+                title: '1. Prompt Engineering: System Guardrail Injection',
+                question: 'Which parameter in a Transformer LLM decoding step controls randomness by scaling logits before softmax?',
+                options: ['A) Weight Decay (L2)', 'B) Temperature (T)', 'C) Batch Normalization', 'D) Dropout Rate'],
+                correctIndex: 1,
+                badgeId: 'prompt_engineer'
+            },
+            {
+                id: 'ch_bug',
+                title: '2. Bug Hunter: PyTorch Training Loop Fix',
+                question: 'In a PyTorch training loop, gradients accumulate across batches if which method is omitted before loss.backward()?',
+                options: ['A) model.eval()', 'B) torch.no_grad()', 'C) optimizer.zero_grad()', 'D) scheduler.step()'],
+                correctIndex: 2,
+                badgeId: 'bug_hunter'
+            },
+            {
+                id: 'ch_ml',
+                title: '3. Model Forge: F1-Score Evaluation',
+                question: 'A binary classifier has Precision = 0.80 and Recall = 0.80 on the PESCE test set. What is its harmonic F1-Score?',
+                options: ['A) 0.64', 'B) 0.80', 'C) 0.90', 'D) 1.60'],
+                correctIndex: 1,
+                badgeId: 'model_trainer'
+            }
+        ];
+
+        const AVATAR_OPTIONS = ['🤖', '🧑‍🚀', '⚡', '🦊', '🐉', '🧬', '🛡️', '👑'];
+
+        // --- RUNTIME STATE ---
+        let allUsers = {};
+        let allAgents = [];
+        let currentUserUid = "";
+        let currentUserEmail = "";
+        let currentCustomName = "";
+        let activeAgentFilter = "all";
+        let activeMissionFilter = "all";
+        let activeBadgeCategory = "all";
+        let leaderboardMode = "all";
+
+        // Sync Digital Twin visit flag if user navigated to twin.html
+        document.querySelectorAll('a[href="twin.html"]').forEach(link => {
+            link.addEventListener('click', () => {
+                localStorage.setItem('tachyon_twin_visited', 'true');
+            });
+        });
+
+        // --- custom SVG Medallion Generator for Badges ---
+        function renderBadgeSVG(badge, isEarned) {
+            const colorMap = {
+                Common: '#9AA8C2',
+                Uncommon: '#29E7F2',
+                Rare: '#9B5CFF',
+                Epic: '#FF4FD8',
+                Legendary: '#FFC857'
+            };
+            const strokeCol = isEarned ? (colorMap[badge.rarity] || '#29E7F2') : '#475569';
+            return `
+                <svg width="74" height="74" viewBox="0 0 80 80">
+                    <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="rgba(11,16,32,0.85)" stroke="${strokeCol}" stroke-width="3"/>
+                    <circle cx="40" cy="40" r="24" fill="none" stroke="${strokeCol}" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <text x="40" y="47" text-anchor="middle" font-size="24">${isEarned ? badge.icon : '🔒'}</text>
+                </svg>
+            `;
+        }
+
+        // --- VIEW NAVIGATION ---
+        window.switchArenaView = function(viewKey) {
+            playSound('blip');
+            ['arena', 'missions', 'trophies', 'profile'].forEach(k => {
+                document.getElementById('view-' + k)?.classList.toggle('active', k === viewKey);
+                document.getElementById('tab-' + k)?.classList.toggle('active', k === viewKey);
+                document.getElementById('mob-' + k)?.classList.toggle('active', k === viewKey);
+            });
+            refreshAllUI();
+        };
+
+        window.toggleNotifDrawer = function() {
+            const d = document.getElementById('notif-drawer');
+            d.style.display = d.style.display === 'flex' ? 'none' : 'flex';
+        };
+
+        function pushNotification(text) {
+            const list = document.getElementById('notif-list');
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `${text}<time>${new Date().toLocaleTimeString()}</time>`;
+            list.prepend(item);
+            const countEl = document.getElementById('notif-count');
+            countEl.innerText = parseInt(countEl.innerText || '0') + 1;
+        }
+
+        window.spawnXPFloat = function(text = '+50 XP!') {
+            const el = document.createElement('div');
+            el.className = 'xp-float';
+            el.innerText = text;
+            el.style.left = (window.innerWidth / 2 - 40) + 'px';
+            el.style.top = (window.innerHeight / 2) + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1200);
+        };
+
+        // --- AUTHENTICATION & DAILY STREAK TRACKER ---
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(() => alert("Error signing in."));
+            signInWithPopup(auth, provider).catch(() => alert("Google sign-in interrupted."));
         });
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUserUid = user.uid;
                 currentUserEmail = user.email;
                 const userDocRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userDocRef);
-                
+
                 if (userSnap.exists() && userSnap.data().customName) {
-                    currentCustomName = userSnap.data().customName;
-                    document.getElementById('studentName').value = currentCustomName; 
+                    const data = userSnap.data();
+                    currentCustomName = data.customName;
+                    document.getElementById('studentName').value = currentCustomName;
+                    document.getElementById('editCallsignInput').value = currentCustomName;
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'none';
-                    renderAgents();
-                    renderLeaderboard();
+
+                    // Update daily learning streak
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    if (data.lastStreakDate !== todayStr) {
+                        const newStreak = (data.streakCount || 0) + 1;
+                        await setDoc(userDocRef, {
+                            lastStreakDate: todayStr,
+                            streakCount: newStreak,
+                            lastLogin: Date.now()
+                        }, { merge: true });
+                    }
+                    refreshAllUI();
                 } else {
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('username-modal').style.display = 'flex';
                 }
             } else {
+                currentUserUid = "";
                 currentUserEmail = "";
                 document.getElementById('login-screen').style.display = 'flex';
                 document.getElementById('username-modal').style.display = 'none';
@@ -1313,233 +1835,743 @@
         window.saveUsername = async () => {
             const inputName = document.getElementById('customUsernameInput').value.trim();
             const lowerName = inputName.toLowerCase();
-            if(inputName.length < 3) { alert("Callsign must be at least 3 characters."); return; }
+            if (inputName.length < 3) { alert("Callsign must be at least 3 characters."); return; }
 
             const q = query(collection(db, "users"), where("customNameLower", "==", lowerName));
-            if (!(await getDocs(q)).empty) { alert("Callsign already taken!"); return; }
+            if (!(await getDocs(q)).empty) { alert("That callsign is already registered!"); return; }
 
             const user = auth.currentUser;
+            const todayStr = new Date().toISOString().split('T')[0];
             await setDoc(doc(db, "users", user.uid), {
-                customName: inputName, customNameLower: lowerName, email: user.email, lastLogin: Date.now()
+                customName: inputName,
+                customNameLower: lowerName,
+                email: user.email,
+                lastLogin: Date.now(),
+                streakCount: 1,
+                lastStreakDate: todayStr,
+                bonusXP: 0,
+                completedMissions: [],
+                earnedBadges: ['early_access'],
+                equippedTitle: 'Rookie Coder',
+                avatarId: '🤖'
             }, { merge: true });
 
             currentCustomName = inputName;
             document.getElementById('studentName').value = currentCustomName;
             document.getElementById('username-modal').style.display = 'none';
-            playCyberSound('deploy');
+            playSound('fanfare');
         };
 
         window.logout = () => signOut(auth).then(() => document.getElementById('login-screen').style.display = 'flex');
-        window.openModal = () => { playCyberSound('hover'); document.getElementById('postModal').style.display = 'flex'; };
-        window.closeModal = () => document.getElementById('postModal').style.display = 'none';
 
-        window.setArenaFilter = (filterKey, btnEl) => {
-            activeFilter = filterKey;
-            playCyberSound('hover');
-            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            renderAgents();
-        };
-
-        window.submitAgent = async () => {
-            const name = document.getElementById('agentName').value.trim();
-            const link = document.getElementById('agentLink').value.trim();
-            const desc = document.getElementById('agentDesc').value.trim();
-            if(name) {
-                try {
-                    await addDoc(collection(db, "agents"), {
-                        name: name,
-                        link: link || "",
-                        author: currentCustomName,
-                        authorEmail: currentUserEmail, 
-                        desc: desc || "Autonomous AI module deployed to the PESCE Tachyon network.",
-                        upvotes: 0,
-                        boostedBy: [],
-                        timestamp: Date.now()
-                    });
-                    playCyberSound('deploy');
-                    window.spawnXPFloat(window.innerWidth / 2, window.innerHeight / 2, '+50 XP DEPLOYED! 🚀');
-                    closeModal();
-                    document.getElementById('agentName').value = '';
-                    document.getElementById('agentLink').value = '';
-                    document.getElementById('agentDesc').value = '';
-                } catch (e) { alert("Error saving to database."); }
-            } else { alert("Please enter an Agent Codename."); }
-        };
-
-        window.upvote = async (id, authorEmail, evt) => {
-            if (!currentUserEmail || currentUserEmail === authorEmail) return;
-            playCyberSound('boost');
-            if (evt) window.spawnXPFloat(evt.clientX, evt.clientY, '+10 XP OVERCLOCK! ⚡');
-            await updateDoc(doc(db, "agents", id), { 
-                upvotes: increment(1),
-                boostedBy: arrayUnion(currentUserEmail) 
-            });
-        };
-
+        // --- REAL-TIME FIRESTORE LISTENERS ---
         onSnapshot(collection(db, "users"), (snapshot) => {
             allUsers = {};
-            snapshot.forEach((doc) => { allUsers[doc.data().email] = doc.data(); });
-            renderLeaderboard();
+            snapshot.forEach((d) => {
+                const data = d.data();
+                data.uid = d.id;
+                if (data.email) allUsers[data.email] = data;
+            });
+            refreshAllUI();
         });
 
         onSnapshot(collection(db, "agents"), (snapshot) => {
             allAgents = [];
-            snapshot.forEach((doc) => {
-                let data = doc.data(); data.id = doc.id; allAgents.push(data);
+            snapshot.forEach((d) => {
+                const data = d.data();
+                data.id = d.id;
+                allAgents.push(data);
             });
-            document.getElementById('count-all').innerText = allAgents.length;
-            renderAgents();
-            renderLeaderboard();
+            document.getElementById('nav-agent-count').innerText = allAgents.length;
+            document.getElementById('count-all-units').innerText = allAgents.length;
+            refreshAllUI();
         });
 
-        window.renderAgents = function() {
-            const grid = document.getElementById('agent-grid');
-            const searchQuery = (document.getElementById('agentSearchInput')?.value || '').toLowerCase().trim();
-            grid.innerHTML = '';
-            if(allAgents.length === 0) return;
+        // --- COMPUTE UNIFIED PLAYER STATS & ELIGIBLE BADGES ---
+        function computeAllUserScores() {
+            const statsByEmail = {};
 
-            let filtered = allAgents.filter(agent => {
-                if (activeFilter === 'trending' && (agent.upvotes || 0) < 1) return false;
-                if (activeFilter === 'official' && !agent.isOfficial) return false;
-                if (activeFilter === 'mine' && agent.authorEmail !== currentUserEmail) return false;
-                if (searchQuery) {
-                    const matchName = (agent.name || '').toLowerCase().includes(searchQuery);
-                    const matchAuth = (agent.author || '').toLowerCase().includes(searchQuery);
-                    const matchDesc = (agent.desc || '').toLowerCase().includes(searchQuery);
-                    return matchName || matchAuth || matchDesc;
+            for (let email in allUsers) {
+                const u = allUsers[email];
+                if (!u.customName) continue;
+                statsByEmail[email] = {
+                    uid: u.uid,
+                    name: u.customName,
+                    email: email,
+                    baseXP: 10,
+                    bonusXP: u.bonusXP || 0,
+                    myAgentCount: 0,
+                    myUpvotesReceived: 0,
+                    myBoostsGiven: 0,
+                    hasLiveLinkAgent: false,
+                    completedMissions: u.completedMissions || [],
+                    solvedChallenges: u.solvedChallenges || [],
+                    storedBadges: u.earnedBadges || ['early_access'],
+                    equippedTitle: u.equippedTitle || 'Rookie Coder',
+                    showcaseBadges: u.showcaseBadges || [],
+                    avatarId: u.avatarId || '🤖',
+                    streakCount: u.streakCount || 1,
+                    xpHistory: u.xpHistory || []
+                };
+            }
+
+            allAgents.forEach(a => {
+                const authorEmail = a.authorEmail || "unknown";
+                const upvotes = a.upvotes || 0;
+                if (!statsByEmail[authorEmail]) {
+                    statsByEmail[authorEmail] = {
+                        uid: null,
+                        name: a.author || "Operative",
+                        email: authorEmail,
+                        baseXP: 0,
+                        bonusXP: 0,
+                        myAgentCount: 0,
+                        myUpvotesReceived: 0,
+                        myBoostsGiven: 0,
+                        hasLiveLinkAgent: false,
+                        completedMissions: [],
+                        solvedChallenges: [],
+                        storedBadges: ['early_access'],
+                        equippedTitle: 'Rookie Coder',
+                        showcaseBadges: [],
+                        avatarId: '🤖',
+                        streakCount: 1,
+                        xpHistory: []
+                    };
+                }
+                statsByEmail[authorEmail].baseXP += 50 + (upvotes * 10);
+                statsByEmail[authorEmail].myAgentCount += 1;
+                statsByEmail[authorEmail].myUpvotesReceived += upvotes;
+                if (a.link && a.link.trim().length > 4) {
+                    statsByEmail[authorEmail].hasLiveLinkAgent = true;
+                }
+                if (Array.isArray(a.boostedBy)) {
+                    a.boostedBy.forEach(boosterEmail => {
+                        if (statsByEmail[boosterEmail]) {
+                            statsByEmail[boosterEmail].myBoostsGiven += 1;
+                        }
+                    });
+                }
+            });
+
+            // Calculate totalXP & rank order
+            const sortedEmails = Object.keys(statsByEmail).sort((a, b) => {
+                const totA = statsByEmail[a].baseXP + statsByEmail[a].bonusXP;
+                const totB = statsByEmail[b].baseXP + statsByEmail[b].bonusXP;
+                return totB - totA;
+            });
+
+            sortedEmails.forEach((email, idx) => {
+                const st = statsByEmail[email];
+                st.rank = idx + 1;
+                st.totalXP = st.baseXP + st.bonusXP;
+                st.solvedCount = st.solvedChallenges.length;
+                st.hasSolvedML = st.solvedChallenges.includes('ch_ml');
+                st.twinVisited = localStorage.getItem('tachyon_twin_visited') === 'true' || st.completedMissions.includes('m_campus_scout');
+
+                // Determine earned badges dynamically + stored
+                const unlocked = new Set(st.storedBadges);
+                unlocked.add('early_access');
+                if (st.myAgentCount >= 1) unlocked.add('first_boot');
+                if (st.myAgentCount >= 3) unlocked.add('swarm_architect');
+                if (st.myUpvotesReceived >= 3) unlocked.add('overclocked');
+                if (st.myBoostsGiven >= 3) unlocked.add('team_player');
+                if (st.hasLiveLinkAgent) unlocked.add('innovator');
+                if (st.solvedChallenges.includes('ch_prompt')) unlocked.add('prompt_engineer');
+                if (st.solvedChallenges.includes('ch_bug')) unlocked.add('bug_hunter');
+                if (st.solvedChallenges.includes('ch_ml')) unlocked.add('model_trainer');
+                if (st.solvedCount >= 3) unlocked.add('code_warrior');
+                if (st.twinVisited && email === currentUserEmail) unlocked.add('campus_explorer');
+                if (st.completedMissions.length >= 4) unlocked.add('knowledge_seeker');
+                if (st.streakCount >= 3 || st.totalXP >= 250) unlocked.add('streak_master');
+                if (st.rank === 1 && sortedEmails.length > 0) unlocked.add('arena_champion');
+                if (unlocked.size >= 8) unlocked.add('legend_of_tachyon');
+
+                st.earnedBadgesList = Array.from(unlocked);
+            });
+
+            return { statsByEmail, sortedEmails };
+        }
+
+        function refreshAllUI() {
+            const { statsByEmail, sortedEmails } = computeAllUserScores();
+            const myStats = statsByEmail[currentUserEmail];
+
+            if (myStats) {
+                const prog = calculateProgression(myStats.totalXP);
+                document.getElementById('hero-avatar-icon').innerText = myStats.avatarId;
+                document.getElementById('hero-greeting-text').innerText = `Welcome back, @${myStats.name}`;
+                document.getElementById('hero-title-pill').innerText = `★ ${myStats.equippedTitle}`;
+                document.getElementById('hero-lvl-badge').innerText = `LVL 0${prog.level}`;
+                document.getElementById('hero-streak-badge').innerText = `🔥 ${myStats.streakCount}-Day Streak`;
+                document.getElementById('hero-xp-current').innerText = `${prog.xp} TOTAL XP (Rank #${myStats.rank})`;
+                document.getElementById('hero-xp-target').innerText = `Next: ${prog.nextLevelXP} XP`;
+                document.getElementById('hero-xp-fill').style.width = `${Math.max(6, prog.currentLevelProgress)}%`;
+                document.getElementById('hero-lvl-preview').innerText = `${prog.remainingXP} XP remaining to Level ${prog.level + 1}`;
+                document.getElementById('nav-badge-count').innerText = `${myStats.earnedBadgesList.length}/${BADGE_CATALOG.length}`;
+            }
+
+            renderAgents(statsByEmail);
+            renderLeaderboard(statsByEmail, sortedEmails);
+            renderMissionsView(myStats);
+            renderBadgesGallery(myStats);
+            renderProfileLoadout(myStats);
+        }
+
+        // --- RENDER COLLECTIBLE AI AGENT CARDS ---
+        window.setAgentFilter = function(filter, btnEl) {
+            activeAgentFilter = filter;
+            document.querySelectorAll('#view-arena .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            refreshAllUI();
+        };
+
+        window.renderAgents = function(passedStats) {
+            const statsMap = passedStats || computeAllUserScores().statsByEmail;
+            const grid = document.getElementById('agent-grid');
+            const q = (document.getElementById('agentSearchInput')?.value || '').toLowerCase().trim();
+            grid.innerHTML = '';
+
+            const filtered = allAgents.filter(a => {
+                if (activeAgentFilter === 'running' && (a.upvotes || 0) < 1) return false;
+                if (activeAgentFilter === 'official' && !a.isOfficial) return false;
+                if (activeAgentFilter === 'mine' && a.authorEmail !== currentUserEmail) return false;
+                if (q) {
+                    const matchText = `${a.name} ${a.author} ${a.desc} ${(a.skills || []).join(' ')}`.toLowerCase();
+                    return matchText.includes(q);
                 }
                 return true;
             });
 
-            filtered.sort((a,b) => (b.upvotes || 0) - (a.upvotes || 0)).forEach((agent, idx) => {
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--slate); background:var(--surface-card); border-radius:16px; border:1px dashed var(--border-subtle);">No AI agent units match this filter. Click <strong>DEPLOY YOUR AGENT</strong> to launch a new unit!</div>`;
+                return;
+            }
+
+            filtered.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0)).forEach(agent => {
                 const upvotes = agent.upvotes || 0;
-                const hasBoosted = agent.boostedBy && agent.boostedBy.includes(currentUserEmail);
                 const isOwner = agent.authorEmail === currentUserEmail;
+                const hasBoosted = Array.isArray(agent.boostedBy) && agent.boostedBy.includes(currentUserEmail);
+                const skills = Array.isArray(agent.skills) && agent.skills.length > 0 ? agent.skills : ['AI Agent', 'Neural Node', 'Tachyon'];
 
-                // Determine Card Rarity Tier
-                let rarityClass = '';
-                let pillHTML = `<span class="rarity-pill pill-common">CORE NODE</span>`;
+                let cardStyleClass = '';
+                let statusHTML = `<span class="status-badge status-ready">● READY</span>`;
                 if (agent.isOfficial) {
-                    rarityClass = 'rarity-mythic';
-                    pillHTML = `<span class="rarity-pill pill-mythic">👑 OFFICIAL BROADCAST</span>`;
-                } else if (upvotes >= 3) {
-                    rarityClass = 'rarity-legendary';
-                    pillHTML = `<span class="rarity-pill pill-legendary">🔥 LEGENDARY NODE</span>`;
+                    cardStyleClass = 'card-featured';
+                    statusHTML = `<span class="status-badge status-featured">👑 OFFICIAL</span>`;
                 } else if (upvotes >= 1) {
-                    pillHTML = `<span class="rarity-pill pill-rare">⚡ OVERCLOCKED</span>`;
+                    cardStyleClass = 'card-high-perf';
+                    statusHTML = `<span class="status-badge status-running">⚡ RUNNING</span>`;
                 }
 
-                let btnHTML = '';
+                let boostBtnHTML = '';
                 if (isOwner) {
-                    btnHTML = `<button class="boost-btn owned">🔒 YOUR AGENT // ${upvotes} BOOSTS</button>`;
+                    boostBtnHTML = `<button class="unit-btn unit-btn-disabled" onclick="event.stopPropagation();">🔒 YOUR UNIT (${upvotes})</button>`;
                 } else if (hasBoosted) {
-                    btnHTML = `<button class="boost-btn boosted">✅ OVERCLOCKED (${upvotes})</button>`;
+                    boostBtnHTML = `<button class="unit-btn unit-btn-disabled" style="color:var(--mint); border-color:rgba(92,255,177,0.4);" onclick="event.stopPropagation();">✅ BOOSTED (${upvotes})</button>`;
                 } else {
-                    btnHTML = `<button class="boost-btn ready" onmouseenter="playCyberSound('hover')" onclick="upvote('${agent.id}', '${agent.authorEmail}', event)">⚡ OVERCLOCK AGENT (+10 XP) [${upvotes}]</button>`;
+                    boostBtnHTML = `<button class="unit-btn unit-btn-boost" onclick="event.stopPropagation(); upvoteAgent('${agent.id}', '${agent.authorEmail}')">⚡ OVERCLOCK (+10 XP) [${upvotes}]</button>`;
                 }
 
-                let linkBtn = agent.link ? `<a href="${agent.link.startsWith('http') ? agent.link : 'https://' + agent.link}" target="_blank" class="launch-agent-link">🔗 INITIALIZE AGENT LINK ↗</a>` : '';
-                const nodeCode = (agent.id || 'NODE').substring(0, 4).toUpperCase();
-
-                grid.innerHTML += `
-                    <div class="agent-card ${rarityClass}" onmousemove="handleCardTilt(event, this)" onmouseleave="resetCardTilt(this)">
-                        <div>
-                            <div class="card-top-meta">
-                                ${pillHTML}
-                                <span class="node-id-tag">SYS // #${nodeCode}</span>
+                const card = document.createElement('div');
+                card.className = `unit-agent-card ${cardStyleClass}`;
+                card.onclick = () => openAgentInspectModal(agent);
+                card.innerHTML = `
+                    <div>
+                        <div class="unit-header-row">
+                            <div class="unit-avatar-title">
+                                <div class="unit-emblem">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${agent.isOfficial ? '#FFC857' : '#29E7F2'}" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="16" rx="3"/>
+                                        <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+                                        <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+                                        <path d="M9 16h6"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="unit-name">${agent.name}</div>
+                                    <div class="unit-creator">Creator: <strong>@${agent.author}</strong></div>
+                                </div>
                             </div>
-                            <h3 class="card-title">${agent.name}</h3>
-                            <div class="card-dev-row">
-                                <span style="color:#94a3b8;">Architect: <strong style="color:#fff;">@${agent.author}</strong></span>
-                                <span style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--cyan);">+${50 + upvotes * 10} XP</span>
-                            </div>
-                            <p class="card-desc">${agent.desc}</p>
+                            ${statusHTML}
                         </div>
-                        <div class="card-actions">
-                            ${linkBtn}
-                            ${btnHTML}
+
+                        <p class="unit-purpose" style="margin-top:12px;">${agent.desc}</p>
+
+                        <div class="unit-skills-row" style="margin-top:10px;">
+                            ${skills.slice(0, 3).map(s => `<span class="skill-chip">${s}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <div class="unit-telemetry-grid">
+                            <div class="tele-cell"><span>RUNS / BOOSTS</span><span>${upvotes} Runs</span></div>
+                            <div class="tele-cell"><span>CREATOR XP</span><span style="color:var(--cyan);">+${50 + upvotes * 10} XP</span></div>
+                            <div class="tele-cell"><span>STATE</span><span>Verified</span></div>
+                        </div>
+                        <div class="unit-actions-row">
+                            <button class="unit-btn unit-btn-inspect" onclick="event.stopPropagation(); openAgentInspectModalById('${agent.id}')">🔍 Details</button>
+                            ${boostBtnHTML}
                         </div>
                     </div>
                 `;
+                grid.appendChild(card);
             });
         };
 
-        function renderLeaderboard() {
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '';
-            let scores = {};
-            let agentCounts = {};
-            
-            for(let email in allUsers) {
-                let user = allUsers[email];
-                if(user.customName) {
-                    scores[email] = { name: user.customName, points: 10 };
-                    agentCounts[email] = 0;
-                }
+        // --- AGENT INSPECTION MODAL ---
+        window.openAgentInspectModalById = function(id) {
+            const agent = allAgents.find(a => a.id === id);
+            if (agent) openAgentInspectModal(agent);
+        };
+
+        function openAgentInspectModal(agent) {
+            playSound('blip');
+            const upvotes = agent.upvotes || 0;
+            const dateStr = agent.timestamp ? new Date(agent.timestamp).toLocaleString() : 'Active Deployment';
+            const linkHTML = agent.link ? `<a href="${agent.link.startsWith('http') ? agent.link : 'https://' + agent.link}" target="_blank" class="btn-primary-cyan" style="justify-content:center; text-decoration:none;">🔗 LAUNCH LIVE AGENT / REPO ↗</a>` : '';
+
+            const box = document.getElementById('agentInspectContent');
+            box.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>🤖 ${agent.name}</h2>
+                    <button class="skip-btn" onclick="document.getElementById('agentInspectModal').style.display='none'">✕ Close</button>
+                </div>
+                <div style="font-family:var(--font-mono); font-size:0.78rem; color:var(--cyan);">
+                    CREATOR: @${agent.author} // DEPLOYED: ${dateStr}
+                </div>
+                <p style="color:var(--soft-white); line-height:1.6; background:var(--obsidian); padding:14px; border-radius:12px; border:1px solid var(--border-subtle);">
+                    ${agent.desc}
+                </p>
+                <div class="unit-telemetry-grid">
+                    <div class="tele-cell"><span>STATUS</span><span style="color:var(--mint);">ONLINE</span></div>
+                    <div class="tele-cell"><span>OVERCLOCKS</span><span>${upvotes} Verified</span></div>
+                    <div class="tele-cell"><span>XP GENERATED</span><span>+${50 + upvotes * 10} XP</span></div>
+                </div>
+                ${linkHTML}
+            `;
+            document.getElementById('agentInspectModal').style.display = 'flex';
+        }
+
+        // --- DEPLOY & UPVOTE ACTIONS ---
+        window.openDeployModal = () => { playSound('blip'); document.getElementById('deployModal').style.display = 'flex'; };
+        window.closeDeployModal = () => document.getElementById('deployModal').style.display = 'none';
+
+        window.submitAgent = async () => {
+            const name = document.getElementById('agentName').value.trim();
+            const link = document.getElementById('agentLink').value.trim();
+            const skillsRaw = document.getElementById('agentSkills').value.trim();
+            const desc = document.getElementById('agentDesc').value.trim();
+
+            if (!name) { alert("Please enter an Agent Name."); return; }
+            const btn = document.getElementById('deploySubmitBtn');
+            btn.disabled = true;
+            btn.innerText = "DEPLOYING TO NETWORK...";
+
+            const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : ['AI Agent', 'PESCE AIML'];
+
+            try {
+                await addDoc(collection(db, "agents"), {
+                    name,
+                    link: link || "",
+                    skills,
+                    author: currentCustomName,
+                    authorEmail: currentUserEmail,
+                    desc: desc || "Autonomous AI unit deployed to the PESCE Tachyon Arena.",
+                    upvotes: 0,
+                    boostedBy: [],
+                    timestamp: Date.now()
+                });
+                playSound('fanfare');
+                window.spawnXPFloat('+50 XP AGENT DEPLOYED!');
+                pushNotification(`🚀 Deployed agent "${name}" (+50 XP earned).`);
+                closeDeployModal();
+                document.getElementById('agentName').value = '';
+                document.getElementById('agentLink').value = '';
+                document.getElementById('agentSkills').value = '';
+                document.getElementById('agentDesc').value = '';
+            } catch (err) {
+                alert("Deployment failed: check network connection.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "LAUNCH AGENT (+50 XP)";
             }
-            
-            allAgents.forEach(a => {
-                let email = a.authorEmail || "unknown";
-                agentCounts[email] = (agentCounts[email] || 0) + 1;
-                if(scores[email]) scores[email].points += 50 + ((a.upvotes || 0) * 10);
-                else scores[email] = { name: a.author, points: 50 + ((a.upvotes || 0) * 10) };
+        };
+
+        window.upvoteAgent = async (id, authorEmail) => {
+            if (!currentUserEmail || currentUserEmail === authorEmail) return;
+            playSound('fanfare');
+            window.spawnXPFloat('+10 XP OVERCLOCK!');
+            await updateDoc(doc(db, "agents", id), {
+                upvotes: increment(1),
+                boostedBy: arrayUnion(currentUserEmail)
             });
+        };
 
-            let sortedEmails = Object.keys(scores).sort((a,b) => scores[b].points - scores[a].points);
+        // --- MISSION CONTROL & IDEMPOTENT REWARD CLAIMING ---
+        window.setMissionFilter = function(cat, btnEl) {
+            activeMissionFilter = cat;
+            document.querySelectorAll('#view-missions .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            refreshAllUI();
+        };
 
-            // Populate #1 Champion Podium
-            if(sortedEmails.length > 0) {
-                let top = scores[sortedEmails[0]];
-                let topRank = getRankInfo(top.points);
-                document.getElementById('top-student').innerText = `@${top.name}`;
-                document.getElementById('top-student-xp').innerText = `⚡ ${top.points} XP`;
-                document.getElementById('top-student-tier').innerText = `LVL 0${topRank.level} // ${topRank.title}`;
-            }
+        function renderMissionsView(myStats) {
+            const grid = document.getElementById('missions-grid');
+            if (!grid || !myStats) return;
+            grid.innerHTML = '';
 
-            // Update Logged-In Player's Personal Gamified Command Deck
-            if (currentUserEmail && scores[currentUserEmail]) {
-                const myScore = scores[currentUserEmail].points;
-                const myRank = getRankInfo(myScore);
-                const myDeploys = agentCounts[currentUserEmail] || 0;
-                const isRankOne = sortedEmails[0] === currentUserEmail;
+            const list = MISSIONS_CATALOG.filter(m => activeMissionFilter === 'all' || m.category === activeMissionFilter);
+            list.forEach(m => {
+                const prog = m.getProgress(myStats);
+                const isClaimed = myStats.completedMissions.includes(m.id);
+                const isReadyToClaim = prog >= m.target && !isClaimed;
+                const pct = Math.min(100, Math.round((prog / m.target) * 100));
 
-                document.getElementById('my-lvl-badge').innerText = `LVL 0${myRank.level}`;
-                document.getElementById('my-callsign-display').innerText = `@${scores[currentUserEmail].name}`;
-                document.getElementById('my-rank-title').innerText = myRank.title;
-                document.getElementById('my-xp-text').innerText = `${myScore} TOTAL XP`;
-                document.getElementById('my-next-lvl-text').innerText = `${100 - myRank.progress} XP TO LVL 0${myRank.level + 1}`;
-                document.getElementById('my-xp-bar').style.width = `${Math.max(8, myRank.progress)}%`;
+                let actionBtn = '';
+                if (isClaimed) {
+                    actionBtn = `<button class="unit-btn unit-btn-disabled" style="color:var(--mint); border-color:rgba(92,255,177,0.4);">✅ REWARD CLAIMED (+${m.xp} XP)</button>`;
+                } else if (isReadyToClaim) {
+                    actionBtn = `<button class="btn-primary-cyan" style="width:100%; justify-content:center;" onclick="claimMissionReward('${m.id}')">🎁 CLAIM REWARD (+${m.xp} XP)</button>`;
+                } else if (m.category === 'coding') {
+                    actionBtn = `<button class="unit-btn unit-btn-boost" onclick="openChallengeModal()">💻 Open Verification Lab (${prog}/${m.target})</button>`;
+                } else if (m.category === 'exploration') {
+                    actionBtn = `<a href="twin.html" class="unit-btn unit-btn-boost">🏛️ Enter Digital Twin →</a>`;
+                } else {
+                    actionBtn = `<button class="unit-btn unit-btn-inspect" onclick="switchArenaView('arena')">⚡ Go to Arena (${prog}/${m.target})</button>`;
+                }
 
-                document.getElementById('badge-creator').classList.toggle('unlocked', myDeploys >= 1);
-                document.getElementById('badge-architect').classList.toggle('unlocked', myDeploys >= 3);
-                document.getElementById('badge-apex').classList.toggle('unlocked', isRankOne);
-            }
-
-            // Render Leaderboard Rows with Mini XP Progress Bars
-            sortedEmails.forEach((email, index) => {
-                let s = scores[email];
-                let rInfo = getRankInfo(s.points);
-                let rankColor = index === 0 ? 'var(--gold)' : (index === 1 ? '#e2e8f0' : (index === 2 ? '#f97316' : 'var(--cyan)'));
-                let medal = index === 0 ? '👑' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : `#${index + 1}`));
-
-                list.innerHTML += `
-                    <div class="leaderboard-item" style="border-left: 4px solid ${rankColor};" onmouseenter="playCyberSound('hover')">
-                        <div class="lb-top-row">
-                            <div class="lb-user-info">
-                                <span class="lb-rank-num" style="color:${rankColor};">${medal}</span>
-                                <span class="lb-handle">@${s.name}</span>
-                                <span class="lb-lvl-tag">LVL ${rInfo.level}</span>
+                grid.innerHTML += `
+                    <div class="mission-card ${isClaimed ? 'mission-completed' : ''}">
+                        <div>
+                            <div class="mission-top-bar">
+                                <span class="diff-tag diff-${m.diff}">${m.diff}</span>
+                                <span style="color:var(--slate);">⏱️ ${m.duration}</span>
                             </div>
-                            <span class="xp-badge">${s.points} XP</span>
+                            <h3 class="mission-title">${m.title}</h3>
+                            <p class="mission-narrative">${m.desc}</p>
+                            <div class="mission-rewards-box">
+                                <span class="reward-pill">⚡ +${m.xp} XP</span>
+                                <span class="reward-pill" style="color:var(--cyan); border-color:rgba(41,231,242,0.35); background:rgba(41,231,242,0.1);">🏅 Badge Progress</span>
+                            </div>
                         </div>
-                        <div class="lb-mini-bar-bg">
-                            <div class="lb-mini-bar-fill" style="width:${Math.max(12, rInfo.progress)}%; background:${rankColor};"></div>
+                        <div class="mission-prog-wrap">
+                            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.72rem; color:var(--slate);">
+                                <span>PROGRESS</span>
+                                <span>${prog} / ${m.target} (${pct}%)</span>
+                            </div>
+                            <div class="mission-prog-bar">
+                                <div class="mission-prog-fill" style="width:${pct}%;"></div>
+                            </div>
+                            <div style="margin-top:6px;">${actionBtn}</div>
                         </div>
                     </div>
                 `;
             });
         }
+
+        window.claimMissionReward = async function(missionId) {
+            if (!currentUserUid) return;
+            const mission = MISSIONS_CATALOG.find(m => m.id === missionId);
+            if (!mission) return;
+
+            const userRef = doc(db, "users", currentUserUid);
+            const snap = await getDoc(userRef);
+            if (!snap.exists()) return;
+            const data = snap.data();
+            const claimed = data.completedMissions || [];
+            if (claimed.includes(missionId)) return; // Idempotency guard
+
+            const historyEntry = {
+                reason: `Completed ${mission.title}`,
+                xp: mission.xp,
+                timestamp: Date.now()
+            };
+
+            await updateDoc(userRef, {
+                bonusXP: increment(mission.xp),
+                completedMissions: arrayUnion(missionId),
+                earnedBadges: arrayUnion(mission.badgeId),
+                xpHistory: arrayUnion(historyEntry)
+            });
+
+            playSound('fanfare');
+            window.spawnXPFloat(`+${mission.xp} XP MISSION COMPLETE!`);
+            pushNotification(`🎯 Claimed +${mission.xp} XP for ${mission.title}!`);
+
+            const unlockedBadge = BADGE_CATALOG.find(b => b.id === mission.badgeId);
+            if (unlockedBadge) openBadgeInspectModal(unlockedBadge, true, true);
+        };
+
+        // --- INTERACTIVE AI & CODING VERIFICATION LAB ---
+        window.openChallengeModal = function() {
+            playSound('blip');
+            const myStats = computeAllUserScores().statsByEmail[currentUserEmail];
+            const solved = myStats ? myStats.solvedChallenges : [];
+            const container = document.getElementById('challenge-body');
+            container.innerHTML = '';
+
+            LAB_CHALLENGES.forEach(ch => {
+                const isSolved = solved.includes(ch.id);
+                container.innerHTML += `
+                    <div style="background:var(--obsidian); border:1px solid ${isSolved ? 'var(--mint)' : 'var(--border-subtle)'}; padding:14px; border-radius:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:var(--cyan); font-size:0.86rem;">${ch.title}</strong>
+                            <span style="font-family:var(--font-mono); font-size:0.7rem; color:${isSolved ? 'var(--mint)' : 'var(--gold)'};">${isSolved ? '✅ VERIFIED' : '+35 XP'}</span>
+                        </div>
+                        <p style="font-size:0.82rem; color:var(--soft-white); margin:8px 0;">${ch.question}</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                            ${ch.options.map((opt, idx) => `
+                                <button class="unit-btn ${isSolved && idx === ch.correctIndex ? 'unit-btn-boost' : 'unit-btn-inspect'}"
+                                    ${isSolved ? 'disabled' : ''}
+                                    onclick="submitLabChallenge('${ch.id}', ${idx})">${opt}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('challengeModal').style.display = 'flex';
+        };
+        window.closeChallengeModal = () => document.getElementById('challengeModal').style.display = 'none';
+
+        window.submitLabChallenge = async function(chId, chosenIdx) {
+            if (!currentUserUid) return;
+            const ch = LAB_CHALLENGES.find(c => c.id === chId);
+            if (!ch) return;
+            if (chosenIdx !== ch.correctIndex) {
+                alert("Incorrect response! Review the AI/ML concept and try again.");
+                return;
+            }
+
+            const userRef = doc(db, "users", currentUserUid);
+            const snap = await getDoc(userRef);
+            const solved = (snap.data()?.solvedChallenges) || [];
+            if (solved.includes(chId)) return;
+
+            await updateDoc(userRef, {
+                bonusXP: increment(35),
+                solvedChallenges: arrayUnion(chId),
+                earnedBadges: arrayUnion(ch.badgeId),
+                xpHistory: arrayUnion({ reason: `Verified ${ch.title}`, xp: 35, timestamp: Date.now() })
+            });
+
+            playSound('fanfare');
+            window.spawnXPFloat('+35 XP CHALLENGE VERIFIED!');
+            pushNotification(`💻 Verified ${ch.title} (+35 XP).`);
+            openChallengeModal();
+        };
+
+        // --- TROPHY ROOM & COLLECTIBLE BADGES ---
+        window.setBadgeCategory = function(cat, btnEl) {
+            activeBadgeCategory = cat;
+            document.querySelectorAll('#view-trophies .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            refreshAllUI();
+        };
+
+        window.renderBadgesGallery = function(passedStats) {
+            const myStats = passedStats || computeAllUserScores().statsByEmail[currentUserEmail];
+            const grid = document.getElementById('badge-gallery-grid');
+            if (!grid || !myStats) return;
+            grid.innerHTML = '';
+
+            const sortMode = document.getElementById('badgeSortSelect')?.value || 'rarity';
+            const rarityRank = { Legendary: 5, Epic: 4, Rare: 3, Uncommon: 2, Common: 1 };
+
+            let badges = BADGE_CATALOG.filter(b => activeBadgeCategory === 'all' || b.category === activeBadgeCategory);
+            badges.sort((a, b) => {
+                const aEarned = myStats.earnedBadgesList.includes(a.id) ? 1 : 0;
+                const bEarned = myStats.earnedBadgesList.includes(b.id) ? 1 : 0;
+                if (sortMode === 'earned') return bEarned - aEarned || rarityRank[b.rarity] - rarityRank[a.rarity];
+                if (sortMode === 'locked') return aEarned - bEarned || rarityRank[b.rarity] - rarityRank[a.rarity];
+                return rarityRank[b.rarity] - rarityRank[a.rarity];
+            });
+
+            badges.forEach(badge => {
+                const isEarned = myStats.earnedBadgesList.includes(badge.id);
+                const card = document.createElement('div');
+                card.className = `collectible-badge-card rarity-${badge.rarity} ${isEarned ? '' : 'locked-badge'}`;
+                card.onclick = () => openBadgeInspectModal(badge, isEarned, false);
+                card.innerHTML = `
+                    <span class="badge-rarity-tag tag-${badge.rarity}">${badge.rarity}</span>
+                    <div class="badge-medallion-wrap">${renderBadgeSVG(badge, isEarned)}</div>
+                    <div class="badge-card-name">${badge.name}</div>
+                    <p class="badge-card-desc">${badge.desc}</p>
+                    <div style="font-family:var(--font-mono); font-size:0.68rem; color:${isEarned ? 'var(--mint)' : 'var(--gold)'}; margin-top:auto;">
+                        ${isEarned ? '✅ UNLOCKED' : '🔒 ' + badge.reqText}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        function openBadgeInspectModal(badge, isEarned, isNewUnlock) {
+            playSound(isNewUnlock ? 'fanfare' : 'blip');
+            const box = document.getElementById('badgeInspectContent');
+            box.innerHTML = `
+                <span class="badge-rarity-tag tag-${badge.rarity}">${badge.rarity} Medallion</span>
+                <h2 style="margin-top:6px;">${isNewUnlock ? '🎉 BADGE UNLOCKED: ' : ''}${badge.name}</h2>
+                <div style="margin:12px 0; transform:scale(1.25);">${renderBadgeSVG(badge, isEarned)}</div>
+                <p style="color:var(--soft-white); font-size:0.92rem; line-height:1.5;">${badge.desc}</p>
+                <div style="background:var(--obsidian); padding:12px; border-radius:10px; width:100%; font-family:var(--font-mono); font-size:0.76rem; color:var(--cyan);">
+                    REQUIREMENT: ${badge.reqText} // XP BOUNTY: +${badge.xp} XP
+                </div>
+                <div style="display:flex; gap:10px; width:100%;">
+                    ${isEarned ? `<button class="btn-primary-cyan" style="flex:1; justify-content:center;" onclick="pinBadgeToShowcase('${badge.id}')">📌 Pin to Profile Showcase</button>` : ''}
+                    <button class="unit-btn unit-btn-inspect" style="flex:1;" onclick="document.getElementById('badgeInspectModal').style.display='none'">${isNewUnlock ? 'COLLECT BADGE' : 'Close'}</button>
+                </div>
+            `;
+            document.getElementById('badgeInspectModal').style.display = 'flex';
+        }
+
+        window.pinBadgeToShowcase = async function(badgeId) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), {
+                showcaseBadges: arrayUnion(badgeId)
+            });
+            document.getElementById('badgeInspectModal').style.display = 'none';
+            pushNotification(`📌 Pinned badge to your Profile Showcase!`);
+        };
+
+        // --- PLAYER PROFILE & LOADOUT ---
+        function renderProfileLoadout(myStats) {
+            if (!myStats) return;
+            document.getElementById('profile-big-avatar').innerText = myStats.avatarId;
+            document.getElementById('profile-callsign').innerText = `@${myStats.name}`;
+            document.getElementById('profile-equipped-title').innerText = `★ ${myStats.equippedTitle}`;
+
+            // Avatar Picker
+            const picker = document.getElementById('avatar-picker');
+            picker.innerHTML = AVATAR_OPTIONS.map(av => `
+                <button class="avatar-opt-btn ${myStats.avatarId === av ? 'selected' : ''}" onclick="selectOperativeAvatar('${av}')">${av}</button>
+            `).join('');
+
+            // Titles List
+            const titleList = document.getElementById('title-selector-list');
+            titleList.innerHTML = TITLE_CATALOG.map(t => {
+                const unlocked = !t.reqBadge || myStats.earnedBadgesList.includes(t.reqBadge);
+                const equipped = myStats.equippedTitle === t.id;
+                return `
+                    <button class="title-choice-btn ${equipped ? 'equipped' : ''} ${unlocked ? '' : 'locked-title'}"
+                        title="${t.desc}"
+                        onclick="${unlocked ? `equipOperativeTitle('${t.id}')` : ''}">
+                        <span>${t.id}</span>
+                        <span>${equipped ? '★' : (unlocked ? '✓' : '🔒')}</span>
+                    </button>
+                `;
+            }).join('');
+
+            // Showcase Badges
+            const showcaseIds = (myStats.showcaseBadges && myStats.showcaseBadges.length > 0)
+                ? myStats.showcaseBadges.slice(-3)
+                : myStats.earnedBadgesList.slice(0, 3);
+            const showcaseEl = document.getElementById('profile-showcase-badges');
+            showcaseEl.innerHTML = showcaseIds.map(bid => {
+                const b = BADGE_CATALOG.find(x => x.id === bid) || BADGE_CATALOG[0];
+                return `
+                    <div style="background:var(--obsidian); border:1px solid var(--border-cyan); border-radius:12px; padding:12px; text-align:center;">
+                        <div style="font-size:1.5rem;">${b.icon}</div>
+                        <div style="font-family:var(--font-display); font-size:0.7rem; margin-top:4px;">${b.name}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // XP Ledger
+            const ledgerEl = document.getElementById('profile-xp-ledger');
+            const baseItems = [
+                { reason: `Deployed ${myStats.myAgentCount} AI Agent(s)`, xp: myStats.myAgentCount * 50 },
+                { reason: `Received ${myStats.myUpvotesReceived} Community Overclock(s)`, xp: myStats.myUpvotesReceived * 10 },
+                { reason: `Academy Operative Registration`, xp: 10 }
+            ];
+            const combinedLedger = [...(myStats.xpHistory || []).slice().reverse(), ...baseItems];
+            ledgerEl.innerHTML = combinedLedger.map(entry => `
+                <div style="display:flex; justify-content:space-between; background:var(--obsidian); padding:9px 12px; border-radius:8px; font-size:0.8rem;">
+                    <span>${entry.reason}</span>
+                    <strong style="font-family:var(--font-mono); color:var(--mint);">+${entry.xp} XP</strong>
+                </div>
+            `).join('');
+        }
+
+        window.selectOperativeAvatar = async function(av) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), { avatarId: av });
+            playSound('blip');
+        };
+
+        window.equipOperativeTitle = async function(titleId) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), { equippedTitle: titleId });
+            playSound('fanfare');
+            pushNotification(`★ Equipped title: ${titleId}`);
+        };
+
+        window.updateOperativeCallsign = async function() {
+            if (!currentUserUid) return;
+            const newName = document.getElementById('editCallsignInput').value.trim();
+            if (newName.length < 3) { alert("Callsign must be at least 3 characters."); return; }
+            await updateDoc(doc(db, "users", currentUserUid), {
+                customName: newName,
+                customNameLower: newName.toLowerCase()
+            });
+            currentCustomName = newName;
+            playSound('fanfare');
+            pushNotification(`🛡️ Updated Operative Callsign to @${newName}`);
+        };
+
+        // --- COMPETITIVE LEADERBOARD & PODIUM ---
+        window.setLeaderboardMode = function(mode) {
+            leaderboardMode = mode;
+            document.getElementById('lb-tab-all').classList.toggle('active', mode === 'all');
+            document.getElementById('lb-tab-weekly').classList.toggle('active', mode === 'weekly');
+            refreshAllUI();
+        };
+
+        window.renderLeaderboard = function(passedMap, passedSorted) {
+            const { statsByEmail, sortedEmails } = passedMap ? { statsByEmail: passedMap, sortedEmails: passedSorted } : computeAllUserScores();
+            const podiumEl = document.getElementById('leaderboard-podium');
+            const listEl = document.getElementById('leaderboard-list');
+            const searchQ = (document.getElementById('lbSearchInput')?.value || '').toLowerCase().trim();
+            if (!podiumEl || !listEl) return;
+
+            // Top 3 Podium (#2 Silver, #1 Gold, #3 Bronze)
+            const top1 = sortedEmails[0] ? statsByEmail[sortedEmails[0]] : null;
+            const top2 = sortedEmails[1] ? statsByEmail[sortedEmails[1]] : null;
+            const top3 = sortedEmails[2] ? statsByEmail[sortedEmails[2]] : null;
+
+            const renderSpot = (st, rankNum, cls, medal) => st ? `
+                <div class="podium-spot ${cls}">
+                    <span class="podium-rank-tag">${medal} #${rankNum}</span>
+                    <div style="font-size:1.35rem;">${st.avatarId || '🤖'}</div>
+                    <span class="podium-handle">@${st.name}</span>
+                    <span class="podium-xp">${st.totalXP} XP</span>
+                </div>
+            ` : `<div class="podium-spot ${cls}"><span class="podium-rank-tag">#${rankNum}</span><span class="podium-handle">--</span></div>`;
+
+            podiumEl.innerHTML = renderSpot(top2, 2, 'podium-2', '🥈') + renderSpot(top1, 1, 'podium-1', '👑') + renderSpot(top3, 3, 'podium-3', '🥉');
+
+            // Ranked List
+            listEl.innerHTML = '';
+            sortedEmails.forEach((email, idx) => {
+                const st = statsByEmail[email];
+                if (searchQ && !st.name.toLowerCase().includes(searchQ)) return;
+                const prog = calculateProgression(st.totalXP);
+                const isMe = email === currentUserEmail;
+
+                listEl.innerHTML += `
+                    <div class="lb-row ${isMe ? 'is-me' : ''}">
+                        <div class="lb-row-left">
+                            <span class="lb-pos">#${idx + 1}</span>
+                            <span style="font-size:1.15rem;">${st.avatarId || '🤖'}</span>
+                            <div class="lb-name-wrap">
+                                <span class="lb-name">@${st.name} ${isMe ? '(You)' : ''}</span>
+                                <span class="lb-sub-title">LVL ${prog.level} • ${st.equippedTitle}</span>
+                            </div>
+                        </div>
+                        <span class="lb-xp-val">${st.totalXP} XP</span>
+                    </div>
+                `;
+            });
+        };
     </script>
 </body>
 </html>
