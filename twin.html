@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3D Digital Twin — PESCE Mandya AI & ML Dept</title>
+    <title>3D Multiplayer Digital Twin — PESCE Mandya AI & ML Dept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --cyan: #00f2fe;
+            --cyan: #29E7F2;
             --blue: #4facfe;
-            --purple: #8b5cf6;
-            --gold: #fbbf24;
-            --emerald: #10b981;
-            --dark: #030712;
-            --glass: rgba(15, 23, 42, 0.82);
-            --border: rgba(255, 255, 255, 0.16);
+            --purple: #9B5CFF;
+            --gold: #FFC857;
+            --emerald: #5CFFB1;
+            --dark: #0B1020;
+            --glass: rgba(11, 16, 32, 0.84);
+            --border: rgba(41, 231, 242, 0.25);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--dark);
-            color: #f8fafc;
+            color: #F3F6FF;
             height: 100dvh;
             width: 100vw;
             overflow: hidden;
@@ -48,62 +51,436 @@
         #reticle.hover-active {
             transform: translate(-50%, -50%) scale(1.9);
             border-color: var(--cyan);
-            background-color: rgba(0, 242, 254, 0.35);
+            background-color: rgba(41, 231, 242, 0.35);
             box-shadow: 0 0 12px var(--cyan);
         }
 
+        /* Top Header with Official TACHYON Club Logo */
+        header {
+            position: absolute;
+            top: 12px; left: 16px; right: 16px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            pointer-events: none;
+        }
+        header > * { pointer-events: auto; }
+
+        .brand-nav-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .club-logo-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 5px 14px 5px 6px;
+            border-radius: 50px;
+            backdrop-filter: blur(14px);
+            text-decoration: none;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .club-logo-badge img {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--cyan);
+            background: #fff;
+        }
+        .club-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .club-logo-text strong {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: var(--cyan);
+        }
+        .club-logo-text span {
+            font-size: 0.62rem;
+            color: #9AA8C2;
+            letter-spacing: 0.5px;
+        }
+
+        .stage-nav {
+            display: flex; gap: 6px; align-items: center; font-size: 0.78rem; font-weight: 600; flex-wrap: wrap;
+        }
+        .stage-nav a {
+            color: #cbd5e1; text-decoration: none; padding: 7px 14px; border-radius: 20px;
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(14px);
+            transition: 0.25s;
+        }
+        .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
+        .stage-nav a.active { color: #0B1020; background: var(--cyan); border-color: var(--cyan); font-weight: 700; box-shadow: 0 0 15px rgba(41,231,242,0.35); }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+        .hud-pill-btn, .hud-select {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #f8fafc;
+            padding: 7px 12px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            transition: 0.2s;
+            outline: none;
+        }
+        .hud-pill-btn:hover, .hud-select:hover { border-color: var(--cyan); color: var(--cyan); }
+        .hud-pill-btn.active-mode { background: rgba(41, 231, 242, 0.22); border-color: var(--cyan); color: #fff; }
+        .hud-select option { background: #0f172a; color: #fff; }
+
+        /* Left Walkthrough & Online Players Panel */
+        .zone-panel {
+            position: absolute;
+            top: 72px; left: 16px;
+            z-index: 10;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 235px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.45);
+        }
+        .zone-panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--cyan);
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .zone-btn {
+            background: rgba(2, 6, 23, 0.65);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0;
+            padding: 7px 10px;
+            border-radius: 9px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .zone-btn:hover, .zone-btn.active {
+            background: rgba(41, 231, 242, 0.18);
+            border-color: var(--cyan);
+            color: #fff;
+            transform: translateX(3px);
+        }
+
+        .online-roster-box {
+            margin-top: 6px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 115px;
+            overflow-y: auto;
+        }
+        .online-user-chip {
+            font-size: 0.74rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: rgba(92, 255, 177, 0.08);
+            border: 1px solid rgba(92, 255, 177, 0.25);
+            cursor: pointer;
+        }
+        .online-user-chip:hover {
+            background: rgba(41, 231, 242, 0.2);
+            border-color: var(--cyan);
+        }
+
+        /* Right Info Card */
+        .info-card {
+            position: absolute;
+            top: 72px; right: 16px;
+            z-index: 10;
+            width: 315px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 15px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        .info-card h3 { color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: 0.95rem; margin-bottom: 5px; }
+        .info-card p { color: #cbd5e1; font-size: 0.8rem; line-height: 1.45; }
+        .telemetry-row {
+            margin-top: 8px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(92, 255, 177, 0.12);
+            border: 1px solid rgba(92, 255, 177, 0.35);
+            color: var(--emerald);
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Contextual Interaction Prompt */
         #interact-prompt {
             position: absolute;
-            bottom: 138px; left: 50%;
+            bottom: 145px; left: 50%;
             transform: translateX(-50%);
             z-index: 18;
-            background: rgba(3, 7, 18, 0.90);
+            background: rgba(11, 16, 32, 0.92);
             border: 1px solid var(--cyan);
             color: #fff;
-            padding: 9px 18px;
+            padding: 8px 16px;
             border-radius: 30px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: 0.4px;
             pointer-events: auto;
             cursor: pointer;
             display: none;
             align-items: center;
             gap: 8px;
             backdrop-filter: blur(12px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.55);
         }
-        #interact-prompt:hover { background: rgba(0, 242, 254, 0.22); }
         #interact-prompt span.key-badge {
             background: var(--cyan);
             color: #030712;
             padding: 2px 7px;
             border-radius: 6px;
             font-weight: 900;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
         }
 
-        #npc-dialogue {
+        /* ==========================================================================
+           MULTIPLAYER OVERHEAD CHAT BAR (TYPE TO DISPLAY ABOVE YOUR HEAD)
+           ========================================================================== */
+        .multiplayer-chat-dock {
             position: absolute;
-            bottom: 190px; left: 50%;
+            bottom: 16px;
+            left: 50%;
             transform: translateX(-50%);
-            z-index: 19;
-            background: rgba(15, 23, 42, 0.94);
-            border: 1px solid var(--gold);
-            border-left: 4px solid var(--gold);
-            color: #f8fafc;
-            padding: 12px 20px;
-            border-radius: 14px;
+            z-index: 25;
+            width: 92%;
+            max-width: 560px;
+            background: rgba(11, 16, 32, 0.90);
+            border: 1.5px solid var(--cyan);
+            border-radius: 16px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+        }
+        .chat-feed-mini {
+            max-height: 62px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 0 4px;
+            user-select: text;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .chat-input-row input {
+            flex: 1;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #fff;
+            padding: 9px 14px;
+            border-radius: 10px;
             font-size: 0.84rem;
-            max-width: 440px;
-            width: 90%;
+            outline: none;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .chat-input-row input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 12px rgba(41, 231, 242, 0.3);
+        }
+        .chat-send-btn {
+            background: var(--cyan);
+            color: #0B1020;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* ==========================================================================
+           SARVAM AI FLOATING CHATBOT WIDGET
+           ========================================================================== */
+        .sarvam-fab {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            z-index: 40;
+            background: linear-gradient(135deg, var(--purple), #FF4FD8);
+            color: #fff;
+            border: 1.5px solid var(--cyan);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(155, 92, 255, 0.5);
+            transition: 0.25s;
+        }
+        .sarvam-fab:hover { transform: translateY(-3px) scale(1.03); }
+
+        .sarvam-window {
+            position: fixed;
+            bottom: 78px; right: 20px;
+            z-index: 45;
+            width: 350px;
+            max-width: calc(100vw - 32px);
+            height: 450px;
+            background: rgba(11, 16, 32, 0.96);
+            border: 1.5px solid var(--cyan);
+            border-radius: 18px;
             display: none;
             flex-direction: column;
-            gap: 4px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.65);
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8);
         }
-        #npc-dialogue strong { color: var(--gold); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; }
+        .sarvam-header {
+            background: linear-gradient(90deg, rgba(155, 92, 255, 0.25), rgba(41, 231, 242, 0.2));
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sarvam-header strong {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.82rem;
+            color: var(--cyan);
+        }
+        .sarvam-key-bar {
+            display: none;
+            padding: 8px 12px;
+            background: rgba(2, 6, 23, 0.95);
+            border-bottom: 1px solid var(--border);
+            gap: 6px;
+        }
+        .sarvam-key-bar input {
+            flex: 1;
+            background: #0B1020;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .sarvam-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.82rem;
+            user-select: text;
+        }
+        .s-msg {
+            padding: 9px 12px;
+            border-radius: 12px;
+            line-height: 1.45;
+            max-width: 88%;
+            word-break: break-word;
+        }
+        .s-msg.bot {
+            background: rgba(24, 34, 60, 0.9);
+            border: 1px solid rgba(41, 231, 242, 0.25);
+            color: #F3F6FF;
+            align-self: flex-start;
+        }
+        .s-msg.user {
+            background: linear-gradient(135deg, var(--purple), #6d28d9);
+            color: #fff;
+            align-self: flex-end;
+        }
+        .sarvam-input-area {
+            padding: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 6px;
+        }
+        .sarvam-input-area input {
+            flex: 1;
+            background: rgba(2, 6, 23, 0.9);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            outline: none;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        /* Mobile D-Pad */
+        .mobile-dpad {
+            position: absolute;
+            bottom: 120px; left: 14px;
+            z-index: 15;
+            display: none;
+            grid-template-columns: repeat(3, 44px);
+            grid-template-rows: repeat(2, 44px);
+            gap: 5px;
+        }
+        .dpad-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         #profile-modal {
             position: absolute;
@@ -119,10 +496,7 @@
             display: none;
             flex-direction: column;
             gap: 14px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.75);
         }
-        #profile-modal h2 { color: var(--gold); font-size: 1.2rem; }
         .profile-item {
             background: rgba(2, 6, 23, 0.65);
             border: 1px solid var(--border);
@@ -130,245 +504,13 @@
             padding: 12px;
             border-radius: 12px;
         }
-        .profile-item h4 { color: #fff; font-size: 0.95rem; margin-bottom: 4px; }
-        .profile-item p { color: #cbd5e1; font-size: 0.8rem; line-height: 1.45; }
-
-        header {
-            position: absolute;
-            top: 14px; left: 18px; right: 18px;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            pointer-events: none;
-        }
-        header > * { pointer-events: auto; }
-
-        .stage-nav {
-            display: flex; gap: 8px; align-items: center; font-size: 0.8rem; font-weight: 600; flex-wrap: wrap;
-        }
-        .stage-nav a {
-            color: #cbd5e1; text-decoration: none; padding: 7px 14px; border-radius: 20px;
-            background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(14px);
-            transition: 0.25s;
-        }
-        .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
-        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.22); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,242,254,0.3); }
-
-        .top-controls {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-        .hud-pill-btn, .hud-select {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: #f8fafc;
-            padding: 7px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            backdrop-filter: blur(14px);
-            transition: 0.2s;
-            outline: none;
-        }
-        .hud-pill-btn:hover, .hud-select:hover { border-color: var(--cyan); color: var(--cyan); }
-        .hud-pill-btn.active-mode { background: rgba(0, 242, 254, 0.22); border-color: var(--cyan); color: #fff; }
-        .hud-select option { background: #0f172a; color: #fff; }
-
-        .zone-panel {
-            position: absolute;
-            top: 70px; left: 18px;
-            z-index: 10;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 13px;
-            backdrop-filter: blur(16px);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 240px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.45);
-        }
-        .zone-panel-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            color: var(--cyan);
-            font-weight: 800;
-            margin-bottom: 2px;
-        }
-        .zone-btn {
-            background: rgba(2, 6, 23, 0.65);
-            border: 1px solid var(--border);
-            color: #e2e8f0;
-            padding: 8px 11px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            transition: 0.22s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .zone-btn:hover, .zone-btn.active {
-            background: rgba(0, 242, 254, 0.18);
-            border-color: var(--cyan);
-            color: #fff;
-            transform: translateX(3px);
-        }
-
-        .info-card {
-            position: absolute;
-            top: 70px; right: 18px;
-            z-index: 10;
-            width: 325px;
-            background: var(--glass);
-            border: 1px solid var(--cyan);
-            border-radius: 16px;
-            padding: 16px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            transition: 0.3s;
-        }
-        .info-card h3 { color: var(--gold); font-size: 1.02rem; margin-bottom: 5px; }
-        .info-card p { color: #cbd5e1; font-size: 0.81rem; line-height: 1.46; }
-        .telemetry-row {
-            margin-top: 8px;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: #6ee7b7;
-            font-size: 0.72rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-        }
-        .controls-hint {
-            margin-top: 9px;
-            padding-top: 9px;
-            border-top: 1px solid var(--border);
-            font-size: 0.72rem;
-            color: #94a3b8;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .key-pill {
-            display: inline-block;
-            background: rgba(255,255,255,0.14);
-            color: #fff;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 0.68rem;
-        }
-
-        #cinematic-banner {
-            position: absolute;
-            bottom: 84px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-            background: rgba(3, 7, 18, 0.88);
-            border: 1px solid var(--gold);
-            padding: 10px 20px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            backdrop-filter: blur(14px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            transition: opacity 0.35s ease;
-        }
-        .skip-btn {
-            background: var(--gold);
-            color: #030712;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            cursor: pointer;
-        }
-        .skip-btn:hover { background: #fde047; }
-
-        .mobile-dpad {
-            position: absolute;
-            bottom: 82px; left: 16px;
-            z-index: 15;
-            display: none;
-            grid-template-columns: repeat(3, 46px);
-            grid-template-rows: repeat(2, 46px);
-            gap: 6px;
-        }
-        .dpad-btn {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: white;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            touch-action: manipulation;
-        }
-        .dpad-btn:active { background: var(--cyan); color: #000; }
-
-        footer {
-            position: absolute;
-            bottom: 16px; left: 18px; right: 18px;
-            z-index: 10;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            pointer-events: none;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        footer > * { pointer-events: auto; }
-
-        .launch-hub-btn {
-            text-decoration: none;
-            color: white;
-            background: linear-gradient(135deg, var(--purple), #ec4899, var(--cyan));
-            padding: 12px 26px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.92rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.5);
-            transition: 0.3s;
-        }
-        .launch-hub-btn:hover { transform: translateY(-2px) scale(1.03); }
 
         @media (max-width: 850px) {
-            .zone-panel {
-                top: auto; bottom: 80px; right: 12px; left: auto;
-                width: 172px; padding: 9px; gap: 4px;
-            }
-            .zone-btn { padding: 6px 9px; font-size: 0.72rem; }
-            .info-card {
-                top: 105px; left: 12px; right: 12px; width: auto; padding: 11px;
-            }
-            .controls-hint { display: none; }
-            .mobile-dpad { display: grid; bottom: 80px; left: 12px; }
-            #cinematic-banner { bottom: 190px; width: 90%; justify-content: space-between; }
-            #interact-prompt { bottom: 185px; font-size: 0.76rem; padding: 8px 14px; }
-            footer { justify-content: center; bottom: 12px; }
-            .launch-hub-btn { width: 100%; justify-content: center; padding: 13px; }
+            .zone-panel { display: none; }
+            .info-card { top: 68px; left: 12px; right: 12px; width: auto; padding: 10px; }
+            .mobile-dpad { display: grid; }
+            .multiplayer-chat-dock { bottom: 70px; width: 95%; }
+            .sarvam-fab { bottom: 12px; right: 12px; padding: 10px 14px; }
         }
     </style>
 </head>
@@ -383,100 +525,80 @@
         <span id="interact-label">Interact</span>
     </div>
 
-    <!-- NPC Speech Toast -->
-    <div id="npc-dialogue">
-        <strong id="npc-speaker">AI & ML Student</strong>
-        <span id="npc-text">Welcome to the PESCE Mandya AI & ML Department Digital Twin!</span>
-    </div>
-
     <!-- Department & Faculty Leadership Modal -->
     <div id="profile-modal">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="modal-title">🏛️ PESCE Mandya — AI & ML Leadership</h2>
-            <button class="skip-btn" onclick="closeProfileModal()">✕ Close [Esc]</button>
+            <h2 style="color:var(--gold); font-size:1.15rem;">🏛️ PESCE Mandya — AI & ML Leadership</h2>
+            <button class="hud-pill-btn" onclick="document.getElementById('profile-modal').style.display='none'">✕ Close</button>
         </div>
-        <div id="modal-content-box" style="display:flex; flex-direction:column; gap:10px;">
-            <div class="profile-item">
-                <h4>Dr. Vinay S. — Principal, PESCE Mandya</h4>
-                <p>B.E., M.Tech., Ph.D. (Computer Science). Spearheading institutional excellence, autonomous systems research, and industry-aligned AI education at PES College of Engineering.</p>
-            </div>
-            <div class="profile-item">
-                <h4>Department of CSE (Artificial Intelligence & Machine Learning)</h4>
-                <p>Equipped with high-performance Deep Learning compute clusters, smart lecture halls, and active student research groups in Computer Vision, NLP, and Autonomous Agents.</p>
-            </div>
-            <div class="profile-item">
-                <h4>Shivakumar Patil — President, TACHYON AIML Club</h4>
-                <p>Leading student-driven AI agent deployments, hackathons, cloud computing workshops, and the PESCE Digital Twin initiative.</p>
-            </div>
+        <div class="profile-item">
+            <h4>Dr. Vinay S. — Principal, PESCE Mandya</h4>
+            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">B.E., M.Tech., Ph.D. (Computer Science). Spearheading institutional excellence and AI education at PES College of Engineering.</p>
+        </div>
+        <div class="profile-item">
+            <h4>Shivakumar Patil — President, TACHYON AIML Club</h4>
+            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">Leading student-driven AI agent deployments, hackathons, and the PESCE Digital Twin initiative.</p>
         </div>
     </div>
 
-    <!-- Top Navigation & Real-Time Environment Controls -->
+    <!-- Top Header with Official TACHYON Club Logo -->
     <header>
-        <nav class="stage-nav">
-            <a href="index.html">01 / Welcome</a>
-            <a href="twin.html" class="active">02 / 3D Digital Twin</a>
-            <a href="hub.html">03 / AI Agent Hub</a>
-        </nav>
+        <div class="brand-nav-wrap">
+            <a href="index.html" class="club-logo-badge">
+                <img src="tachyon-logo.jpg" alt="TACHYON Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2246%22 fill=%22%230B1020%22 stroke=%22%2329E7F2%22 stroke-width=%226%22/><circle cx=%2250%22 cy=%2242%22 r=%2222%22 fill=%22%2329E7F2%22/><rect x=%2215%22 y=%2264%22 width=%2270%22 height=%2220%22 rx=%224%22 fill=%22%236b1d2f%22/><text x=%2250%22 y=%2278%22 font-size=%2213%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>TACHYON</text></svg>'">
+                <div class="club-logo-text">
+                    <strong>TACHYON</strong>
+                    <span>GUIDE BY LIGHT, DRIVEN BY INTELLIGENCE</span>
+                </div>
+            </a>
+
+            <nav class="stage-nav">
+                <a href="index.html">01 / Welcome</a>
+                <a href="twin.html" class="active">02 / 3D Digital Twin</a>
+                <a href="hub.html">03 / AI Agent Arena</a>
+            </nav>
+        </div>
 
         <div class="top-controls">
-            <button class="hud-pill-btn" id="btn-viewmode" onclick="togglePerspectiveMode()">👁️ View: 1st Person</button>
-            <button class="hud-pill-btn" id="btn-cinematic" onclick="startCinematicIntro()">🎬 Replay Intro</button>
-            <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit Exterior</button>
+            <span class="hud-pill-btn" id="my-online-badge" style="border-color:var(--emerald); color:var(--emerald);">🟢 Connecting...</span>
+            <button class="hud-pill-btn active-mode" id="btn-viewmode" onclick="togglePerspectiveMode()">🧍 View: 3rd Person</button>
+            <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit</button>
             <button class="hud-pill-btn" id="btn-lighting" onclick="toggleLightingMode()">☀️ Daylight</button>
-            <button class="hud-pill-btn" id="btn-audio" onclick="toggleAmbienceAudio()">🔇 Audio: Off</button>
-            <select class="hud-select" id="PresetSelect" onchange="applyGraphicsPreset(this.value)" aria-label="Graphics Quality Preset">
-                <option value="HIGH">⚡ Preset: HIGH</option>
-                <option value="BALANCED">⚖️ Preset: BALANCED</option>
-                <option value="MOBILE">📱 Preset: MOBILE</option>
+            <select class="hud-select" id="PresetSelect" onchange="applyGraphicsPreset(this.value)">
+                <option value="HIGH">⚡ HIGH</option>
+                <option value="BALANCED">⚖️ BALANCED</option>
+                <option value="MOBILE">📱 MOBILE</option>
             </select>
         </div>
     </header>
 
-    <!-- Camera Teleport & Walkthrough Views -->
+    <!-- Left Walkthrough Zones & Live Online Players Roster -->
     <aside class="zone-panel">
         <div class="zone-panel-title">📍 Walkthrough Zones</div>
-        <button class="zone-btn active" id="zbtn-exterior" onclick="teleportTo('exterior', this)">
-            <span>🏛️ Exterior Facade</span> <span>1</span>
-        </button>
-        <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)">
-            <span>🚪 Return to Entrance</span> <span>2</span>
-        </button>
-        <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)">
-            <span>🪜 Switchback Stairs</span> <span>3</span>
-        </button>
-        <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)">
-            <span>🚶 1st Floor Corridor</span> <span>4</span>
-        </button>
-        <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)">
-            <span>💻 AI & ML Lab</span> <span>5</span>
-        </button>
-        <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)">
-            <span>🎓 Smart Classroom</span> <span>6</span>
-        </button>
+        <button class="zone-btn active" id="zbtn-exterior" onclick="teleportTo('exterior', this)"><span>🏛️ Exterior Facade</span> <span>1</span></button>
+        <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)"><span>🚪 Main Entrance</span> <span>2</span></button>
+        <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)"><span>🪜 Switchback Stairs</span> <span>3</span></button>
+        <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)"><span>🚶 1st Floor Corridor</span> <span>4</span></button>
+        <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)"><span>💻 AI & ML Lab</span> <span>5</span></button>
+        <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)"><span>🎓 Smart Classroom</span> <span>6</span></button>
+
+        <div class="online-roster-box">
+            <div class="zone-panel-title" style="color:var(--emerald);">🟢 Online Players (<span id="online-count">1</span>)</div>
+            <div id="online-players-list" style="display:flex; flex-direction:column; gap:4px;"></div>
+        </div>
     </aside>
 
     <!-- Right Context & Physics Telemetry Panel -->
     <aside class="info-card" id="zone-info">
-        <h3 id="info-title">🏛️ Department Exterior Elevation</h3>
+        <h3 id="info-title">🏛️ Multiplayer Digital Twin</h3>
         <p id="info-desc">
-            Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building. Walk through the portico, climb the physical switchback stairs, open doors, sit at lab workstations, and interact with anime NPCs.
+            Every signed-in user appears here as a live 3D character with their name above their head. Walk up to friends and type in the chat bar below to display messages above your head!
         </p>
-        <div class="telemetry-row" id="telemetry-status">
-            <span id="actor-status">✅ 9 Rigged Anime Actors Active</span>
-            <span id="floor-status">Elevation: 0.0m (Ground)</span>
-        </div>
-        <div class="controls-hint">
-            <div><span class="key-pill">WASD</span> Move | <span class="key-pill">Shift</span> Run | <span class="key-pill">Space</span> Jump | <span class="key-pill">V</span> 1P/3P View</div>
-            <div><span class="key-pill">E / Click</span> Open Doors, Sit in Chairs, Inspect Boards & Talk</div>
+        <div class="telemetry-row">
+            <span id="actor-status">🟢 Multiplayer Sync Active</span>
+            <span id="floor-status">Elevation: 0.0m</span>
         </div>
     </aside>
-
-    <!-- Skippable Cinematic Intro Overlay -->
-    <div id="cinematic-banner">
-        <span style="font-size: 0.82rem; font-weight: 700; color: #f8fafc;">🎬 Cinematic Approach — PESCE Mandya AI & ML Dept</span>
-        <button class="skip-btn" onclick="skipCinematicIntro()">⏭ Skip Intro</button>
-    </div>
 
     <!-- Mobile Touch D-Pad -->
     <div class="mobile-dpad">
@@ -488,23 +610,153 @@
         <button class="dpad-btn" id="btn-right">▶</button>
     </div>
 
-    <!-- Bottom Action Bar -->
-    <footer>
-        <div id="perf-badge" style="background: var(--glass); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; color: #cbd5e1; backdrop-filter: blur(10px);">
-            Stage 02 / Physical Stair Climbing • Dynamic Hinged Doors • Stylized Anime NPCs
+    <!-- ==========================================================================
+         MULTIPLAYER OVERHEAD CHAT BAR (DISPLAYS SPEECH BUBBLE ON YOUR 3D HEAD)
+         ========================================================================== -->
+    <div class="multiplayer-chat-dock">
+        <div class="chat-feed-mini" id="multiplayer-chat-feed">
+            <div><strong style="color:var(--cyan);">[System]:</strong> Type a message below and press Enter — it will appear directly above your 3D character's head for everyone online!</div>
         </div>
-        <a href="hub.html" class="launch-hub-btn">
-            Proceed to AI Agent Hub 🚀
-        </a>
-    </footer>
+        <div class="chat-input-row">
+            <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Say something above your character's head... (Press Enter)">
+            <button class="chat-send-btn" onclick="sendOverheadChatMessage()">SAY 🗣️ [+XP]</button>
+        </div>
+    </div>
 
-    <!-- Three.js r128 Core + GLTFLoader -->
+    <!-- ==========================================================================
+         SARVAM AI FLOATING CHATBOT WIDGET
+         ========================================================================== -->
+    <button class="sarvam-fab" onclick="toggleSarvamChatbot()">
+        🤖 Ask Sarvam AI
+    </button>
+
+    <div class="sarvam-window" id="sarvam-window">
+        <div class="sarvam-header">
+            <div>
+                <strong>🇮🇳 TACHYON × SARVAM AI</strong>
+                <div style="font-size:0.65rem; color:#9AA8C2;">PESCE Mandya AI & ML Assistant</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+                <button class="hud-pill-btn" style="padding:4px 8px;" title="Configure Sarvam API Key" onclick="toggleSarvamKeyBar()">⚙️ Key</button>
+                <button class="hud-pill-btn" style="padding:4px 8px;" onclick="toggleSarvamChatbot()">✕</button>
+            </div>
+        </div>
+        <div class="sarvam-key-bar" id="sarvam-key-bar">
+            <input type="password" id="sarvam-key-input" placeholder="Paste Sarvam API Subscription Key...">
+            <button class="chat-send-btn" style="padding:5px 10px;" onclick="saveSarvamApiKey()">Save</button>
+        </div>
+        <div class="sarvam-messages" id="sarvam-messages">
+            <div class="s-msg bot">
+                Namaskara! 👋 I am your <strong>TACHYON Sarvam AI Assistant</strong> for the PESCE Mandya AI & ML Department. Ask me anything about AI agents, coding, or our Digital Twin in English, Kannada, or Hindi!
+            </div>
+        </div>
+        <div class="sarvam-input-area">
+            <input type="text" id="sarvam-user-input" placeholder="Ask Sarvam AI..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
+            <button class="chat-send-btn" onclick="sendSarvamMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Three.js r128 Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
-    <script>
+    <!-- Main 3D Engine + Firebase Multiplayer Sync + Sarvam AI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
+            authDomain: "digital-twin-6c779.firebaseapp.com",
+            projectId: "digital-twin-6c779",
+            storageBucket: "digital-twin-6c779.firebasestorage.app",
+            messagingSenderId: "445832291229",
+            appId: "1:445832291229:web:00d7de2c4c4ade9646c574",
+            measurementId: "G-55ZB5JW4P9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
         // ============================================================================
-        // MODULE 1: SCENE & RENDERER INITIALIZATION (NaN-Safe IBL + Daylight PBR)
+        // SARVAM AI CHATBOT INTEGRATION (sarvam-105b-conversations / sarvam-105b)
+        // ============================================================================
+        const DEFAULT_SARVAM_KEY = "PASTE_YOUR_SARVAM_API_KEY_HERE";
+        let sarvamHistory = [
+            { role: "system", content: "You are TACHYON AI, the official AI & ML Department Assistant at P.E.S. College of Engineering (PESCE), Mandya, led by Principal Dr. Vinay S. and TACHYON Club President Shivakumar Patil. Be concise, friendly, and helpful with AI, Machine Learning, coding, and campus questions." }
+        ];
+
+        window.toggleSarvamChatbot = function() {
+            const win = document.getElementById('sarvam-window');
+            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        };
+        window.toggleSarvamKeyBar = function() {
+            const bar = document.getElementById('sarvam-key-bar');
+            bar.style.display = bar.style.display === 'flex' ? 'none' : 'flex';
+            document.getElementById('sarvam-key-input').value = localStorage.getItem('tachyon_sarvam_key') || '';
+        };
+        window.saveSarvamApiKey = function() {
+            const val = document.getElementById('sarvam-key-input').value.trim();
+            if (val) {
+                localStorage.setItem('tachyon_sarvam_key', val);
+                document.getElementById('sarvam-key-bar').style.display = 'none';
+                alert("Sarvam API Key saved!");
+            }
+        };
+
+        window.sendSarvamMessage = async function() {
+            const inputEl = document.getElementById('sarvam-user-input');
+            const text = inputEl.value.trim();
+            if (!text) return;
+            inputEl.value = '';
+
+            const msgBox = document.getElementById('sarvam-messages');
+            msgBox.innerHTML += `<div class="s-msg user">${text}</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            const apiKey = localStorage.getItem('tachyon_sarvam_key') || DEFAULT_SARVAM_KEY;
+            if (!apiKey || apiKey === "PASTE_YOUR_SARVAM_API_KEY_HERE") {
+                msgBox.innerHTML += `<div class="s-msg bot">⚠️ Please click the <strong>⚙️ Key</strong> button at the top of this chat window and paste your <strong>Sarvam API Key</strong> to activate live responses!</div>`;
+                msgBox.scrollTop = msgBox.scrollHeight;
+                document.getElementById('sarvam-key-bar').style.display = 'flex';
+                return;
+            }
+
+            const loadingId = "s-load-" + Date.now();
+            msgBox.innerHTML += `<div class="s-msg bot" id="${loadingId}">⏳ Thinking with Sarvam AI...</div>`;
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            sarvamHistory.push({ role: "user", content: text });
+
+            try {
+                const res = await fetch("https://api.sarvam.ai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "api-subscription-key": apiKey,
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "sarvam-105b-conversations",
+                        messages: sarvamHistory.slice(-8),
+                        temperature: 0.4,
+                        max_tokens: 512
+                    })
+                });
+                const data = await res.json();
+                const reply = data?.choices?.[0]?.message?.content || data?.error?.message || "Connected to Sarvam AI, but received an empty response.";
+                sarvamHistory.push({ role: "assistant", content: reply });
+                document.getElementById(loadingId).innerText = reply;
+            } catch (err) {
+                document.getElementById(loadingId).innerText = "⚠️ Network error reaching Sarvam API. Verify your API key in ⚙️ Key settings.";
+            }
+            msgBox.scrollTop = msgBox.scrollHeight;
+        };
+
+        // ============================================================================
+        // THREE.JS SCENE & RENDERER INITIALIZATION
         // ============================================================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
@@ -560,7 +812,6 @@
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.72);
         scene.add(ambientLight);
-
         const hemiLight = new THREE.HemisphereLight(0xf0f7ff, 0x6e6a5e, 0.75);
         hemiLight.position.set(0, 55, 0);
         scene.add(hemiLight);
@@ -605,10 +856,6 @@
                 scene.background.setHex(0xe59866);
                 scene.fog.color.setHex(0xe59866);
                 sunLight.color.setHex(0xffa94d);
-                sunLight.intensity = 1.38;
-                sunLight.position.set(-34, 16, 26);
-                hemiLight.color.setHex(0xffd8a8);
-                ambientLight.color.setHex(0xffe8cc);
                 btn.innerText = '🌅 Golden Hour';
                 btn.classList.add('active-mode');
             } else {
@@ -617,17 +864,13 @@
                 scene.background.setHex(0x9bc9e8);
                 scene.fog.color.setHex(0xc8dff0);
                 sunLight.color.setHex(0xfff9ed);
-                sunLight.intensity = 1.25;
-                sunLight.position.set(26, 44, 32);
-                hemiLight.color.setHex(0xf0f7ff);
-                ambientLight.color.setHex(0xffffff);
                 btn.innerText = '☀️ Daylight';
                 btn.classList.remove('active-mode');
             }
         };
 
         // ============================================================================
-        // MODULE 2: PHYSICS WORLD, GRAVITY, STEP-UP STAIR TRAVERSAL & COLLISION
+        // PHYSICS WORLD & COLLISION
         // ============================================================================
         const PhysicsWorld = {
             colliders: [],
@@ -642,33 +885,25 @@
                 this.colliders.push(box);
                 return box;
             },
-
             addFloorVolume(minX, maxX, minZ, maxZ, surfaceY, ceilingY = 15) {
                 this.floorVolumes.push({ minX, maxX, minZ, maxZ, surfaceY, ceilingY });
             },
-
             checkHorizontalCollision(x, footY, z, radius = this.playerRadius) {
                 const headY = footY + 1.62;
                 for (let i = 0; i < this.colliders.length; i++) {
                     const c = this.colliders[i];
                     if (!c.active) continue;
                     if (headY <= c.minY || footY + this.stepUpHeight >= c.maxY) continue;
-                    if (x + radius > c.minX && x - radius < c.maxX &&
-                        z + radius > c.minZ && z - radius < c.maxZ) {
-                        return true;
-                    }
+                    if (x + radius > c.minX && x - radius < c.maxX && z + radius > c.minZ && z - radius < c.maxZ) return true;
                 }
                 return false;
             },
-
             getSupportingFloorY(x, currentFootY, z) {
                 let bestY = 0.0;
                 for (let i = 0; i < this.floorVolumes.length; i++) {
                     const f = this.floorVolumes[i];
                     if (x >= f.minX && x <= f.maxX && z >= f.minZ && z <= f.maxZ) {
-                        if (f.surfaceY <= currentFootY + this.stepUpHeight && f.surfaceY > bestY) {
-                            bestY = f.surfaceY;
-                        }
+                        if (f.surfaceY <= currentFootY + this.stepUpHeight && f.surfaceY > bestY) bestY = f.surfaceY;
                     }
                 }
                 return bestY;
@@ -676,7 +911,7 @@
         };
 
         // ============================================================================
-        // MODULE 3: MATERIAL & PROCEDURAL PBR TEXTURE MANAGER
+        // PROCEDURAL TEXTURES & BUILDING ARCHITECTURE
         // ============================================================================
         function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
             const canvas = document.createElement('canvas');
@@ -696,7 +931,6 @@
             });
             const tex = new THREE.CanvasTexture(canvas);
             tex.encoding = THREE.sRGBEncoding;
-            tex.needsUpdate = true;
             return tex;
         }
 
@@ -706,51 +940,30 @@
             const bumpCanvas = document.createElement('canvas');
             diffCanvas.width = bumpCanvas.width = size;
             diffCanvas.height = bumpCanvas.height = size;
-
             const dCtx = diffCanvas.getContext('2d');
             const bCtx = bumpCanvas.getContext('2d');
+            dCtx.fillStyle = baseHex; dCtx.fillRect(0, 0, size, size);
+            bCtx.fillStyle = 'rgb(200, 200, 200)'; bCtx.fillRect(0, 0, size, size);
 
-            dCtx.fillStyle = baseHex;
-            dCtx.fillRect(0, 0, size, size);
-            bCtx.fillStyle = 'rgb(200, 200, 200)';
-            bCtx.fillRect(0, 0, size, size);
-
-            for (let i = 0; i < 3800; i++) {
-                const x = Math.random() * size;
-                const y = Math.random() * size;
-                const w = 2 + Math.random() * 3;
+            for (let i = 0; i < 3200; i++) {
+                const x = Math.random() * size, y = Math.random() * size, w = 2 + Math.random() * 3;
                 const bright = i % 2 === 0;
                 dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
                 dCtx.fillRect(x, y, w, w);
-                bCtx.fillStyle = bright ? 'rgb(220, 220, 220)' : 'rgb(180, 180, 180)';
-                bCtx.fillRect(x, y, w, w);
             }
-
             if (divisions > 1) {
                 const step = size / divisions;
-                dCtx.strokeStyle = groutHex;
-                dCtx.lineWidth = 3;
-                bCtx.strokeStyle = 'rgb(100, 100, 100)';
-                bCtx.lineWidth = 3;
+                dCtx.strokeStyle = groutHex; dCtx.lineWidth = 3;
                 for (let i = 0; i <= divisions; i++) {
                     const p = i * step;
-                    [dCtx, bCtx].forEach(ctx => {
-                        ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, size); ctx.stroke();
-                        ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(size, p); ctx.stroke();
-                    });
+                    dCtx.beginPath(); dCtx.moveTo(p, 0); dCtx.lineTo(p, size); dCtx.stroke();
+                    dCtx.beginPath(); dCtx.moveTo(0, p); dCtx.lineTo(size, p); dCtx.stroke();
                 }
             }
-
             const map = new THREE.CanvasTexture(diffCanvas);
             map.encoding = THREE.sRGBEncoding;
             const bumpMap = new THREE.CanvasTexture(bumpCanvas);
-
-            [map, bumpMap].forEach(t => {
-                t.wrapS = THREE.RepeatWrapping;
-                t.wrapT = THREE.RepeatWrapping;
-                t.repeat.set(repeatX, repeatY);
-                t.needsUpdate = true;
-            });
+            [map, bumpMap].forEach(t => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeatX, repeatY); });
             return { map, bumpMap };
         }
 
@@ -762,17 +975,10 @@
             grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
             grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.16)');
             grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 128, 128);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.needsUpdate = true;
-            return tex;
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
+            return new THREE.CanvasTexture(canvas);
         }
-        const contactShadowMat = new THREE.MeshBasicMaterial({
-            map: createContactShadowTexture(),
-            transparent: true,
-            depthWrite: false
-        });
+        const contactShadowMat = new THREE.MeshBasicMaterial({ map: createContactShadowTexture(), transparent: true, depthWrite: false });
 
         function createToonGradientMap() {
             const canvas = document.createElement('canvas');
@@ -783,408 +989,112 @@
             ctx.fillStyle = '#e8eef5'; ctx.fillRect(2, 0, 1, 1);
             ctx.fillStyle = '#ffffff'; ctx.fillRect(3, 0, 1, 1);
             const tex = new THREE.CanvasTexture(canvas);
-            tex.minFilter = THREE.NearestFilter;
-            tex.magFilter = THREE.NearestFilter;
-            tex.needsUpdate = true;
+            tex.minFilter = tex.magFilter = THREE.NearestFilter;
             return tex;
         }
         const animeToonGrad = createToonGradientMap();
 
-        const screenCanvas = document.createElement('canvas');
-        screenCanvas.width = 256; screenCanvas.height = 160;
-        const screenCtx = screenCanvas.getContext('2d');
-        const liveMonitorTexture = new THREE.CanvasTexture(screenCanvas);
-        liveMonitorTexture.encoding = THREE.sRGBEncoding;
-
-        let labWorkloadMode = 0;
-        const labModeTitles = ['PyTorch ResNet-50 Training', 'YOLOv8 Real-Time Vision', 'Tachyon Autonomous Agent Mesh'];
-        let screenTick = 0;
-
-        function updateLabMonitorScreen(dt) {
-            screenTick += dt;
-            screenCtx.fillStyle = '#071022';
-            screenCtx.fillRect(0, 0, 256, 160);
-            screenCtx.fillStyle = '#0f172a';
-            screenCtx.fillRect(0, 0, 42, 160);
-
-            screenCtx.fillStyle = '#1e293b';
-            screenCtx.fillRect(42, 0, 214, 20);
-            screenCtx.fillStyle = '#38bdf8';
-            screenCtx.font = 'bold 10px monospace';
-            screenCtx.fillText(labModeTitles[labWorkloadMode], 48, 13);
-
-            if (labWorkloadMode === 0) {
-                const codeColors = ['#38bdf8', '#a78bfa', '#34d399', '#facc15', '#cbd5e1'];
-                for (let i = 0; i < 8; i++) {
-                    screenCtx.fillStyle = codeColors[i % codeColors.length];
-                    const w = 40 + ((i * 29 + Math.floor(screenTick * 2)) % 80);
-                    screenCtx.fillRect(50, 28 + i * 15, w, 5);
-                }
-                screenCtx.strokeStyle = '#00f2fe';
-                screenCtx.lineWidth = 2;
-                screenCtx.beginPath();
-                for (let x = 0; x < 85; x += 5) {
-                    const y = 135 - Math.exp(-x * 0.035) * 65 - Math.sin(x * 0.2 + screenTick * 3) * 4;
-                    if (x === 0) screenCtx.moveTo(160 + x, y);
-                    else screenCtx.lineTo(160 + x, y);
-                }
-                screenCtx.stroke();
-            } else if (labWorkloadMode === 1) {
-                screenCtx.strokeStyle = '#10b981';
-                screenCtx.lineWidth = 2;
-                const bx = 65 + Math.sin(screenTick * 1.8) * 25;
-                screenCtx.strokeRect(bx, 42, 65, 75);
-                screenCtx.fillStyle = '#10b981';
-                screenCtx.fillText('student 0.99', bx, 38);
-                screenCtx.strokeStyle = '#f59e0b';
-                screenCtx.strokeRect(160, 58, 70, 60);
-                screenCtx.fillStyle = '#f59e0b';
-                screenCtx.fillText('gpu_node 0.96', 160, 54);
-            } else {
-                for (let b = 0; b < 6; b++) {
-                    const bh = 25 + Math.abs(Math.sin(screenTick * 2.5 + b)) * 75;
-                    screenCtx.fillStyle = b % 2 === 0 ? '#00f2fe' : '#ec4899';
-                    screenCtx.fillRect(60 + b * 28, 140 - bh, 18, bh);
-                }
-            }
-            liveMonitorTexture.needsUpdate = true;
-        }
-
-        const slideCanvas = document.createElement('canvas');
-        slideCanvas.width = 512; slideCanvas.height = 256;
-        const slideCtx = slideCanvas.getContext('2d');
-        const smartBoardTexture = new THREE.CanvasTexture(slideCanvas);
-        smartBoardTexture.encoding = THREE.sRGBEncoding;
-
-        let currentSlideIndex = 0;
-        const lectureSlides = [
-            { title: 'CS701: DEEP LEARNING ARCHITECTURES', sub: 'Convolutional & Vision Transformer Backbones' },
-            { title: 'CS702: MULTI-HEAD SELF ATTENTION', sub: 'Scaled Dot-Product Attention: Q · K^T / sqrt(d_k)' },
-            { title: 'CS703: REINFORCEMENT LEARNING & AGENTS', sub: 'Markov Decision Processes & Policy Gradients' }
-        ];
-        function renderSmartBoardSlide() {
-            const s = lectureSlides[currentSlideIndex];
-            slideCtx.fillStyle = '#063f2e';
-            slideCtx.fillRect(0, 0, 512, 256);
-            slideCtx.strokeStyle = '#94a3b8';
-            slideCtx.lineWidth = 8;
-            slideCtx.strokeRect(4, 4, 504, 248);
-            slideCtx.fillStyle = '#fef08a';
-            slideCtx.font = 'bold 22px Segoe UI, Arial';
-            slideCtx.fillText(s.title, 28, 48);
-            slideCtx.fillStyle = '#e2e8f0';
-            slideCtx.font = '18px Segoe UI, Arial';
-            slideCtx.fillText(s.sub, 28, 82);
-
-            slideCtx.strokeStyle = '#38bdf8';
-            slideCtx.lineWidth = 3;
-            for (let i = 0; i < 4; i++) {
-                slideCtx.strokeRect(45 + i * 110, 115, 75, 85);
-                if (i < 3) {
-                    slideCtx.beginPath();
-                    slideCtx.moveTo(120 + i * 110, 158);
-                    slideCtx.lineTo(155 + i * 110, 158);
-                    slideCtx.stroke();
-                }
-            }
-            slideCtx.fillStyle = '#6ee7b7';
-            slideCtx.font = 'bold 14px Arial';
-            slideCtx.fillText('[ Click Smartboard or Press E to Advance Lecture Slide ]', 28, 228);
-            smartBoardTexture.needsUpdate = true;
-        }
-        renderSmartBoardSlide();
-
+        // Materials
         const plasterPBR = createPBRSurfaceSet('#f5f0e1', '#e6dec5', 1, 0.02, 4, 2);
-        const matCreamWall = new THREE.MeshStandardMaterial({
-            map: plasterPBR.map, bumpMap: plasterPBR.bumpMap, bumpScale: 0.01,
-            roughness: 0.80, metalness: 0.02
-        });
-
+        const matCreamWall = new THREE.MeshStandardMaterial({ map: plasterPBR.map, roughness: 0.80, metalness: 0.02 });
         const dadoPBR = createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.018, 4, 1);
-        const matGreyDado = new THREE.MeshStandardMaterial({
-            map: dadoPBR.map, bumpMap: dadoPBR.bumpMap, bumpScale: 0.008,
-            roughness: 0.65, metalness: 0.04
-        });
-
+        const matGreyDado = new THREE.MeshStandardMaterial({ map: dadoPBR.map, roughness: 0.65, metalness: 0.04 });
         const terracottaPBR = createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.025, 2, 2);
-        const matTerracotta = new THREE.MeshStandardMaterial({
-            map: terracottaPBR.map, bumpMap: terracottaPBR.bumpMap, bumpScale: 0.01,
-            roughness: 0.70, metalness: 0.04
-        });
-
+        const matTerracotta = new THREE.MeshStandardMaterial({ map: terracottaPBR.map, roughness: 0.70, metalness: 0.04 });
         const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.42, metalness: 0.05 });
-
         const granitePBR = createPBRSurfaceSet('#2d333b', '#1b1f24', 2, 0.035, 2, 2);
-        const matDarkGranite = new THREE.MeshStandardMaterial({
-            map: granitePBR.map, bumpMap: granitePBR.bumpMap, bumpScale: 0.006,
-            roughness: 0.26, metalness: 0.14
-        });
-
+        const matDarkGranite = new THREE.MeshStandardMaterial({ map: granitePBR.map, roughness: 0.26, metalness: 0.14 });
         const concretePBR = createPBRSurfaceSet('#a6acb2', '#858b91', 1, 0.03, 2, 2);
-        const matGreySteps = new THREE.MeshStandardMaterial({
-            map: concretePBR.map, bumpMap: concretePBR.bumpMap, bumpScale: 0.012,
-            roughness: 0.74, metalness: 0.04
-        });
-
+        const matGreySteps = new THREE.MeshStandardMaterial({ map: concretePBR.map, roughness: 0.74, metalness: 0.04 });
         const woodPBR = createPBRSurfaceSet('#4d281a', '#361b11', 1, 0.02, 2, 1);
-        const matWoodRack = new THREE.MeshStandardMaterial({
-            map: woodPBR.map, bumpMap: woodPBR.bumpMap, bumpScale: 0.008,
-            roughness: 0.46, metalness: 0.05
-        });
-        const matDoorWood = new THREE.MeshStandardMaterial({
-            map: woodPBR.map, bumpMap: woodPBR.bumpMap, bumpScale: 0.01,
-            color: 0xd9b38c, roughness: 0.45, metalness: 0.05
-        });
-
-        const matGlass = new THREE.MeshStandardMaterial({
-            color: 0xbae6fd, transparent: true, opacity: 0.46,
-            roughness: 0.08, metalness: 0.25, envMapIntensity: 1.2
-        });
-
+        const matWoodRack = new THREE.MeshStandardMaterial({ map: woodPBR.map, roughness: 0.46, metalness: 0.05 });
+        const matDoorWood = new THREE.MeshStandardMaterial({ map: woodPBR.map, color: 0xd9b38c, roughness: 0.45, metalness: 0.05 });
+        const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.46, roughness: 0.08, metalness: 0.25 });
         const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.35, metalness: 0.35 });
         const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.08 });
-
         const corridorTilePBR = createPBRSurfaceSet('#6e4e44', '#422c26', 4, 0.02, 16, 4);
-        const matCorridorFloor = new THREE.MeshStandardMaterial({
-            map: corridorTilePBR.map, bumpMap: corridorTilePBR.bumpMap, bumpScale: 0.01,
-            roughness: 0.42, metalness: 0.06
-        });
-
+        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTilePBR.map, roughness: 0.42, metalness: 0.06 });
         const paverPBR = createPBRSurfaceSet('#b8b3ae', '#78716c', 10, 0.035, 14, 18);
-        const matCourtyard = new THREE.MeshStandardMaterial({
-            map: paverPBR.map, bumpMap: paverPBR.bumpMap, bumpScale: 0.016,
-            roughness: 0.78, metalness: 0.04
-        });
-
+        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverPBR.map, roughness: 0.78, metalness: 0.04 });
         const redBrickPBR = createPBRSurfaceSet('#ad4f3e', '#662b20', 8, 0.03, 2, 16);
-        const matRedPaverStrip = new THREE.MeshStandardMaterial({
-            map: redBrickPBR.map, bumpMap: redBrickPBR.bumpMap, bumpScale: 0.014,
-            roughness: 0.76, metalness: 0.04
-        });
-
+        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: redBrickPBR.map, roughness: 0.76, metalness: 0.04 });
         const soilPBR = createPBRSurfaceSet('#4d3e2e', '#362b1f', 1, 0.05, 24, 24);
-        const matRichSoil = new THREE.MeshStandardMaterial({
-            map: soilPBR.map, bumpMap: soilPBR.bumpMap, bumpScale: 0.022,
-            roughness: 0.92, metalness: 0.02
-        });
+        const matRichSoil = new THREE.MeshStandardMaterial({ map: soilPBR.map, roughness: 0.92, metalness: 0.02 });
 
-        // ============================================================================
-        // MODULE 4: EXTERIOR LANDSCAPING, PAVER COURTYARD & GPU WIND GRASS
-        // ============================================================================
+        // Exterior Ground & Driveway
         const soilGround = new THREE.Mesh(new THREE.PlaneGeometry(170, 170), matRichSoil);
-        soilGround.rotation.x = -Math.PI / 2;
-        soilGround.receiveShadow = true;
-        scene.add(soilGround);
-
+        soilGround.rotation.x = -Math.PI / 2; soilGround.receiveShadow = true; scene.add(soilGround);
         const mainDriveway = new THREE.Mesh(new THREE.PlaneGeometry(18, 36), matCourtyard);
-        mainDriveway.rotation.x = -Math.PI / 2;
-        mainDriveway.position.set(0, 0.02, 18);
-        mainDriveway.receiveShadow = true;
-        scene.add(mainDriveway);
-
+        mainDriveway.rotation.x = -Math.PI / 2; mainDriveway.position.set(0, 0.02, 18); mainDriveway.receiveShadow = true; scene.add(mainDriveway);
         const buildingApron = new THREE.Mesh(new THREE.PlaneGeometry(36, 8), matCourtyard);
-        buildingApron.rotation.x = -Math.PI / 2;
-        buildingApron.position.set(0, 0.02, 5.5);
-        buildingApron.receiveShadow = true;
-        scene.add(buildingApron);
+        buildingApron.rotation.x = -Math.PI / 2; buildingApron.position.set(0, 0.02, 5.5); buildingApron.receiveShadow = true; scene.add(buildingApron);
 
         [-2.2, 2.2].forEach(rx => {
             const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 28), matRedPaverStrip);
-            runner.rotation.x = -Math.PI / 2;
-            runner.position.set(rx, 0.026, 18);
-            runner.receiveShadow = true;
-            scene.add(runner);
+            runner.rotation.x = -Math.PI / 2; runner.position.set(rx, 0.026, 18); scene.add(runner);
         });
 
-        function createCurbLine(xPos, zStart, zEnd) {
-            const count = Math.floor(Math.abs(zEnd - zStart) / 0.8);
-            for (let i = 0; i < count; i++) {
-                const curbMat = i % 2 === 0 ? matTerracotta : matWhiteTrim;
-                const curb = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.16, 0.78), curbMat);
-                curb.position.set(xPos, 0.08, zStart + i * 0.8);
-                curb.castShadow = true; curb.receiveShadow = true;
-                scene.add(curb);
-            }
-        }
-        createCurbLine(-9.1, 8, 34);
-        createCurbLine(9.1, 8, 34);
-
-        const shrubCrowns = [];
-        function createTerracottaPotPlant(x, z, scale = 1.0) {
-            const group = new THREE.Group();
-            const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.28 * scale, 0.2 * scale, 0.42 * scale, 12), matTerracotta);
-            pot.position.y = 0.21 * scale;
-            pot.castShadow = true;
-            const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.31 * scale, 0.29 * scale, 0.06 * scale, 12), matTerracotta);
-            rim.position.y = 0.40 * scale;
-            const plantGroup = new THREE.Group();
-            plantGroup.position.y = 0.45 * scale;
-            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2e6f3e, roughness: 0.72 });
-            for (let i = 0; i < 5; i++) {
-                const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.22 * scale, 8, 8), leafMat);
-                const ang = (i / 5) * Math.PI * 2;
-                leaf.position.set(Math.cos(ang) * 0.12 * scale, (i % 2) * 0.1 * scale, Math.sin(ang) * 0.12 * scale);
-                leaf.castShadow = true;
-                plantGroup.add(leaf);
-            }
-            group.add(pot, rim, plantGroup);
-            group.position.set(x, 0.02, z);
-            scene.add(group);
-            shrubCrowns.push({ group: plantGroup, phase: Math.random() * Math.PI * 2 });
-        }
-        [-2.8, -3.8, -5.8, -8.2, 2.8, 3.8, 5.8, 8.2].forEach(px => createTerracottaPotPlant(px, 3.0, 0.95));
-        createTerracottaPotPlant(-2.6, 5.6, 1.1);
-        createTerracottaPotPlant(2.6, 5.6, 1.1);
-
-        function createCampusShrub(x, z, radius = 0.85) {
-            const sGroup = new THREE.Group();
-            sGroup.position.set(x, 0.35, z);
-            const sMat = new THREE.MeshStandardMaterial({ color: 0x366938, roughness: 0.8 });
-            const main = new THREE.Mesh(new THREE.SphereGeometry(radius, 10, 10), sMat);
-            main.scale.y = 0.72;
-            main.castShadow = true; main.receiveShadow = true;
-            sGroup.add(main);
-            scene.add(sGroup);
-            shrubCrowns.push({ group: sGroup, phase: Math.random() * Math.PI * 2 });
-        }
-        [-11.5, -14.5, -18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
-        [11.5, 14.5, 18.0].forEach(x => createCampusShrub(x, 8.5, 0.9));
-
-        const grassUniforms = {
-            uTime: { value: 0 },
-            uWindStrength: { value: 1.0 }
-        };
-
+        // GPU Wind Grass
+        const grassUniforms = { uTime: { value: 0 }, uWindStrength: { value: 1.0 } };
         function createCrossedGrassGeometry() {
-            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4);
-            b1.translate(0, 0.22, 0);
-            const b2 = b1.clone();
-            b2.rotateY(Math.PI / 2.3);
-
-            const configureBlade = (geo, curveDir) => {
+            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4); b1.translate(0, 0.22, 0);
+            const b2 = b1.clone(); b2.rotateY(Math.PI / 2.3);
+            [b1, b2].forEach((geo, idx) => {
                 const pos = geo.attributes.position;
                 for (let i = 0; i < pos.count; i++) {
-                    const y = pos.getY(i);
-                    const hRatio = y / 0.44;
+                    const y = pos.getY(i), hRatio = y / 0.44;
                     pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
-                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * curveDir);
+                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * (idx === 0 ? 1 : -1));
                 }
                 geo.computeVertexNormals();
-            };
-            configureBlade(b1, 1);
-            configureBlade(b2, -1);
-
+            });
             const merged = new THREE.BufferGeometry();
-            const pos1 = b1.attributes.position.array;
-            const pos2 = b2.attributes.position.array;
-            const norm1 = b1.attributes.normal.array;
-            const norm2 = b2.attributes.normal.array;
-            const uv1 = b1.attributes.uv.array;
-            const uv2 = b2.attributes.uv.array;
-            const idx1 = b1.index.array;
-            const idx2 = b2.index.array;
-
-            const combinedPos = new Float32Array(pos1.length + pos2.length);
-            combinedPos.set(pos1, 0); combinedPos.set(pos2, pos1.length);
-
-            const combinedNorm = new Float32Array(norm1.length + norm2.length);
-            combinedNorm.set(norm1, 0); combinedNorm.set(norm2, norm1.length);
-
-            const combinedUV = new Float32Array(uv1.length + uv2.length);
-            combinedUV.set(uv1, 0); combinedUV.set(uv2, uv1.length);
-
-            const combinedIdx = new Uint16Array(idx1.length + idx2.length);
-            combinedIdx.set(idx1, 0);
+            const pos1 = b1.attributes.position.array, pos2 = b2.attributes.position.array;
+            const norm1 = b1.attributes.normal.array, norm2 = b2.attributes.normal.array;
+            const uv1 = b1.attributes.uv.array, uv2 = b2.attributes.uv.array;
+            const idx1 = b1.index.array, idx2 = b2.index.array;
+            const combinedPos = new Float32Array(pos1.length + pos2.length); combinedPos.set(pos1, 0); combinedPos.set(pos2, pos1.length);
+            const combinedNorm = new Float32Array(norm1.length + norm2.length); combinedNorm.set(norm1, 0); combinedNorm.set(norm2, norm1.length);
+            const combinedUV = new Float32Array(uv1.length + uv2.length); combinedUV.set(uv1, 0); combinedUV.set(uv2, uv1.length);
+            const combinedIdx = new Uint16Array(idx1.length + idx2.length); combinedIdx.set(idx1, 0);
             const vertexOffset = pos1.length / 3;
-            for (let i = 0; i < idx2.length; i++) {
-                combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
-            }
-
+            for (let i = 0; i < idx2.length; i++) combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
             merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
             merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
             merged.setAttribute('uv', new THREE.BufferAttribute(combinedUV, 2));
             merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
             return merged;
         }
-
         const grassBladeGeo = createCrossedGrassGeometry();
-        const grassMat = new THREE.MeshStandardMaterial({
-            color: 0x4d823b,
-            roughness: 0.74,
-            metalness: 0.02,
-            side: THREE.DoubleSide
-        });
-
+        const grassMat = new THREE.MeshStandardMaterial({ color: 0x4d823b, roughness: 0.74, metalness: 0.02, side: THREE.DoubleSide });
         grassMat.onBeforeCompile = (shader) => {
             shader.uniforms.uTime = grassUniforms.uTime;
-            shader.uniforms.uWindStrength = grassUniforms.uWindStrength;
-            shader.vertexShader = `
-                uniform float uTime;
-                uniform float uWindStrength;
-                varying float vHeightFactor;
-            ` + shader.vertexShader;
-
-            shader.vertexShader = shader.vertexShader.replace(
+            shader.vertexShader = `uniform float uTime;\n` + shader.vertexShader.replace(
                 '#include <begin_vertex>',
-                `
-                #include <begin_vertex>
+                `#include <begin_vertex>
                 float hFactor = clamp(position.y / 0.44, 0.0, 1.0);
-                vHeightFactor = hFactor;
-                float bendWeight = hFactor * hFactor;
-                vec3 worldInstPos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-                float wave1 = sin(uTime * 2.15 + worldInstPos.x * 0.42 + worldInstPos.z * 0.38);
-                float wave2 = cos(uTime * 1.45 - worldInstPos.x * 0.28 + worldInstPos.z * 0.62) * 0.5;
-                float gust = max(0.0, sin(uTime * 0.7 + worldInstPos.x * 0.14 + worldInstPos.z * 0.1)) * 0.085;
-                float totalSway = (wave1 * 0.068 + wave2 * 0.042 + gust) * uWindStrength * bendWeight;
-                transformed.x += totalSway;
-                transformed.z += totalSway * 0.65;
-                `
-            );
-
-            shader.fragmentShader = `
-                varying float vHeightFactor;
-            ` + shader.fragmentShader;
-
-            shader.fragmentShader = shader.fragmentShader.replace(
-                '#include <color_fragment>',
-                `
-                #include <color_fragment>
-                diffuseColor.rgb *= mix(0.55, 1.18, vHeightFactor);
-                `
+                vec3 wp = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+                float sway = sin(uTime * 2.1 + wp.x * 0.4 + wp.z * 0.4) * 0.07 * hFactor * hFactor;
+                transformed.x += sway; transformed.z += sway * 0.6;`
             );
         };
-
         let grassInstancedMesh = null;
         function buildLivingGrassField(bladeCount) {
-            if (grassInstancedMesh) {
-                scene.remove(grassInstancedMesh);
-                grassInstancedMesh.dispose();
-            }
+            if (grassInstancedMesh) { scene.remove(grassInstancedMesh); grassInstancedMesh.dispose(); }
             grassInstancedMesh = new THREE.InstancedMesh(grassBladeGeo, grassMat, bladeCount);
-            grassInstancedMesh.receiveShadow = true;
-
-            const dummy = new THREE.Object3D();
-            const color = new THREE.Color();
+            const dummy = new THREE.Object3D(), color = new THREE.Color();
             const greenPalette = [0x3b6e2c, 0x4d7c3f, 0x2e5a22, 0x558b3e, 0x3f6a2e];
-
             let placed = 0;
             while (placed < bladeCount) {
                 const isLeft = Math.random() < 0.55;
                 const x = isLeft ? (-9.3 - Math.random() * 25) : (9.3 + Math.random() * 25);
                 const z = -10 + Math.random() * 44;
-
                 if (x > -27.5 && x < -16.5 && z > -5.5 && z < 9.5) continue;
                 if (x > -15.5 && x < 15.5 && z < 3.5) continue;
-
-                dummy.position.set(x, 0, z);
-                dummy.rotation.y = Math.random() * Math.PI * 2;
-                const scaleH = 0.72 + Math.random() * 0.72;
-                dummy.scale.set(0.88 + Math.random() * 0.45, scaleH, 0.88 + Math.random() * 0.45);
-                dummy.updateMatrix();
+                dummy.position.set(x, 0, z); dummy.rotation.y = Math.random() * Math.PI * 2;
+                dummy.scale.set(1, 0.75 + Math.random() * 0.65, 1); dummy.updateMatrix();
                 grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
-
                 color.setHex(greenPalette[placed % greenPalette.length]);
-                color.offsetHSL((Math.random() - 0.5) * 0.04, 0, (Math.random() - 0.5) * 0.08);
                 grassInstancedMesh.setColorAt(placed, color);
                 placed++;
             }
@@ -1193,98 +1103,13 @@
             scene.add(grassInstancedMesh);
         }
 
-        const redShedGroup = new THREE.Group();
-        const shedBase = new THREE.Mesh(new THREE.BoxGeometry(10, 3.2, 14), matCreamWall);
-        shedBase.position.set(-22, 1.6, 2);
-        shedBase.castShadow = true; shedBase.receiveShadow = true;
-        redShedGroup.add(shedBase);
-        const shedRoof = new THREE.Mesh(new THREE.ConeGeometry(8.5, 2.2, 4), matRedRoof);
-        shedRoof.rotation.y = Math.PI / 4;
-        shedRoof.scale.set(1, 1, 1.35);
-        shedRoof.position.set(-22, 4.3, 2);
-        shedRoof.castShadow = true;
-        redShedGroup.add(shedRoof);
-        scene.add(redShedGroup);
-        PhysicsWorld.addCollider(-27, -17, -5, 9, 0, 5);
-
-        const animatedTreeCrowns = [];
-        function createTree(x, z, scale = 1) {
-            const tree = new THREE.Group();
-            const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.32 * scale, 0.48 * scale, 4 * scale, 10),
-                new THREE.MeshStandardMaterial({ color: 0x4a3525, roughness: 0.92 })
-            );
-            trunk.position.y = 2 * scale;
-            trunk.castShadow = true;
-            tree.add(trunk);
-
-            const crownGroup = new THREE.Group();
-            crownGroup.position.set(0, 4.2 * scale, 0);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.78 });
-            const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 14, 14), foliageMat);
-            c1.position.set(0, 0.6 * scale, 0);
-            const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 12, 12), foliageMat);
-            c2.position.set(1.2 * scale, 0, 0.8 * scale);
-            const c3 = new THREE.Mesh(new THREE.SphereGeometry(1.9 * scale, 12, 12), foliageMat);
-            c3.position.set(-1.1 * scale, 0.2 * scale, -0.6 * scale);
-            c1.castShadow = c2.castShadow = c3.castShadow = true;
-            crownGroup.add(c1, c2, c3);
-
-            const treeShadow = new THREE.Mesh(new THREE.PlaneGeometry(5.5 * scale, 5.5 * scale), contactShadowMat);
-            treeShadow.rotation.x = -Math.PI / 2;
-            treeShadow.position.y = 0.02;
-            tree.add(crownGroup, treeShadow);
-            tree.position.set(x, 0, z);
-            scene.add(tree);
-            animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
-            PhysicsWorld.addCollider(x - 0.5, x + 0.5, z - 0.5, z + 0.5, 0, 4);
-        }
-        createTree(-15.5, 11.5, 1.35);
-        createTree(-24.5, 15.0, 1.45);
-        createTree(-18.0, -7.5, 1.25);
-        createTree(18.5, 12.5, 1.2);
-        createTree(24.0, 20.0, 1.3);
-
-        const rearCampusBlock = new THREE.Mesh(new THREE.BoxGeometry(9.5, 12.5, 7.0), matWhiteTrim);
-        rearCampusBlock.position.set(-7.5, 6.25, -15.5);
-        scene.add(rearCampusBlock);
-
-        const palmGroup = new THREE.Group();
-        const palmTrunk = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.18, 0.28, 11.5, 8),
-            new THREE.MeshStandardMaterial({ color: 0x5c4738, roughness: 0.9 })
-        );
-        palmTrunk.position.y = 5.75;
-        palmGroup.add(palmTrunk);
-        const palmCrown = new THREE.Group();
-        palmCrown.position.y = 11.4;
-        const frondMat = new THREE.MeshStandardMaterial({ color: 0x2f6f39, roughness: 0.7, side: THREE.DoubleSide });
-        for (let f = 0; f < 8; f++) {
-            const frond = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.04, 0.45), frondMat);
-            frond.position.x = 1.2;
-            frond.rotation.z = -0.28;
-            const fPivot = new THREE.Group();
-            fPivot.rotation.y = (f / 8) * Math.PI * 2;
-            fPivot.add(frond);
-            palmCrown.add(fPivot);
-        }
-        palmGroup.add(palmCrown);
-        palmGroup.position.set(-3.2, 0, -11.5);
-        scene.add(palmGroup);
-        animatedTreeCrowns.push({ group: palmCrown, phase: 1.2 });
-
-        // ============================================================================
-        // MODULE 5: BUILDING ENVIRONMENT, PHYSICAL STAIRCASE & DYNAMIC HINGED DOORS
-        // ============================================================================
-        const building = new THREE.Group();
-        scene.add(building);
+        // Building & Rooms Construction
+        const building = new THREE.Group(); scene.add(building);
         const interactableObjects = [];
         const hingedDoors = [];
 
         const gfSlab = new THREE.Mesh(new THREE.BoxGeometry(30, 0.2, 12), matGreySteps);
-        gfSlab.position.set(0, 0.1, -4);
-        gfSlab.receiveShadow = true;
-        building.add(gfSlab);
+        gfSlab.position.set(0, 0.1, -4); gfSlab.receiveShadow = true; building.add(gfSlab);
         PhysicsWorld.addFloorVolume(-15, 15, -10, 2.2, 0.20, 3.85);
 
         const gfFrontWallLeft = new THREE.Mesh(new THREE.BoxGeometry(11.5, 3.8, 0.25), matCreamWall);
@@ -1295,260 +1120,105 @@
         PhysicsWorld.addCollider(-14.5, -2.4, 0.2, 0.6, 0, 3.9);
         PhysicsWorld.addCollider(2.0, 14.8, 0.2, 0.6, 0, 3.9);
 
-        [-6.5, 6.0, 11.0].forEach(gx => {
-            const gWinFrame = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.3, 0.3), matBlackMetal);
-            gWinFrame.position.set(gx, 2.1, 0.42);
-            const gWinGlass = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.15, 0.32), matGlass);
-            gWinGlass.position.set(gx, 2.1, 0.42);
-            building.add(gWinFrame, gWinGlass);
-        });
-
         const ffCorridorFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.24, 3.6), matCorridorFloor);
-        ffCorridorFloor.position.set(0, 4.0, 0.2);
-        ffCorridorFloor.receiveShadow = true;
-        building.add(ffCorridorFloor);
+        ffCorridorFloor.position.set(0, 4.0, 0.2); ffCorridorFloor.receiveShadow = true; building.add(ffCorridorFloor);
         PhysicsWorld.addFloorVolume(-15, 4.5, -1.6, 2.0, 4.12, 7.9);
 
         for (let s = 0; s < 3; s++) {
-            const stepX = 4.5 + s * 0.4;
-            const stepTopY = 4.12 + (s + 1) * 0.08;
+            const stepX = 4.5 + s * 0.4, stepTopY = 4.12 + (s + 1) * 0.08;
             const step = new THREE.Mesh(new THREE.BoxGeometry(0.4, (s + 1) * 0.08, 3.4), matGreySteps);
-            step.position.set(stepX, 4.12 + ((s + 1) * 0.04), 0.2);
-            step.receiveShadow = true;
-            building.add(step);
+            step.position.set(stepX, 4.12 + ((s + 1) * 0.04), 0.2); building.add(step);
             PhysicsWorld.addFloorVolume(stepX - 0.22, stepX + 0.22, -1.5, 1.9, stepTopY, 7.9);
         }
 
-        const doormat = new THREE.Mesh(
-            new THREE.BoxGeometry(0.9, 0.03, 1.4),
-            new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.95 })
-        );
-        doormat.position.set(6.0, 4.38, 0.2);
-        building.add(doormat);
-
-        const blueBin = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.22, 0.18, 0.55, 14),
-            new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.4 })
-        );
-        blueBin.position.set(8.8, 4.64, -1.15);
-        building.add(blueBin);
-
         const raisedFloor = new THREE.Mesh(new THREE.BoxGeometry(9.5, 0.25, 3.6), matCorridorFloor);
-        raisedFloor.position.set(10.25, 4.24, 0.2);
-        raisedFloor.receiveShadow = true;
-        building.add(raisedFloor);
+        raisedFloor.position.set(10.25, 4.24, 0.2); building.add(raisedFloor);
         PhysicsWorld.addFloorVolume(5.5, 15.0, -1.6, 2.0, 4.36, 7.9);
 
         const ffLabFloor = new THREE.Mesh(new THREE.BoxGeometry(23.5, 0.24, 8.4), matGreySteps);
-        ffLabFloor.position.set(3.25, 4.0, -5.8);
-        ffLabFloor.receiveShadow = true;
-        building.add(ffLabFloor);
+        ffLabFloor.position.set(3.25, 4.0, -5.8); building.add(ffLabFloor);
         PhysicsWorld.addFloorVolume(-8.5, 15.0, -10.0, -1.5, 4.12, 7.9);
 
         const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(30.4, 0.3, 12.4), matCreamWall);
-        roofSlab.position.set(0, 8.0, -4);
-        roofSlab.castShadow = true; roofSlab.receiveShadow = true;
-        building.add(roofSlab);
-
+        roofSlab.position.set(0, 8.0, -4); building.add(roofSlab);
         const topParapet = new THREE.Mesh(new THREE.BoxGeometry(30.4, 1.1, 0.35), matCreamWall);
-        topParapet.position.set(0, 8.6, 2.0);
-        building.add(topParapet);
+        topParapet.position.set(0, 8.6, 2.0); building.add(topParapet);
 
         [4.0, 8.0, 9.15].forEach(yPos => {
             const redBand = new THREE.Mesh(new THREE.BoxGeometry(30.5, 0.18, 0.42), matTerracotta);
-            redBand.position.set(0, yPos, 2.0);
-            building.add(redBand);
+            redBand.position.set(0, yPos, 2.0); building.add(redBand);
         });
 
         const ffParapetOuter = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.18), matCreamWall);
         ffParapetOuter.position.set(0, 4.65, 1.95);
         const ffParapetInner = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.12), matGreyDado);
         ffParapetInner.position.set(0, 4.65, 1.80);
-        const ffParapetCoping = new THREE.Mesh(new THREE.BoxGeometry(30.2, 0.08, 0.36), matWhiteTrim);
-        ffParapetCoping.position.set(0, 5.25, 1.88);
-        building.add(ffParapetOuter, ffParapetInner, ffParapetCoping);
+        building.add(ffParapetOuter, ffParapetInner);
         PhysicsWorld.addCollider(-15, 15, 1.68, 2.15, 4.0, 7.8);
 
         for (let x = -14; x <= 14; x += 4.66) {
             const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.55, 8.0, 0.55), matWhiteTrim);
-            pillar.position.set(x, 4.0, 1.85);
-            pillar.castShadow = true; pillar.receiveShadow = true;
-            building.add(pillar);
-
+            pillar.position.set(x, 4.0, 1.85); building.add(pillar);
             const redStripe = new THREE.Mesh(new THREE.BoxGeometry(0.28, 9.1, 0.1), matTerracotta);
-            redStripe.position.set(x, 4.55, 2.12);
-            building.add(redStripe);
+            redStripe.position.set(x, 4.55, 2.12); building.add(redStripe);
         }
 
         const mainSignTex = createSignTexture('#2563eb', '#f8fafc', [
             { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 46px Arial' },
             { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 38px Arial' }
         ], 1024, 256);
-        const mainSign = new THREE.Mesh(
-            new THREE.BoxGeometry(5.2, 1.45, 0.15),
-            new THREE.MeshStandardMaterial({ map: mainSignTex, roughness: 0.35 })
-        );
-        mainSign.position.set(0, 8.65, 2.22);
-        building.add(mainSign);
+        const mainSign = new THREE.Mesh(new THREE.BoxGeometry(5.2, 1.45, 0.15), new THREE.MeshStandardMaterial({ map: mainSignTex }));
+        mainSign.position.set(0, 8.65, 2.22); building.add(mainSign);
 
-        const vlsiSignTex = createSignTexture('#1d4ed8', '#ffffff', [
-            { text: 'DEPARTMENT OF', font: 'bold 30px Arial' },
-            { text: 'ELECTRONICS & COMMUNICATION ENGINEERING', font: 'bold 34px Arial' },
-            { text: '( VLSI DESIGN & TECHNOLOGY )', font: 'bold 30px Arial' }
-        ], 1024, 256);
-        const vlsiSign = new THREE.Mesh(
-            new THREE.BoxGeometry(3.4, 0.95, 0.12),
-            new THREE.MeshStandardMaterial({ map: vlsiSignTex })
-        );
-        vlsiSign.position.set(7.0, 2.6, 2.18);
-        building.add(vlsiSign);
-
-        function createSolarArray(xStart, count) {
-            const solarMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.25, metalness: 0.35 });
-            for (let i = 0; i < count; i++) {
-                const panel = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.08, 1.2), solarMat);
-                panel.position.set(xStart + i * 2.0, 8.6, -1.5);
-                panel.rotation.x = 0.35;
-                building.add(panel);
-            }
-        }
-        createSolarArray(-12, 4);
-        createSolarArray(4, 5);
-
-        const portico = new THREE.Group();
-        portico.position.set(0, 0, 4.2);
-        scene.add(portico);
-
+        // Entrance Portico
+        const portico = new THREE.Group(); portico.position.set(0, 0, 4.2); scene.add(portico);
         [-2.1, 2.1].forEach(px => {
             const pCol = new THREE.Mesh(new THREE.BoxGeometry(0.45, 3.6, 0.45), matDarkGranite);
-            pCol.position.set(px, 1.8, 1.2);
-            pCol.castShadow = true;
-            portico.add(pCol);
+            pCol.position.set(px, 1.8, 1.2); portico.add(pCol);
             PhysicsWorld.addCollider(px - 0.32, px + 0.32, 5.05, 5.75, 0, 3.8);
         });
-
         const porticoRamp = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.18, 3.2), matRedPaverStrip);
-        porticoRamp.position.set(0, 0.09, 0.2);
-        porticoRamp.receiveShadow = true;
-        portico.add(porticoRamp);
+        porticoRamp.position.set(0, 0.09, 0.2); portico.add(porticoRamp);
         PhysicsWorld.addFloorVolume(-2.2, 2.2, 2.6, 5.8, 0.18, 3.8);
 
         const roofLeft = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
         roofLeft.position.set(-1.2, 4.1, 0); roofLeft.rotation.z = 0.32;
         const roofRight = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
         roofRight.position.set(1.2, 4.1, 0); roofRight.rotation.z = -0.32;
-        const trimLeft = new THREE.Mesh(new THREE.BoxGeometry(3.05, 0.26, 0.15), matTerracotta);
-        trimLeft.position.set(-1.2, 4.1, 1.78); trimLeft.rotation.z = 0.32;
-        const trimRight = new THREE.Mesh(new THREE.BoxGeometry(3.05, 0.26, 0.15), matTerracotta);
-        trimRight.position.set(1.2, 4.1, 1.78); trimRight.rotation.z = -0.32;
-        portico.add(roofLeft, roofRight, trimLeft, trimRight);
+        portico.add(roofLeft, roofRight);
 
         const porticoSignTex = createSignTexture('#3b82f6', '#ffffff', [
-            { text: 'ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಮತ್ತು ಇಂಜಿನಿಯರಿಂಗ್ ವಿಭಾಗ (AI & ML)', font: 'bold 30px Segoe UI, Arial', color: '#ffffff' },
-            { text: 'COMPUTER SCIENCE & ENGINEERING (AI & ML)', font: 'bold 32px Arial', color: '#ffffff' }
+            { text: 'ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಮತ್ತು ಇಂಜಿನಿಯರಿಂಗ್ ವಿಭಾಗ (AI & ML)', font: 'bold 30px Segoe UI, Arial' },
+            { text: 'COMPUTER SCIENCE & ENGINEERING (AI & ML)', font: 'bold 32px Arial' }
         ], 1024, 200);
-        const porticoBanner = new THREE.Mesh(
-            new THREE.BoxGeometry(4.1, 0.62, 0.1),
-            new THREE.MeshStandardMaterial({ map: porticoSignTex })
-        );
-        porticoBanner.position.set(0, 3.38, 1.5);
-        portico.add(porticoBanner);
+        const porticoBanner = new THREE.Mesh(new THREE.BoxGeometry(4.1, 0.62, 0.1), new THREE.MeshStandardMaterial({ map: porticoSignTex }));
+        porticoBanner.position.set(0, 3.38, 1.5); portico.add(porticoBanner);
 
-        const quoteSignTex = createSignTexture('#0f172a', '#64748b', [
-            { text: '"We commit ourselves to render service to provide engineering education to our', font: '22px Arial', color: '#cbd5e1' },
-            { text: 'students with exemplary professional excellence and high ethics."', font: '22px Arial', color: '#cbd5e1' }
-        ], 1024, 140);
-        const quoteBanner = new THREE.Mesh(
-            new THREE.BoxGeometry(3.2, 0.36, 0.06),
-            new THREE.MeshStandardMaterial({ map: quoteSignTex })
-        );
-        quoteBanner.position.set(0, 2.86, 1.2);
-        portico.add(quoteBanner);
-
-        // Switchback Staircase with Physical Step Volumes
-        const stairGroup = new THREE.Group();
-        stairGroup.position.set(-10.5, 0, -1.2);
-        scene.add(stairGroup);
-
+        // Switchback Staircase
+        const stairGroup = new THREE.Group(); stairGroup.position.set(-10.5, 0, -1.2); scene.add(stairGroup);
         for (let i = 0; i < 10; i++) {
-            const stepTopY = (i + 1) * 0.20;
-            const localZ = -i * 0.32;
-            const worldZ = -1.2 + localZ;
+            const stepTopY = (i + 1) * 0.20, localZ = -i * 0.32, worldZ = -1.2 + localZ;
             const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.20, 0.34), matDarkGranite);
-            tread.position.set(0.95, stepTopY - 0.10, localZ);
-            tread.receiveShadow = true;
-            stairGroup.add(tread);
+            tread.position.set(0.95, stepTopY - 0.10, localZ); stairGroup.add(tread);
             PhysicsWorld.addFloorVolume(-10.50, -8.55, worldZ - 0.22, worldZ + 0.22, stepTopY, stepTopY + 3.2);
         }
-
         const midLanding = new THREE.Mesh(new THREE.BoxGeometry(3.9, 0.24, 1.8), matDarkGranite);
-        midLanding.position.set(0, 1.90, -3.75);
-        midLanding.receiveShadow = true;
-        stairGroup.add(midLanding);
+        midLanding.position.set(0, 1.90, -3.75); stairGroup.add(midLanding);
         PhysicsWorld.addFloorVolume(-12.50, -8.55, -5.90, -4.05, 2.02, 6.5);
-
         for (let i = 0; i < 10; i++) {
-            const stepTopY = 2.20 + i * 0.192;
-            const localZ = -2.88 + i * 0.32;
-            const worldZ = -1.2 + localZ;
+            const stepTopY = 2.20 + i * 0.192, localZ = -2.88 + i * 0.32, worldZ = -1.2 + localZ;
             const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.20, 0.34), matGreySteps);
-            tread.position.set(-0.95, stepTopY - 0.10, localZ);
-            tread.receiveShadow = true;
-            stairGroup.add(tread);
+            tread.position.set(-0.95, stepTopY - 0.10, localZ); stairGroup.add(tread);
             PhysicsWorld.addFloorVolume(-12.45, -10.45, worldZ - 0.22, worldZ + 0.22, stepTopY, 7.9);
         }
 
-        PhysicsWorld.addCollider(-10.58, -10.42, -4.10, -1.10, 0.2, 4.8);
-
-        const railMaterial = new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.7 });
-        for (let i = 0; i < 10; i += 2) {
-            const post1 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.95), matBlackMetal);
-            post1.position.set(0.05, 0.5 + i * 0.2, -i * 0.32);
-            const post2 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.95), matBlackMetal);
-            post2.position.set(-0.05, 2.5 + i * 0.2, -2.88 + i * 0.32);
-            stairGroup.add(post1, post2);
-        }
-        const handrailUpper = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 3.4), railMaterial);
-        handrailUpper.position.set(-0.05, 3.55, -1.45); handrailUpper.rotation.x = 0.56;
-        const handrailLower = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 3.4), railMaterial);
-        handrailLower.position.set(0.05, 1.55, -1.45); handrailLower.rotation.x = -0.56;
-        stairGroup.add(handrailUpper, handrailLower);
-
-        const stairWallRight = new THREE.Mesh(new THREE.BoxGeometry(0.2, 8.0, 6.2), matCreamWall);
-        stairWallRight.position.set(1.95, 4.0, -1.8);
-        stairGroup.add(stairWallRight);
-        PhysicsWorld.addCollider(-8.65, -8.42, -6.0, -1.2, 0, 8.0);
-
-        const redNoticeBoard = new THREE.Mesh(
-            new THREE.BoxGeometry(0.04, 0.9, 0.6),
-            new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.5 })
-        );
-        redNoticeBoard.position.set(1.83, 3.3, -0.5);
-        stairGroup.add(redNoticeBoard);
-
-        const switchBox = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.24, 0.18), matWhiteTrim);
-        switchBox.position.set(1.83, 2.75, -1.25);
-        const conduitPipe = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 2.6, 8), matWhiteTrim);
-        conduitPipe.position.set(1.83, 3.6, -1.9);
-        stairGroup.add(switchBox, conduitPipe);
-
-        const fireExitTex = createSignTexture('#15803d', '#ffffff', [{ text: '⬅ FIRE EXIT', font: 'bold 54px Arial' }], 512, 180);
-        const fireExitSign = new THREE.Mesh(
-            new THREE.BoxGeometry(0.04, 0.28, 0.55),
-            new THREE.MeshStandardMaterial({ map: fireExitTex })
-        );
-        fireExitSign.position.set(1.83, 4.1, -1.2);
-        stairGroup.add(fireExitSign);
-
+        // Corridor Walls & Doors
         function addCorridorWallSegment(xStart, xEnd, yFloor = 4.0) {
-            const length = xEnd - xStart;
-            const centerX = (xStart + xEnd) / 2;
+            const length = xEnd - xStart, centerX = (xStart + xEnd) / 2;
             const lower = new THREE.Mesh(new THREE.BoxGeometry(length, 1.25, 0.25), matGreyDado);
             lower.position.set(centerX, yFloor + 0.625, -1.55);
             const upper = new THREE.Mesh(new THREE.BoxGeometry(length, 2.75, 0.25), matCreamWall);
             upper.position.set(centerX, yFloor + 2.625, -1.55);
-            lower.castShadow = upper.castShadow = true;
-            lower.receiveShadow = upper.receiveShadow = true;
             building.add(lower, upper);
             PhysicsWorld.addCollider(xStart, xEnd, -1.72, -1.38, 4.0, 8.0);
         }
@@ -1556,318 +1226,116 @@
         addCorridorWallSegment(-1.55, 5.55, 4.0);
         addCorridorWallSegment(6.85, 14.85, 4.24);
 
-        [ { x: -2.2, y: 4.0, label: 'AI & ML LAB - 01' }, { x: 6.2, y: 4.24, label: 'LECTURE HALL - 101' } ].forEach(d => {
-            const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.6, 0.25), matCreamWall);
-            lintel.position.set(d.x, d.y + 3.2, -1.55);
-            building.add(lintel);
-
-            const plateTex = createSignTexture('#0f172a', '#38bdf8', [{ text: d.label, font: 'bold 44px Arial' }], 512, 128);
-            const plate = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.22, 0.04), new THREE.MeshStandardMaterial({ map: plateTex }));
-            plate.position.set(d.x, d.y + 2.65, -1.41);
-            building.add(plate);
-        });
-
-        function createHingedDoor(hingeX, baseY, zPos, doorLabel, startOpen = false) {
-            const pivot = new THREE.Group();
-            pivot.position.set(hingeX, baseY, zPos);
+        function createHingedDoor(hingeX, baseY, zPos, doorLabel, startOpen = true) {
+            const pivot = new THREE.Group(); pivot.position.set(hingeX, baseY, zPos);
             const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.26, 2.35, 0.07), matDoorWood);
             doorLeaf.position.set(0.63, 1.18, 0);
-            doorLeaf.castShadow = true;
-            const glassPane = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.85, 0.09), matGlass);
-            glassPane.position.set(0.63, 1.55, 0);
-            const handle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.16, 0.14), matWhiteTrim);
-            handle.position.set(1.12, 1.1, 0);
-            pivot.add(doorLeaf, glassPane, handle);
-            building.add(pivot);
-
+            pivot.add(doorLeaf); building.add(pivot);
             const doorCollider = PhysicsWorld.addCollider(hingeX, hingeX + 1.28, zPos - 0.18, zPos + 0.18, baseY, baseY + 2.4, doorLabel);
             doorCollider.active = !startOpen;
-
-            const doorObj = {
-                pivot,
-                doorLeaf,
-                doorLabel,
-                center: new THREE.Vector3(hingeX + 0.63, baseY + 1.0, zPos),
-                currentAngle: startOpen ? -1.48 : 0.0,
-                isOpen: startOpen,
-                collider: doorCollider
-            };
-            doorLeaf.userData = {
-                interactType: 'door_toggle',
-                doorRef: doorObj,
-                getPrompt: () => `Press E or Click to ${doorObj.isOpen ? 'Close' : 'Open'} ${doorLabel} Door`
-            };
-            interactableObjects.push(doorLeaf);
-            hingedDoors.push(doorObj);
+            const doorObj = { pivot, doorLeaf, doorLabel, currentAngle: startOpen ? -1.48 : 0.0, isOpen: startOpen, collider: doorCollider };
+            doorLeaf.userData = { interactType: 'door_toggle', doorRef: doorObj, getPrompt: () => `Press E or Click to ${doorObj.isOpen ? 'Close' : 'Open'} ${doorLabel} Door` };
+            interactableObjects.push(doorLeaf); hingedDoors.push(doorObj);
         }
-        createHingedDoor(-2.83, 4.12, -1.55, 'AI & ML Lab', false);
-        createHingedDoor(5.57, 4.36, -1.55, 'Smart Classroom', false);
-        createHingedDoor(-1.25, 0.20, 0.40, 'Ground Foyer Entrance', true);
+        createHingedDoor(-2.83, 4.12, -1.55, 'AI & ML Lab', true);
+        createHingedDoor(5.57, 4.36, -1.55, 'Smart Classroom', true);
 
-        const facultyBoardTex = createSignTexture('#0f172a', '#fbbf24', [
-            { text: '🏛️ AI & ML FACULTY & TACHYON LEADERSHIP', font: 'bold 34px Segoe UI, Arial', color: '#fbbf24' },
-            { text: 'Dr. Vinay S. (Principal) • Shivakumar Patil (President)', font: 'bold 26px Arial', color: '#ffffff' },
-            { text: '[ Click or Press E to Inspect Profiles ]', font: '24px Arial', color: '#38bdf8' }
-        ], 1024, 256);
-        const facultyBoardMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(1.85, 0.95, 0.06),
-            new THREE.MeshStandardMaterial({ map: facultyBoardTex, roughness: 0.3 })
-        );
-        facultyBoardMesh.position.set(-3.9, 5.75, -1.39);
-        facultyBoardMesh.userData = {
-            interactType: 'faculty_modal',
-            getPrompt: () => 'Press E or Click to Inspect AI & ML Faculty Profiles'
-        };
-        building.add(facultyBoardMesh);
-        interactableObjects.push(facultyBoardMesh);
-
-        [-5.6, 1.2, 10.2].forEach(wx => {
-            const winFrame = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.3, 0.28), matWhiteTrim);
-            winFrame.position.set(wx, 5.85, -1.55);
-            const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.26, 0.30), matWhiteTrim);
-            mullion.position.set(wx, 5.85, -1.55);
-            const winGlass = new THREE.Mesh(new THREE.BoxGeometry(2.04, 1.14, 0.31), matGlass);
-            winGlass.position.set(wx, 5.85, -1.55);
-            building.add(winFrame, mullion, winGlass);
-        });
-
-        function createShoeRack(xPos) {
-            const rack = new THREE.Group();
-            const top = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.05, 0.42), matWoodRack);
-            top.position.y = 0.72;
-            const mid = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.04, 0.40), matWoodRack);
-            mid.position.y = 0.42;
-            const bot = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.04, 0.40), matWoodRack);
-            bot.position.y = 0.12;
-            const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.65, 0.42), matWoodRack);
-            sideL.position.set(-0.85, 0.42, 0);
-            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.65, 0.42), matWoodRack);
-            sideR.position.set(0.85, 0.42, 0);
-            const div = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.65, 0.40), matWoodRack);
-            div.position.set(0, 0.42, 0);
-            rack.add(top, mid, bot, sideL, sideR, div);
-            rack.position.set(xPos, 4.12, -1.18);
-            building.add(rack);
-            PhysicsWorld.addCollider(xPos - 0.9, xPos + 0.9, -1.42, -0.92, 4.0, 5.2);
-        }
-        createShoeRack(-7.2);
-        createShoeRack(-5.2);
-        createShoeRack(0.2);
-
-        const extinguisher = new THREE.Group();
-        const extTank = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.09, 0.09, 0.48, 14),
-            new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.28, metalness: 0.35 })
-        );
-        const extNozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12), matBlackMetal);
-        extNozzle.position.y = 0.28;
-        extinguisher.add(extTank, extNozzle);
-        extinguisher.position.set(2.8, 5.5, -1.36);
-        building.add(extinguisher);
-
-        const ceilingFans = [];
-        function createCeilingFan(x, y, z) {
-            const fanGroup = new THREE.Group();
-            fanGroup.position.set(x, y, z);
-            const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.45, 8), matWhiteTrim);
-            rod.position.y = 0.22;
-            const rotor = new THREE.Group();
-            const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.07, 16), matWhiteTrim);
-            rotor.add(hub);
-            for (let b = 0; b < 3; b++) {
-                const blade = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.015, 0.14), matWhiteTrim);
-                blade.position.x = 0.42;
-                const bladePivot = new THREE.Group();
-                bladePivot.rotation.y = (b * Math.PI * 2) / 3;
-                bladePivot.add(blade);
-                rotor.add(bladePivot);
-            }
-            fanGroup.add(rod, rotor);
-            building.add(fanGroup);
-            ceilingFans.push(rotor);
-        }
-        createCeilingFan(-3.5, 7.55, 0.2);
-        createCeilingFan(3.5, 7.55, 0.2);
-        createCeilingFan(-3.5, 7.55, -5.5);
-        createCeilingFan(0.5, 7.55, -5.5);
-        createCeilingFan(8.0, 7.55, -5.5);
-        createCeilingFan(11.5, 7.55, -5.5);
-
-        const backWall = new THREE.Mesh(new THREE.BoxGeometry(30, 8.0, 0.3), matCreamWall);
-        backWall.position.set(0, 4.0, -10.0);
-        const leftEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall);
-        leftEndWall.position.set(-15, 4.0, -4);
-        const rightEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall);
-        rightEndWall.position.set(15, 4.0, -4);
-        const midRoomDivider = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4.0, 8.4), matCreamWall);
-        midRoomDivider.position.set(4.0, 6.0, -5.8);
+        const backWall = new THREE.Mesh(new THREE.BoxGeometry(30, 8.0, 0.3), matCreamWall); backWall.position.set(0, 4.0, -10.0);
+        const leftEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall); leftEndWall.position.set(-15, 4.0, -4);
+        const rightEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall); rightEndWall.position.set(15, 4.0, -4);
+        const midRoomDivider = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4.0, 8.4), matCreamWall); midRoomDivider.position.set(4.0, 6.0, -5.8);
         building.add(backWall, leftEndWall, rightEndWall, midRoomDivider);
         PhysicsWorld.addCollider(-15, 15, -10.2, -9.7, 0, 9);
         PhysicsWorld.addCollider(-15.2, -14.7, -10, 2, 0, 9);
         PhysicsWorld.addCollider(14.7, 15.2, -10, 2, 0, 9);
         PhysicsWorld.addCollider(3.8, 4.2, -10, -1.6, 4.0, 8.0);
 
-        // Sittable Ergonomic Lab Chairs
-        function createLabChair(x, y, z, rotY = Math.PI, isSittable = true) {
-            const chair = new THREE.Group();
-            chair.position.set(x, y, z);
-            chair.rotation.y = rotY;
-            const seat = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.06, 0.46), matBlackMetal);
-            seat.position.y = 0.46;
-            const back = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.48, 0.05), matBlackMetal);
-            back.position.set(0, 0.72, -0.21);
-            const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.45, 8), matBlackMetal);
-            ped.position.y = 0.23;
-            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.04, 6), matBlackMetal);
-            base.position.y = 0.02;
-            const shadow = new THREE.Mesh(new THREE.PlaneGeometry(0.75, 0.75), contactShadowMat);
-            shadow.rotation.x = -Math.PI / 2;
-            shadow.position.y = 0.01;
-            chair.add(seat, back, ped, base, shadow);
-            building.add(chair);
-
-            if (isSittable) {
-                seat.userData = {
-                    interactType: 'sit_chair',
-                    seatPos: new THREE.Vector3(x, y, z),
-                    seatYaw: 0,
-                    getPrompt: () => 'Press E or Click to Sit at AI Workstation'
-                };
-                interactableObjects.push(seat);
-            }
-        }
-
-        const monitorScreenMat = new THREE.MeshBasicMaterial({ map: liveMonitorTexture });
+        // Lab Workstations & Classroom Benches
         for (let row = -3.8; row >= -8.2; row -= 2.2) {
             for (let col = -6.5; col <= 1.5; col += 2.6) {
                 const desk = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.74, 0.8), matWoodRack);
-                desk.position.set(col, 4.49, row);
-                desk.castShadow = true; desk.receiveShadow = true;
-                building.add(desk);
+                desk.position.set(col, 4.49, row); building.add(desk);
                 PhysicsWorld.addCollider(col - 1.0, col + 1.0, row - 0.42, row + 0.42, 4.0, 5.5);
-
-                [-0.45, 0.45].forEach(offset => {
-                    const monFrame = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.40, 0.04), matBlackMetal);
-                    monFrame.position.set(col + offset, 5.10, row - 0.15);
-                    const monScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.34), monitorScreenMat);
-                    monScreen.position.set(col + offset, 5.10, row - 0.128);
-                    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 0.06), matBlackMetal);
-                    stand.position.set(col + offset, 4.88, row - 0.15);
-                    const keyboard = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.02, 0.14), matBlackMetal);
-                    keyboard.position.set(col + offset, 4.87, row + 0.14);
-                    building.add(monFrame, monScreen, stand, keyboard);
-                });
-                createLabChair(col - 0.45, 4.12, row + 0.58, Math.PI, true);
-                createLabChair(col + 0.45, 4.12, row + 0.58, Math.PI, true);
             }
         }
-
-        const labScreen = new THREE.Mesh(
-            new THREE.BoxGeometry(4.2, 1.8, 0.08),
-            new THREE.MeshStandardMaterial({ map: liveMonitorTexture, roughness: 0.25 })
-        );
-        labScreen.position.set(-2.0, 6.1, -9.75);
-        labScreen.userData = {
-            interactType: 'cycle_lab_mode',
-            getPrompt: () => 'Press E or Click to Switch AI Lab Workload (PyTorch / YOLOv8 / Agent Mesh)'
-        };
-        building.add(labScreen);
-        interactableObjects.push(labScreen);
-
         const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.58 });
         for (let r = -3.8; r >= -8.2; r -= 1.6) {
             for (let c = 6.5; c <= 11.5; c += 2.6) {
                 const desk = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.74, 0.55), benchMat);
-                desk.position.set(c, 4.49, r);
-                desk.castShadow = true;
-                const seatBench = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.45, 0.38), benchMat);
-                seatBench.position.set(c - 0.52, 4.35, r);
-                seatBench.castShadow = true;
-                building.add(desk, seatBench);
+                desk.position.set(c, 4.49, r); building.add(desk);
                 PhysicsWorld.addCollider(c - 0.95, c + 0.95, r - 0.35, r + 0.35, 4.0, 5.5);
             }
         }
 
-        const smartBoard = new THREE.Mesh(
-            new THREE.BoxGeometry(0.08, 1.6, 4.0),
-            new THREE.MeshStandardMaterial({ map: smartBoardTexture, roughness: 0.35 })
-        );
-        smartBoard.position.set(14.75, 6.0, -5.8);
-        smartBoard.userData = {
-            interactType: 'next_slide',
-            getPrompt: () => 'Press E or Click to Advance Smartboard Lecture Slide'
-        };
-        building.add(smartBoard);
-        interactableObjects.push(smartBoard);
-
-        const hotspotMeshes = [];
-        function createInteractiveHotspot(x, y, z, zoneKey, labelText) {
-            const tex = createSignTexture('#0f172a', '#00f2fe', [
-                { text: '📍 ' + labelText, font: 'bold 44px Segoe UI, Arial', color: '#00f2fe' },
-                { text: 'Click to Enter / Inspect', font: 'bold 28px Segoe UI, Arial', color: '#f8fafc' }
-            ], 512, 160);
-            const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
-            const sprite = new THREE.Sprite(mat);
-            sprite.position.set(x, y, z);
-            sprite.scale.set(2.4, 0.75, 1);
-            sprite.userData = {
-                interactType: 'teleport',
-                zoneKey,
-                baseY: y,
-                getPrompt: () => 'Teleport to ' + labelText
-            };
-            scene.add(sprite);
-            hotspotMeshes.push(sprite);
-            interactableObjects.push(sprite);
-        }
-        createInteractiveHotspot(0, 2.5, 6.2, 'portico', 'Main Entrance Portico');
-        createInteractiveHotspot(-10.2, 3.1, -0.5, 'stairs', 'Switchback Staircase');
-        createInteractiveHotspot(-5.0, 5.5, 0.3, 'corridor', '1st Floor AIML Corridor');
-        createInteractiveHotspot(-2.2, 5.4, -1.2, 'lab', 'Enter AI & ML Lab');
-        createInteractiveHotspot(6.2, 5.6, -1.2, 'classroom', 'Enter Smart Classroom');
-
         // ============================================================================
-        // MODULE 6: 16-BONE RIGGED STYLIZED ANIME CHARACTER ENGINE & NPC POPULATION
+        // 3D CHARACTER BUILDER + FLOATING NAMEPLATE & OVERHEAD SPEECH BUBBLE SPRITE
         // ============================================================================
-        const characterAgents = [];
-        let playerAvatar = null;
-        let isThirdPerson = false;
-
         function createAnimeFaceTexture(eyeColorHex) {
             const canvas = document.createElement('canvas');
             canvas.width = 256; canvas.height = 256;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ffe4d0';
-            ctx.fillRect(0, 0, 256, 256);
-
-            // Anime eyebrows
-            ctx.strokeStyle = '#27272a';
-            ctx.lineWidth = 5;
-            ctx.beginPath(); ctx.moveTo(58, 92); ctx.quadraticCurveTo(80, 82, 102, 90); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(154, 90); ctx.quadraticCurveTo(176, 82, 198, 92); ctx.stroke();
-
-            // Expressive Anime Eyes
+            ctx.fillStyle = '#ffe4d0'; ctx.fillRect(0, 0, 256, 256);
             [80, 176].forEach(ex => {
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath(); ctx.ellipse(ex, 122, 20, 22, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = eyeColorHex;
-                ctx.beginPath(); ctx.ellipse(ex, 124, 13, 17, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#090d16';
-                ctx.beginPath(); ctx.ellipse(ex, 126, 7, 10, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#ffffff';
-                ctx.beginPath(); ctx.arc(ex - 5, 115, 4.5, 0, Math.PI * 2); ctx.fill();
-                ctx.beginPath(); ctx.arc(ex + 5, 130, 2.2, 0, Math.PI * 2); ctx.fill();
-                ctx.strokeStyle = '#18181b';
-                ctx.lineWidth = 5;
-                ctx.beginPath(); ctx.arc(ex, 120, 20, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(ex, 122, 20, 22, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = eyeColorHex; ctx.beginPath(); ctx.ellipse(ex, 124, 13, 17, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#090d16'; ctx.beginPath(); ctx.ellipse(ex, 126, 7, 10, 0, 0, Math.PI * 2); ctx.fill();
             });
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.encoding = THREE.sRGBEncoding;
+            return tex;
+        }
 
-            // Subtle nose & smile
-            ctx.fillStyle = '#f4b89a';
-            ctx.beginPath(); ctx.arc(128, 152, 2.5, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = '#b45309';
-            ctx.lineWidth = 3.5;
-            ctx.beginPath(); ctx.arc(128, 168, 12, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        // Draws the floating @Nameplate + Live Overhead Speech Bubble above a Character's Head
+        function createOverheadHeadTagCanvas(callsign, title, chatMsg) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 220;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 512, 220);
+
+            // 1. Speech Bubble (if active chat message within last 12 seconds)
+            if (chatMsg && chatMsg.trim().length > 0) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+                ctx.strokeStyle = '#29E7F2';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.roundRect(26, 12, 460, 88, 22);
+                ctx.fill();
+                ctx.stroke();
+
+                // Speech bubble pointer triangle
+                ctx.beginPath();
+                ctx.moveTo(240, 100);
+                ctx.lineTo(260, 122);
+                ctx.lineTo(276, 100);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = '#0B1020';
+                ctx.font = 'bold 24px Inter, Segoe UI, Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const clipped = chatMsg.length > 36 ? chatMsg.substring(0, 35) + '…' : chatMsg;
+                ctx.fillText('💬 ' + clipped, 256, 56);
+            }
+
+            // 2. Callsign & Title Nameplate Pill
+            ctx.fillStyle = 'rgba(11, 16, 32, 0.88)';
+            ctx.strokeStyle = '#29E7F2';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.roundRect(96, 132, 320, 74, 18);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#29E7F2';
+            ctx.font = 'bold 28px Orbitron, Segoe UI, Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('@' + (callsign || 'Student'), 256, 162);
+
+            ctx.fillStyle = '#FFC857';
+            ctx.font = 'bold 17px JetBrains Mono, monospace';
+            ctx.fillText('★ ' + (title || 'Tachyon Operative'), 256, 190);
 
             const tex = new THREE.CanvasTexture(canvas);
             tex.encoding = THREE.sRGBEncoding;
@@ -1883,109 +1351,66 @@
             const pantsMat = new THREE.MeshToonMaterial({ color: config.pantsColor || 0x1e293b, gradientMap: animeToonGrad });
             const shoeMat = new THREE.MeshToonMaterial({ color: 0x0f172a, gradientMap: animeToonGrad });
 
-            const hips = new THREE.Group();
-            hips.position.y = 0.88;
-            root.add(hips);
-
-            const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.14, 0.16, 12), pantsMat);
-            hips.add(pelvis);
-
-            const spine = new THREE.Group();
-            spine.position.y = 0.08;
-            hips.add(spine);
-
+            const hips = new THREE.Group(); hips.position.y = 0.88; root.add(hips);
+            const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.14, 0.16, 12), pantsMat); hips.add(pelvis);
+            const spine = new THREE.Group(); spine.position.y = 0.08; hips.add(spine);
             const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 0.44, 14), topMat);
-            torso.position.y = 0.22;
-            torso.castShadow = true;
-            spine.add(torso);
+            torso.position.y = 0.22; torso.castShadow = true; spine.add(torso);
 
-            // White Shirt Collar & PESCE ID Lanyard
-            const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.08, 12), matWhiteTrim);
-            collar.position.y = 0.43;
-            const idCard = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 0.01), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
-            idCard.position.set(0, 0.25, 0.16);
-            spine.add(collar, idCard);
-
-            const neck = new THREE.Group();
-            neck.position.y = 0.46;
-            spine.add(neck);
-
-            const headGroup = new THREE.Group();
-            headGroup.position.y = 0.08;
-            neck.add(headGroup);
+            const neck = new THREE.Group(); neck.position.y = 0.46; spine.add(neck);
+            const headGroup = new THREE.Group(); headGroup.position.y = 0.08; neck.add(headGroup);
 
             const faceTex = createAnimeFaceTexture(config.eyeColor || '#2563eb');
-            const headMesh = new THREE.Mesh(
-                new THREE.SphereGeometry(0.145, 20, 20),
-                new THREE.MeshToonMaterial({ map: faceTex, gradientMap: animeToonGrad })
-            );
-            headMesh.rotation.y = -Math.PI / 2;
-            headMesh.position.y = 0.11;
-            headMesh.castShadow = true;
-            headGroup.add(headMesh);
+            const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20), new THREE.MeshToonMaterial({ map: faceTex, gradientMap: animeToonGrad }));
+            headMesh.rotation.y = -Math.PI / 2; headMesh.position.y = 0.11; headGroup.add(headMesh);
 
-            // Stylized Layered Anime Hair Cap + Spikes
             const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.154, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.62), hairMat);
-            hairCap.position.y = 0.12;
-            headGroup.add(hairCap);
-            for (let s = 0; s < 7; s++) {
-                const spike = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.14, 5), hairMat);
-                const ang = (s / 7) * Math.PI * 2;
-                spike.position.set(Math.sin(ang) * 0.12, 0.15, Math.cos(ang) * 0.12);
-                spike.rotation.z = -Math.sin(ang) * 0.45;
-                spike.rotation.x = Math.cos(ang) * 0.45;
-                headGroup.add(spike);
-            }
+            hairCap.position.y = 0.12; headGroup.add(hairCap);
 
             function buildArm(side) {
-                const shoulder = new THREE.Group();
-                shoulder.position.set(side * 0.20, 0.38, 0);
-                spine.add(shoulder);
-                const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.04, 0.28, 10), topMat);
-                upper.position.y = -0.14;
-                shoulder.add(upper);
-                const elbow = new THREE.Group();
-                elbow.position.y = -0.28;
-                shoulder.add(elbow);
-                const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.26, 10), skinMat);
-                fore.position.y = -0.13;
-                const hand = new THREE.Mesh(new THREE.SphereGeometry(0.042, 8, 8), skinMat);
-                hand.position.y = -0.27;
-                elbow.add(fore, hand);
+                const shoulder = new THREE.Group(); shoulder.position.set(side * 0.20, 0.38, 0); spine.add(shoulder);
+                const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.04, 0.28, 10), topMat); upper.position.y = -0.14; shoulder.add(upper);
+                const elbow = new THREE.Group(); elbow.position.y = -0.28; shoulder.add(elbow);
+                const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.26, 10), skinMat); fore.position.y = -0.13;
+                elbow.add(fore);
                 return { arm: shoulder, foreArm: elbow };
             }
 
             function buildLeg(side) {
-                const hipJoint = new THREE.Group();
-                hipJoint.position.set(side * 0.085, -0.04, 0);
-                hips.add(hipJoint);
-                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.055, 0.42, 10), pantsMat);
-                thigh.position.y = -0.21;
-                thigh.castShadow = true;
-                hipJoint.add(thigh);
-                const knee = new THREE.Group();
-                knee.position.y = -0.42;
-                hipJoint.add(knee);
-                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.054, 0.044, 0.40, 10), pantsMat);
-                shin.position.y = -0.20;
-                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.18), shoeMat);
-                shoe.position.set(0, -0.41, 0.03);
+                const hipJoint = new THREE.Group(); hipJoint.position.set(side * 0.085, -0.04, 0); hips.add(hipJoint);
+                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.055, 0.42, 10), pantsMat); thigh.position.y = -0.21; hipJoint.add(thigh);
+                const knee = new THREE.Group(); knee.position.y = -0.42; hipJoint.add(knee);
+                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.054, 0.044, 0.40, 10), pantsMat); shin.position.y = -0.20;
+                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.18), shoeMat); shoe.position.set(0, -0.41, 0.03);
                 knee.add(shin, shoe);
                 return { upLeg: hipJoint, leg: knee };
             }
 
-            const leftArm = buildArm(1);
-            const rightArm = buildArm(-1);
-            const leftLeg = buildLeg(1);
-            const rightLeg = buildLeg(-1);
+            const leftArm = buildArm(1), rightArm = buildArm(-1);
+            const leftLeg = buildLeg(1), rightLeg = buildLeg(-1);
 
             const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
-            shadowPlane.rotation.x = -Math.PI / 2;
-            shadowPlane.position.y = 0.015;
-            root.add(shadowPlane);
+            shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = 0.015; root.add(shadowPlane);
+
+            // Overhead Nameplate & Speech Bubble Sprite
+            const tagTex = createOverheadHeadTagCanvas(config.callsign || 'Operative', config.title || 'Rookie Coder', '');
+            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tagTex, transparent: true, depthTest: false }));
+            tagSprite.position.set(0, 2.18, 0);
+            tagSprite.scale.set(2.1, 0.9, 1);
+            tagSprite.renderOrder = 999;
+            root.add(tagSprite);
 
             return {
                 wrapper: root,
+                tagSprite,
+                lastRenderedHash: '',
+                updateOverheadTag(callsign, title, chatMsg) {
+                    const hash = `${callsign}|${title}|${chatMsg}`;
+                    if (this.lastRenderedHash === hash) return;
+                    this.lastRenderedHash = hash;
+                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose();
+                    this.tagSprite.material.map = createOverheadHeadTagCanvas(callsign, title, chatMsg);
+                },
                 bones: {
                     hips, spine, neck, head: headGroup,
                     leftArm: leftArm.arm, leftForeArm: leftArm.foreArm,
@@ -1996,133 +1421,7 @@
             };
         }
 
-        function spawnAnimeNPC(config) {
-            const actor = buildStylizedAnimeActor(config);
-            actor.wrapper.position.copy(config.position);
-            actor.wrapper.rotation.y = config.rotationY || 0;
-            scene.add(actor.wrapper);
-
-            // Make NPC interactive for dialogue
-            actor.wrapper.traverse(child => {
-                if (child.isMesh) {
-                    child.userData = {
-                        interactType: 'npc_talk',
-                        speaker: config.name || 'PESCE AIML Student',
-                        dialogue: config.dialogue || 'Exploring our department Digital Twin!',
-                        getPrompt: () => `Press E or Click to Talk to ${config.name || 'Student'}`
-                    };
-                    interactableObjects.push(child);
-                }
-            });
-
-            characterAgents.push({
-                wrapper: actor.wrapper,
-                bones: actor.bones,
-                role: config.role,
-                phase: Math.random() * Math.PI * 2,
-                waypoints: config.waypoints || null,
-                wpIndex: 0,
-                pauseTimer: 0,
-                isGroundFloor: !!config.isGroundFloor,
-                optionalOnMobile: !!config.optionalOnMobile
-            });
-        }
-
-        function initializeDepartmentPopulation() {
-            // Controllable 3rd-Person Player Avatar
-            playerAvatar = buildStylizedAnimeActor({
-                hairColor: 0x0f172a, shirtColor: 0x0284c7, pantsColor: 0x1e293b, eyeColor: '#00f2fe'
-            });
-            playerAvatar.wrapper.visible = isThirdPerson;
-            scene.add(playerAvatar.wrapper);
-
-            // 1. Courtyard Walker
-            spawnAnimeNPC({
-                name: 'Aarav (AIML Undergrad)',
-                dialogue: 'Welcome to PESCE Mandya! Walk through the portico and take the stairs on the left to visit our Deep Learning Lab.',
-                role: 'walker', isGroundFloor: true,
-                hairColor: 0x1e1b4b, shirtColor: 0x2563eb, pantsColor: 0x1e293b, eyeColor: '#38bdf8',
-                position: new THREE.Vector3(-1.5, 0.03, 18.0),
-                waypoints: [
-                    { x: -1.5, z: 18.0, pause: 1.5 },
-                    { x: -1.2, z: 7.2,  pause: 2.8 },
-                    { x: 1.5,  z: 10.0, pause: 1.0 },
-                    { x: 1.5,  z: 21.0, pause: 2.0 }
-                ]
-            });
-
-            // 2. 1st-Floor Corridor Walker
-            spawnAnimeNPC({
-                name: 'Diya (Tachyon Club Member)',
-                dialogue: 'We are deploying autonomous AI agents for the Tachyon Hub leaderboard! Check out the Lab next door.',
-                role: 'walker',
-                hairColor: 0x3b0764, shirtColor: 0x0d9488, pantsColor: 0x1e293b, eyeColor: '#10b981',
-                position: new THREE.Vector3(-6.2, 4.12, 0.35),
-                waypoints: [
-                    { x: -6.2, z: 0.35, pause: 2.0 },
-                    { x: -2.2, z: -0.35, pause: 3.0 },
-                    { x: 3.8,  z: 0.35, pause: 1.0 },
-                    { x: 8.5,  z: 0.35, pause: 2.5 },
-                    { x: 3.8,  z: 0.35, pause: 0.5 }
-                ]
-            });
-
-            // 3. Corridor Standing Student
-            spawnAnimeNPC({
-                name: 'Rohan (Research Intern)',
-                dialogue: 'Press E on the Faculty & Leadership board behind me to view Dr. Vinay S. and our club leadership!',
-                role: 'corridor_talker',
-                hairColor: 0x27272a, shirtColor: 0x4f46e5, pantsColor: 0x0f172a, eyeColor: '#fbbf24',
-                position: new THREE.Vector3(1.5, 4.12, 0.55),
-                rotationY: -0.4,
-                optionalOnMobile: true
-            });
-
-            // 4. AI & ML Lab Seated Coders
-            [
-                { x: -6.95, z: -3.22, shirt: 0x0f766e, name: 'Sneha (CV Researcher)', opt: false },
-                { x: -3.45, z: -3.22, shirt: 0x4338ca, name: 'Karthik (NLP Lead)', opt: false },
-                { x: -0.85, z: -5.42, shirt: 0xb45309, name: 'Meera (RL Developer)', opt: true }
-            ].forEach(seat => {
-                spawnAnimeNPC({
-                    name: seat.name,
-                    dialogue: 'Training Vision Transformers on our dual-monitor cluster! Click the projection screen to switch workloads.',
-                    role: 'seated_lab_typing',
-                    hairColor: 0x18181b, shirtColor: seat.shirt, pantsColor: 0x1e293b,
-                    position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                    rotationY: Math.PI,
-                    optionalOnMobile: seat.opt
-                });
-            });
-
-            // 5. Smart Classroom Seated Students + Faculty
-            [
-                { x: 5.98, z: -3.8, role: 'seated_classroom', shirt: 0x1d4ed8, name: 'Ananya (3rd Year AIML)', opt: false },
-                { x: 5.98, z: -5.4, role: 'seated_hand_raise', shirt: 0x047857, name: 'Vikram (3rd Year AIML)', opt: false },
-                { x: 8.58, z: -3.8, role: 'seated_classroom', shirt: 0x6d28d9, name: 'Priya (3rd Year AIML)', opt: true }
-            ].forEach(seat => {
-                spawnAnimeNPC({
-                    name: seat.name,
-                    dialogue: 'Today’s lecture covers Multi-Head Self-Attention and Policy Gradients!',
-                    role: seat.role,
-                    hairColor: 0x1e293b, shirtColor: seat.shirt, pantsColor: 0x0f172a,
-                    position: new THREE.Vector3(seat.x, 4.12, seat.z),
-                    rotationY: Math.PI / 2,
-                    optionalOnMobile: seat.opt
-                });
-            });
-
-            spawnAnimeNPC({
-                name: 'Prof. Arvind (AI & ML Faculty)',
-                dialogue: 'Welcome to Lecture Hall 101! Click the green smartboard or press E to advance through the course slides.',
-                role: 'faculty',
-                hairColor: 0x334155, shirtColor: 0x0f172a, pantsColor: 0x334155, eyeColor: '#38bdf8',
-                position: new THREE.Vector3(13.6, 4.12, -5.6),
-                rotationY: -Math.PI / 2
-            });
-        }
-
-        function animateBonePose(b, state, t, speed = 1.0) {
+        function animateBonePose(b, state, t) {
             if (state === 'walk' || state === 'run') {
                 const freq = state === 'run' ? 11.0 : 7.0;
                 const amp = state === 'run' ? 0.65 : 0.42;
@@ -2133,386 +1432,231 @@
                 b.rightLeg.rotation.x = Math.max(0, Math.cos(t * freq) * 0.45);
                 b.leftArm.rotation.x = -Math.sin(t * freq) * (amp * 0.75);
                 b.rightArm.rotation.x = Math.sin(t * freq) * (amp * 0.75);
-                b.leftForeArm.rotation.x = -0.25;
-                b.rightForeArm.rotation.x = -0.25;
-                b.spine.rotation.x = state === 'run' ? 0.12 : 0.04;
-            } else if (state === 'seated_typing') {
-                b.hips.position.y = 0.52;
-                b.leftUpLeg.rotation.x = -1.52;
-                b.rightUpLeg.rotation.x = -1.52;
-                b.leftLeg.rotation.x = 1.52;
-                b.rightLeg.rotation.x = 1.52;
-                b.spine.rotation.x = 0.12;
-                b.leftArm.rotation.x = -0.68; b.leftArm.rotation.z = 0.18;
-                b.rightArm.rotation.x = -0.68; b.rightArm.rotation.z = -0.18;
-                b.leftForeArm.rotation.x = -0.82 + Math.sin(t * 12) * 0.08;
-                b.rightForeArm.rotation.x = -0.82 + Math.cos(t * 12) * 0.08;
-                b.head.rotation.y = Math.sin(t * 0.9) * 0.20;
-            } else if (state === 'seated_classroom' || state === 'seated_hand_raise') {
-                b.hips.position.y = 0.52;
-                b.leftUpLeg.rotation.x = -1.50;
-                b.rightUpLeg.rotation.x = -1.50;
-                b.leftLeg.rotation.x = 1.50;
-                b.rightLeg.rotation.x = 1.50;
-                b.leftArm.rotation.x = -0.45;
-                b.leftForeArm.rotation.x = -0.75;
-                const raise = state === 'seated_hand_raise' ? Math.max(0, Math.sin(t * 0.6)) : 0;
-                if (raise > 0.3) {
-                    b.rightArm.rotation.x = -2.45;
-                    b.rightForeArm.rotation.x = -0.25;
-                } else {
-                    b.rightArm.rotation.x = -0.45;
-                    b.rightForeArm.rotation.x = -0.75;
-                }
-                b.head.rotation.y = Math.sin(t * 0.6) * 0.15;
-            } else if (state === 'faculty') {
-                b.hips.position.y = 0.88 + Math.sin(t * 2.0) * 0.01;
-                b.rightArm.rotation.x = -0.75 + Math.sin(t * 2.4) * 0.28;
-                b.rightForeArm.rotation.x = -0.55 + Math.cos(t * 2.4) * 0.22;
-                b.leftArm.rotation.x = -0.20;
-                b.head.rotation.y = Math.sin(t * 0.9) * 0.30;
             } else {
-                // Idle breathing
                 b.hips.position.y = 0.88 + Math.sin(t * 2.2) * 0.012;
                 b.leftUpLeg.rotation.x = 0; b.rightUpLeg.rotation.x = 0;
                 b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0;
                 b.leftArm.rotation.x = Math.sin(t * 1.5) * 0.04;
                 b.rightArm.rotation.x = -Math.sin(t * 1.5) * 0.04;
-                b.leftForeArm.rotation.x = -0.15;
-                b.rightForeArm.rotation.x = -0.15;
-                b.spine.rotation.x = 0;
-                b.head.rotation.y = Math.sin(t * 1.1) * 0.18;
+                b.head.rotation.y = Math.sin(t * 1.1) * 0.15;
             }
         }
 
-        function getCorridorFloorY(xPos) {
-            if (xPos <= 4.3) return 4.12;
-            if (xPos >= 5.7) return 4.36;
-            return 4.12 + ((xPos - 4.3) / 1.4) * 0.24;
+        // ============================================================================
+        // REAL-TIME MULTIPLAYER PLAYER SYSTEM (Firestore `twin_players` Sync)
+        // ============================================================================
+        let myUid = "guest_" + Math.random().toString(36).substring(2, 7);
+        let myCallsign = "Guest_" + myUid.slice(-3);
+        let myTitle = "Tachyon Explorer";
+        let myChatText = "";
+        let myChatTimestamp = 0;
+        let isThirdPerson = true; // Default 3rd Person so you immediately see your own character & overhead chat!
+
+        const playerAvatar = buildStylizedAnimeActor({
+            callsign: myCallsign, title: myTitle, shirtColor: 0x0284c7
+        });
+        scene.add(playerAvatar.wrapper);
+
+        // Dictionary of other live online players: { [uid]: { actor, targetPos, targetYaw, state, lastSeen, name, title, chatMsg } }
+        const remotePlayers = {};
+        const colorPalette = [0x9B5CFF, 0x10b981, 0xf43f5e, 0xf59e0b, 0x06b6d4, 0xec4899];
+
+        onAuthStateChanged(auth, async (user) => {
+            const badgeEl = document.getElementById('my-online-badge');
+            if (user) {
+                myUid = user.uid;
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists() && snap.data().customName) {
+                    myCallsign = snap.data().customName;
+                    myTitle = snap.data().equippedTitle || "Neural Architect";
+                } else {
+                    myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, '');
+                }
+                badgeEl.innerText = `🟢 Online as @${myCallsign}`;
+                playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
+                broadcastMyPresence(true);
+            } else {
+                badgeEl.innerText = `🔑 Sign In for Custom Name`;
+                badgeEl.onclick = () => signInWithPopup(auth, provider);
+            }
+        });
+
+        async function broadcastMyPresence(force = false) {
+            if (!myUid) return;
+            try {
+                const activeMsg = (Date.now() - myChatTimestamp < 10000) ? myChatText : "";
+                await setDoc(doc(db, "twin_players", myUid), {
+                    uid: myUid,
+                    name: myCallsign,
+                    title: myTitle,
+                    x: Number(playerFootPos.x.toFixed(2)),
+                    y: Number(playerFootPos.y.toFixed(2)),
+                    z: Number(playerFootPos.z.toFixed(2)),
+                    yaw: Number(playerAvatar.wrapper.rotation.y.toFixed(2)),
+                    state: currentLocomotionState,
+                    chatMessage: activeMsg,
+                    chatTimestamp: myChatTimestamp,
+                    lastSeen: Date.now()
+                }, { merge: true });
+            } catch (e) {}
         }
 
-        function updateCharacterAgents(dt, elapsed) {
-            const maxDist = currentPreset === 'MOBILE' ? 28 : 55;
-            characterAgents.forEach((agent) => {
-                if (!agent.wrapper.visible) return;
-                if (agent.wrapper.position.distanceTo(camera.position) > maxDist) return;
+        // Send Overhead Chat Message (Displays above your 3D head + syncs to all online players!)
+        window.sendOverheadChatMessage = function() {
+            const input = document.getElementById('overhead-chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            myChatText = msg;
+            myChatTimestamp = Date.now();
 
-                const t = elapsed + agent.phase;
-                if (agent.role === 'walker' && agent.waypoints) {
-                    const targetWP = agent.waypoints[agent.wpIndex];
-                    if (agent.pauseTimer > 0) {
-                        agent.pauseTimer -= dt;
-                        animateBonePose(agent.bones, 'idle', t);
-                        if (agent.pauseTimer <= 0) {
-                            agent.wpIndex = (agent.wpIndex + 1) % agent.waypoints.length;
-                        }
-                    } else {
-                        const dx = targetWP.x - agent.wrapper.position.x;
-                        const dz = targetWP.z - agent.wrapper.position.z;
-                        const dist = Math.hypot(dx, dz);
-                        if (dist < 0.18) {
-                            agent.pauseTimer = targetWP.pause || 1.5;
-                        } else {
-                            const walkSpeed = 1.15;
-                            agent.wrapper.position.x += (dx / dist) * walkSpeed * dt;
-                            agent.wrapper.position.z += (dz / dist) * walkSpeed * dt;
-                            agent.wrapper.position.y = agent.isGroundFloor ? 0.03 : getCorridorFloorY(agent.wrapper.position.x);
-                            const desiredYaw = Math.atan2(dx, dz);
-                            let diff = desiredYaw - agent.wrapper.rotation.y;
-                            while (diff > Math.PI) diff -= Math.PI * 2;
-                            while (diff < -Math.PI) diff += Math.PI * 2;
-                            agent.wrapper.rotation.y += diff * Math.min(1, dt * 7);
-                            animateBonePose(agent.bones, 'walk', t);
-                        }
+            playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
+            broadcastMyPresence(true);
+
+            const feed = document.getElementById('multiplayer-chat-feed');
+            feed.innerHTML += `<div><strong style="color:var(--emerald);">@${myCallsign}:</strong> ${msg}</div>`;
+            feed.scrollTop = feed.scrollHeight;
+        };
+
+        document.getElementById('overhead-chat-input').addEventListener('keydown', (e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter') window.sendOverheadChatMessage();
+        });
+
+        // Listen to all online players in `twin_players`
+        onSnapshot(collection(db, "twin_players"), (snapshot) => {
+            const now = Date.now();
+            const rosterEl = document.getElementById('online-players-list');
+            let onlineCount = 1;
+            let rosterHTML = `<div class="online-user-chip"><span>🟢 @${myCallsign} (You)</span></div>`;
+
+            snapshot.forEach((docSnap) => {
+                const p = docSnap.data();
+                if (!p || !p.uid || p.uid === myUid) return;
+
+                // Consider online if active in the last 120 seconds
+                const isRecent = (now - (p.lastSeen || 0)) < 120000;
+                if (!isRecent) {
+                    if (remotePlayers[p.uid]) {
+                        scene.remove(remotePlayers[p.uid].actor.wrapper);
+                        delete remotePlayers[p.uid];
                     }
-                } else if (agent.role === 'seated_lab_typing') {
-                    animateBonePose(agent.bones, 'seated_typing', t);
-                } else if (agent.role === 'seated_classroom' || agent.role === 'seated_hand_raise') {
-                    animateBonePose(agent.bones, agent.role, t);
-                } else if (agent.role === 'faculty') {
-                    animateBonePose(agent.bones, 'faculty', t);
-                } else {
-                    animateBonePose(agent.bones, 'idle', t);
+                    return;
+                }
+
+                onlineCount++;
+                rosterHTML += `<div class="online-user-chip" onclick="teleportNearPlayer(${p.x || 0}, ${p.y || 0}, ${p.z || 15})" title="Click to walk to @${p.name}"><span>🧑‍🚀 @${p.name}</span> <span>↗</span></div>`;
+
+                if (!remotePlayers[p.uid]) {
+                    const colorHash = p.uid.charCodeAt(0) % colorPalette.length;
+                    const newActor = buildStylizedAnimeActor({
+                        callsign: p.name,
+                        title: p.title || 'Operative',
+                        shirtColor: colorPalette[colorHash]
+                    });
+                    newActor.wrapper.position.set(p.x || 0, p.y || 0, p.z || 18);
+                    scene.add(newActor.wrapper);
+                    remotePlayers[p.uid] = {
+                        actor: newActor,
+                        targetPos: new THREE.Vector3(p.x || 0, p.y || 0, p.z || 18),
+                        targetYaw: p.yaw || 0,
+                        state: p.state || 'idle',
+                        lastChatTs: 0
+                    };
+                }
+
+                const rp = remotePlayers[p.uid];
+                rp.targetPos.set(p.x || 0, p.y || 0, p.z || 18);
+                rp.targetYaw = p.yaw || 0;
+                rp.state = p.state || 'idle';
+
+                const bubbleActive = p.chatMessage && (now - (p.chatTimestamp || 0) < 12000);
+                rp.actor.updateOverheadTag(p.name, p.title || 'Operative', bubbleActive ? p.chatMessage : '');
+
+                if (bubbleActive && p.chatTimestamp !== rp.lastChatTs) {
+                    rp.lastChatTs = p.chatTimestamp;
+                    const feed = document.getElementById('multiplayer-chat-feed');
+                    feed.innerHTML += `<div><strong style="color:var(--cyan);">@${p.name}:</strong> ${p.chatMessage}</div>`;
+                    feed.scrollTop = feed.scrollHeight;
                 }
             });
-        }
+
+            document.getElementById('online-count').innerText = onlineCount;
+            rosterEl.innerHTML = rosterHTML;
+        });
+
+        window.teleportNearPlayer = function(tx, ty, tz) {
+            orbitMode = false;
+            playerFootPos.set(tx + 1.2, ty, tz + 1.2);
+        };
 
         // ============================================================================
-        // MODULE 7: GRAPHICS PRESETS, AUDIO, INTERACTIONS & MASTER RENDER LOOP
+        // NAVIGATION, CAMERA & CONTROLS
         // ============================================================================
-        const isMobileDevice = window.innerWidth <= 850 || /Mobi|Android/i.test(navigator.userAgent);
-        let currentPreset = isMobileDevice ? 'MOBILE' : 'HIGH';
-        document.getElementById('PresetSelect').value = currentPreset;
-
-        window.applyGraphicsPreset = function(preset) {
-            currentPreset = preset;
-            if (preset === 'HIGH') {
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                buildLivingGrassField(18000);
-                characterAgents.forEach(a => { a.wrapper.visible = true; });
-            } else if (preset === 'BALANCED') {
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-                buildLivingGrassField(9000);
-                characterAgents.forEach(a => { a.wrapper.visible = true; });
-            } else {
-                renderer.setPixelRatio(1.0);
-                buildLivingGrassField(3500);
-                characterAgents.forEach(a => { a.wrapper.visible = !a.optionalOnMobile; });
-            }
-        };
-        initializeDepartmentPopulation();
-        applyGraphicsPreset(currentPreset);
-
-        let audioCtx = null;
-        let audioGain = null;
-        let audioEnabled = false;
-
-        window.toggleAmbienceAudio = function() {
-            const btn = document.getElementById('btn-audio');
-            if (!audioCtx) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-                const bufferSize = audioCtx.sampleRate * 2;
-                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const output = noiseBuffer.getChannelData(0);
-                let lastOut = 0.0;
-                for (let i = 0; i < bufferSize; i++) {
-                    const white = Math.random() * 2 - 1;
-                    output[i] = (lastOut + (0.02 * white)) / 1.02;
-                    lastOut = output[i];
-                    output[i] *= 0.15;
-                }
-                const whiteNoise = audioCtx.createBufferSource();
-                whiteNoise.buffer = noiseBuffer;
-                whiteNoise.loop = true;
-
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 420;
-
-                audioGain = audioCtx.createGain();
-                audioGain.gain.value = 0.0;
-
-                whiteNoise.connect(filter);
-                filter.connect(audioGain);
-                audioGain.connect(audioCtx.destination);
-                whiteNoise.start(0);
-            }
-            audioEnabled = !audioEnabled;
-            if (audioEnabled) {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                audioGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.3);
-                btn.innerText = '🔊 Audio: On';
-                btn.classList.add('active-mode');
-            } else {
-                audioGain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.2);
-                btn.innerText = '🔇 Audio: Off';
-                btn.classList.remove('active-mode');
-            }
+        const viewpoints = {
+            exterior: { foot: { x: 0, y: 0.0, z: 21 }, yaw: 0, pitch: 0.06, title: "🏛️ Department Exterior", desc: "Walk up to other online players and type in the chat bar to talk!" },
+            portico: { foot: { x: 0, y: 0.18, z: 4.8 }, yaw: 0, pitch: 0.04, title: "🚪 Main Entrance Portico", desc: "Walk inside and head left (-X) to climb the switchback staircase." },
+            stairs: { foot: { x: -9.5, y: 0.20, z: -0.6 }, yaw: 0, pitch: 0.12, title: "🪜 Switchback Staircase", desc: "Walk forward up the granite steps to the 1st-floor AI & ML corridor." },
+            corridor: { foot: { x: -7.5, y: 4.12, z: 0.25 }, yaw: -1.57, pitch: -0.02, title: "🚶 1st Floor AI & ML Corridor", desc: "Matte-brown floor tiles, shoe racks, and entrances to the AI Lab & Classroom." },
+            lab: { foot: { x: -2.0, y: 4.12, z: -2.3 }, yaw: 0.25, pitch: -0.08, title: "💻 AI & ML Deep Learning Lab", desc: "Dual-monitor AI compute cluster." },
+            classroom: { foot: { x: 7.2, y: 4.12, z: -5.6 }, yaw: -1.57, pitch: -0.05, title: "🎓 Smart Lecture Classroom", desc: "Academic lecture hall." }
         };
 
-        let activeHoveredTarget = null;
-        let isPlayerSeated = false;
-        let dialogueTimer = null;
-
-        window.openProfileModal = function() {
-            document.getElementById('profile-modal').style.display = 'flex';
-        };
-        window.closeProfileModal = function() {
-            document.getElementById('profile-modal').style.display = 'none';
-        };
-
-        function showNPCDialogue(speaker, text) {
-            const box = document.getElementById('npc-dialogue');
-            document.getElementById('npc-speaker').innerText = '💬 ' + speaker;
-            document.getElementById('npc-text').innerText = text;
-            box.style.display = 'flex';
-            if (dialogueTimer) clearTimeout(dialogueTimer);
-            dialogueTimer = setTimeout(() => { box.style.display = 'none'; }, 5500);
-        }
-
-        window.executeObjectInteraction = function(userData) {
-            if (!userData) return;
-            if (userData.interactType === 'teleport' && userData.zoneKey) {
-                window.teleportTo(userData.zoneKey);
-            } else if (userData.interactType === 'door_toggle' && userData.doorRef) {
-                userData.doorRef.isOpen = !userData.doorRef.isOpen;
-                userData.doorRef.collider.active = !userData.doorRef.isOpen;
-            } else if (userData.interactType === 'sit_chair' && userData.seatPos) {
-                isPlayerSeated = true;
-                playerFootPos.set(userData.seatPos.x, userData.seatPos.y, userData.seatPos.z);
-                camYaw = userData.seatYaw || 0;
-                camPitch = -0.05;
-            } else if (userData.interactType === 'npc_talk') {
-                showNPCDialogue(userData.speaker, userData.dialogue);
-            } else if (userData.interactType === 'faculty_modal') {
-                window.openProfileModal();
-            } else if (userData.interactType === 'cycle_lab_mode') {
-                labWorkloadMode = (labWorkloadMode + 1) % 3;
-                updateLabMonitorScreen(0.1);
-                document.getElementById('info-title').innerText = '💻 ' + labModeTitles[labWorkloadMode];
-            } else if (userData.interactType === 'next_slide') {
-                currentSlideIndex = (currentSlideIndex + 1) % lectureSlides.length;
-                renderSmartBoardSlide();
-                document.getElementById('info-title').innerText = '🎓 ' + lectureSlides[currentSlideIndex].title;
-            }
-        };
-
-        window.triggerActiveInteraction = function() {
-            if (activeHoveredTarget && activeHoveredTarget.userData) {
-                window.executeObjectInteraction(activeHoveredTarget.userData);
-            }
-        };
+        const playerFootPos = new THREE.Vector3(0, 0.0, 19);
+        let playerVelY = 0;
+        let isGrounded = true;
+        let camYaw = 0;
+        let camPitch = 0.08;
+        let targetTeleport = null;
+        let orbitMode = false;
+        let orbitAngle = 0.45, orbitElevation = 0.32, orbitDistance = 30;
+        let currentLocomotionState = 'idle';
 
         window.togglePerspectiveMode = function() {
             isThirdPerson = !isThirdPerson;
             const btn = document.getElementById('btn-viewmode');
             btn.innerText = isThirdPerson ? '🧍 View: 3rd Person' : '👁️ View: 1st Person';
             btn.classList.toggle('active-mode', isThirdPerson);
-            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson && !cinematicActive && !orbitMode;
-        };
-
-        const viewpoints = {
-            exterior: {
-                foot: { x: 0, y: 0.0, z: 21 },
-                yaw: 0, pitch: 0.06,
-                title: "🏛️ Department Exterior Elevation",
-                desc: "Photorealistic PBR reconstruction of the PESCE Mandya CSE (AI & ML) building with 3D cross-quad wind grass, terracotta planters, and rooftop solar arrays."
-            },
-            portico: {
-                foot: { x: 0, y: 0.18, z: 4.8 },
-                yaw: 0, pitch: 0.04,
-                title: "🚪 Main Entrance Portico",
-                desc: "Gable-roofed entrance canopy with bilingual department signage. Walk inside and head left (-X) to climb the physical switchback staircase."
-            },
-            stairs: {
-                foot: { x: -9.5, y: 0.20, z: -0.6 },
-                yaw: 0, pitch: 0.12,
-                title: "🪜 Switchback Staircase",
-                desc: "Walk forward (W) up the black granite lower steps to the mid-landing, turn around, and climb the grey concrete upper steps to the 1st floor."
-            },
-            corridor: {
-                foot: { x: -7.5, y: 4.12, z: 0.25 },
-                yaw: -1.57, pitch: -0.02,
-                title: "🚶 1st Floor AI & ML Corridor",
-                desc: "Matte-brown vitrified floor tiles, wooden shoe racks, fire extinguisher, operable doors, and interactive Faculty Leadership board."
-            },
-            lab: {
-                foot: { x: -2.0, y: 4.12, z: -2.3 },
-                yaw: 0.25, pitch: -0.08,
-                title: "💻 AI & ML Deep Learning Lab",
-                desc: "Students code at dual-monitor workstations. Click any chair to sit down, or click the front screen to switch live AI workloads."
-            },
-            classroom: {
-                foot: { x: 7.2, y: 4.12, z: -5.6 },
-                yaw: -1.57, pitch: -0.05,
-                title: "🎓 Smart Lecture Classroom",
-                desc: "Students sit at wooden lecture benches while a faculty member lectures. Click the green smartboard or press E to advance slides."
-            }
-        };
-
-        const playerFootPos = new THREE.Vector3(0, 0.0, 21);
-        let playerVelY = 0;
-        let isGrounded = true;
-        let camYaw = 0;
-        let camPitch = 0.06;
-        let targetTeleport = null;
-        let cinematicActive = true;
-        let cinematicTime = 0;
-        let orbitMode = false;
-        let orbitAngle = 0.45;
-        let orbitElevation = 0.32;
-        let orbitDistance = 30;
-
-        window.startCinematicIntro = function() {
-            orbitMode = false;
-            isPlayerSeated = false;
-            document.getElementById('btn-orbit').classList.remove('active-mode');
-            cinematicActive = true;
-            cinematicTime = 0;
-            targetTeleport = null;
-            if (playerAvatar) playerAvatar.wrapper.visible = false;
-            const banner = document.getElementById('cinematic-banner');
-            banner.style.display = 'flex';
-            banner.style.opacity = '1';
-        };
-
-        window.skipCinematicIntro = function() {
-            if (!cinematicActive) return;
-            cinematicActive = false;
-            const banner = document.getElementById('cinematic-banner');
-            banner.style.opacity = '0';
-            setTimeout(() => { banner.style.display = 'none'; }, 350);
-            window.teleportTo('exterior', document.getElementById('zbtn-exterior'));
+            playerAvatar.wrapper.visible = isThirdPerson && !orbitMode;
         };
 
         window.toggleOrbitMode = function() {
-            cinematicActive = false;
-            isPlayerSeated = false;
-            document.getElementById('cinematic-banner').style.display = 'none';
-            targetTeleport = null;
             orbitMode = !orbitMode;
-            const btn = document.getElementById('btn-orbit');
-            if (playerAvatar) playerAvatar.wrapper.visible = false;
-            if (orbitMode) {
-                btn.classList.add('active-mode');
-                document.getElementById('info-title').innerText = '🔭 Exterior Orbit Inspection Mode';
-                document.getElementById('info-desc').innerText = 'Drag with mouse or touch to orbit 360° around the PESCE Mandya AI & ML building. Scroll to zoom.';
-            } else {
-                btn.classList.remove('active-mode');
-                window.teleportTo('exterior', document.getElementById('zbtn-exterior'));
-            }
+            document.getElementById('btn-orbit').classList.toggle('active-mode', orbitMode);
+            playerAvatar.wrapper.visible = isThirdPerson && !orbitMode;
         };
 
         window.teleportTo = function(zoneKey, btnEl) {
-            cinematicActive = false;
             orbitMode = false;
-            isPlayerSeated = false;
-            playerVelY = 0;
             document.getElementById('btn-orbit').classList.remove('active-mode');
-            document.getElementById('cinematic-banner').style.display = 'none';
             const v = viewpoints[zoneKey];
             if (!v) return;
-            // Automatically open room door if teleporting directly into Lab or Classroom
-            if (zoneKey === 'lab' && hingedDoors[0]) { hingedDoors[0].isOpen = true; hingedDoors[0].collider.active = false; }
-            if (zoneKey === 'classroom' && hingedDoors[1]) { hingedDoors[1].isOpen = true; hingedDoors[1].collider.active = false; }
-
-            targetTeleport = {
-                x: v.foot.x, y: v.foot.y, z: v.foot.z,
-                yaw: v.yaw, pitch: v.pitch
-            };
-            if (playerAvatar) playerAvatar.wrapper.visible = isThirdPerson;
+            targetTeleport = { x: v.foot.x, y: v.foot.y, z: v.foot.z, yaw: v.yaw, pitch: v.pitch };
+            playerAvatar.wrapper.visible = isThirdPerson;
             document.getElementById('info-title').innerText = v.title;
             document.getElementById('info-desc').innerText = v.desc;
             document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
-            const matchBtn = btnEl || document.getElementById('zbtn-' + zoneKey);
-            if (matchBtn) matchBtn.classList.add('active');
+            if (btnEl) btnEl.classList.add('active');
         };
+
+        window.applyGraphicsPreset = function(preset) {
+            if (preset === 'HIGH') { renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); buildLivingGrassField(14000); }
+            else if (preset === 'BALANCED') { renderer.setPixelRatio(1.5); buildLivingGrassField(8000); }
+            else { renderer.setPixelRatio(1.0); buildLivingGrassField(3000); }
+        };
+        window.applyGraphicsPreset(window.innerWidth <= 850 ? 'MOBILE' : 'HIGH');
 
         const keys = { forward: false, backward: false, left: false, right: false, shift: false };
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                window.closeProfileModal();
-                return;
-            }
-            if (cinematicActive) window.skipCinematicIntro();
+            if (document.activeElement.tagName === 'INPUT') return;
             const k = e.key.toLowerCase();
-            if (k === 'w' || e.key === 'ArrowUp') { keys.forward = true; isPlayerSeated = false; }
-            if (k === 's' || e.key === 'ArrowDown') { keys.backward = true; isPlayerSeated = false; }
-            if (k === 'a' || e.key === 'ArrowLeft') { keys.left = true; isPlayerSeated = false; }
-            if (k === 'd' || e.key === 'ArrowRight') { keys.right = true; isPlayerSeated = false; }
+            if (k === 'w' || e.key === 'ArrowUp') keys.forward = true;
+            if (k === 's' || e.key === 'ArrowDown') keys.backward = true;
+            if (k === 'a' || e.key === 'ArrowLeft') keys.left = true;
+            if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
             if (e.key === 'Shift') keys.shift = true;
-            if (e.code === 'Space' && isGrounded && !cinematicActive && !orbitMode) {
-                isPlayerSeated = false;
-                playerVelY = 6.2;
-                isGrounded = false;
-            }
-            if (k === 'e') window.triggerActiveInteraction();
             if (k === 'v') window.togglePerspectiveMode();
-            if (['1','2','3','4','5','6'].includes(k)) {
-                const map = ['exterior','portico','stairs','corridor','lab','classroom'];
-                window.teleportTo(map[parseInt(k) - 1]);
-            }
+            if (e.code === 'Space' && isGrounded) { playerVelY = 6.2; isGrounded = false; }
         });
         window.addEventListener('keyup', (e) => {
             const k = e.key.toLowerCase();
@@ -2523,61 +1667,21 @@
             if (e.key === 'Shift') keys.shift = false;
         });
 
-        window.addEventListener('wheel', (e) => {
-            if (orbitMode) {
-                orbitDistance = Math.max(12, Math.min(55, orbitDistance + e.deltaY * 0.02));
-            } else {
-                camera.fov = Math.max(38, Math.min(72, camera.fov + e.deltaY * 0.015));
-                camera.updateProjectionMatrix();
-            }
-        }, { passive: true });
-
         function bindTouchBtn(id, dir) {
             const el = document.getElementById(id);
             if (!el) return;
-            el.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                if (cinematicActive) window.skipCinematicIntro();
-                isPlayerSeated = false;
-                keys[dir] = true;
-                targetTeleport = null;
-            });
+            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[dir] = true; targetTeleport = null; });
             el.addEventListener('touchend', (e) => { e.preventDefault(); keys[dir] = false; });
         }
-        bindTouchBtn('btn-up', 'forward');
-        bindTouchBtn('btn-down', 'backward');
-        bindTouchBtn('btn-left', 'left');
-        bindTouchBtn('btn-right', 'right');
+        bindTouchBtn('btn-up', 'forward'); bindTouchBtn('btn-down', 'backward');
+        bindTouchBtn('btn-left', 'left'); bindTouchBtn('btn-right', 'right');
 
-        const raycaster = new THREE.Raycaster();
-        const pointer = new THREE.Vector2();
-        let isDragging = false;
-        let pointerDownPos = { x: 0, y: 0 };
-        let prevX = 0, prevY = 0;
-
-        container.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            pointerDownPos = { x: e.clientX, y: e.clientY };
-            prevX = e.clientX; prevY = e.clientY;
-            if (cinematicActive) window.skipCinematicIntro();
-            targetTeleport = null;
-        });
-        window.addEventListener('mouseup', (e) => {
-            if (isDragging && Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y) < 6) {
-                pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-                pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-                raycaster.setFromCamera(pointer, camera);
-                const hits = raycaster.intersectObjects(interactableObjects);
-                if (hits.length > 0 && hits[0].distance < 18) {
-                    window.executeObjectInteraction(hits[0].object.userData);
-                }
-            }
-            isDragging = false;
-        });
+        let isDragging = false, prevX = 0, prevY = 0;
+        container.addEventListener('mousedown', (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; targetTeleport = null; });
+        window.addEventListener('mouseup', () => isDragging = false);
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            const dx = e.clientX - prevX;
-            const dy = e.clientY - prevY;
+            const dx = e.clientX - prevX, dy = e.clientY - prevY;
             if (orbitMode) {
                 orbitAngle -= dx * 0.006;
                 orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005));
@@ -2589,32 +1693,20 @@
         });
 
         container.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                isDragging = true;
-                prevX = e.touches[0].clientX;
-                prevY = e.touches[0].clientY;
-                if (cinematicActive) window.skipCinematicIntro();
-            }
+            if (e.touches.length === 1) { isDragging = true; prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; }
         }, { passive: true });
         window.addEventListener('touchend', () => isDragging = false);
         window.addEventListener('touchmove', (e) => {
             if (!isDragging || e.touches.length !== 1) return;
-            const dx = e.touches[0].clientX - prevX;
-            const dy = e.touches[0].clientY - prevY;
-            if (orbitMode) {
-                orbitAngle -= dx * 0.006;
-                orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005));
-            } else {
-                camYaw -= dx * 0.005;
-                camPitch = Math.max(-1.0, Math.min(1.0, camPitch - dy * 0.005));
-            }
-            prevX = e.touches[0].clientX;
-            prevY = e.touches[0].clientY;
+            const dx = e.touches[0].clientX - prevX, dy = e.touches[0].clientY - prevY;
+            camYaw -= dx * 0.005;
+            camPitch = Math.max(-1.0, Math.min(1.0, camPitch - dy * 0.005));
+            prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
         }, { passive: true });
 
-        const reticleEl = document.getElementById('reticle');
-        const promptEl = document.getElementById('interact-prompt');
-        const promptLabelEl = document.getElementById('interact-label');
+        // Periodic multiplayer heartbeat & position sync (every 600ms)
+        setInterval(() => broadcastMyPresence(), 600);
+
         const floorStatusEl = document.getElementById('floor-status');
 
         function animate() {
@@ -2623,68 +1715,22 @@
             const elapsed = clock.getElapsedTime();
 
             grassUniforms.uTime.value = elapsed;
-            ceilingFans.forEach(rotor => { rotor.rotation.y -= dt * 6.5; });
 
-            animatedTreeCrowns.forEach(t => {
-                t.group.rotation.z = Math.sin(elapsed * 1.25 + t.phase) * 0.026;
-                t.group.rotation.x = Math.cos(elapsed * 0.95 + t.phase) * 0.018;
-            });
-            shrubCrowns.forEach(s => {
-                s.group.rotation.z = Math.sin(elapsed * 2.1 + s.phase) * 0.034;
-            });
-
-            hotspotMeshes.forEach((h, idx) => {
-                h.position.y = h.userData.baseY + Math.sin(elapsed * 2.4 + idx) * 0.08;
-            });
-
-            if (Math.floor(elapsed * 12) !== Math.floor((elapsed - dt) * 12)) {
-                updateLabMonitorScreen(dt);
+            // Clear expired overhead chat bubble after 10 seconds
+            if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
+                myChatText = "";
+                playerAvatar.updateOverheadTag(myCallsign, myTitle, "");
             }
 
-            hingedDoors.forEach(d => {
-                const targetAngle = d.isOpen ? -1.48 : 0.0;
-                d.currentAngle += (targetAngle - d.currentAngle) * Math.min(1, dt * 5.5);
-                d.pivot.rotation.y = d.currentAngle;
-            });
-
-            updateCharacterAgents(dt, elapsed);
-
-            if (!cinematicActive && !orbitMode) {
-                raycaster.setFromCamera({ x: 0, y: 0 }, camera);
-                const hits = raycaster.intersectObjects(interactableObjects);
-                if (hits.length > 0 && hits[0].distance < 7.0) {
-                    activeHoveredTarget = hits[0].object;
-                    reticleEl.classList.add('hover-active');
-                    const pText = activeHoveredTarget.userData.getPrompt ? activeHoveredTarget.userData.getPrompt() : 'Interact';
-                    promptLabelEl.innerText = pText;
-                    promptEl.style.display = 'flex';
-                } else {
-                    activeHoveredTarget = null;
-                    reticleEl.classList.remove('hover-active');
-                    promptEl.style.display = 'none';
-                }
-            } else {
-                promptEl.style.display = 'none';
+            // Smoothly interpolate & animate all other online players
+            for (let uid in remotePlayers) {
+                const rp = remotePlayers[uid];
+                rp.actor.wrapper.position.lerp(rp.targetPos, Math.min(1, dt * 8));
+                rp.actor.wrapper.rotation.y += (rp.targetYaw - rp.actor.wrapper.rotation.y) * Math.min(1, dt * 8);
+                animateBonePose(rp.actor.bones, rp.state, elapsed);
             }
 
-            const isInsideBuilding = playerFootPos.z < 2.2 && Math.abs(playerFootPos.x) < 15;
-            const targetExposure = isInsideBuilding ? 1.24 : (isGoldenHour ? 1.15 : 1.10);
-            renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * Math.min(1, dt * 3.0);
-
-            if (cinematicActive) {
-                cinematicTime += dt;
-                const duration = 9.5;
-                const p = Math.min(1.0, cinematicTime / duration);
-                const smooth = p * p * (3 - 2 * p);
-                camera.position.x = -14 * (1 - smooth);
-                camera.position.y = 10.5 * (1 - smooth) + 2.0 * smooth;
-                camera.position.z = 34 * (1 - smooth) + 21 * smooth;
-                camera.lookAt(0, 4.2 * (1 - smooth) + 3.2 * smooth, 2.0);
-                playerFootPos.set(camera.position.x, 0, camera.position.z);
-                camYaw = camera.rotation.y;
-                camPitch = camera.rotation.x;
-                if (p >= 1.0) window.skipCinematicIntro();
-            } else if (orbitMode) {
+            if (orbitMode) {
                 camera.position.x = Math.sin(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
                 camera.position.y = Math.max(1.8, Math.sin(orbitElevation) * orbitDistance);
                 camera.position.z = Math.cos(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
@@ -2695,75 +1741,47 @@
                 playerFootPos.z += (targetTeleport.z - playerFootPos.z) * 0.12;
                 camYaw += (targetTeleport.yaw - camYaw) * 0.12;
                 camPitch += (targetTeleport.pitch - camPitch) * 0.12;
-                if (Math.hypot(targetTeleport.x - playerFootPos.x, targetTeleport.z - playerFootPos.z) < 0.06) {
-                    targetTeleport = null;
-                }
-                camera.position.set(playerFootPos.x, playerFootPos.y + PhysicsWorld.playerEyeHeight, playerFootPos.z);
-                camera.rotation.order = 'YXZ';
-                camera.rotation.y = camYaw;
-                camera.rotation.x = camPitch;
+                if (Math.hypot(targetTeleport.x - playerFootPos.x, targetTeleport.z - playerFootPos.z) < 0.08) targetTeleport = null;
+                playerAvatar.wrapper.position.copy(playerFootPos);
             } else {
                 const moveSpeed = (keys.shift ? 7.2 : 4.2) * dt;
-                const forwardX = -Math.sin(camYaw);
-                const forwardZ = -Math.cos(camYaw);
-                const rightX = Math.cos(camYaw);
-                const rightZ = -Math.sin(camYaw);
+                const forwardX = -Math.sin(camYaw), forwardZ = -Math.cos(camYaw);
+                const rightX = Math.cos(camYaw), rightZ = -Math.sin(camYaw);
 
                 let moveX = 0, moveZ = 0;
-                if (!isPlayerSeated) {
-                    if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
-                    if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
-                    if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
-                    if (keys.right) { moveX += rightX * moveSpeed; moveZ += rightZ * moveSpeed; }
+                if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
+                if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
+                if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
+                if (keys.right) { moveX += rightX * moveSpeed; moveZ += rightZ * moveSpeed; }
 
-                    const candX = Math.max(-32, Math.min(32, playerFootPos.x + moveX));
-                    if (!PhysicsWorld.checkHorizontalCollision(candX, playerFootPos.y, playerFootPos.z)) {
-                        playerFootPos.x = candX;
-                    }
-                    const candZ = Math.max(-9.4, Math.min(36, playerFootPos.z + moveZ));
-                    if (!PhysicsWorld.checkHorizontalCollision(playerFootPos.x, playerFootPos.y, candZ)) {
-                        playerFootPos.z = candZ;
-                    }
+                const candX = Math.max(-32, Math.min(32, playerFootPos.x + moveX));
+                if (!PhysicsWorld.checkHorizontalCollision(candX, playerFootPos.y, playerFootPos.z)) playerFootPos.x = candX;
+                const candZ = Math.max(-9.4, Math.min(36, playerFootPos.z + moveZ));
+                if (!PhysicsWorld.checkHorizontalCollision(playerFootPos.x, playerFootPos.y, candZ)) playerFootPos.z = candZ;
 
-                    const supportY = PhysicsWorld.getSupportingFloorY(playerFootPos.x, playerFootPos.y, playerFootPos.z);
-                    if (playerFootPos.y <= supportY + 0.08 && playerVelY <= 0) {
-                        playerFootPos.y += (supportY - playerFootPos.y) * Math.min(1, dt * 18);
-                        playerVelY = 0;
-                        isGrounded = true;
-                    } else {
-                        playerVelY += PhysicsWorld.gravity * dt;
-                        playerFootPos.y += playerVelY * dt;
-                        if (playerFootPos.y <= supportY) {
-                            playerFootPos.y = supportY;
-                            playerVelY = 0;
-                            isGrounded = true;
-                        } else {
-                            isGrounded = false;
-                        }
-                    }
+                const supportY = PhysicsWorld.getSupportingFloorY(playerFootPos.x, playerFootPos.y, playerFootPos.z);
+                if (playerFootPos.y <= supportY + 0.08 && playerVelY <= 0) {
+                    playerFootPos.y += (supportY - playerFootPos.y) * Math.min(1, dt * 18);
+                    playerVelY = 0; isGrounded = true;
+                } else {
+                    playerVelY += PhysicsWorld.gravity * dt;
+                    playerFootPos.y += playerVelY * dt;
+                    if (playerFootPos.y <= supportY) { playerFootPos.y = supportY; playerVelY = 0; isGrounded = true; }
+                    else isGrounded = false;
                 }
 
-                const levelLabel = playerFootPos.y > 3.5 ? '1st Floor' : (playerFootPos.y > 0.4 ? 'Staircase' : 'Ground');
-                floorStatusEl.innerText = `Elevation: ${playerFootPos.y.toFixed(1)}m (${levelLabel})`;
+                const movingNow = Math.hypot(moveX, moveZ) > 0.002;
+                currentLocomotionState = movingNow ? (keys.shift ? 'run' : 'walk') : 'idle';
+                animateBonePose(playerAvatar.bones, currentLocomotionState, elapsed);
+                playerAvatar.wrapper.position.copy(playerFootPos);
+                if (movingNow) playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
 
-                const eyeH = isPlayerSeated ? 1.18 : PhysicsWorld.playerEyeHeight;
-                if (playerAvatar) {
-                    const movingNow = Math.hypot(moveX, moveZ) > 0.002;
-                    const pState = isPlayerSeated ? 'seated_typing' : (movingNow ? (keys.shift ? 'run' : 'walk') : 'idle');
-                    animateBonePose(playerAvatar.bones, pState, elapsed);
-                    playerAvatar.wrapper.position.copy(playerFootPos);
-                    if (movingNow) {
-                        playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
-                    } else if (isPlayerSeated) {
-                        playerAvatar.wrapper.rotation.y = camYaw + Math.PI;
-                    }
-                }
-
+                const eyeH = PhysicsWorld.playerEyeHeight;
                 if (isThirdPerson) {
                     camera.position.set(
-                        playerFootPos.x + Math.sin(camYaw) * 2.5,
-                        playerFootPos.y + eyeH + 0.35,
-                        playerFootPos.z + Math.cos(camYaw) * 2.5
+                        playerFootPos.x + Math.sin(camYaw) * 2.8,
+                        playerFootPos.y + eyeH + 0.45,
+                        playerFootPos.z + Math.cos(camYaw) * 2.8
                     );
                 } else {
                     camera.position.set(playerFootPos.x, playerFootPos.y + eyeH, playerFootPos.z);
@@ -2771,6 +1789,8 @@
                 camera.rotation.order = 'YXZ';
                 camera.rotation.y = camYaw;
                 camera.rotation.x = camPitch;
+
+                floorStatusEl.innerText = `Elevation: ${playerFootPos.y.toFixed(1)}m`;
             }
 
             renderer.render(scene, camera);
