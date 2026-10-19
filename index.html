@@ -3,1805 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3D Multiplayer Digital Twin — PESCE Mandya AI & ML Dept</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <title>Welcome — AIML X TACHYON HUB</title>
     <style>
         :root {
-            --cyan: #29E7F2;
+            --cyan: #00f2fe;
             --blue: #4facfe;
-            --purple: #9B5CFF;
-            --gold: #FFC857;
-            --emerald: #5CFFB1;
-            --dark: #0B1020;
-            --glass: rgba(11, 16, 32, 0.84);
-            --border: rgba(41, 231, 242, 0.25);
+            --purple: #8b5cf6;
+            --gold: #fbbf24;
+            --dark: #030712;
+            --glass-bg: rgba(3, 7, 18, 0.42);
+            --glass-border: rgba(255, 255, 255, 0.14);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--dark);
-            color: #F3F6FF;
-            height: 100dvh;
-            width: 100vw;
-            overflow: hidden;
-            position: relative;
+            color: #ffffff;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 26px 4vw;
+            gap: 24px;
         }
 
-        #canvas-container {
-            position: absolute;
+        /* Fullscreen Principal Video Background */
+        .video-wrapper {
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            cursor: crosshair;
+            z-index: -2;
+            background: #030712;
+        }
+        #principal-video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            filter: brightness(0.85) contrast(1.05);
         }
 
-        #reticle {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 8px; height: 8px;
-            transform: translate(-50%, -50%);
-            border: 1.5px solid rgba(255, 255, 255, 0.75);
-            border-radius: 50%;
-            z-index: 5;
-            pointer-events: none;
-            transition: transform 0.18s, border-color 0.18s, background-color 0.18s;
-        }
-        #reticle.hover-active {
-            transform: translate(-50%, -50%) scale(1.9);
-            border-color: var(--cyan);
-            background-color: rgba(41, 231, 242, 0.35);
-            box-shadow: 0 0 12px var(--cyan);
+        /* Dual-Side Vignette */
+        .gradient-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(90deg, 
+                rgba(3, 7, 18, 0.88) 0%, 
+                rgba(3, 7, 18, 0.25) 28%, 
+                rgba(3, 7, 18, 0.05) 50%, 
+                rgba(3, 7, 18, 0.35) 72%, 
+                rgba(3, 7, 18, 0.92) 100%);
         }
 
-        /* Top Header with Official TACHYON Club Logo */
+        /* Top Navigation Breadcrumb */
         header {
-            position: absolute;
-            top: 12px; left: 16px; right: 16px;
-            z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 10;
             flex-wrap: wrap;
-            gap: 10px;
-            pointer-events: none;
-        }
-        header > * { pointer-events: auto; }
-
-        .brand-nav-wrap {
-            display: flex;
-            align-items: center;
             gap: 12px;
+        }
+        .brand-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             flex-wrap: wrap;
         }
-        .club-logo-badge {
+        .club-logo-pill {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: var(--glass);
-            border: 1px solid var(--border);
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 242, 254, 0.35);
             padding: 5px 14px 5px 6px;
             border-radius: 50px;
             backdrop-filter: blur(14px);
             text-decoration: none;
             color: #fff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-        .club-logo-badge img {
-            width: 38px; height: 38px;
+        .club-logo-pill img {
+            width: 36px; height: 36px;
             border-radius: 50%;
             object-fit: cover;
             border: 1.5px solid var(--cyan);
             background: #fff;
         }
-        .club-logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-        .club-logo-text strong {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            color: var(--cyan);
-        }
-        .club-logo-text span {
-            font-size: 0.62rem;
-            color: #9AA8C2;
-            letter-spacing: 0.5px;
-        }
-
         .stage-nav {
-            display: flex; gap: 6px; align-items: center; font-size: 0.78rem; font-weight: 600; flex-wrap: wrap;
+            display: flex; gap: 10px; align-items: center; font-size: 0.82rem; font-weight: 600; flex-wrap: wrap;
         }
         .stage-nav a {
-            color: #cbd5e1; text-decoration: none; padding: 7px 14px; border-radius: 20px;
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(14px);
-            transition: 0.25s;
+            color: #cbd5e1; text-decoration: none; padding: 7px 15px; border-radius: 20px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px); transition: 0.3s;
         }
         .stage-nav a:hover { color: var(--cyan); border-color: var(--cyan); }
-        .stage-nav a.active { color: #0B1020; background: var(--cyan); border-color: var(--cyan); font-weight: 700; box-shadow: 0 0 15px rgba(41,231,242,0.35); }
+        .stage-nav a.active { color: #fff; background: rgba(0, 242, 254, 0.2); border-color: var(--cyan); }
 
-        .top-controls {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            flex-wrap: wrap;
-        }
-        .hud-pill-btn, .hud-select {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.16);
-            color: #f8fafc;
-            padding: 7px 12px;
-            border-radius: 12px;
-            font-size: 0.74rem;
-            font-weight: 700;
-            cursor: pointer;
-            backdrop-filter: blur(14px);
-            transition: 0.2s;
-            outline: none;
-        }
-        .hud-pill-btn:hover, .hud-select:hover { border-color: var(--cyan); color: var(--cyan); }
-        .hud-pill-btn.active-mode { background: rgba(41, 231, 242, 0.22); border-color: var(--cyan); color: #fff; }
-        .hud-select option { background: #0f172a; color: #fff; }
-
-        /* Left Walkthrough & Online Players Panel */
-        .zone-panel {
-            position: absolute;
-            top: 72px; left: 16px;
-            z-index: 10;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 12px;
-            backdrop-filter: blur(16px);
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 235px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.45);
-        }
-        .zone-panel-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--cyan);
-            font-weight: 800;
-            margin-bottom: 2px;
-        }
-        .zone-btn {
-            background: rgba(2, 6, 23, 0.65);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #e2e8f0;
-            padding: 7px 10px;
-            border-radius: 9px;
+        .college-pill {
+            padding: 7px 16px;
+            border-radius: 50px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: var(--gold);
             font-size: 0.78rem;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .zone-btn:hover, .zone-btn.active {
-            background: rgba(41, 231, 242, 0.18);
-            border-color: var(--cyan);
-            color: #fff;
-            transform: translateX(3px);
-        }
-
-        .online-roster-box {
-            margin-top: 6px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.12);
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 115px;
-            overflow-y: auto;
-        }
-        .online-user-chip {
-            font-size: 0.74rem;
-            color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: rgba(92, 255, 177, 0.08);
-            border: 1px solid rgba(92, 255, 177, 0.25);
-            cursor: pointer;
-        }
-        .online-user-chip:hover {
-            background: rgba(41, 231, 242, 0.2);
-            border-color: var(--cyan);
-        }
-
-        /* Right Info Card */
-        .info-card {
-            position: absolute;
-            top: 72px; right: 16px;
-            z-index: 10;
-            width: 315px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 15px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        }
-        .info-card h3 { color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: 0.95rem; margin-bottom: 5px; }
-        .info-card p { color: #cbd5e1; font-size: 0.8rem; line-height: 1.45; }
-        .telemetry-row {
-            margin-top: 8px;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: rgba(92, 255, 177, 0.12);
-            border: 1px solid rgba(92, 255, 177, 0.35);
-            color: var(--emerald);
-            font-size: 0.72rem;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Contextual Interaction Prompt */
-        #interact-prompt {
-            position: absolute;
-            bottom: 145px; left: 50%;
-            transform: translateX(-50%);
-            z-index: 18;
-            background: rgba(11, 16, 32, 0.92);
-            border: 1px solid var(--cyan);
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
             font-weight: 700;
-            pointer-events: auto;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            gap: 8px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
             backdrop-filter: blur(12px);
         }
-        #interact-prompt span.key-badge {
-            background: var(--cyan);
-            color: #030712;
-            padding: 2px 7px;
-            border-radius: 6px;
-            font-weight: 900;
-            font-size: 0.72rem;
+
+        /* Main Split Grid: Left (Principal Info) | Center (Open for Video) | Right (Welcome Title) */
+        .split-stage {
+            display: grid;
+            grid-template-columns: 360px 1fr 460px;
+            align-items: center;
+            gap: 24px;
+            margin: auto 0;
+            z-index: 10;
         }
 
-        /* ==========================================================================
-           MULTIPLAYER OVERHEAD CHAT BAR (TYPE TO DISPLAY ABOVE YOUR HEAD)
-           ========================================================================== */
-        .multiplayer-chat-dock {
-            position: absolute;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 25;
-            width: 92%;
-            max-width: 560px;
-            background: rgba(11, 16, 32, 0.90);
-            border: 1.5px solid var(--cyan);
-            border-radius: 16px;
-            padding: 8px 10px;
+        /* LEFT SIDE: Principal Dr. Vinay S. Profile Card */
+        .principal-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--gold);
+            border-radius: 20px;
+            padding: 26px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+            gap: 14px;
+            animation: slideLeft 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .chat-feed-mini {
-            max-height: 62px;
-            overflow-y: auto;
-            font-size: 0.75rem;
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+        .principal-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+        .principal-creds {
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: 700;
+            margin-top: -6px;
+        }
+        .college-name {
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .principal-bio {
+            font-size: 0.88rem;
             color: #cbd5e1;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            padding: 0 4px;
-            user-select: text;
+            line-height: 1.6;
         }
-        .chat-input-row {
+        .Domain-pills {
             display: flex;
+            flex-wrap: wrap;
             gap: 8px;
-            align-items: center;
+            margin-top: 4px;
         }
-        .chat-input-row input {
-            flex: 1;
-            background: rgba(2, 6, 23, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            color: #fff;
-            padding: 9px 14px;
-            border-radius: 10px;
-            font-size: 0.84rem;
-            outline: none;
-            user-select: text;
-            -webkit-user-select: text;
-        }
-        .chat-input-row input:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 12px rgba(41, 231, 242, 0.3);
-        }
-        .chat-send-btn {
-            background: var(--cyan);
-            color: #0B1020;
-            border: none;
-            padding: 9px 16px;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.74rem;
-            font-weight: 800;
-            cursor: pointer;
-            white-space: nowrap;
+        .domain-pill {
+            font-size: 0.72rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.12);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            color: var(--cyan);
+            font-weight: 600;
         }
 
-        /* ==========================================================================
-           SARVAM AI FLOATING CHATBOT WIDGET
-           ========================================================================== */
-        .sarvam-fab {
-            position: fixed;
-            bottom: 20px; right: 20px;
-            z-index: 40;
-            background: linear-gradient(135deg, var(--purple), #FF4FD8);
-            color: #fff;
-            border: 1.5px solid var(--cyan);
-            padding: 12px 20px;
+        /* RIGHT SIDE: Welcome to AIML X TACHYON HUB */
+        .welcome-right {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-right: 4px solid var(--cyan);
+            border-radius: 22px;
+            padding: 32px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            gap: 20px;
+            animation: slideRight 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .club-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 16px;
+            background: rgba(0, 242, 254, 0.14);
+            border: 1px solid rgba(0, 242, 254, 0.4);
             border-radius: 50px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.78rem;
+            color: var(--cyan);
+            font-size: 0.76rem;
             font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 30px rgba(155, 92, 255, 0.5);
-            transition: 0.25s;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
         }
-        .sarvam-fab:hover { transform: translateY(-3px) scale(1.03); }
+        .pulse-dot {
+            width: 8px; height: 8px;
+            background-color: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--cyan);
+            animation: pulse 1.8s infinite;
+        }
 
-        .sarvam-window {
-            position: fixed;
-            bottom: 78px; right: 20px;
-            z-index: 45;
-            width: 350px;
-            max-width: calc(100vw - 32px);
-            height: 450px;
-            background: rgba(11, 16, 32, 0.96);
-            border: 1.5px solid var(--cyan);
-            border-radius: 18px;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8);
+        h1 {
+            font-size: clamp(2.1rem, 3.8vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -1px;
         }
-        .sarvam-header {
-            background: linear-gradient(90deg, rgba(155, 92, 255, 0.25), rgba(41, 231, 242, 0.2));
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border);
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 50%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-top: 6px;
+            filter: drop-shadow(0 0 20px rgba(0, 242, 254, 0.3));
+        }
+
+        .subtitle {
+            font-size: 0.96rem;
+            color: #e2e8f0;
+            line-height: 1.65;
+        }
+
+        .next-btn {
+            text-decoration: none;
+            color: #030712;
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            padding: 15px 34px;
+            border-radius: 50px;
+            font-size: 1.02rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+            transition: all 0.35s ease;
+        }
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.65);
+        }
+
+        /* Bottom Footer */
+        footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 10;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        .sarvam-header strong {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.82rem;
-            color: var(--cyan);
+        .step-indicator { display: flex; align-items: center; gap: 8px; }
+        .step-pill { height: 6px; border-radius: 10px; background: rgba(255, 255, 255, 0.2); }
+        .step-pill.active { width: 40px; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+        .step-pill.inactive { width: 16px; }
+
+        @keyframes slideLeft {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
-        .sarvam-key-bar {
-            display: none;
-            padding: 8px 12px;
-            background: rgba(2, 6, 23, 0.95);
-            border-bottom: 1px solid var(--border);
-            gap: 6px;
+        @keyframes slideRight {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
-        .sarvam-key-bar input {
-            flex: 1;
-            background: #0B1020;
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            user-select: text;
-            -webkit-user-select: text;
-        }
-        .sarvam-messages {
-            flex: 1;
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 0.82rem;
-            user-select: text;
-        }
-        .s-msg {
-            padding: 9px 12px;
-            border-radius: 12px;
-            line-height: 1.45;
-            max-width: 88%;
-            word-break: break-word;
-        }
-        .s-msg.bot {
-            background: rgba(24, 34, 60, 0.9);
-            border: 1px solid rgba(41, 231, 242, 0.25);
-            color: #F3F6FF;
-            align-self: flex-start;
-        }
-        .s-msg.user {
-            background: linear-gradient(135deg, var(--purple), #6d28d9);
-            color: #fff;
-            align-self: flex-end;
-        }
-        .sarvam-input-area {
-            padding: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            gap: 6px;
-        }
-        .sarvam-input-area input {
-            flex: 1;
-            background: rgba(2, 6, 23, 0.9);
-            border: 1px solid rgba(255,255,255,0.16);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            outline: none;
-            user-select: text;
-            -webkit-user-select: text;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
         }
 
-        /* Mobile D-Pad */
-        .mobile-dpad {
-            position: absolute;
-            bottom: 120px; left: 14px;
-            z-index: 15;
-            display: none;
-            grid-template-columns: repeat(3, 44px);
-            grid-template-rows: repeat(2, 44px);
-            gap: 5px;
-        }
-        .dpad-btn {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            color: white;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #profile-modal {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 30;
-            width: 90%;
-            max-width: 480px;
-            background: rgba(15, 23, 42, 0.96);
-            border: 1px solid var(--gold);
-            border-radius: 20px;
-            padding: 24px;
-            display: none;
-            flex-direction: column;
-            gap: 14px;
-        }
-        .profile-item {
-            background: rgba(2, 6, 23, 0.65);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--cyan);
-            padding: 12px;
-            border-radius: 12px;
-        }
-
-        @media (max-width: 850px) {
-            .zone-panel { display: none; }
-            .info-card { top: 68px; left: 12px; right: 12px; width: auto; padding: 10px; }
-            .mobile-dpad { display: grid; }
-            .multiplayer-chat-dock { bottom: 70px; width: 95%; }
-            .sarvam-fab { bottom: 12px; right: 12px; padding: 10px 14px; }
+        /* MOBILE PORTRAIT OPTIMIZATION */
+        @media (max-width: 960px) {
+            body { padding: 18px 4vw; }
+            #principal-video { object-position: center top; }
+            .gradient-overlay {
+                background: linear-gradient(180deg, 
+                    rgba(3, 7, 18, 0.15) 0%, 
+                    rgba(3, 7, 18, 0.5) 38%, 
+                    rgba(3, 7, 18, 0.92) 100%);
+            }
+            header { justify-content: center; }
+            .stage-nav { justify-content: center; width: 100%; }
+            .split-stage {
+                grid-template-columns: 1fr;
+                margin-top: 28vh;
+                gap: 18px;
+            }
+            .center-spacer { display: none; }
+            .welcome-right {
+                order: 1;
+                align-items: flex-start;
+                text-align: left;
+                border-right: 1px solid var(--glass-border);
+                border-left: 4px solid var(--cyan);
+                padding: 24px;
+            }
+            .principal-card {
+                order: 2;
+                padding: 22px;
+            }
+            .next-btn { width: 100%; }
+            footer { flex-direction: column; align-items: center; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <div id="canvas-container"></div>
-    <div id="reticle"></div>
-
-    <!-- Contextual Interaction Prompt -->
-    <div id="interact-prompt" onclick="triggerActiveInteraction()">
-        <span class="key-badge">E / Click</span>
-        <span id="interact-label">Interact</span>
+    <div class="video-wrapper">
+        <video autoplay loop muted playsinline id="principal-video">
+            <source src="Man_walking_toward_camera_20261015111025.mp4" type="video/mp4">
+            <source src="bg-video.mp4" type="video/mp4">
+        </video>
     </div>
+    <div class="gradient-overlay"></div>
 
-    <!-- Department & Faculty Leadership Modal -->
-    <div id="profile-modal">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="color:var(--gold); font-size:1.15rem;">🏛️ PESCE Mandya — AI & ML Leadership</h2>
-            <button class="hud-pill-btn" onclick="document.getElementById('profile-modal').style.display='none'">✕ Close</button>
-        </div>
-        <div class="profile-item">
-            <h4>Dr. Vinay S. — Principal, PESCE Mandya</h4>
-            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">B.E., M.Tech., Ph.D. (Computer Science). Spearheading institutional excellence and AI education at PES College of Engineering.</p>
-        </div>
-        <div class="profile-item">
-            <h4>Shivakumar Patil — President, TACHYON AIML Club</h4>
-            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">Leading student-driven AI agent deployments, hackathons, and the PESCE Digital Twin initiative.</p>
-        </div>
-    </div>
-
-    <!-- Top Header with Official TACHYON Club Logo -->
     <header>
-        <div class="brand-nav-wrap">
-            <a href="index.html" class="club-logo-badge">
-                <img src="tachyon-logo.jpg" alt="TACHYON Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2246%22 fill=%22%230B1020%22 stroke=%22%2329E7F2%22 stroke-width=%226%22/><circle cx=%2250%22 cy=%2242%22 r=%2222%22 fill=%22%2329E7F2%22/><rect x=%2215%22 y=%2264%22 width=%2270%22 height=%2220%22 rx=%224%22 fill=%22%236b1d2f%22/><text x=%2250%22 y=%2278%22 font-size=%2213%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>TACHYON</text></svg>'">
-                <div class="club-logo-text">
-                    <strong>TACHYON</strong>
-                    <span>GUIDE BY LIGHT, DRIVEN BY INTELLIGENCE</span>
-                </div>
+        <div class="brand-nav-group">
+            <a href="index.html" class="club-logo-pill">
+                <img src="tachyon-logo.jpg" alt="TACHYON Logo" onerror="this.style.display='none'">
+                <strong style="font-size:0.85rem; letter-spacing:1px; color:var(--cyan);">TACHYON</strong>
             </a>
-
             <nav class="stage-nav">
-                <a href="index.html">01 / Welcome</a>
-                <a href="twin.html" class="active">02 / 3D Digital Twin</a>
-                <a href="hub.html">03 / AI Agent Arena</a>
+                <a href="index.html" class="active">01 / Welcome</a>
+                <a href="twin.html">02 / Digital Twin</a>
+                <a href="hub.html">03 / AI Agent Hub</a>
             </nav>
         </div>
-
-        <div class="top-controls">
-            <span class="hud-pill-btn" id="my-online-badge" style="border-color:var(--emerald); color:var(--emerald);">🟢 Connecting...</span>
-            <button class="hud-pill-btn active-mode" id="btn-viewmode" onclick="togglePerspectiveMode()">🧍 View: 3rd Person</button>
-            <button class="hud-pill-btn" id="btn-orbit" onclick="toggleOrbitMode()">🔭 Orbit</button>
-            <button class="hud-pill-btn" id="btn-lighting" onclick="toggleLightingMode()">☀️ Daylight</button>
-            <select class="hud-select" id="PresetSelect" onchange="applyGraphicsPreset(this.value)">
-                <option value="HIGH">⚡ HIGH</option>
-                <option value="BALANCED">⚖️ BALANCED</option>
-                <option value="MOBILE">📱 MOBILE</option>
-            </select>
-        </div>
+        <div class="college-pill">🏛️ PESCE Mandya</div>
     </header>
 
-    <!-- Left Walkthrough Zones & Live Online Players Roster -->
-    <aside class="zone-panel">
-        <div class="zone-panel-title">📍 Walkthrough Zones</div>
-        <button class="zone-btn active" id="zbtn-exterior" onclick="teleportTo('exterior', this)"><span>🏛️ Exterior Facade</span> <span>1</span></button>
-        <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)"><span>🚪 Main Entrance</span> <span>2</span></button>
-        <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)"><span>🪜 Switchback Stairs</span> <span>3</span></button>
-        <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)"><span>🚶 1st Floor Corridor</span> <span>4</span></button>
-        <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)"><span>💻 AI & ML Lab</span> <span>5</span></button>
-        <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)"><span>🎓 Smart Classroom</span> <span>6</span></button>
-
-        <div class="online-roster-box">
-            <div class="zone-panel-title" style="color:var(--emerald);">🟢 Online Players (<span id="online-count">1</span>)</div>
-            <div id="online-players-list" style="display:flex; flex-direction:column; gap:4px;"></div>
-        </div>
-    </aside>
-
-    <!-- Right Context & Physics Telemetry Panel -->
-    <aside class="info-card" id="zone-info">
-        <h3 id="info-title">🏛️ Multiplayer Digital Twin</h3>
-        <p id="info-desc">
-            Every signed-in user appears here as a live 3D character with their name above their head. Walk up to friends and type in the chat bar below to display messages above your head!
-        </p>
-        <div class="telemetry-row">
-            <span id="actor-status">🟢 Multiplayer Sync Active</span>
-            <span id="floor-status">Elevation: 0.0m</span>
-        </div>
-    </aside>
-
-    <!-- Mobile Touch D-Pad -->
-    <div class="mobile-dpad">
-        <div></div>
-        <button class="dpad-btn" id="btn-up">▲</button>
-        <div></div>
-        <button class="dpad-btn" id="btn-left">◀</button>
-        <button class="dpad-btn" id="btn-down">▼</button>
-        <button class="dpad-btn" id="btn-right">▶</button>
-    </div>
-
-    <!-- ==========================================================================
-         MULTIPLAYER OVERHEAD CHAT BAR (DISPLAYS SPEECH BUBBLE ON YOUR 3D HEAD)
-         ========================================================================== -->
-    <div class="multiplayer-chat-dock">
-        <div class="chat-feed-mini" id="multiplayer-chat-feed">
-            <div><strong style="color:var(--cyan);">[System]:</strong> Type a message below and press Enter — it will appear directly above your 3D character's head for everyone online!</div>
-        </div>
-        <div class="chat-input-row">
-            <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Say something above your character's head... (Press Enter)">
-            <button class="chat-send-btn" onclick="sendOverheadChatMessage()">SAY 🗣️ [+XP]</button>
-        </div>
-    </div>
-
-    <!-- ==========================================================================
-         SARVAM AI FLOATING CHATBOT WIDGET
-         ========================================================================== -->
-    <button class="sarvam-fab" onclick="toggleSarvamChatbot()">
-        🤖 Ask Sarvam AI
-    </button>
-
-    <div class="sarvam-window" id="sarvam-window">
-        <div class="sarvam-header">
-            <div>
-                <strong>🇮🇳 TACHYON × SARVAM AI</strong>
-                <div style="font-size:0.65rem; color:#9AA8C2;">PESCE Mandya AI & ML Assistant</div>
+    <main class="split-stage">
+        <!-- LEFT PANEL: Dr. Vinay S. Info -->
+        <aside class="principal-card">
+            <div class="role-tag">👑 Institutional Leadership</div>
+            <div class="principal-name">Dr. Vinay S.</div>
+            <div class="principal-creds">B.E., M.Tech., Ph.D. (Computer Science)</div>
+            <div class="college-name">Principal — P.E.S. College of Engineering, Mandya</div>
+            <p class="principal-bio">
+                Championing next-generation engineering education, autonomous systems research, and student-driven AI innovation across PESCE Mandya.
+            </p>
+            <div class="Domain-pills">
+                <span class="domain-pill">Machine Learning</span>
+                <span class="domain-pill">Software Engineering</span>
+                <span class="domain-pill">Cloud & Big Data</span>
             </div>
-            <div style="display:flex; gap:6px;">
-                <button class="hud-pill-btn" style="padding:4px 8px;" title="Configure Sarvam API Key" onclick="toggleSarvamKeyBar()">⚙️ Key</button>
-                <button class="hud-pill-btn" style="padding:4px 8px;" onclick="toggleSarvamChatbot()">✕</button>
+        </aside>
+
+        <!-- CENTER SPACER: Leaves video of Dr. Vinay completely unobstructed -->
+        <div class="center-spacer"></div>
+
+        <!-- RIGHT PANEL: Welcome to AIML X TACHYON HUB -->
+        <section class="welcome-right">
+            <div class="club-badge">
+                <span class="pulse-dot"></span>
+                Official Department Portal
             </div>
+
+            <h1>
+                Welcome to
+                <span class="gradient-text">AIML X TACHYON HUB</span>
+            </h1>
+
+            <p class="subtitle">
+                Step into PESCE Mandya's premier Artificial Intelligence & Machine Learning innovation ecosystem. Explore our virtual Digital Twin and deploy live AI agents.
+            </p>
+
+            <a href="twin.html" class="next-btn">
+                Enter Digital Twin
+                <span>→</span>
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="step-indicator">
+            <div class="step-pill active"></div>
+            <div class="step-pill inactive"></div>
+            <div class="step-pill inactive"></div>
+            <span style="margin-left: 6px; font-size: 0.8rem; color: #cbd5e1; letter-spacing: 1px; text-transform: uppercase;">01 / Executive Welcome</span>
         </div>
-        <div class="sarvam-key-bar" id="sarvam-key-bar">
-            <input type="password" id="sarvam-key-input" placeholder="Paste Sarvam API Subscription Key...">
-            <button class="chat-send-btn" style="padding:5px 10px;" onclick="saveSarvamApiKey()">Save</button>
+        <div style="font-size: 0.82rem; color: #94a3b8;">
+            PESCE Mandya — AIML X Tachyon Club
         </div>
-        <div class="sarvam-messages" id="sarvam-messages">
-            <div class="s-msg bot">
-                Namaskara! 👋 I am your <strong>TACHYON Sarvam AI Assistant</strong> for the PESCE Mandya AI & ML Department. Ask me anything about AI agents, coding, or our Digital Twin in English, Kannada, or Hindi!
-            </div>
-        </div>
-        <div class="sarvam-input-area">
-            <input type="text" id="sarvam-user-input" placeholder="Ask Sarvam AI..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
-            <button class="chat-send-btn" onclick="sendSarvamMessage()">Send</button>
-        </div>
-    </div>
+    </footer>
 
-    <!-- Three.js r128 Core -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-    <!-- Main 3D Engine + Firebase Multiplayer Sync + Sarvam AI -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
-            authDomain: "digital-twin-6c779.firebaseapp.com",
-            projectId: "digital-twin-6c779",
-            storageBucket: "digital-twin-6c779.firebasestorage.app",
-            messagingSenderId: "445832291229",
-            appId: "1:445832291229:web:00d7de2c4c4ade9646c574",
-            measurementId: "G-55ZB5JW4P9"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // ============================================================================
-        // SARVAM AI CHATBOT INTEGRATION (sarvam-105b-conversations / sarvam-105b)
-        // ============================================================================
-        const DEFAULT_SARVAM_KEY = "PASTE_YOUR_SARVAM_API_KEY_HERE";
-        let sarvamHistory = [
-            { role: "system", content: "You are TACHYON AI, the official AI & ML Department Assistant at P.E.S. College of Engineering (PESCE), Mandya, led by Principal Dr. Vinay S. and TACHYON Club President Shivakumar Patil. Be concise, friendly, and helpful with AI, Machine Learning, coding, and campus questions." }
-        ];
-
-        window.toggleSarvamChatbot = function() {
-            const win = document.getElementById('sarvam-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-        };
-        window.toggleSarvamKeyBar = function() {
-            const bar = document.getElementById('sarvam-key-bar');
-            bar.style.display = bar.style.display === 'flex' ? 'none' : 'flex';
-            document.getElementById('sarvam-key-input').value = localStorage.getItem('tachyon_sarvam_key') || '';
-        };
-        window.saveSarvamApiKey = function() {
-            const val = document.getElementById('sarvam-key-input').value.trim();
-            if (val) {
-                localStorage.setItem('tachyon_sarvam_key', val);
-                document.getElementById('sarvam-key-bar').style.display = 'none';
-                alert("Sarvam API Key saved!");
-            }
-        };
-
-        window.sendSarvamMessage = async function() {
-            const inputEl = document.getElementById('sarvam-user-input');
-            const text = inputEl.value.trim();
-            if (!text) return;
-            inputEl.value = '';
-
-            const msgBox = document.getElementById('sarvam-messages');
-            msgBox.innerHTML += `<div class="s-msg user">${text}</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            const apiKey = localStorage.getItem('tachyon_sarvam_key') || DEFAULT_SARVAM_KEY;
-            if (!apiKey || apiKey === "PASTE_YOUR_SARVAM_API_KEY_HERE") {
-                msgBox.innerHTML += `<div class="s-msg bot">⚠️ Please click the <strong>⚙️ Key</strong> button at the top of this chat window and paste your <strong>Sarvam API Key</strong> to activate live responses!</div>`;
-                msgBox.scrollTop = msgBox.scrollHeight;
-                document.getElementById('sarvam-key-bar').style.display = 'flex';
-                return;
-            }
-
-            const loadingId = "s-load-" + Date.now();
-            msgBox.innerHTML += `<div class="s-msg bot" id="${loadingId}">⏳ Thinking with Sarvam AI...</div>`;
-            msgBox.scrollTop = msgBox.scrollHeight;
-
-            sarvamHistory.push({ role: "user", content: text });
-
-            try {
-                const res = await fetch("https://api.sarvam.ai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "api-subscription-key": apiKey,
-                        "Authorization": `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: "sarvam-105b-conversations",
-                        messages: sarvamHistory.slice(-8),
-                        temperature: 0.4,
-                        max_tokens: 512
-                    })
-                });
-                const data = await res.json();
-                const reply = data?.choices?.[0]?.message?.content || data?.error?.message || "Connected to Sarvam AI, but received an empty response.";
-                sarvamHistory.push({ role: "assistant", content: reply });
-                document.getElementById(loadingId).innerText = reply;
-            } catch (err) {
-                document.getElementById(loadingId).innerText = "⚠️ Network error reaching Sarvam API. Verify your API key in ⚙️ Key settings.";
-            }
-            msgBox.scrollTop = msgBox.scrollHeight;
-        };
-
-        // ============================================================================
-        // THREE.JS SCENE & RENDERER INITIALIZATION
-        // ============================================================================
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x9bc9e8);
-        scene.fog = new THREE.FogExp2(0xc8dff0, 0.0032);
-
-        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 280);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.12;
-        container.appendChild(renderer.domElement);
-
-        const clock = new THREE.Clock();
-
-        function createSafeIBLTexture(isGoldenHour) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512; canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createLinearGradient(0, 0, 0, 256);
-            if (isGoldenHour) {
-                grad.addColorStop(0.0, '#1e3a8a');
-                grad.addColorStop(0.45, '#f97316');
-                grad.addColorStop(0.52, '#fde047');
-                grad.addColorStop(1.0, '#574132');
-            } else {
-                grad.addColorStop(0.0, '#2b6cb0');
-                grad.addColorStop(0.46, '#bae6fd');
-                grad.addColorStop(0.52, '#ffffff');
-                grad.addColorStop(1.0, '#6e7368');
-            }
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 512, 256);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.mapping = THREE.EquirectangularReflectionMapping;
-            tex.encoding = THREE.sRGBEncoding;
-            tex.needsUpdate = true;
-            return tex;
-        }
-
-        const envDaylight = createSafeIBLTexture(false);
-        const envGoldenHour = createSafeIBLTexture(true);
-        scene.environment = envDaylight;
-
-        const skyDome = new THREE.Mesh(
-            new THREE.SphereGeometry(220, 32, 16),
-            new THREE.MeshBasicMaterial({ map: envDaylight, side: THREE.BackSide, depthWrite: false })
-        );
-        scene.add(skyDome);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.72);
-        scene.add(ambientLight);
-        const hemiLight = new THREE.HemisphereLight(0xf0f7ff, 0x6e6a5e, 0.75);
-        hemiLight.position.set(0, 55, 0);
-        scene.add(hemiLight);
-
-        const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.25);
-        sunLight.position.set(26, 44, 32);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.bias = -0.0004;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 135;
-        sunLight.shadow.camera.left = -36;
-        sunLight.shadow.camera.right = 36;
-        sunLight.shadow.camera.top = 36;
-        sunLight.shadow.camera.bottom = -36;
-        scene.add(sunLight);
-
-        const bounceLight = new THREE.DirectionalLight(0xdbeafe, 0.48);
-        bounceLight.position.set(-24, 28, -26);
-        scene.add(bounceLight);
-
-        const stairLight = new THREE.PointLight(0xfff9eb, 0.70, 18);
-        stairLight.position.set(-10.5, 4.5, -2.0);
-        const corridorLight1 = new THREE.PointLight(0xfff9eb, 0.70, 18);
-        corridorLight1.position.set(-4, 7.4, 0.2);
-        const corridorLight2 = new THREE.PointLight(0xfff9eb, 0.70, 18);
-        corridorLight2.position.set(6, 7.4, 0.2);
-        const labRoomLight = new THREE.PointLight(0xf0f9ff, 0.90, 24);
-        labRoomLight.position.set(-2, 7.4, -5.8);
-        const classRoomLight = new THREE.PointLight(0xfffbeb, 0.90, 24);
-        classRoomLight.position.set(9.5, 7.4, -5.8);
-        scene.add(stairLight, corridorLight1, corridorLight2, labRoomLight, classRoomLight);
-
-        let isGoldenHour = false;
-        window.toggleLightingMode = function() {
-            isGoldenHour = !isGoldenHour;
-            const btn = document.getElementById('btn-lighting');
-            if (isGoldenHour) {
-                scene.environment = envGoldenHour;
-                skyDome.material.map = envGoldenHour;
-                scene.background.setHex(0xe59866);
-                scene.fog.color.setHex(0xe59866);
-                sunLight.color.setHex(0xffa94d);
-                btn.innerText = '🌅 Golden Hour';
-                btn.classList.add('active-mode');
-            } else {
-                scene.environment = envDaylight;
-                skyDome.material.map = envDaylight;
-                scene.background.setHex(0x9bc9e8);
-                scene.fog.color.setHex(0xc8dff0);
-                sunLight.color.setHex(0xfff9ed);
-                btn.innerText = '☀️ Daylight';
-                btn.classList.remove('active-mode');
-            }
-        };
-
-        // ============================================================================
-        // PHYSICS WORLD & COLLISION
-        // ============================================================================
-        const PhysicsWorld = {
-            colliders: [],
-            floorVolumes: [],
-            gravity: -19.6,
-            stepUpHeight: 0.36,
-            playerRadius: 0.34,
-            playerEyeHeight: 1.68,
-
-            addCollider(minX, maxX, minZ, maxZ, minY = 0, maxY = 12, id = null) {
-                const box = { minX, maxX, minZ, maxZ, minY, maxY, active: true, id };
-                this.colliders.push(box);
-                return box;
-            },
-            addFloorVolume(minX, maxX, minZ, maxZ, surfaceY, ceilingY = 15) {
-                this.floorVolumes.push({ minX, maxX, minZ, maxZ, surfaceY, ceilingY });
-            },
-            checkHorizontalCollision(x, footY, z, radius = this.playerRadius) {
-                const headY = footY + 1.62;
-                for (let i = 0; i < this.colliders.length; i++) {
-                    const c = this.colliders[i];
-                    if (!c.active) continue;
-                    if (headY <= c.minY || footY + this.stepUpHeight >= c.maxY) continue;
-                    if (x + radius > c.minX && x - radius < c.maxX && z + radius > c.minZ && z - radius < c.maxZ) return true;
-                }
-                return false;
-            },
-            getSupportingFloorY(x, currentFootY, z) {
-                let bestY = 0.0;
-                for (let i = 0; i < this.floorVolumes.length; i++) {
-                    const f = this.floorVolumes[i];
-                    if (x >= f.minX && x <= f.maxX && z >= f.minZ && z <= f.maxZ) {
-                        if (f.surfaceY <= currentFootY + this.stepUpHeight && f.surfaceY > bestY) bestY = f.surfaceY;
-                    }
-                }
-                return bestY;
-            }
-        };
-
-        // ============================================================================
-        // PROCEDURAL TEXTURES & BUILDING ARCHITECTURE
-        // ============================================================================
-        function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
-            const canvas = document.createElement('canvas');
-            canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, width, height);
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = 10;
-            ctx.strokeRect(8, 8, width - 16, height - 16);
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            lines.forEach((line, i) => {
-                ctx.font = line.font || 'bold 42px Segoe UI, Arial';
-                ctx.fillStyle = line.color || '#ffffff';
-                ctx.fillText(line.text, width / 2, (height / (lines.length + 1)) * (i + 1));
-            });
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            return tex;
-        }
-
-        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.025, repeatX = 1, repeatY = 1) {
-            const size = 512;
-            const diffCanvas = document.createElement('canvas');
-            const bumpCanvas = document.createElement('canvas');
-            diffCanvas.width = bumpCanvas.width = size;
-            diffCanvas.height = bumpCanvas.height = size;
-            const dCtx = diffCanvas.getContext('2d');
-            const bCtx = bumpCanvas.getContext('2d');
-            dCtx.fillStyle = baseHex; dCtx.fillRect(0, 0, size, size);
-            bCtx.fillStyle = 'rgb(200, 200, 200)'; bCtx.fillRect(0, 0, size, size);
-
-            for (let i = 0; i < 3200; i++) {
-                const x = Math.random() * size, y = Math.random() * size, w = 2 + Math.random() * 3;
-                const bright = i % 2 === 0;
-                dCtx.fillStyle = bright ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
-                dCtx.fillRect(x, y, w, w);
-            }
-            if (divisions > 1) {
-                const step = size / divisions;
-                dCtx.strokeStyle = groutHex; dCtx.lineWidth = 3;
-                for (let i = 0; i <= divisions; i++) {
-                    const p = i * step;
-                    dCtx.beginPath(); dCtx.moveTo(p, 0); dCtx.lineTo(p, size); dCtx.stroke();
-                    dCtx.beginPath(); dCtx.moveTo(0, p); dCtx.lineTo(size, p); dCtx.stroke();
-                }
-            }
-            const map = new THREE.CanvasTexture(diffCanvas);
-            map.encoding = THREE.sRGBEncoding;
-            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
-            [map, bumpMap].forEach(t => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(repeatX, repeatY); });
-            return { map, bumpMap };
-        }
-
-        function createContactShadowTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.16)');
-            grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-            return new THREE.CanvasTexture(canvas);
-        }
-        const contactShadowMat = new THREE.MeshBasicMaterial({ map: createContactShadowTexture(), transparent: true, depthWrite: false });
-
-        function createToonGradientMap() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 4; canvas.height = 1;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#758296'; ctx.fillRect(0, 0, 1, 1);
-            ctx.fillStyle = '#b4c0d4'; ctx.fillRect(1, 0, 1, 1);
-            ctx.fillStyle = '#e8eef5'; ctx.fillRect(2, 0, 1, 1);
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(3, 0, 1, 1);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            return tex;
-        }
-        const animeToonGrad = createToonGradientMap();
-
-        // Materials
-        const plasterPBR = createPBRSurfaceSet('#f5f0e1', '#e6dec5', 1, 0.02, 4, 2);
-        const matCreamWall = new THREE.MeshStandardMaterial({ map: plasterPBR.map, roughness: 0.80, metalness: 0.02 });
-        const dadoPBR = createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.018, 4, 1);
-        const matGreyDado = new THREE.MeshStandardMaterial({ map: dadoPBR.map, roughness: 0.65, metalness: 0.04 });
-        const terracottaPBR = createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.025, 2, 2);
-        const matTerracotta = new THREE.MeshStandardMaterial({ map: terracottaPBR.map, roughness: 0.70, metalness: 0.04 });
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.42, metalness: 0.05 });
-        const granitePBR = createPBRSurfaceSet('#2d333b', '#1b1f24', 2, 0.035, 2, 2);
-        const matDarkGranite = new THREE.MeshStandardMaterial({ map: granitePBR.map, roughness: 0.26, metalness: 0.14 });
-        const concretePBR = createPBRSurfaceSet('#a6acb2', '#858b91', 1, 0.03, 2, 2);
-        const matGreySteps = new THREE.MeshStandardMaterial({ map: concretePBR.map, roughness: 0.74, metalness: 0.04 });
-        const woodPBR = createPBRSurfaceSet('#4d281a', '#361b11', 1, 0.02, 2, 1);
-        const matWoodRack = new THREE.MeshStandardMaterial({ map: woodPBR.map, roughness: 0.46, metalness: 0.05 });
-        const matDoorWood = new THREE.MeshStandardMaterial({ map: woodPBR.map, color: 0xd9b38c, roughness: 0.45, metalness: 0.05 });
-        const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.46, roughness: 0.08, metalness: 0.25 });
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x27272a, roughness: 0.35, metalness: 0.35 });
-        const matRedRoof = new THREE.MeshStandardMaterial({ color: 0xd93829, roughness: 0.55, metalness: 0.08 });
-        const corridorTilePBR = createPBRSurfaceSet('#6e4e44', '#422c26', 4, 0.02, 16, 4);
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: corridorTilePBR.map, roughness: 0.42, metalness: 0.06 });
-        const paverPBR = createPBRSurfaceSet('#b8b3ae', '#78716c', 10, 0.035, 14, 18);
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: paverPBR.map, roughness: 0.78, metalness: 0.04 });
-        const redBrickPBR = createPBRSurfaceSet('#ad4f3e', '#662b20', 8, 0.03, 2, 16);
-        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: redBrickPBR.map, roughness: 0.76, metalness: 0.04 });
-        const soilPBR = createPBRSurfaceSet('#4d3e2e', '#362b1f', 1, 0.05, 24, 24);
-        const matRichSoil = new THREE.MeshStandardMaterial({ map: soilPBR.map, roughness: 0.92, metalness: 0.02 });
-
-        // Exterior Ground & Driveway
-        const soilGround = new THREE.Mesh(new THREE.PlaneGeometry(170, 170), matRichSoil);
-        soilGround.rotation.x = -Math.PI / 2; soilGround.receiveShadow = true; scene.add(soilGround);
-        const mainDriveway = new THREE.Mesh(new THREE.PlaneGeometry(18, 36), matCourtyard);
-        mainDriveway.rotation.x = -Math.PI / 2; mainDriveway.position.set(0, 0.02, 18); mainDriveway.receiveShadow = true; scene.add(mainDriveway);
-        const buildingApron = new THREE.Mesh(new THREE.PlaneGeometry(36, 8), matCourtyard);
-        buildingApron.rotation.x = -Math.PI / 2; buildingApron.position.set(0, 0.02, 5.5); buildingApron.receiveShadow = true; scene.add(buildingApron);
-
-        [-2.2, 2.2].forEach(rx => {
-            const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 28), matRedPaverStrip);
-            runner.rotation.x = -Math.PI / 2; runner.position.set(rx, 0.026, 18); scene.add(runner);
-        });
-
-        // GPU Wind Grass
-        const grassUniforms = { uTime: { value: 0 }, uWindStrength: { value: 1.0 } };
-        function createCrossedGrassGeometry() {
-            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4); b1.translate(0, 0.22, 0);
-            const b2 = b1.clone(); b2.rotateY(Math.PI / 2.3);
-            [b1, b2].forEach((geo, idx) => {
-                const pos = geo.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const y = pos.getY(i), hRatio = y / 0.44;
-                    pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
-                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * (idx === 0 ? 1 : -1));
-                }
-                geo.computeVertexNormals();
-            });
-            const merged = new THREE.BufferGeometry();
-            const pos1 = b1.attributes.position.array, pos2 = b2.attributes.position.array;
-            const norm1 = b1.attributes.normal.array, norm2 = b2.attributes.normal.array;
-            const uv1 = b1.attributes.uv.array, uv2 = b2.attributes.uv.array;
-            const idx1 = b1.index.array, idx2 = b2.index.array;
-            const combinedPos = new Float32Array(pos1.length + pos2.length); combinedPos.set(pos1, 0); combinedPos.set(pos2, pos1.length);
-            const combinedNorm = new Float32Array(norm1.length + norm2.length); combinedNorm.set(norm1, 0); combinedNorm.set(norm2, norm1.length);
-            const combinedUV = new Float32Array(uv1.length + uv2.length); combinedUV.set(uv1, 0); combinedUV.set(uv2, uv1.length);
-            const combinedIdx = new Uint16Array(idx1.length + idx2.length); combinedIdx.set(idx1, 0);
-            const vertexOffset = pos1.length / 3;
-            for (let i = 0; i < idx2.length; i++) combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
-            merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
-            merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
-            merged.setAttribute('uv', new THREE.BufferAttribute(combinedUV, 2));
-            merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
-            return merged;
-        }
-        const grassBladeGeo = createCrossedGrassGeometry();
-        const grassMat = new THREE.MeshStandardMaterial({ color: 0x4d823b, roughness: 0.74, metalness: 0.02, side: THREE.DoubleSide });
-        grassMat.onBeforeCompile = (shader) => {
-            shader.uniforms.uTime = grassUniforms.uTime;
-            shader.vertexShader = `uniform float uTime;\n` + shader.vertexShader.replace(
-                '#include <begin_vertex>',
-                `#include <begin_vertex>
-                float hFactor = clamp(position.y / 0.44, 0.0, 1.0);
-                vec3 wp = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-                float sway = sin(uTime * 2.1 + wp.x * 0.4 + wp.z * 0.4) * 0.07 * hFactor * hFactor;
-                transformed.x += sway; transformed.z += sway * 0.6;`
-            );
-        };
-        let grassInstancedMesh = null;
-        function buildLivingGrassField(bladeCount) {
-            if (grassInstancedMesh) { scene.remove(grassInstancedMesh); grassInstancedMesh.dispose(); }
-            grassInstancedMesh = new THREE.InstancedMesh(grassBladeGeo, grassMat, bladeCount);
-            const dummy = new THREE.Object3D(), color = new THREE.Color();
-            const greenPalette = [0x3b6e2c, 0x4d7c3f, 0x2e5a22, 0x558b3e, 0x3f6a2e];
-            let placed = 0;
-            while (placed < bladeCount) {
-                const isLeft = Math.random() < 0.55;
-                const x = isLeft ? (-9.3 - Math.random() * 25) : (9.3 + Math.random() * 25);
-                const z = -10 + Math.random() * 44;
-                if (x > -27.5 && x < -16.5 && z > -5.5 && z < 9.5) continue;
-                if (x > -15.5 && x < 15.5 && z < 3.5) continue;
-                dummy.position.set(x, 0, z); dummy.rotation.y = Math.random() * Math.PI * 2;
-                dummy.scale.set(1, 0.75 + Math.random() * 0.65, 1); dummy.updateMatrix();
-                grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
-                color.setHex(greenPalette[placed % greenPalette.length]);
-                grassInstancedMesh.setColorAt(placed, color);
-                placed++;
-            }
-            grassInstancedMesh.instanceMatrix.needsUpdate = true;
-            if (grassInstancedMesh.instanceColor) grassInstancedMesh.instanceColor.needsUpdate = true;
-            scene.add(grassInstancedMesh);
-        }
-
-        // Building & Rooms Construction
-        const building = new THREE.Group(); scene.add(building);
-        const interactableObjects = [];
-        const hingedDoors = [];
-
-        const gfSlab = new THREE.Mesh(new THREE.BoxGeometry(30, 0.2, 12), matGreySteps);
-        gfSlab.position.set(0, 0.1, -4); gfSlab.receiveShadow = true; building.add(gfSlab);
-        PhysicsWorld.addFloorVolume(-15, 15, -10, 2.2, 0.20, 3.85);
-
-        const gfFrontWallLeft = new THREE.Mesh(new THREE.BoxGeometry(11.5, 3.8, 0.25), matCreamWall);
-        gfFrontWallLeft.position.set(-8.2, 2.0, 0.4);
-        const gfFrontWallRight = new THREE.Mesh(new THREE.BoxGeometry(12.5, 3.8, 0.25), matCreamWall);
-        gfFrontWallRight.position.set(8.2, 2.0, 0.4);
-        building.add(gfFrontWallLeft, gfFrontWallRight);
-        PhysicsWorld.addCollider(-14.5, -2.4, 0.2, 0.6, 0, 3.9);
-        PhysicsWorld.addCollider(2.0, 14.8, 0.2, 0.6, 0, 3.9);
-
-        const ffCorridorFloor = new THREE.Mesh(new THREE.BoxGeometry(30, 0.24, 3.6), matCorridorFloor);
-        ffCorridorFloor.position.set(0, 4.0, 0.2); ffCorridorFloor.receiveShadow = true; building.add(ffCorridorFloor);
-        PhysicsWorld.addFloorVolume(-15, 4.5, -1.6, 2.0, 4.12, 7.9);
-
-        for (let s = 0; s < 3; s++) {
-            const stepX = 4.5 + s * 0.4, stepTopY = 4.12 + (s + 1) * 0.08;
-            const step = new THREE.Mesh(new THREE.BoxGeometry(0.4, (s + 1) * 0.08, 3.4), matGreySteps);
-            step.position.set(stepX, 4.12 + ((s + 1) * 0.04), 0.2); building.add(step);
-            PhysicsWorld.addFloorVolume(stepX - 0.22, stepX + 0.22, -1.5, 1.9, stepTopY, 7.9);
-        }
-
-        const raisedFloor = new THREE.Mesh(new THREE.BoxGeometry(9.5, 0.25, 3.6), matCorridorFloor);
-        raisedFloor.position.set(10.25, 4.24, 0.2); building.add(raisedFloor);
-        PhysicsWorld.addFloorVolume(5.5, 15.0, -1.6, 2.0, 4.36, 7.9);
-
-        const ffLabFloor = new THREE.Mesh(new THREE.BoxGeometry(23.5, 0.24, 8.4), matGreySteps);
-        ffLabFloor.position.set(3.25, 4.0, -5.8); building.add(ffLabFloor);
-        PhysicsWorld.addFloorVolume(-8.5, 15.0, -10.0, -1.5, 4.12, 7.9);
-
-        const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(30.4, 0.3, 12.4), matCreamWall);
-        roofSlab.position.set(0, 8.0, -4); building.add(roofSlab);
-        const topParapet = new THREE.Mesh(new THREE.BoxGeometry(30.4, 1.1, 0.35), matCreamWall);
-        topParapet.position.set(0, 8.6, 2.0); building.add(topParapet);
-
-        [4.0, 8.0, 9.15].forEach(yPos => {
-            const redBand = new THREE.Mesh(new THREE.BoxGeometry(30.5, 0.18, 0.42), matTerracotta);
-            redBand.position.set(0, yPos, 2.0); building.add(redBand);
-        });
-
-        const ffParapetOuter = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.18), matCreamWall);
-        ffParapetOuter.position.set(0, 4.65, 1.95);
-        const ffParapetInner = new THREE.Mesh(new THREE.BoxGeometry(30, 1.15, 0.12), matGreyDado);
-        ffParapetInner.position.set(0, 4.65, 1.80);
-        building.add(ffParapetOuter, ffParapetInner);
-        PhysicsWorld.addCollider(-15, 15, 1.68, 2.15, 4.0, 7.8);
-
-        for (let x = -14; x <= 14; x += 4.66) {
-            const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.55, 8.0, 0.55), matWhiteTrim);
-            pillar.position.set(x, 4.0, 1.85); building.add(pillar);
-            const redStripe = new THREE.Mesh(new THREE.BoxGeometry(0.28, 9.1, 0.1), matTerracotta);
-            redStripe.position.set(x, 4.55, 2.12); building.add(redStripe);
-        }
-
-        const mainSignTex = createSignTexture('#2563eb', '#f8fafc', [
-            { text: 'COMPUTER SCIENCE & ENGINEERING', font: 'bold 46px Arial' },
-            { text: '( Artificial Intelligence & Machine Learning )', font: 'bold 38px Arial' }
-        ], 1024, 256);
-        const mainSign = new THREE.Mesh(new THREE.BoxGeometry(5.2, 1.45, 0.15), new THREE.MeshStandardMaterial({ map: mainSignTex }));
-        mainSign.position.set(0, 8.65, 2.22); building.add(mainSign);
-
-        // Entrance Portico
-        const portico = new THREE.Group(); portico.position.set(0, 0, 4.2); scene.add(portico);
-        [-2.1, 2.1].forEach(px => {
-            const pCol = new THREE.Mesh(new THREE.BoxGeometry(0.45, 3.6, 0.45), matDarkGranite);
-            pCol.position.set(px, 1.8, 1.2); portico.add(pCol);
-            PhysicsWorld.addCollider(px - 0.32, px + 0.32, 5.05, 5.75, 0, 3.8);
-        });
-        const porticoRamp = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.18, 3.2), matRedPaverStrip);
-        porticoRamp.position.set(0, 0.09, 0.2); portico.add(porticoRamp);
-        PhysicsWorld.addFloorVolume(-2.2, 2.2, 2.6, 5.8, 0.18, 3.8);
-
-        const roofLeft = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
-        roofLeft.position.set(-1.2, 4.1, 0); roofLeft.rotation.z = 0.32;
-        const roofRight = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.22, 3.6), matCreamWall);
-        roofRight.position.set(1.2, 4.1, 0); roofRight.rotation.z = -0.32;
-        portico.add(roofLeft, roofRight);
-
-        const porticoSignTex = createSignTexture('#3b82f6', '#ffffff', [
-            { text: 'ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಮತ್ತು ಇಂಜಿನಿಯರಿಂಗ್ ವಿಭಾಗ (AI & ML)', font: 'bold 30px Segoe UI, Arial' },
-            { text: 'COMPUTER SCIENCE & ENGINEERING (AI & ML)', font: 'bold 32px Arial' }
-        ], 1024, 200);
-        const porticoBanner = new THREE.Mesh(new THREE.BoxGeometry(4.1, 0.62, 0.1), new THREE.MeshStandardMaterial({ map: porticoSignTex }));
-        porticoBanner.position.set(0, 3.38, 1.5); portico.add(porticoBanner);
-
-        // Switchback Staircase
-        const stairGroup = new THREE.Group(); stairGroup.position.set(-10.5, 0, -1.2); scene.add(stairGroup);
-        for (let i = 0; i < 10; i++) {
-            const stepTopY = (i + 1) * 0.20, localZ = -i * 0.32, worldZ = -1.2 + localZ;
-            const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.20, 0.34), matDarkGranite);
-            tread.position.set(0.95, stepTopY - 0.10, localZ); stairGroup.add(tread);
-            PhysicsWorld.addFloorVolume(-10.50, -8.55, worldZ - 0.22, worldZ + 0.22, stepTopY, stepTopY + 3.2);
-        }
-        const midLanding = new THREE.Mesh(new THREE.BoxGeometry(3.9, 0.24, 1.8), matDarkGranite);
-        midLanding.position.set(0, 1.90, -3.75); stairGroup.add(midLanding);
-        PhysicsWorld.addFloorVolume(-12.50, -8.55, -5.90, -4.05, 2.02, 6.5);
-        for (let i = 0; i < 10; i++) {
-            const stepTopY = 2.20 + i * 0.192, localZ = -2.88 + i * 0.32, worldZ = -1.2 + localZ;
-            const tread = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.20, 0.34), matGreySteps);
-            tread.position.set(-0.95, stepTopY - 0.10, localZ); stairGroup.add(tread);
-            PhysicsWorld.addFloorVolume(-12.45, -10.45, worldZ - 0.22, worldZ + 0.22, stepTopY, 7.9);
-        }
-
-        // Corridor Walls & Doors
-        function addCorridorWallSegment(xStart, xEnd, yFloor = 4.0) {
-            const length = xEnd - xStart, centerX = (xStart + xEnd) / 2;
-            const lower = new THREE.Mesh(new THREE.BoxGeometry(length, 1.25, 0.25), matGreyDado);
-            lower.position.set(centerX, yFloor + 0.625, -1.55);
-            const upper = new THREE.Mesh(new THREE.BoxGeometry(length, 2.75, 0.25), matCreamWall);
-            upper.position.set(centerX, yFloor + 2.625, -1.55);
-            building.add(lower, upper);
-            PhysicsWorld.addCollider(xStart, xEnd, -1.72, -1.38, 4.0, 8.0);
-        }
-        addCorridorWallSegment(-8.5, -2.85, 4.0);
-        addCorridorWallSegment(-1.55, 5.55, 4.0);
-        addCorridorWallSegment(6.85, 14.85, 4.24);
-
-        function createHingedDoor(hingeX, baseY, zPos, doorLabel, startOpen = true) {
-            const pivot = new THREE.Group(); pivot.position.set(hingeX, baseY, zPos);
-            const doorLeaf = new THREE.Mesh(new THREE.BoxGeometry(1.26, 2.35, 0.07), matDoorWood);
-            doorLeaf.position.set(0.63, 1.18, 0);
-            pivot.add(doorLeaf); building.add(pivot);
-            const doorCollider = PhysicsWorld.addCollider(hingeX, hingeX + 1.28, zPos - 0.18, zPos + 0.18, baseY, baseY + 2.4, doorLabel);
-            doorCollider.active = !startOpen;
-            const doorObj = { pivot, doorLeaf, doorLabel, currentAngle: startOpen ? -1.48 : 0.0, isOpen: startOpen, collider: doorCollider };
-            doorLeaf.userData = { interactType: 'door_toggle', doorRef: doorObj, getPrompt: () => `Press E or Click to ${doorObj.isOpen ? 'Close' : 'Open'} ${doorLabel} Door` };
-            interactableObjects.push(doorLeaf); hingedDoors.push(doorObj);
-        }
-        createHingedDoor(-2.83, 4.12, -1.55, 'AI & ML Lab', true);
-        createHingedDoor(5.57, 4.36, -1.55, 'Smart Classroom', true);
-
-        const backWall = new THREE.Mesh(new THREE.BoxGeometry(30, 8.0, 0.3), matCreamWall); backWall.position.set(0, 4.0, -10.0);
-        const leftEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall); leftEndWall.position.set(-15, 4.0, -4);
-        const rightEndWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 8.0, 12), matCreamWall); rightEndWall.position.set(15, 4.0, -4);
-        const midRoomDivider = new THREE.Mesh(new THREE.BoxGeometry(0.25, 4.0, 8.4), matCreamWall); midRoomDivider.position.set(4.0, 6.0, -5.8);
-        building.add(backWall, leftEndWall, rightEndWall, midRoomDivider);
-        PhysicsWorld.addCollider(-15, 15, -10.2, -9.7, 0, 9);
-        PhysicsWorld.addCollider(-15.2, -14.7, -10, 2, 0, 9);
-        PhysicsWorld.addCollider(14.7, 15.2, -10, 2, 0, 9);
-        PhysicsWorld.addCollider(3.8, 4.2, -10, -1.6, 4.0, 8.0);
-
-        // Lab Workstations & Classroom Benches
-        for (let row = -3.8; row >= -8.2; row -= 2.2) {
-            for (let col = -6.5; col <= 1.5; col += 2.6) {
-                const desk = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.74, 0.8), matWoodRack);
-                desk.position.set(col, 4.49, row); building.add(desk);
-                PhysicsWorld.addCollider(col - 1.0, col + 1.0, row - 0.42, row + 0.42, 4.0, 5.5);
-            }
-        }
-        const benchMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.58 });
-        for (let r = -3.8; r >= -8.2; r -= 1.6) {
-            for (let c = 6.5; c <= 11.5; c += 2.6) {
-                const desk = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.74, 0.55), benchMat);
-                desk.position.set(c, 4.49, r); building.add(desk);
-                PhysicsWorld.addCollider(c - 0.95, c + 0.95, r - 0.35, r + 0.35, 4.0, 5.5);
-            }
-        }
-
-        // ============================================================================
-        // 3D CHARACTER BUILDER + FLOATING NAMEPLATE & OVERHEAD SPEECH BUBBLE SPRITE
-        // ============================================================================
-        function createAnimeFaceTexture(eyeColorHex) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 256; canvas.height = 256;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ffe4d0'; ctx.fillRect(0, 0, 256, 256);
-            [80, 176].forEach(ex => {
-                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(ex, 122, 20, 22, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = eyeColorHex; ctx.beginPath(); ctx.ellipse(ex, 124, 13, 17, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#090d16'; ctx.beginPath(); ctx.ellipse(ex, 126, 7, 10, 0, 0, Math.PI * 2); ctx.fill();
-            });
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            return tex;
-        }
-
-        // Draws the floating @Nameplate + Live Overhead Speech Bubble above a Character's Head
-        function createOverheadHeadTagCanvas(callsign, title, chatMsg) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 220;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, 512, 220);
-
-            // 1. Speech Bubble (if active chat message within last 12 seconds)
-            if (chatMsg && chatMsg.trim().length > 0) {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
-                ctx.strokeStyle = '#29E7F2';
-                ctx.lineWidth = 5;
-                ctx.beginPath();
-                ctx.roundRect(26, 12, 460, 88, 22);
-                ctx.fill();
-                ctx.stroke();
-
-                // Speech bubble pointer triangle
-                ctx.beginPath();
-                ctx.moveTo(240, 100);
-                ctx.lineTo(260, 122);
-                ctx.lineTo(276, 100);
-                ctx.closePath();
-                ctx.fill();
-
-                ctx.fillStyle = '#0B1020';
-                ctx.font = 'bold 24px Inter, Segoe UI, Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                const clipped = chatMsg.length > 36 ? chatMsg.substring(0, 35) + '…' : chatMsg;
-                ctx.fillText('💬 ' + clipped, 256, 56);
-            }
-
-            // 2. Callsign & Title Nameplate Pill
-            ctx.fillStyle = 'rgba(11, 16, 32, 0.88)';
-            ctx.strokeStyle = '#29E7F2';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.roundRect(96, 132, 320, 74, 18);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.fillStyle = '#29E7F2';
-            ctx.font = 'bold 28px Orbitron, Segoe UI, Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('@' + (callsign || 'Student'), 256, 162);
-
-            ctx.fillStyle = '#FFC857';
-            ctx.font = 'bold 17px JetBrains Mono, monospace';
-            ctx.fillText('★ ' + (title || 'Tachyon Operative'), 256, 190);
-
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            tex.needsUpdate = true;
-            return tex;
-        }
-
-        function buildStylizedAnimeActor(config) {
-            const root = new THREE.Group();
-            const skinMat = new THREE.MeshToonMaterial({ color: 0xffe4d0, gradientMap: animeToonGrad });
-            const hairMat = new THREE.MeshToonMaterial({ color: config.hairColor || 0x1e293b, gradientMap: animeToonGrad });
-            const topMat = new THREE.MeshToonMaterial({ color: config.shirtColor || 0x2563eb, gradientMap: animeToonGrad });
-            const pantsMat = new THREE.MeshToonMaterial({ color: config.pantsColor || 0x1e293b, gradientMap: animeToonGrad });
-            const shoeMat = new THREE.MeshToonMaterial({ color: 0x0f172a, gradientMap: animeToonGrad });
-
-            const hips = new THREE.Group(); hips.position.y = 0.88; root.add(hips);
-            const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.14, 0.16, 12), pantsMat); hips.add(pelvis);
-            const spine = new THREE.Group(); spine.position.y = 0.08; hips.add(spine);
-            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 0.44, 14), topMat);
-            torso.position.y = 0.22; torso.castShadow = true; spine.add(torso);
-
-            const neck = new THREE.Group(); neck.position.y = 0.46; spine.add(neck);
-            const headGroup = new THREE.Group(); headGroup.position.y = 0.08; neck.add(headGroup);
-
-            const faceTex = createAnimeFaceTexture(config.eyeColor || '#2563eb');
-            const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20), new THREE.MeshToonMaterial({ map: faceTex, gradientMap: animeToonGrad }));
-            headMesh.rotation.y = -Math.PI / 2; headMesh.position.y = 0.11; headGroup.add(headMesh);
-
-            const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.154, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.62), hairMat);
-            hairCap.position.y = 0.12; headGroup.add(hairCap);
-
-            function buildArm(side) {
-                const shoulder = new THREE.Group(); shoulder.position.set(side * 0.20, 0.38, 0); spine.add(shoulder);
-                const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.04, 0.28, 10), topMat); upper.position.y = -0.14; shoulder.add(upper);
-                const elbow = new THREE.Group(); elbow.position.y = -0.28; shoulder.add(elbow);
-                const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.26, 10), skinMat); fore.position.y = -0.13;
-                elbow.add(fore);
-                return { arm: shoulder, foreArm: elbow };
-            }
-
-            function buildLeg(side) {
-                const hipJoint = new THREE.Group(); hipJoint.position.set(side * 0.085, -0.04, 0); hips.add(hipJoint);
-                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.055, 0.42, 10), pantsMat); thigh.position.y = -0.21; hipJoint.add(thigh);
-                const knee = new THREE.Group(); knee.position.y = -0.42; hipJoint.add(knee);
-                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.054, 0.044, 0.40, 10), pantsMat); shin.position.y = -0.20;
-                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.18), shoeMat); shoe.position.set(0, -0.41, 0.03);
-                knee.add(shin, shoe);
-                return { upLeg: hipJoint, leg: knee };
-            }
-
-            const leftArm = buildArm(1), rightArm = buildArm(-1);
-            const leftLeg = buildLeg(1), rightLeg = buildLeg(-1);
-
-            const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.85), contactShadowMat);
-            shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = 0.015; root.add(shadowPlane);
-
-            // Overhead Nameplate & Speech Bubble Sprite
-            const tagTex = createOverheadHeadTagCanvas(config.callsign || 'Operative', config.title || 'Rookie Coder', '');
-            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tagTex, transparent: true, depthTest: false }));
-            tagSprite.position.set(0, 2.18, 0);
-            tagSprite.scale.set(2.1, 0.9, 1);
-            tagSprite.renderOrder = 999;
-            root.add(tagSprite);
-
-            return {
-                wrapper: root,
-                tagSprite,
-                lastRenderedHash: '',
-                updateOverheadTag(callsign, title, chatMsg) {
-                    const hash = `${callsign}|${title}|${chatMsg}`;
-                    if (this.lastRenderedHash === hash) return;
-                    this.lastRenderedHash = hash;
-                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose();
-                    this.tagSprite.material.map = createOverheadHeadTagCanvas(callsign, title, chatMsg);
-                },
-                bones: {
-                    hips, spine, neck, head: headGroup,
-                    leftArm: leftArm.arm, leftForeArm: leftArm.foreArm,
-                    rightArm: rightArm.arm, rightForeArm: rightArm.foreArm,
-                    leftUpLeg: leftLeg.upLeg, leftLeg: leftLeg.leg,
-                    rightUpLeg: rightLeg.upLeg, rightLeg: rightLeg.leg
-                }
-            };
-        }
-
-        function animateBonePose(b, state, t) {
-            if (state === 'walk' || state === 'run') {
-                const freq = state === 'run' ? 11.0 : 7.0;
-                const amp = state === 'run' ? 0.65 : 0.42;
-                b.hips.position.y = 0.88 + Math.abs(Math.sin(t * freq)) * 0.035;
-                b.leftUpLeg.rotation.x = Math.sin(t * freq) * amp;
-                b.rightUpLeg.rotation.x = -Math.sin(t * freq) * amp;
-                b.leftLeg.rotation.x = Math.max(0, -Math.cos(t * freq) * 0.45);
-                b.rightLeg.rotation.x = Math.max(0, Math.cos(t * freq) * 0.45);
-                b.leftArm.rotation.x = -Math.sin(t * freq) * (amp * 0.75);
-                b.rightArm.rotation.x = Math.sin(t * freq) * (amp * 0.75);
-            } else {
-                b.hips.position.y = 0.88 + Math.sin(t * 2.2) * 0.012;
-                b.leftUpLeg.rotation.x = 0; b.rightUpLeg.rotation.x = 0;
-                b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0;
-                b.leftArm.rotation.x = Math.sin(t * 1.5) * 0.04;
-                b.rightArm.rotation.x = -Math.sin(t * 1.5) * 0.04;
-                b.head.rotation.y = Math.sin(t * 1.1) * 0.15;
-            }
-        }
-
-        // ============================================================================
-        // REAL-TIME MULTIPLAYER PLAYER SYSTEM (Firestore `twin_players` Sync)
-        // ============================================================================
-        let myUid = "guest_" + Math.random().toString(36).substring(2, 7);
-        let myCallsign = "Guest_" + myUid.slice(-3);
-        let myTitle = "Tachyon Explorer";
-        let myChatText = "";
-        let myChatTimestamp = 0;
-        let isThirdPerson = true; // Default 3rd Person so you immediately see your own character & overhead chat!
-
-        const playerAvatar = buildStylizedAnimeActor({
-            callsign: myCallsign, title: myTitle, shirtColor: 0x0284c7
-        });
-        scene.add(playerAvatar.wrapper);
-
-        // Dictionary of other live online players: { [uid]: { actor, targetPos, targetYaw, state, lastSeen, name, title, chatMsg } }
-        const remotePlayers = {};
-        const colorPalette = [0x9B5CFF, 0x10b981, 0xf43f5e, 0xf59e0b, 0x06b6d4, 0xec4899];
-
-        onAuthStateChanged(auth, async (user) => {
-            const badgeEl = document.getElementById('my-online-badge');
-            if (user) {
-                myUid = user.uid;
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if (snap.exists() && snap.data().customName) {
-                    myCallsign = snap.data().customName;
-                    myTitle = snap.data().equippedTitle || "Neural Architect";
-                } else {
-                    myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, '');
-                }
-                badgeEl.innerText = `🟢 Online as @${myCallsign}`;
-                playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
-                broadcastMyPresence(true);
-            } else {
-                badgeEl.innerText = `🔑 Sign In for Custom Name`;
-                badgeEl.onclick = () => signInWithPopup(auth, provider);
-            }
-        });
-
-        async function broadcastMyPresence(force = false) {
-            if (!myUid) return;
-            try {
-                const activeMsg = (Date.now() - myChatTimestamp < 10000) ? myChatText : "";
-                await setDoc(doc(db, "twin_players", myUid), {
-                    uid: myUid,
-                    name: myCallsign,
-                    title: myTitle,
-                    x: Number(playerFootPos.x.toFixed(2)),
-                    y: Number(playerFootPos.y.toFixed(2)),
-                    z: Number(playerFootPos.z.toFixed(2)),
-                    yaw: Number(playerAvatar.wrapper.rotation.y.toFixed(2)),
-                    state: currentLocomotionState,
-                    chatMessage: activeMsg,
-                    chatTimestamp: myChatTimestamp,
-                    lastSeen: Date.now()
-                }, { merge: true });
-            } catch (e) {}
-        }
-
-        // Send Overhead Chat Message (Displays above your 3D head + syncs to all online players!)
-        window.sendOverheadChatMessage = function() {
-            const input = document.getElementById('overhead-chat-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-            input.value = '';
-            myChatText = msg;
-            myChatTimestamp = Date.now();
-
-            playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
-            broadcastMyPresence(true);
-
-            const feed = document.getElementById('multiplayer-chat-feed');
-            feed.innerHTML += `<div><strong style="color:var(--emerald);">@${myCallsign}:</strong> ${msg}</div>`;
-            feed.scrollTop = feed.scrollHeight;
-        };
-
-        document.getElementById('overhead-chat-input').addEventListener('keydown', (e) => {
-            e.stopPropagation();
-            if (e.key === 'Enter') window.sendOverheadChatMessage();
-        });
-
-        // Listen to all online players in `twin_players`
-        onSnapshot(collection(db, "twin_players"), (snapshot) => {
-            const now = Date.now();
-            const rosterEl = document.getElementById('online-players-list');
-            let onlineCount = 1;
-            let rosterHTML = `<div class="online-user-chip"><span>🟢 @${myCallsign} (You)</span></div>`;
-
-            snapshot.forEach((docSnap) => {
-                const p = docSnap.data();
-                if (!p || !p.uid || p.uid === myUid) return;
-
-                // Consider online if active in the last 120 seconds
-                const isRecent = (now - (p.lastSeen || 0)) < 120000;
-                if (!isRecent) {
-                    if (remotePlayers[p.uid]) {
-                        scene.remove(remotePlayers[p.uid].actor.wrapper);
-                        delete remotePlayers[p.uid];
-                    }
-                    return;
-                }
-
-                onlineCount++;
-                rosterHTML += `<div class="online-user-chip" onclick="teleportNearPlayer(${p.x || 0}, ${p.y || 0}, ${p.z || 15})" title="Click to walk to @${p.name}"><span>🧑‍🚀 @${p.name}</span> <span>↗</span></div>`;
-
-                if (!remotePlayers[p.uid]) {
-                    const colorHash = p.uid.charCodeAt(0) % colorPalette.length;
-                    const newActor = buildStylizedAnimeActor({
-                        callsign: p.name,
-                        title: p.title || 'Operative',
-                        shirtColor: colorPalette[colorHash]
-                    });
-                    newActor.wrapper.position.set(p.x || 0, p.y || 0, p.z || 18);
-                    scene.add(newActor.wrapper);
-                    remotePlayers[p.uid] = {
-                        actor: newActor,
-                        targetPos: new THREE.Vector3(p.x || 0, p.y || 0, p.z || 18),
-                        targetYaw: p.yaw || 0,
-                        state: p.state || 'idle',
-                        lastChatTs: 0
-                    };
-                }
-
-                const rp = remotePlayers[p.uid];
-                rp.targetPos.set(p.x || 0, p.y || 0, p.z || 18);
-                rp.targetYaw = p.yaw || 0;
-                rp.state = p.state || 'idle';
-
-                const bubbleActive = p.chatMessage && (now - (p.chatTimestamp || 0) < 12000);
-                rp.actor.updateOverheadTag(p.name, p.title || 'Operative', bubbleActive ? p.chatMessage : '');
-
-                if (bubbleActive && p.chatTimestamp !== rp.lastChatTs) {
-                    rp.lastChatTs = p.chatTimestamp;
-                    const feed = document.getElementById('multiplayer-chat-feed');
-                    feed.innerHTML += `<div><strong style="color:var(--cyan);">@${p.name}:</strong> ${p.chatMessage}</div>`;
-                    feed.scrollTop = feed.scrollHeight;
-                }
-            });
-
-            document.getElementById('online-count').innerText = onlineCount;
-            rosterEl.innerHTML = rosterHTML;
-        });
-
-        window.teleportNearPlayer = function(tx, ty, tz) {
-            orbitMode = false;
-            playerFootPos.set(tx + 1.2, ty, tz + 1.2);
-        };
-
-        // ============================================================================
-        // NAVIGATION, CAMERA & CONTROLS
-        // ============================================================================
-        const viewpoints = {
-            exterior: { foot: { x: 0, y: 0.0, z: 21 }, yaw: 0, pitch: 0.06, title: "🏛️ Department Exterior", desc: "Walk up to other online players and type in the chat bar to talk!" },
-            portico: { foot: { x: 0, y: 0.18, z: 4.8 }, yaw: 0, pitch: 0.04, title: "🚪 Main Entrance Portico", desc: "Walk inside and head left (-X) to climb the switchback staircase." },
-            stairs: { foot: { x: -9.5, y: 0.20, z: -0.6 }, yaw: 0, pitch: 0.12, title: "🪜 Switchback Staircase", desc: "Walk forward up the granite steps to the 1st-floor AI & ML corridor." },
-            corridor: { foot: { x: -7.5, y: 4.12, z: 0.25 }, yaw: -1.57, pitch: -0.02, title: "🚶 1st Floor AI & ML Corridor", desc: "Matte-brown floor tiles, shoe racks, and entrances to the AI Lab & Classroom." },
-            lab: { foot: { x: -2.0, y: 4.12, z: -2.3 }, yaw: 0.25, pitch: -0.08, title: "💻 AI & ML Deep Learning Lab", desc: "Dual-monitor AI compute cluster." },
-            classroom: { foot: { x: 7.2, y: 4.12, z: -5.6 }, yaw: -1.57, pitch: -0.05, title: "🎓 Smart Lecture Classroom", desc: "Academic lecture hall." }
-        };
-
-        const playerFootPos = new THREE.Vector3(0, 0.0, 19);
-        let playerVelY = 0;
-        let isGrounded = true;
-        let camYaw = 0;
-        let camPitch = 0.08;
-        let targetTeleport = null;
-        let orbitMode = false;
-        let orbitAngle = 0.45, orbitElevation = 0.32, orbitDistance = 30;
-        let currentLocomotionState = 'idle';
-
-        window.togglePerspectiveMode = function() {
-            isThirdPerson = !isThirdPerson;
-            const btn = document.getElementById('btn-viewmode');
-            btn.innerText = isThirdPerson ? '🧍 View: 3rd Person' : '👁️ View: 1st Person';
-            btn.classList.toggle('active-mode', isThirdPerson);
-            playerAvatar.wrapper.visible = isThirdPerson && !orbitMode;
-        };
-
-        window.toggleOrbitMode = function() {
-            orbitMode = !orbitMode;
-            document.getElementById('btn-orbit').classList.toggle('active-mode', orbitMode);
-            playerAvatar.wrapper.visible = isThirdPerson && !orbitMode;
-        };
-
-        window.teleportTo = function(zoneKey, btnEl) {
-            orbitMode = false;
-            document.getElementById('btn-orbit').classList.remove('active-mode');
-            const v = viewpoints[zoneKey];
-            if (!v) return;
-            targetTeleport = { x: v.foot.x, y: v.foot.y, z: v.foot.z, yaw: v.yaw, pitch: v.pitch };
-            playerAvatar.wrapper.visible = isThirdPerson;
-            document.getElementById('info-title').innerText = v.title;
-            document.getElementById('info-desc').innerText = v.desc;
-            document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-        };
-
-        window.applyGraphicsPreset = function(preset) {
-            if (preset === 'HIGH') { renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); buildLivingGrassField(14000); }
-            else if (preset === 'BALANCED') { renderer.setPixelRatio(1.5); buildLivingGrassField(8000); }
-            else { renderer.setPixelRatio(1.0); buildLivingGrassField(3000); }
-        };
-        window.applyGraphicsPreset(window.innerWidth <= 850 ? 'MOBILE' : 'HIGH');
-
-        const keys = { forward: false, backward: false, left: false, right: false, shift: false };
-        window.addEventListener('keydown', (e) => {
-            if (document.activeElement.tagName === 'INPUT') return;
-            const k = e.key.toLowerCase();
-            if (k === 'w' || e.key === 'ArrowUp') keys.forward = true;
-            if (k === 's' || e.key === 'ArrowDown') keys.backward = true;
-            if (k === 'a' || e.key === 'ArrowLeft') keys.left = true;
-            if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
-            if (e.key === 'Shift') keys.shift = true;
-            if (k === 'v') window.togglePerspectiveMode();
-            if (e.code === 'Space' && isGrounded) { playerVelY = 6.2; isGrounded = false; }
-        });
-        window.addEventListener('keyup', (e) => {
-            const k = e.key.toLowerCase();
-            if (k === 'w' || e.key === 'ArrowUp') keys.forward = false;
-            if (k === 's' || e.key === 'ArrowDown') keys.backward = false;
-            if (k === 'a' || e.key === 'ArrowLeft') keys.left = false;
-            if (k === 'd' || e.key === 'ArrowRight') keys.right = false;
-            if (e.key === 'Shift') keys.shift = false;
-        });
-
-        function bindTouchBtn(id, dir) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[dir] = true; targetTeleport = null; });
-            el.addEventListener('touchend', (e) => { e.preventDefault(); keys[dir] = false; });
-        }
-        bindTouchBtn('btn-up', 'forward'); bindTouchBtn('btn-down', 'backward');
-        bindTouchBtn('btn-left', 'left'); bindTouchBtn('btn-right', 'right');
-
-        let isDragging = false, prevX = 0, prevY = 0;
-        container.addEventListener('mousedown', (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; targetTeleport = null; });
-        window.addEventListener('mouseup', () => isDragging = false);
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - prevX, dy = e.clientY - prevY;
-            if (orbitMode) {
-                orbitAngle -= dx * 0.006;
-                orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005));
-            } else {
-                camYaw -= dx * 0.0045;
-                camPitch = Math.max(-1.1, Math.min(1.1, camPitch - dy * 0.0045));
-            }
-            prevX = e.clientX; prevY = e.clientY;
-        });
-
-        container.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) { isDragging = true; prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; }
-        }, { passive: true });
-        window.addEventListener('touchend', () => isDragging = false);
-        window.addEventListener('touchmove', (e) => {
-            if (!isDragging || e.touches.length !== 1) return;
-            const dx = e.touches[0].clientX - prevX, dy = e.touches[0].clientY - prevY;
-            camYaw -= dx * 0.005;
-            camPitch = Math.max(-1.0, Math.min(1.0, camPitch - dy * 0.005));
-            prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
-        }, { passive: true });
-
-        // Periodic multiplayer heartbeat & position sync (every 600ms)
-        setInterval(() => broadcastMyPresence(), 600);
-
-        const floorStatusEl = document.getElementById('floor-status');
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const dt = Math.min(clock.getDelta(), 0.1);
-            const elapsed = clock.getElapsedTime();
-
-            grassUniforms.uTime.value = elapsed;
-
-            // Clear expired overhead chat bubble after 10 seconds
-            if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
-                myChatText = "";
-                playerAvatar.updateOverheadTag(myCallsign, myTitle, "");
-            }
-
-            // Smoothly interpolate & animate all other online players
-            for (let uid in remotePlayers) {
-                const rp = remotePlayers[uid];
-                rp.actor.wrapper.position.lerp(rp.targetPos, Math.min(1, dt * 8));
-                rp.actor.wrapper.rotation.y += (rp.targetYaw - rp.actor.wrapper.rotation.y) * Math.min(1, dt * 8);
-                animateBonePose(rp.actor.bones, rp.state, elapsed);
-            }
-
-            if (orbitMode) {
-                camera.position.x = Math.sin(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
-                camera.position.y = Math.max(1.8, Math.sin(orbitElevation) * orbitDistance);
-                camera.position.z = Math.cos(orbitAngle) * Math.cos(orbitElevation) * orbitDistance;
-                camera.lookAt(0, 4.2, -2.0);
-            } else if (targetTeleport) {
-                playerFootPos.x += (targetTeleport.x - playerFootPos.x) * 0.12;
-                playerFootPos.y += (targetTeleport.y - playerFootPos.y) * 0.12;
-                playerFootPos.z += (targetTeleport.z - playerFootPos.z) * 0.12;
-                camYaw += (targetTeleport.yaw - camYaw) * 0.12;
-                camPitch += (targetTeleport.pitch - camPitch) * 0.12;
-                if (Math.hypot(targetTeleport.x - playerFootPos.x, targetTeleport.z - playerFootPos.z) < 0.08) targetTeleport = null;
-                playerAvatar.wrapper.position.copy(playerFootPos);
-            } else {
-                const moveSpeed = (keys.shift ? 7.2 : 4.2) * dt;
-                const forwardX = -Math.sin(camYaw), forwardZ = -Math.cos(camYaw);
-                const rightX = Math.cos(camYaw), rightZ = -Math.sin(camYaw);
-
-                let moveX = 0, moveZ = 0;
-                if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
-                if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
-                if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
-                if (keys.right) { moveX += rightX * moveSpeed; moveZ += rightZ * moveSpeed; }
-
-                const candX = Math.max(-32, Math.min(32, playerFootPos.x + moveX));
-                if (!PhysicsWorld.checkHorizontalCollision(candX, playerFootPos.y, playerFootPos.z)) playerFootPos.x = candX;
-                const candZ = Math.max(-9.4, Math.min(36, playerFootPos.z + moveZ));
-                if (!PhysicsWorld.checkHorizontalCollision(playerFootPos.x, playerFootPos.y, candZ)) playerFootPos.z = candZ;
-
-                const supportY = PhysicsWorld.getSupportingFloorY(playerFootPos.x, playerFootPos.y, playerFootPos.z);
-                if (playerFootPos.y <= supportY + 0.08 && playerVelY <= 0) {
-                    playerFootPos.y += (supportY - playerFootPos.y) * Math.min(1, dt * 18);
-                    playerVelY = 0; isGrounded = true;
-                } else {
-                    playerVelY += PhysicsWorld.gravity * dt;
-                    playerFootPos.y += playerVelY * dt;
-                    if (playerFootPos.y <= supportY) { playerFootPos.y = supportY; playerVelY = 0; isGrounded = true; }
-                    else isGrounded = false;
-                }
-
-                const movingNow = Math.hypot(moveX, moveZ) > 0.002;
-                currentLocomotionState = movingNow ? (keys.shift ? 'run' : 'walk') : 'idle';
-                animateBonePose(playerAvatar.bones, currentLocomotionState, elapsed);
-                playerAvatar.wrapper.position.copy(playerFootPos);
-                if (movingNow) playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
-
-                const eyeH = PhysicsWorld.playerEyeHeight;
-                if (isThirdPerson) {
-                    camera.position.set(
-                        playerFootPos.x + Math.sin(camYaw) * 2.8,
-                        playerFootPos.y + eyeH + 0.45,
-                        playerFootPos.z + Math.cos(camYaw) * 2.8
-                    );
-                } else {
-                    camera.position.set(playerFootPos.x, playerFootPos.y + eyeH, playerFootPos.z);
-                }
-                camera.rotation.order = 'YXZ';
-                camera.rotation.y = camYaw;
-                camera.rotation.x = camPitch;
-
-                floorStatusEl.innerText = `Elevation: ${playerFootPos.y.toFixed(1)}m`;
-            }
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
 </body>
 </html>
