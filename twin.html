@@ -59,7 +59,7 @@
         header {
             position: absolute;
             top: 10px; left: 14px; right: 14px;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -104,9 +104,21 @@
         .hud-pill-btn.active-mode { background: rgba(41, 231, 242, 0.22); border-color: var(--cyan); color: #fff; }
         .hud-select option { background: #0f172a; color: #fff; }
 
-        /* Left Campus Navigation & Multiplayer Directory */
+        /* ==========================================================================
+           SLIDABLE LEFT CAMPUS NAVIGATION DRAWER
+           ========================================================================== */
+        .left-drawer-wrap {
+            position: absolute;
+            top: 66px; left: 14px;
+            z-index: 18;
+            display: flex;
+            align-items: flex-start;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .left-drawer-wrap.collapsed {
+            transform: translateX(calc(-100% + 38px));
+        }
         .zone-panel {
-            position: absolute; top: 66px; left: 14px; z-index: 10;
             background: var(--glass); border: 1px solid var(--border);
             border-radius: 16px; padding: 12px; backdrop-filter: blur(16px);
             display: flex; flex-direction: column; gap: 4px;
@@ -115,6 +127,36 @@
         }
         .zone-panel::-webkit-scrollbar { width: 4px; }
         .zone-panel::-webkit-scrollbar-thumb { background: rgba(41, 231, 242, 0.35); border-radius: 4px; }
+
+        .drawer-tab-btn {
+            background: rgba(11, 16, 32, 0.92);
+            border: 1.5px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 10px 8px;
+            cursor: pointer;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            transition: 0.2s;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .drawer-tab-btn:hover {
+            background: var(--cyan);
+            color: #0B1020;
+        }
+        .left-tab-btn {
+            border-left: none;
+            border-radius: 0 12px 12px 0;
+            margin-top: 12px;
+        }
+
         .zone-panel-title {
             font-family: 'Orbitron', sans-serif; font-size: 0.65rem;
             text-transform: uppercase; letter-spacing: 1.2px; color: var(--cyan);
@@ -148,12 +190,31 @@
         }
         .online-user-chip:hover { background: rgba(41, 231, 242, 0.2); border-color: var(--cyan); }
 
-        /* Right HUD Stack: Minimap Radar + Info Card */
-        .right-hud-stack {
-            position: absolute; top: 66px; right: 14px; z-index: 10;
-            width: 295px; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+        /* ==========================================================================
+           SLIDABLE RIGHT RADAR MAP & INFO DRAWER
+           ========================================================================== */
+        .right-drawer-wrap {
+            position: absolute;
+            top: 66px; right: 14px;
+            z-index: 18;
+            display: flex;
+            align-items: flex-start;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
-        .right-hud-stack > * { pointer-events: auto; }
+        .right-drawer-wrap > * { pointer-events: auto; }
+        .right-drawer-wrap.collapsed {
+            transform: translateX(calc(100% - 38px));
+        }
+        .right-tab-btn {
+            border-right: none;
+            border-radius: 12px 0 0 12px;
+            margin-top: 12px;
+        }
+
+        .right-hud-stack {
+            width: 285px; display: flex; flex-direction: column; gap: 10px;
+        }
         .minimap-card {
             background: var(--glass); border: 1px solid var(--border);
             border-radius: 16px; padding: 10px; backdrop-filter: blur(16px);
@@ -164,7 +225,7 @@
             font-family: 'Orbitron', sans-serif; font-size: 0.68rem; color: var(--cyan); font-weight: 800;
         }
         #minimap-canvas {
-            width: 100%; height: 170px; border-radius: 10px;
+            width: 100%; height: 165px; border-radius: 10px;
             background: #070b16; border: 1px solid rgba(255,255,255,0.12); cursor: pointer;
         }
         .info-card {
@@ -182,8 +243,65 @@
         }
 
         /* ==========================================================================
-           LIVE FOOTBALL SCOREBOARD & PITCH CONTROLS HUD
+           SLIDABLE BOTTOM MULTIPLAYER CHAT DOCK
            ========================================================================== */
+        .multiplayer-chat-dock {
+            position: absolute;
+            bottom: 12px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 25;
+            width: 92%; max-width: 540px;
+            background: rgba(11, 16, 32, 0.92);
+            border: 1.5px solid var(--cyan);
+            border-radius: 16px;
+            padding: 8px 10px;
+            display: flex; flex-direction: column; gap: 6px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .multiplayer-chat-dock.collapsed {
+            transform: translate(-50%, calc(100% + 12px));
+        }
+        .chat-slide-handle {
+            position: absolute;
+            top: -29px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(11, 16, 32, 0.94);
+            border: 1.5px solid var(--cyan);
+            border-bottom: none;
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.66rem;
+            font-weight: 800;
+            padding: 5px 16px;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.45);
+        }
+        .chat-slide-handle:hover {
+            background: var(--cyan);
+            color: #0B1020;
+        }
+        .chat-feed-mini {
+            max-height: 54px; overflow-y: auto; font-size: 0.74rem; color: #cbd5e1;
+            display: flex; flex-direction: column; gap: 3px; padding: 0 4px; user-select: text;
+        }
+        .chat-input-row { display: flex; gap: 8px; align-items: center; }
+        .chat-input-row input {
+            flex: 1; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #fff; padding: 8px 13px; border-radius: 10px; font-size: 0.82rem;
+            outline: none; user-select: text; -webkit-user-select: text;
+        }
+        .chat-input-row input:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(41, 231, 242, 0.3); }
+        .chat-send-btn {
+            background: var(--cyan); color: #0B1020; border: none; padding: 8px 15px;
+            border-radius: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.72rem;
+            font-weight: 800; cursor: pointer; white-space: nowrap;
+        }
+
+        /* Live Football Scoreboard HUD */
         #football-hud {
             position: absolute;
             top: 66px; left: 50%;
@@ -237,7 +355,6 @@
             box-shadow: 0 0 50px rgba(255, 200, 87, 0.5); pointer-events: none;
         }
 
-        /* Contextual Interaction Prompt */
         #interact-prompt {
             position: absolute; bottom: 145px; left: 50%; transform: translateX(-50%);
             z-index: 18; background: rgba(11, 16, 32, 0.92); border: 1px solid var(--cyan);
@@ -250,9 +367,7 @@
             border-radius: 6px; font-weight: 900; font-size: 0.72rem;
         }
 
-        /* ==========================================================================
-           INTERACTIVE STUDENT NOTICE BOARD MODAL
-           ========================================================================== */
+        /* Student Notice Board Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(6, 10, 22, 0.78); backdrop-filter: blur(10px);
@@ -332,7 +447,6 @@
         .n-act-btn:hover { border-color: var(--cyan); color: #fff; }
         .n-act-btn.del:hover { border-color: var(--crimson); color: var(--crimson); }
 
-        /* Notice Composer Drawer inside Modal */
         #notice-composer {
             display: none; flex-direction: column; gap: 10px;
             background: rgba(2, 6, 23, 0.95); border: 1px solid var(--cyan);
@@ -345,45 +459,20 @@
         }
         #notice-composer input:focus, #notice-composer textarea:focus { border-color: var(--cyan); }
 
-        /* Multiplayer Overhead Chat Bar */
-        .multiplayer-chat-dock {
-            position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-            z-index: 25; width: 92%; max-width: 550px;
-            background: rgba(11, 16, 32, 0.90); border: 1.5px solid var(--cyan);
-            border-radius: 16px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px;
-            backdrop-filter: blur(16px); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65);
-        }
-        .chat-feed-mini {
-            max-height: 58px; overflow-y: auto; font-size: 0.74rem; color: #cbd5e1;
-            display: flex; flex-direction: column; gap: 3px; padding: 0 4px; user-select: text;
-        }
-        .chat-input-row { display: flex; gap: 8px; align-items: center; }
-        .chat-input-row input {
-            flex: 1; background: rgba(2, 6, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.16);
-            color: #fff; padding: 8px 13px; border-radius: 10px; font-size: 0.82rem;
-            outline: none; user-select: text; -webkit-user-select: text;
-        }
-        .chat-input-row input:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(41, 231, 242, 0.3); }
-        .chat-send-btn {
-            background: var(--cyan); color: #0B1020; border: none; padding: 8px 15px;
-            border-radius: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.72rem;
-            font-weight: 800; cursor: pointer; white-space: nowrap;
-        }
-
         /* Sarvam AI Floating Chatbot */
         .sarvam-fab {
-            position: fixed; bottom: 18px; right: 18px; z-index: 40;
+            position: fixed; bottom: 14px; right: 14px; z-index: 40;
             background: linear-gradient(135deg, var(--purple), #FF4FD8); color: #fff;
-            border: 1.5px solid var(--cyan); padding: 11px 18px; border-radius: 50px;
-            font-family: 'Orbitron', sans-serif; font-size: 0.76rem; font-weight: 800;
+            border: 1.5px solid var(--cyan); padding: 10px 16px; border-radius: 50px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.74rem; font-weight: 800;
             cursor: pointer; display: flex; align-items: center; gap: 8px;
             box-shadow: 0 10px 30px rgba(155, 92, 255, 0.5); transition: 0.25s;
         }
         .sarvam-fab:hover { transform: translateY(-3px) scale(1.03); }
 
         .sarvam-window {
-            position: fixed; bottom: 74px; right: 18px; z-index: 45;
-            width: 355px; max-width: calc(100vw - 32px); height: 450px;
+            position: fixed; bottom: 68px; right: 14px; z-index: 45;
+            width: 360px; max-width: calc(100vw - 28px); height: 465px;
             background: rgba(11, 16, 32, 0.96); border: 1.5px solid var(--cyan);
             border-radius: 18px; display: none; flex-direction: column; overflow: hidden;
             backdrop-filter: blur(20px); box-shadow: 0 20px 55px rgba(0, 0, 0, 0.8);
@@ -398,7 +487,7 @@
             flex: 1; padding: 12px; overflow-y: auto;
             display: flex; flex-direction: column; gap: 10px; font-size: 0.81rem; user-select: text;
         }
-        .s-msg { padding: 9px 12px; border-radius: 12px; line-height: 1.45; max-width: 90%; word-break: break-word; }
+        .s-msg { padding: 9px 12px; border-radius: 12px; line-height: 1.48; max-width: 90%; word-break: break-word; white-space: pre-wrap; }
         .s-msg.bot { background: rgba(24, 34, 60, 0.9); border: 1px solid rgba(41, 231, 242, 0.25); color: #F3F6FF; align-self: flex-start; }
         .s-msg.user { background: linear-gradient(135deg, var(--purple), #6d28d9); color: #fff; align-self: flex-end; }
         .sarvam-quick-chips {
@@ -420,7 +509,7 @@
         }
 
         .mobile-dpad {
-            position: absolute; bottom: 120px; left: 14px; z-index: 15;
+            position: absolute; bottom: 88px; left: 14px; z-index: 15;
             display: none; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(2, 44px); gap: 5px;
         }
         .dpad-btn {
@@ -431,9 +520,10 @@
 
         #profile-modal {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 30; width: 90%; max-width: 480px; background: rgba(15, 23, 42, 0.96);
-            border: 1px solid var(--gold); border-radius: 20px; padding: 24px;
-            display: none; flex-direction: column; gap: 14px;
+            z-index: 30; width: 92%; max-width: 520px; max-height: 82dvh; overflow-y: auto;
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid var(--gold); border-radius: 20px; padding: 22px;
+            display: none; flex-direction: column; gap: 12px;
         }
         .profile-item {
             background: rgba(2, 6, 23, 0.65); border: 1px solid var(--border);
@@ -441,14 +531,16 @@
         }
 
         @media (max-width: 900px) {
-            .zone-panel { display: none; }
-            .right-hud-stack { top: 64px; right: 10px; width: 175px; }
-            #minimap-canvas { height: 115px; }
-            .info-card { display: none; }
+            .left-drawer-wrap { top: 72px; left: 0; }
+            .left-drawer-wrap.collapsed { transform: translateX(calc(-100% + 32px)); }
+            .right-drawer-wrap { top: 72px; right: 0; }
+            .right-drawer-wrap.collapsed { transform: translateX(calc(100% - 32px)); }
+            .right-hud-stack { width: 225px; }
+            #minimap-canvas { height: 135px; }
             .mobile-dpad { display: grid; }
-            .multiplayer-chat-dock { bottom: 66px; width: 95%; }
-            .sarvam-fab { bottom: 10px; right: 10px; padding: 9px 14px; }
-            #football-hud { top: 62px; left: 10px; transform: none; padding: 7px 11px; }
+            .multiplayer-chat-dock { width: 94%; bottom: 8px; }
+            .sarvam-fab { bottom: 8px; right: 10px; padding: 8px 12px; font-size: 0.68rem; }
+            #football-hud { top: 68px; padding: 7px 11px; }
         }
     </style>
 </head>
@@ -504,7 +596,6 @@
             </div>
 
             <div class="notice-body-scroll">
-                <!-- Create / Edit Notice Form -->
                 <div id="notice-composer">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <strong style="color:var(--cyan); font-size:0.82rem;" id="composer-heading">✍️ Publish Campus Notice</strong>
@@ -521,26 +612,37 @@
                     </div>
                 </div>
 
-                <!-- Notices Feed -->
                 <div id="notices-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
                 <button class="hud-pill-btn" id="btn-load-more-notices" style="align-self:center; display:none;" onclick="loadMoreNotices()">Load More Notices ↓</button>
             </div>
         </div>
     </div>
 
-    <!-- Department & Faculty Leadership Modal -->
+    <!-- Department, Club & Faculty Leadership Modal -->
     <div id="profile-modal">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="color:var(--gold); font-size:1.15rem;">🏛️ PESCE Mandya — AI & ML Leadership</h2>
+            <h2 style="color:var(--gold); font-size:1.1rem;">🏛️ PESCE Mandya — AI & ML Directory</h2>
             <button class="hud-pill-btn" onclick="document.getElementById('profile-modal').style.display='none'">✕ Close</button>
         </div>
         <div class="profile-item">
             <h4>Dr. Vinay S. — Principal, PESCE Mandya</h4>
-            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">B.E., M.Tech., Ph.D. (Computer Science). Spearheading institutional excellence and AI education at PES College of Engineering.</p>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">B.E., M.Tech., Ph.D. (Computer Science). Principal & Professor spearheading institutional excellence at P.E.S. College of Engineering, Mandya.</p>
         </div>
         <div class="profile-item">
-            <h4>Shivakumar Patil — President, TACHYON AIML Club</h4>
-            <p style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">Leading student-driven AI agent deployments, hackathons, and the PESCE Digital Twin initiative.</p>
+            <h4>Dr. Mahesh Kaluti — Professor & HoD, CSE (AI & ML)</h4>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Head of the Department of Computer Science & Engineering (Artificial Intelligence & Machine Learning), PESCE Mandya.</p>
+        </div>
+        <div class="profile-item">
+            <h4>Dr. Umesh D. R. — Professor (CAS) & Controller of Examinations</h4>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Professor in CSE (AI & ML) and Controller of Examinations (COE), PESCE Mandya.</p>
+        </div>
+        <div class="profile-item">
+            <h4>CSE (AI & ML) Faculty Roster — PESCE Mandya</h4>
+            <p style="font-size:0.76rem; color:#cbd5e1; margin-top:4px;">Prof. Chetan Kumar V. • Prof. Sindhu P. • Prof. Ashwini M. C. • Prof. M. S. Shanthi Swaroop • Prof. Renuka H. R. • Prof. Ashwitha B. M. • Prof. Pavan Krishna K.</p>
+        </div>
+        <div class="profile-item">
+            <h4>TACHYON AIML Club Leadership</h4>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;"><strong>President:</strong> Shivakumar Patil (@shivu) • <strong>Vice President:</strong> Suhas (@suhas) • Leading AI Agent deployments, hackathons, and the PESCE Digital Twin.</p>
         </div>
     </div>
 
@@ -548,7 +650,7 @@
     <header>
         <div class="brand-nav-wrap">
             <a href="index.html" class="club-logo-badge">
-                <img src="tachyon-logo.jpg" alt="TACHYON Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2246%22 fill=%22%230B1020%22 stroke=%22%2329E7F2%22 stroke-width=%226%22/><circle cx=%2250%22 cy=%2242%22 r=%2222%22 fill=%22%2329E7F2%22/><rect x=%2215%22 y=%2264%22 width=%2270%22 height=%2220%22 rx=%224%22 fill=%22%236b1d2f%22/><text x=%2250%22 y=%2278%22 font-size=%2213%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22>TACHYON</text></svg>'">
+                <img src="WhatsApp Image 2026-10-19 at 2.21.46 PM.jpeg" alt="TACHYON Logo" onerror="this.onerror=null; this.src='tachyon-logo.jpg';">
                 <div class="club-logo-text">
                     <strong>TACHYON</strong>
                     <span>PESCE MANDYA VIRTUAL CAMPUS</span>
@@ -576,53 +678,63 @@
         </div>
     </header>
 
-    <!-- Left Campus Navigation & Live Multiplayer Directory -->
-    <aside class="zone-panel">
-        <button class="hub-return-btn" onclick="teleportTo('quad')">🏛️ RETURN TO MAIN CAMPUS HUB</button>
+    <!-- ==========================================================================
+         SLIDABLE LEFT CAMPUS NAVIGATION & MULTIPLAYER DIRECTORY DRAWER
+         ========================================================================== -->
+    <div class="left-drawer-wrap" id="left-drawer">
+        <aside class="zone-panel">
+            <button class="hub-return-btn" onclick="teleportTo('quad')">🏛️ RETURN TO MAIN CAMPUS HUB</button>
 
-        <div class="zone-panel-title">🏢 Main AI & ML Block</div>
-        <button class="zone-btn active" id="zbtn-quad" onclick="teleportTo('quad', this)"><span>⛲ Central Quad & Notice Board</span> <span>1</span></button>
-        <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)"><span>🚪 AI & ML Main Foyer</span> <span>2</span></button>
-        <button class="zone-btn" id="zbtn-hod" onclick="teleportTo('hod', this)"><span>👨‍🏫 HOD & Faculty Cabins</span> <span>3</span></button>
-        <button class="zone-btn" id="zbtn-project" onclick="teleportTo('project', this)"><span>🤖 TACHYON Project Room</span> <span>4</span></button>
-        <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)"><span>🪜 Switchback Staircase</span> <span>5</span></button>
-        <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)"><span>🚶 1st Floor Corridor</span> <span>6</span></button>
-        <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)"><span>💻 Deep Learning Lab</span> <span>7</span></button>
-        <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)"><span>🎓 Smart Classroom 101</span> <span>8</span></button>
+            <div class="zone-panel-title">🏢 Main AI & ML Block</div>
+            <button class="zone-btn active" id="zbtn-quad" onclick="teleportTo('quad', this)"><span>⛲ Central Quad & Notice Board</span> <span>1</span></button>
+            <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)"><span>🚪 AI & ML Main Foyer</span> <span>2</span></button>
+            <button class="zone-btn" id="zbtn-hod" onclick="teleportTo('hod', this)"><span>👨‍🏫 HOD & Faculty Cabins</span> <span>3</span></button>
+            <button class="zone-btn" id="zbtn-project" onclick="teleportTo('project', this)"><span>🤖 TACHYON Project Room</span> <span>4</span></button>
+            <button class="zone-btn" id="zbtn-stairs" onclick="teleportTo('stairs', this)"><span>🪜 Switchback Staircase</span> <span>5</span></button>
+            <button class="zone-btn" id="zbtn-corridor" onclick="teleportTo('corridor', this)"><span>🚶 1st Floor Corridor</span> <span>6</span></button>
+            <button class="zone-btn" id="zbtn-lab" onclick="teleportTo('lab', this)"><span>💻 Deep Learning Lab</span> <span>7</span></button>
+            <button class="zone-btn" id="zbtn-classroom" onclick="teleportTo('classroom', this)"><span>🎓 Smart Classroom 101</span> <span>8</span></button>
 
-        <div class="zone-panel-title">⚽ Sports & Campus Zones</div>
-        <button class="zone-btn" id="zbtn-sports" onclick="teleportTo('sports', this)"><span>⚽ Playable Football Stadium</span> <span>9</span></button>
-        <button class="zone-btn" id="zbtn-library" onclick="teleportTo('library', this)"><span>📚 Central Library (Interior)</span> <span>0</span></button>
-        <button class="zone-btn" id="zbtn-seminar" onclick="teleportTo('seminar', this)"><span>🎤 Auditorium & Seminar Hall</span></button>
-        <button class="zone-btn" id="zbtn-cafeteria" onclick="teleportTo('cafeteria', this)"><span>☕ Campus Cafeteria & Patio</span></button>
+            <div class="zone-panel-title">⚽ Sports & Campus Zones</div>
+            <button class="zone-btn" id="zbtn-sports" onclick="teleportTo('sports', this)"><span>⚽ Playable Football Stadium</span> <span>9</span></button>
+            <button class="zone-btn" id="zbtn-library" onclick="teleportTo('library', this)"><span>📚 Central Library (Interior)</span> <span>0</span></button>
+            <button class="zone-btn" id="zbtn-seminar" onclick="teleportTo('seminar', this)"><span>🎤 Auditorium & Seminar Hall</span></button>
+            <button class="zone-btn" id="zbtn-cafeteria" onclick="teleportTo('cafeteria', this)"><span>☕ Campus Cafeteria & Patio</span></button>
 
-        <div class="online-roster-box">
-            <div class="zone-panel-title" style="color:var(--emerald);">🟢 Live Online Students (<span id="online-count">1</span>)</div>
-            <div id="online-players-list" style="display:flex; flex-direction:column; gap:4px;"></div>
-        </div>
-    </aside>
-
-    <!-- Right HUD Stack: Live 2D Campus Radar Minimap + Location Telemetry -->
-    <aside class="right-hud-stack">
-        <div class="minimap-card">
-            <div class="minimap-header">
-                <span>📡 LIVE CAMPUS RADAR</span>
-                <span id="radar-coords" style="font-family:'JetBrains Mono',monospace; font-size:0.64rem; color:#9AA8C2;">X:0 Z:0</span>
+            <div class="online-roster-box">
+                <div class="zone-panel-title" style="color:var(--emerald);">🟢 Live Online Students (<span id="online-count">1</span>)</div>
+                <div id="online-players-list" style="display:flex; flex-direction:column; gap:4px;"></div>
             </div>
-            <canvas id="minimap-canvas" width="275" height="170" title="Click anywhere on radar to fast-travel"></canvas>
-        </div>
+        </aside>
+        <button class="drawer-tab-btn left-tab-btn" id="left-drawer-btn" onclick="toggleLeftDrawer()" title="Slide Campus Hub Menu In/Out">◀ ZONES</button>
+    </div>
 
-        <div class="info-card" id="zone-info">
-            <h3 id="info-title">⛲ Central Campus Quad</h3>
-            <p id="info-desc">
-                Walk to the Notice Board (Press E) to post announcements, or head to the Football Stadium (Zone 9) to play live multiplayer football with friends!
-            </p>
-            <div class="telemetry-row">
-                <span id="actor-status">🟢 Multiplayer Synced</span>
-                <span id="floor-status">Elev: 0.0m</span>
+    <!-- ==========================================================================
+         SLIDABLE RIGHT HUD STACK: LIVE 2D CAMPUS RADAR MINIMAP + INFO CARD
+         ========================================================================== -->
+    <div class="right-drawer-wrap" id="right-drawer">
+        <button class="drawer-tab-btn right-tab-btn" id="right-drawer-btn" onclick="toggleRightDrawer()" title="Slide Radar Map In/Out">📡 MAP ▶</button>
+        <aside class="right-hud-stack">
+            <div class="minimap-card">
+                <div class="minimap-header">
+                    <span>📡 LIVE CAMPUS RADAR</span>
+                    <span id="radar-coords" style="font-family:'JetBrains Mono',monospace; font-size:0.64rem; color:#9AA8C2;">X:0 Z:0</span>
+                </div>
+                <canvas id="minimap-canvas" width="275" height="165" title="Click anywhere on radar to fast-travel"></canvas>
             </div>
-        </div>
-    </aside>
+
+            <div class="info-card" id="zone-info">
+                <h3 id="info-title">⛲ Central Campus Quad</h3>
+                <p id="info-desc">
+                    Walk to the Notice Board (Press E) to post announcements, or head to the Football Stadium (Zone 9) to play live multiplayer football with friends!
+                </p>
+                <div class="telemetry-row">
+                    <span id="actor-status">🟢 Multiplayer Synced</span>
+                    <span id="floor-status">Elev: 0.0m</span>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <!-- Mobile Touch D-Pad -->
     <div class="mobile-dpad">
@@ -634,8 +746,11 @@
         <button class="dpad-btn" id="btn-right">▶</button>
     </div>
 
-    <!-- Multiplayer Overhead Chat Bar -->
-    <div class="multiplayer-chat-dock">
+    <!-- ==========================================================================
+         SLIDABLE BOTTOM MULTIPLAYER OVERHEAD CHAT DOCK
+         ========================================================================== -->
+    <div class="multiplayer-chat-dock" id="bottom-chat-dock">
+        <button class="chat-slide-handle" id="chat-drawer-btn" onclick="toggleBottomChatDock()">💬 Hide Chat ▼</button>
         <div class="chat-feed-mini" id="multiplayer-chat-feed">
             <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near any Notice Board to read/post notices, or walk to the Football Pitch and press <strong>F</strong> to kick the ball!</div>
         </div>
@@ -654,22 +769,21 @@
         <div class="sarvam-header">
             <div>
                 <strong>🇮🇳 TACHYON × SARVAM AI</strong>
-                <div style="font-size:0.65rem; color:#9AA8C2;">Verified Campus Guide & AI Assistant</div>
+                <div style="font-size:0.65rem; color:#9AA8C2;">PESCE Faculty, Club & Web Assistant</div>
             </div>
             <button class="hud-pill-btn" style="padding:4px 8px;" onclick="toggleSarvamChatbot()">✕</button>
         </div>
         <div class="sarvam-messages" id="sarvam-messages">
-            <div class="s-msg bot">
-                Namaskara! 👋 I am your <strong>TACHYON Sarvam AI Assistant</strong>. Ask me where the football field is, how to publish a student notice, or how to find the AI & ML Lab!
-            </div>
+            <div class="s-msg bot">Namaskara! 👋 I am your <strong>TACHYON Sarvam AI Assistant</strong>. Ask me about our TACHYON Club President & Vice President, PESCE Mandya AI & ML faculty names, campus navigation, or any question from the web!</div>
         </div>
         <div class="sarvam-quick-chips">
+            <button class="s-chip" onclick="askSarvamPreset('Who are the President, Vice President, and Faculty of CSE AI & ML at PESCE Mandya?')">👨‍🏫 Faculty & Club Leaders?</button>
             <button class="s-chip" onclick="askSarvamPreset('Where is the football field?')">⚽ Football Field?</button>
             <button class="s-chip" onclick="askSarvamPreset('How do I publish a notice?')">📌 Publish Notice?</button>
             <button class="s-chip" onclick="askSarvamPreset('Where can I find the AI/ML laboratory?')">💻 AI/ML Lab?</button>
         </div>
         <div class="sarvam-input-area">
-            <input type="text" id="sarvam-user-input" placeholder="Ask Sarvam AI..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
+            <input type="text" id="sarvam-user-input" placeholder="Ask about faculty, club leaders, or anything..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
             <button class="chat-send-btn" onclick="sendSarvamMessage()">Send</button>
         </div>
     </div>
@@ -680,7 +794,7 @@
     <!-- Main 3D Campus Engine + Multiplayer Football + Shared Notice Board + Sarvam AI -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -699,6 +813,39 @@
         const provider = new GoogleAuthProvider();
         const ADMIN_EMAIL = "patilshivakumarcr7@gmail.com";
 
+        // ============================================================================
+        // SLIDABLE UI DRAWER CONTROLS (LEFT ZONES, RIGHT MAP, BOTTOM CHAT)
+        // ============================================================================
+        window.toggleLeftDrawer = function(forceCollapse) {
+            const drawer = document.getElementById('left-drawer');
+            const btn = document.getElementById('left-drawer-btn');
+            const isCollapsed = typeof forceCollapse === 'boolean' ? forceCollapse : !drawer.classList.contains('collapsed');
+            drawer.classList.toggle('collapsed', isCollapsed);
+            btn.textContent = isCollapsed ? '🧭 ZONES ▶' : '◀ HIDE';
+        };
+
+        window.toggleRightDrawer = function(forceCollapse) {
+            const drawer = document.getElementById('right-drawer');
+            const btn = document.getElementById('right-drawer-btn');
+            const isCollapsed = typeof forceCollapse === 'boolean' ? forceCollapse : !drawer.classList.contains('collapsed');
+            drawer.classList.toggle('collapsed', isCollapsed);
+            btn.textContent = isCollapsed ? '◀ 📡 MAP' : 'HIDE ▶';
+        };
+
+        window.toggleBottomChatDock = function(forceCollapse) {
+            const dock = document.getElementById('bottom-chat-dock');
+            const btn = document.getElementById('chat-drawer-btn');
+            const isCollapsed = typeof forceCollapse === 'boolean' ? forceCollapse : !dock.classList.contains('collapsed');
+            dock.classList.toggle('collapsed', isCollapsed);
+            btn.textContent = isCollapsed ? '💬 Open Overhead Chat ▲' : '💬 Hide Chat ▼';
+        };
+
+        // Automatically slide side drawers closed on small mobile screens for a clear 3D view
+        if (window.innerWidth <= 900) {
+            window.toggleLeftDrawer(true);
+            window.toggleRightDrawer(true);
+        }
+
         function fillStrokeRoundRect(ctx, x, y, w, h, r) {
             ctx.beginPath();
             ctx.moveTo(x + r, y);
@@ -716,11 +863,49 @@
         }
 
         // ============================================================================
-        // SECURE SERVER-SIDE SARVAM AI + VERIFIED CAMPUS NAVIGATION ASSISTANT
+        // SARVAM AI (`sarvam-105b`) + OFFICIAL PESCE MANDYA & WEB KNOWLEDGE ENGINE
         // ============================================================================
-        let sarvamHistory = [
-            { role: "system", content: "You are TACHYON AI, the official AI & ML Department Assistant at P.E.S. College of Engineering (PESCE), Mandya. Key campus locations: Football Stadium & Basketball Court (South-East Zone 9, X:54 Z:74), Student Notice Boards (Central Quad X:-7.5 Z:40, AI & ML Entrance X:4.5 Z:2.2, and 1st Floor Corridor), AI & ML Deep Learning Lab (1st Floor Main Block Zone 7), Central Library (West Zone 0, X:-62 Z:22), Auditorium (East X:62 Z:22), Cafeteria (South-West X:-52 Z:72). Keep answers concise and helpful." }
-        ];
+        const SARVAM_SUBSCRIPTION_KEY = "sk_ydvjf4pq_o2FrnqVgAWXqSAlmPhjWOCQ5";
+
+        const PESCE_VERIFIED_KNOWLEDGE = `
+You are TACHYON AI, the official intelligent assistant for the Department of Computer Science & Engineering (Artificial Intelligence & Machine Learning) and the TACHYON AIML Club at P.E.S. College of Engineering (PESCE), Mandya, Karnataka (Autonomous institution affiliated to VTU Belagavi, founded in 1962 by Sri K. V. Shankara Gowda under People's Education Society).
+
+OFFICIAL PESCE MANDYA & TACHYON CLUB DIRECTORY (VERIFIED FROM PESCE.AC.IN):
+1. College Leadership:
+   - Principal: Dr. Vinay S. (B.E., M.Tech., Ph.D. in Computer Science; Principal & Professor, PESCE Mandya).
+2. Department of CSE (Artificial Intelligence & Machine Learning) Faculty:
+   - Head of Department (HoD): Dr. Mahesh Kaluti (Professor & HoD, CSE AI & ML).
+   - Professor & Controller of Examinations (COE) / Former HoD: Dr. Umesh D. R. (Professor CAS & COE).
+   - Assistant Professors in CSE (AI & ML):
+     * Prof. Chetan Kumar V. (Assistant Professor)
+     * Prof. Sindhu P. (Assistant Professor)
+     * Prof. Ashwini M. C. (Assistant Professor)
+     * Prof. M. S. Shanthi Swaroop (Assistant Professor)
+     * Prof. Renuka H. R. (Assistant Professor)
+     * Prof. Ashwitha B. M. (Assistant Professor)
+     * Prof. Pavan Krishna K. (Assistant Professor)
+   - Senior Professors in Core CSE at PESCE Mandya:
+     * Dr. Anitha M. L. (Professor & HoD, CSE), Dr. M. C. Padma (Professor), Dr. H. P. Mohan Kumar (Professor), Dr. Nagarathna (Professor), Dr. Veena M. N., Dr. Girish Babu M. C., Dr. Prasanna Kumar R. S., Dr. H. R. Divakar, Dr. Deepika, Dr. Bhavya D.
+3. TACHYON AIML Club Leadership:
+   - Motto: "Guide by Light, Driven by Intelligence"
+   - President: Shivakumar Patil (@shivu)
+   - Vice President: Suhas (@suhas)
+   - Core Club Operatives: Nandi (@nandi), Adi (@adi), and PESCE AI & ML student builders.
+4. 3D Digital Twin Campus Locations:
+   - Zone 1: Central Campus Quad & Student Notice Board (X:0, Z:34)
+   - Zone 2: AI & ML Main Entrance Foyer (X:0, Z:4.8)
+   - Zone 3: HOD & Faculty Cabins (Ground Floor West Wing, X:-15.5, Z:-6)
+   - Zone 4: TACHYON AI & Robotics Project Lab (Ground Floor East Wing, X:11.5, Z:-4.5)
+   - Zone 5 & 6: Switchback Staircase & 1st Floor AI & ML Corridor
+   - Zone 7: AI & ML Deep Learning Lab (1st Floor West)
+   - Zone 8: Smart Lecture Classroom 101 (1st Floor East)
+   - Zone 9: Playable Multiplayer Football Stadium & Basketball Court (South-East Sector, X:54, Z:74 — Press F to Kick, G for Power Shot)
+   - Zone 0: PESCE Central Library & Digital Hub (West Sector, X:-62, Z:22), TACHYON Auditorium (East Sector, X:62, Z:22), and Campus Cafeteria (South-West, X:-52, Z:72).
+
+Always answer clearly, accurately, and concisely.
+`.trim();
+
+        let sarvamConversation = [];
 
         window.toggleSarvamChatbot = function() {
             const win = document.getElementById('sarvam-window');
@@ -733,35 +918,50 @@
         };
 
         function getVerifiedCampusGuideReply(queryLower) {
-            if (queryLower.includes('football') || queryLower.includes('soccer') || queryLower.includes('sports') || queryLower.includes('play')) {
+            if (queryLower.includes('president') || queryLower.includes('vice') || queryLower.includes('faculty') || queryLower.includes('hod') || queryLower.includes('prof') || queryLower.includes('teacher') || queryLower.includes('principal')) {
                 return {
-                    text: "⚽ The Multiplayer Football Stadium is located in the South-East Campus Sector (X: 54, Z: 74, Zone 9). Walk onto the pitch and press [F] to kick/pass, [G] for a power shot, or use the on-screen Kick buttons!",
+                    text: "🏛️ PESCE Mandya CSE (AI & ML) & TACHYON Leadership:\n• Principal: Dr. Vinay S.\n• HoD, CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• AI & ML Faculty: Prof. Chetan Kumar V., Prof. Sindhu P., Prof. Ashwini M. C., Prof. M. S. Shanthi Swaroop, Prof. Renuka H. R., Prof. Ashwitha B. M., Prof. Pavan Krishna K.\n• TACHYON Club President: Shivakumar Patil (@shivu)\n• Vice President: Suhas (@suhas)",
+                    actionLabel: "👨‍🏫 Open Faculty & Leadership Directory",
+                    actionFn: () => { document.getElementById('profile-modal').style.display = 'flex'; }
+                };
+            }
+            if (queryLower.includes('football') || queryLower.includes('soccer') || queryLower.includes('sports')) {
+                return {
+                    text: "⚽ The Multiplayer Football Stadium is in Zone 9 (South-East Sector, X: 54, Z: 74). Walk into the ball to dribble, press [F] to kick/pass, or press [G] for a power shot!",
                     actionLabel: "⚽ Teleport to Football Stadium",
                     actionFn: () => window.teleportTo('sports')
                 };
             }
-            if (queryLower.includes('notice') || queryLower.includes('post') || queryLower.includes('announcement') || queryLower.includes('board')) {
+            if (queryLower.includes('notice') || queryLower.includes('post') || queryLower.includes('announcement')) {
                 return {
-                    text: "📌 Physical Student Notice Boards are located at the Central Quad (X: -7.5, Z: 40), outside the AI & ML Main Foyer, and on the 1st Floor Corridor. Approach any board and press [E] (or click '📌 Notice Board' in the top bar) to read or publish verified notices!",
+                    text: "📌 Physical Student Notice Boards are at the Central Quad (X: -7.5, Z: 40) and AI & ML Entrance. Press [E] near any board or click below to read and publish notices!",
                     actionLabel: "📌 Open Student Notice Board",
                     actionFn: () => window.openNoticeBoardModal()
                 };
             }
-            if (queryLower.includes('lab') || queryLower.includes('deep learning') || queryLower.includes('computer')) {
+            if (queryLower.includes('lab') || queryLower.includes('deep learning')) {
                 return {
-                    text: "💻 The AI & ML Deep Learning Lab is on the 1st Floor of the Main CSE (AI & ML) Block (Zone 7). Climb the Switchback Staircase from the Main Foyer or click below to teleport directly!",
+                    text: "💻 The AI & ML Deep Learning Lab is on the 1st Floor of the Main CSE (AI & ML) Block (Zone 7).",
                     actionLabel: "💻 Teleport to AI & ML Lab",
                     actionFn: () => window.teleportTo('lab')
                 };
             }
-            if (queryLower.includes('library') || queryLower.includes('book')) {
-                return {
-                    text: "📚 The PESCE Central Library & Digital Knowledge Hub is in the West Campus Sector (X: -62, Z: 22).",
-                    actionLabel: "📚 Teleport to Library",
-                    actionFn: () => window.teleportTo('library')
-                };
-            }
             return null;
+        }
+
+        // Fetch live web snippets from Wikipedia REST API for open-domain web questions
+        async function fetchLiveWebSnippet(userQuery) {
+            try {
+                const cleaned = userQuery.replace(/[?.,!]/g, '').trim();
+                const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&utf8=&format=json&origin=*&srlimit=2`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const items = data?.query?.search || [];
+                if (items.length === 0) return "";
+                return items.map(it => `${it.title}: ${it.snippet.replace(/<\/?[^>]+(>|$)/g, "")}`).join(" | ");
+            } catch (e) {
+                return "";
+            }
         }
 
         function appendChatMsg(role, text, actionObj = null) {
@@ -794,29 +994,68 @@
 
             appendChatMsg('user', text);
             const campusMatch = getVerifiedCampusGuideReply(text.toLowerCase());
-            const loadingDiv = appendChatMsg('bot', '⏳ Consulting TACHYON Sarvam AI...');
-            sarvamHistory.push({ role: "user", content: text });
+            const loadingDiv = appendChatMsg('bot', '⏳ Asking Sarvam AI...');
 
+            const webContext = await fetchLiveWebSnippet(text);
+            const augmentedUserPrompt = webContext
+                ? `${text}\n\n[Web Reference Context if relevant: ${webContext}]`
+                : text;
+
+            const messagesPayload = [
+                { role: "system", content: PESCE_VERIFIED_KNOWLEDGE },
+                ...sarvamConversation.slice(-6),
+                { role: "user", content: augmentedUserPrompt }
+            ];
+
+            let finalReply = null;
+
+            // 1. Try server-side proxy (/api/sarvam) first if deployed
             try {
-                // Calls server-side Vercel endpoint (/api/sarvam) so API keys are never exposed in client code
-                const res = await fetch("/api/sarvam", {
+                const serverRes = await fetch("/api/sarvam", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ messages: sarvamHistory.slice(-8) })
+                    body: JSON.stringify({ messages: messagesPayload })
                 });
-                if (!res.ok) throw new Error("Server endpoint unavailable");
-                const data = await res.json();
-                const reply = data?.reply || (campusMatch ? campusMatch.text : "Connected to TACHYON AI.");
-                sarvamHistory.push({ role: "assistant", content: reply });
-                loadingDiv.remove();
-                appendChatMsg('bot', reply, campusMatch);
-            } catch (err) {
-                loadingDiv.remove();
-                if (campusMatch) {
-                    appendChatMsg('bot', campusMatch.text, campusMatch);
-                } else {
-                    appendChatMsg('bot', "🏛️ Campus Guide: You can explore the Main AI & ML Block (Zones 1–8), play Multiplayer Football in Zone 9 (X:54, Z:74), or read/post announcements on the Student Notice Board (Press E near any board).");
+                if (serverRes.ok) {
+                    const sData = await serverRes.json();
+                    if (sData?.reply) finalReply = sData.reply;
                 }
+            } catch (e) {}
+
+            // 2. Direct Sarvam AI v1/chat/completions call using sarvam-105b with reasoning_effort: null
+            if (!finalReply) {
+                try {
+                    const directRes = await fetch("https://api.sarvam.ai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "api-subscription-key": SARVAM_SUBSCRIPTION_KEY,
+                            "Authorization": `Bearer ${SARVAM_SUBSCRIPTION_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "sarvam-105b",
+                            messages: messagesPayload,
+                            temperature: 0.3,
+                            max_tokens: 800,
+                            reasoning_effort: null
+                        })
+                    });
+                    const dData = await directRes.json();
+                    const choiceMsg = dData?.choices?.[0]?.message;
+                    finalReply = choiceMsg?.content || choiceMsg?.reasoning_content || null;
+                } catch (err) {}
+            }
+
+            loadingDiv.remove();
+
+            if (finalReply) {
+                sarvamConversation.push({ role: "user", content: text });
+                sarvamConversation.push({ role: "assistant", content: finalReply });
+                appendChatMsg('bot', finalReply, campusMatch);
+            } else if (campusMatch) {
+                appendChatMsg('bot', campusMatch.text, campusMatch);
+            } else {
+                appendChatMsg('bot', "🏛️ TACHYON Campus Assistant:\n• Principal: Dr. Vinay S.\n• HoD CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• TACHYON President: Shivakumar Patil (@shivu)\n• Vice President: Suhas (@suhas)");
             }
         };
 
@@ -1269,12 +1508,12 @@
         const hodDesk = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.78, 1.1), matWoodRack);
         hodDesk.position.set(-17.5, 0.6, -9.5);
         const hodSignTex = createSignTexture('#0f172a', '#FFC857', [
-            { text: 'HOD & FACULTY CABINS — CSE (AI & ML)', font: 'bold 36px Arial', color: '#FFC857' },
-            { text: 'Dr. Vinay S. (Principal) • Faculty Research Wing', font: 'bold 26px Arial', color: '#ffffff' }
+            { text: 'HOD & FACULTY CABINS — CSE (AI & ML)', font: 'bold 34px Arial', color: '#FFC857' },
+            { text: 'Dr. Mahesh Kaluti (HoD) • Dr. Umesh D. R. • Faculty Wing', font: 'bold 25px Arial', color: '#ffffff' }
         ], 1024, 200);
         const hodBoard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.75, 0.06), new THREE.MeshStandardMaterial({ map: hodSignTex }));
         hodBoard.position.set(-17.5, 2.5, -13.7);
-        hodBoard.userData = { interactType: 'faculty_modal', getPrompt: () => 'Press E or Click to View Faculty & Leadership Profiles' };
+        hodBoard.userData = { interactType: 'faculty_modal', getPrompt: () => 'Press E or Click to View Faculty & Leadership Directory' };
         interactableObjects.push(hodBoard);
         mainGFInterior.add(hodPartition, hodDesk, hodBoard);
         PhysicsWorld.addCollider(-18.8, -16.2, -10.1, -8.9, 0, 1.5);
@@ -1535,14 +1774,12 @@
         PhysicsWorld.addFloorVolume(-64, -40, 63, 81, 0.22, 4.5);
 
         // ============================================================================
-        // PHASE 2: PLAYABLE MULTIPLAYER FOOTBALL STADIUM & BASKETBALL COURT (X=54, Z=74)
+        // PLAYABLE MULTIPLAYER FOOTBALL STADIUM & BASKETBALL COURT (X=54, Z=74)
         // ============================================================================
-        // Pitch center: (54, 0.12, 74). Spans X: 38 to 70 (32m long), Z: 63 to 85 (22m wide)
         const sportsGroup = new THREE.Group();
         sportsGroup.position.set(54, 0, 74);
         scene.add(sportsGroup);
 
-        // Procedural Pitch Markings Texture
         function createFootballPitchTexture() {
             const c = document.createElement('canvas');
             c.width = 1024; c.height = 704;
@@ -1571,8 +1808,6 @@
         turfField.receiveShadow = true;
         sportsGroup.add(turfField);
 
-        // Two Goals: West Goal (X = -15.2 local -> 38.8 world) & East Goal (X = +15.2 local -> 69.2 world)
-        // Goal width: Z from -2.6 to +2.6 (5.2m wide), height: 2.4m
         [-15.2, 15.2].forEach((gx, idx) => {
             const goal = new THREE.Group();
             const goalColor = idx === 0 ? 0x29E7F2 : 0xFFC857;
@@ -1594,7 +1829,6 @@
             sportsGroup.add(goal);
         });
 
-        // Spectator Bleachers along North & South Sidelines
         for (let step = 0; step < 3; step++) {
             const bleacherN = new THREE.Mesh(new THREE.BoxGeometry(24, 0.45 * (step + 1), 0.9), matGreySteps);
             bleacherN.position.set(0, 0.22 * (step + 1), -12.5 - step * 0.95);
@@ -1603,7 +1837,6 @@
             sportsGroup.add(bleacherN, bleacherS);
         }
 
-        // 3D Live Stadium Scoreboard Mesh above North Sideline
         const stadiumScoreCanvas = document.createElement('canvas');
         stadiumScoreCanvas.width = 1024; stadiumScoreCanvas.height = 256;
         const sCtx = stadiumScoreCanvas.getContext('2d');
@@ -1634,7 +1867,6 @@
         stadiumScoreBoard.position.set(0, 4.2, -14.8);
         sportsGroup.add(stadiumScoreBoard);
 
-        // Adjacent Outdoor Basketball Court (East of Pitch: X = 82, Z = 74)
         const bballFloor = new THREE.Mesh(
             new THREE.BoxGeometry(16, 0.1, 20),
             new THREE.MeshStandardMaterial({ color: 0x9a3412, roughness: 0.7 })
@@ -1646,7 +1878,6 @@
         backboard.position.set(28, 3.2, -8.9);
         sportsGroup.add(bballFloor, hoopPost, backboard);
 
-        // 3D Soccer Ball Mesh with Classic Pentagon/Hexagon Texture
         function createSoccerBallTexture() {
             const c = document.createElement('canvas');
             c.width = 256; c.height = 256;
@@ -1667,7 +1898,6 @@
         footballMesh.position.set(54, 0.44, 74);
         scene.add(footballMesh);
 
-        // Shared Multiplayer Football State & Physics
         const ballState = {
             pos: new THREE.Vector3(54, 0.44, 74),
             vel: new THREE.Vector3(0, 0, 0),
@@ -1700,7 +1930,6 @@
                 setTimeout(() => { banner.style.display = 'none'; }, 3500);
             }
 
-            // Sync ball position/velocity if kicked or reset by another player
             if (d.lastKickerUid !== myUid || d.isReset) {
                 if (typeof d.x === 'number') ballState.pos.set(d.x, d.y || 0.44, d.z);
                 if (typeof d.vx === 'number') ballState.vel.set(d.vx, d.vy || 0, d.vz);
@@ -1765,7 +1994,7 @@
                 await runTransaction(db, async (transaction) => {
                     const docSnap = await transaction.get(matchDocRef);
                     const data = docSnap.exists() ? docSnap.data() : { scoreCyan: 0, scoreGold: 0, lastGoalTime: 0 };
-                    if (now - (data.lastGoalTime || 0) < 3500) return; // Server-side duplicate goal guard
+                    if (now - (data.lastGoalTime || 0) < 3500) return;
                     const nextCyan = scoringTeam === 'CYAN' ? (data.scoreCyan || 0) + 1 : (data.scoreCyan || 0);
                     const nextGold = scoringTeam === 'GOLD' ? (data.scoreGold || 0) + 1 : (data.scoreGold || 0);
                     transaction.set(matchDocRef, {
@@ -1781,11 +2010,9 @@
         }
 
         function updateFootballPhysics(dt) {
-            // Show Football HUD when player is near Sports Arena (X: 32..85, Z: 55..92)
             const nearPitch = playerFootPos.x > 30 && playerFootPos.x < 86 && playerFootPos.z > 54 && playerFootPos.z < 92;
             document.getElementById('football-hud').style.display = nearPitch ? 'flex' : 'none';
 
-            // Player foot dribble interaction when running into the ball
             const dx = ballState.pos.x - playerFootPos.x;
             const dz = ballState.pos.z - playerFootPos.z;
             const dist = Math.hypot(dx, dz);
@@ -1799,14 +2026,12 @@
                 syncBallToFirestore({ isReset: false });
             }
 
-            // Integrate ball velocity & gravity
             if (ballState.vel.lengthSq() > 0.001 || ballState.pos.y > 0.44) {
                 ballState.vel.y -= 14.5 * dt;
                 ballState.pos.x += ballState.vel.x * dt;
                 ballState.pos.y += ballState.vel.y * dt;
                 ballState.pos.z += ballState.vel.z * dt;
 
-                // Ground bounce & turf rolling friction
                 if (ballState.pos.y <= 0.44) {
                     ballState.pos.y = 0.44;
                     if (Math.abs(ballState.vel.y) > 0.8) {
@@ -1819,7 +2044,6 @@
                     ballState.vel.z *= friction;
                 }
 
-                // Goal Line Detection (West Goal X <= 38.8, East Goal X >= 69.2, within Z: 71.4..76.6, Y < 2.4)
                 const inGoalMouthZ = ballState.pos.z >= 71.4 && ballState.pos.z <= 76.6 && ballState.pos.y <= 2.45;
                 if (inGoalMouthZ && ballState.pos.x <= 38.8 && ballState.lastKickerUid === myUid) {
                     triggerValidatedGoal('GOLD');
@@ -1830,7 +2054,6 @@
                     return;
                 }
 
-                // Pitch Perimeter Barrier Rebound (X: 37.5..70.5, Z: 62.5..85.5)
                 if (ballState.pos.x < 37.5) { ballState.pos.x = 37.5; ballState.vel.x *= -0.7; }
                 if (ballState.pos.x > 70.5) { ballState.pos.x = 70.5; ballState.vel.x *= -0.7; }
                 if (ballState.pos.z < 62.5) { ballState.pos.z = 62.5; ballState.vel.z *= -0.7; }
@@ -1843,7 +2066,7 @@
         }
 
         // ============================================================================
-        // PHASE 3: INTERACTIVE 3D STUDENT NOTICE BOARDS & PERSISTENT FIRESTORE SYNC
+        // INTERACTIVE 3D STUDENT NOTICE BOARDS & PERSISTENT FIRESTORE SYNC
         // ============================================================================
         const noticeBoardCanvas = document.createElement('canvas');
         noticeBoardCanvas.width = 1024; noticeBoardCanvas.height = 512;
@@ -1907,11 +2130,9 @@
             PhysicsWorld.addCollider(x - 1.7, x + 1.7, z - 0.35, z + 0.35, y, y + 2.9);
         }
 
-        // Place Physical Notice Boards at Central Quad & AI/ML Entrance
         createPhysicalNoticeBoard(-7.5, 0, 40.0, 0.35);
         createPhysicalNoticeBoard(4.5, 0.2, 2.2, -0.25);
 
-        // Notice Board State & Real-Time Firestore Listener (`campus_notices`)
         let allNotices = [];
         let activeNoticeFilter = 'all';
         let visibleNoticeLimit = 10;
@@ -2015,7 +2236,6 @@
             statusEl.textContent = '⏳ Publishing to campus board...';
 
             try {
-                // Derive author identity strictly from trusted auth session + verified users/{uid} profile
                 const userSnap = await getDoc(doc(db, "users", user.uid));
                 const trustedName = (userSnap.exists() && userSnap.data().customName)
                     ? userSnap.data().customName
@@ -2068,7 +2288,6 @@
             }
         }
 
-        // XSS-Safe DOM Renderer for Notices
         function renderNoticesList() {
             const containerEl = document.getElementById('notices-list-container');
             if (!containerEl) return;
@@ -2115,7 +2334,7 @@
 
                 const msgBody = document.createElement('div');
                 msgBody.className = 'n-post-msg';
-                msgBody.textContent = notice.message; // Safe textContent prevents XSS while preserving line breaks
+                msgBody.textContent = notice.message;
 
                 const footer = document.createElement('div');
                 footer.className = 'n-post-footer';
@@ -2129,7 +2348,6 @@
 
                 footer.appendChild(authorSpan);
 
-                // Show Edit/Delete only if logged-in user is the verified author or President Admin
                 const canManage = currentUid && (notice.authorUid === currentUid || currentEmail === ADMIN_EMAIL.toLowerCase());
                 if (canManage) {
                     const actBox = document.createElement('div');
@@ -2421,7 +2639,7 @@
                 const snap = await getDoc(doc(db, "users", user.uid));
                 if (snap.exists() && snap.data().customName) {
                     myCallsign = snap.data().customName;
-                    myTitle = snap.data().equippedTitle || "Neural Architect";
+                    myTitle = snap.data().equippedTitle || "Arena Champion";
                 } else {
                     myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, '');
                 }
@@ -2565,7 +2783,7 @@
 
         function worldToMinimap(wx, wz) {
             const cx = ((wx + 100) / 200) * 275;
-            const cy = ((wz + 25) / 130) * 170;
+            const cy = ((wz + 25) / 130) * 165;
             return { cx, cy };
         }
 
@@ -2582,12 +2800,12 @@
 
         function renderMinimapRadar() {
             mCtx.fillStyle = '#070c18';
-            mCtx.fillRect(0, 0, 275, 170);
+            mCtx.fillRect(0, 0, 275, 165);
 
             mCtx.strokeStyle = 'rgba(41, 231, 242, 0.08)';
             mCtx.lineWidth = 1;
-            for (let gx = 0; gx < 275; gx += 35) { mCtx.beginPath(); mCtx.moveTo(gx, 0); mCtx.lineTo(gx, 170); mCtx.stroke(); }
-            for (let gy = 0; gy < 170; gy += 35) { mCtx.beginPath(); mCtx.moveTo(0, gy); mCtx.lineTo(275, gy); mCtx.stroke(); }
+            for (let gx = 0; gx < 275; gx += 35) { mCtx.beginPath(); mCtx.moveTo(gx, 0); mCtx.lineTo(gx, 165); mCtx.stroke(); }
+            for (let gy = 0; gy < 165; gy += 35) { mCtx.beginPath(); mCtx.moveTo(0, gy); mCtx.lineTo(275, gy); mCtx.stroke(); }
 
             const buildingsMap = [
                 { x: -22, z: -14, w: 44, d: 16, col: '#3b82f6', label: 'AI & ML DEPT' },
@@ -2610,7 +2828,6 @@
                 mCtx.fillText(b.label, (p1.cx + p2.cx) / 2, (p1.cy + p2.cy) / 2 + 3);
             });
 
-            // Draw Football Position on Radar
             const ballMap = worldToMinimap(ballState.pos.x, ballState.pos.z);
             mCtx.beginPath(); mCtx.arc(ballMap.cx, ballMap.cy, 3, 0, Math.PI * 2);
             mCtx.fillStyle = '#FFC857'; mCtx.fill();
@@ -2704,6 +2921,8 @@
             document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
             const matchBtn = btnEl || document.getElementById('zbtn-' + zoneKey);
             if (matchBtn) matchBtn.classList.add('active');
+            // Auto-hide left drawer on mobile after picking a zone for a clear view
+            if (window.innerWidth <= 900) window.toggleLeftDrawer(true);
         };
 
         window.applyGraphicsPreset = function(preset) {
@@ -2836,7 +3055,6 @@
                 item.group.visible = camera.position.distanceTo(item.center) < item.maxDist;
             });
 
-            // Update Multiplayer Football Physics
             updateFootballPhysics(dt);
 
             if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
