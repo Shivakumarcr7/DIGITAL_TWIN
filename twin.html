@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PESCE Mandya — 3D Multiplayer Campus, Football & Notice Board</title>
+    <title>PESCE Mandya — 3D Multiplayer Campus, Football & Interactive Faculty</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -122,7 +122,7 @@
             background: var(--glass); border: 1px solid var(--border);
             border-radius: 16px; padding: 12px; backdrop-filter: blur(16px);
             display: flex; flex-direction: column; gap: 4px;
-            width: 250px; max-height: calc(100dvh - 160px);
+            width: 255px; max-height: calc(100dvh - 160px);
             overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
         .zone-panel::-webkit-scrollbar { width: 4px; }
@@ -170,6 +170,16 @@
         }
         .zone-btn:hover, .zone-btn.active {
             background: rgba(41, 231, 242, 0.18); border-color: var(--cyan); color: #fff; transform: translateX(3px);
+        }
+        .mentor-locate-btn {
+            background: linear-gradient(135deg, rgba(255, 200, 87, 0.16), rgba(11, 16, 32, 0.9));
+            border: 1px solid rgba(255, 200, 87, 0.45);
+            color: var(--gold); padding: 6px 10px; border-radius: 8px;
+            font-size: 0.73rem; font-weight: 700; text-align: left;
+            cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between;
+        }
+        .mentor-locate-btn:hover {
+            background: rgba(255, 200, 87, 0.28); border-color: var(--gold); color: #fff; transform: translateX(3px);
         }
         .hub-return-btn {
             background: linear-gradient(135deg, rgba(41, 231, 242, 0.22), rgba(155, 92, 255, 0.25));
@@ -357,14 +367,100 @@
 
         #interact-prompt {
             position: absolute; bottom: 145px; left: 50%; transform: translateX(-50%);
-            z-index: 18; background: rgba(11, 16, 32, 0.92); border: 1px solid var(--cyan);
-            color: #fff; padding: 8px 16px; border-radius: 30px;
-            font-size: 0.8rem; font-weight: 700; pointer-events: auto; cursor: pointer;
+            z-index: 18; background: rgba(11, 16, 32, 0.94); border: 1.5px solid var(--gold);
+            color: #fff; padding: 9px 18px; border-radius: 30px;
+            font-size: 0.82rem; font-weight: 700; pointer-events: auto; cursor: pointer;
             display: none; align-items: center; gap: 8px; backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.65);
         }
         #interact-prompt span.key-badge {
-            background: var(--cyan); color: #030712; padding: 2px 7px;
-            border-radius: 6px; font-weight: 900; font-size: 0.72rem;
+            background: var(--gold); color: #030712; padding: 3px 8px;
+            border-radius: 6px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 0.72rem;
+        }
+
+        /* ==========================================================================
+           DOCKED FACULTY MENTOR CONVERSATION PANEL (KEEPS 3D CHATTING EMOTE VISIBLE)
+           ========================================================================== */
+        #mentor-chat-modal {
+            position: fixed;
+            top: 68px; right: 16px; bottom: 82px;
+            width: 420px; max-width: calc(100vw - 28px);
+            z-index: 55;
+            display: none;
+            pointer-events: auto;
+        }
+        .mentor-modal-card {
+            background: rgba(11, 16, 32, 0.94);
+            border: 1.5px solid var(--gold);
+            border-radius: 20px;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(18px);
+            box-shadow: -10px 20px 60px rgba(0,0,0,0.75), 0 0 30px rgba(255, 200, 87, 0.15);
+            animation: slideInMentor 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideInMentor {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .mentor-header {
+            background: linear-gradient(90deg, rgba(255, 200, 87, 0.16), rgba(11, 16, 32, 0.95));
+            padding: 13px 16px;
+            border-bottom: 1px solid rgba(255, 200, 87, 0.3);
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+        }
+        .mentor-info { display: flex; align-items: center; gap: 12px; }
+        .mentor-portrait-canvas {
+            width: 46px; height: 46px; border-radius: 50%;
+            border: 2px solid var(--gold); background: #0f172a; flex-shrink: 0;
+        }
+        .mentor-titles { display: flex; flex-direction: column; gap: 2px; }
+        .mentor-titles strong { font-family: 'Orbitron', sans-serif; font-size: 0.92rem; color: var(--gold); }
+        .mentor-titles span.role-sub { font-size: 0.71rem; color: #e2e8f0; font-weight: 600; }
+        .mentor-titles span.research-sub { font-size: 0.65rem; color: var(--cyan); }
+        .mentor-sim-disclaimer {
+            background: rgba(2, 6, 23, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 5px 14px; font-size: 0.65rem; color: #9AA8C2;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .mentor-messages {
+            flex: 1; padding: 14px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px;
+            font-size: 0.83rem; user-select: text; -webkit-user-select: text;
+        }
+        .m-msg { padding: 10px 14px; border-radius: 12px; line-height: 1.52; max-width: 90%; word-break: break-word; white-space: pre-wrap; }
+        .m-msg.bot { background: rgba(30, 41, 59, 0.88); border: 1px solid rgba(255, 200, 87, 0.32); color: #f8fafc; align-self: flex-start; }
+        .m-msg.user { background: linear-gradient(135deg, var(--gold), #f59e0b); color: #0B1020; align-self: flex-end; font-weight: 600; }
+        .mentor-prompts-bar {
+            display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(2, 6, 23, 0.7);
+        }
+        .mentor-chip {
+            background: rgba(255, 200, 87, 0.12); border: 1px solid rgba(255, 200, 87, 0.35);
+            color: var(--gold); padding: 5px 10px; border-radius: 14px;
+            font-size: 0.7rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.2s;
+        }
+        .mentor-chip:hover { background: var(--gold); color: #0B1020; }
+        .mentor-input-area {
+            padding: 10px 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; gap: 6px; background: rgba(2, 6, 23, 0.95); align-items: center;
+        }
+        .mentor-input-area input {
+            flex: 1; background: #0B1020; border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; padding: 9px 12px; border-radius: 10px; font-size: 0.83rem;
+            outline: none; user-select: text; -webkit-user-select: text;
+        }
+        .mentor-input-area input:focus { border-color: var(--gold); }
+        .voice-icon-btn {
+            background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #cbd5e1; padding: 8px 10px; border-radius: 10px; font-size: 0.82rem; cursor: pointer;
+        }
+        .voice-icon-btn.active { border-color: var(--emerald); color: var(--emerald); background: rgba(92, 255, 177, 0.15); }
+        .mentor-send-btn {
+            background: var(--gold); color: #0B1020; border: none; padding: 9px 15px;
+            border-radius: 10px; font-family: 'Orbitron', sans-serif; font-size: 0.74rem; font-weight: 800; cursor: pointer;
         }
 
         /* Student Notice Board Modal */
@@ -541,6 +637,8 @@
             .multiplayer-chat-dock { width: 94%; bottom: 8px; }
             .sarvam-fab { bottom: 8px; right: 10px; padding: 8px 12px; font-size: 0.68rem; }
             #football-hud { top: 68px; padding: 7px 11px; }
+            #mentor-chat-modal { top: auto; bottom: 0; left: 0; right: 0; width: 100%; max-width: 100%; height: 60dvh; }
+            .mentor-modal-card { border-radius: 20px 20px 0 0; }
         }
     </style>
 </head>
@@ -571,6 +669,39 @@
     <div id="interact-prompt" onclick="triggerActiveInteraction()">
         <span class="key-badge">E / Click</span>
         <span id="interact-label">Interact</span>
+    </div>
+
+    <!-- ==========================================================================
+         DOCKED FACULTY MENTOR CONVERSATION MODAL (FACE-TO-FACE CHATTING EMOTE)
+         ========================================================================== -->
+    <div id="mentor-chat-modal">
+        <div class="mentor-modal-card">
+            <div class="mentor-header">
+                <div class="mentor-info">
+                    <canvas id="mentor-portrait-canvas" class="mentor-portrait-canvas" width="92" height="92"></canvas>
+                    <div class="mentor-titles">
+                        <strong id="mentor-name-display">Dr. Umesh D. R.</strong>
+                        <span class="role-sub" id="mentor-role-display">Professor & COE — CSE (AI & ML), PESCE Mandya</span>
+                        <span class="research-sub" id="mentor-research-display">Research: Data Analytics, AI & Machine Learning</span>
+                    </div>
+                </div>
+                <button class="hud-pill-btn" onclick="closeMentorChatModal()">✕ End [Esc]</button>
+            </div>
+
+            <div class="mentor-sim-disclaimer">
+                <span>🎓 Face-to-Face Mentoring Active • PESCE Digital Twin</span>
+                <span id="mentor-anim-state-badge" style="color:var(--emerald); font-family:'JetBrains Mono',monospace;">● Chatting & Gestures</span>
+            </div>
+
+            <div class="mentor-messages" id="mentor-messages-container"></div>
+            <div class="mentor-prompts-bar" id="mentor-suggested-chips"></div>
+
+            <div class="mentor-input-area">
+                <button class="voice-icon-btn active" id="btn-mentor-tts" onclick="toggleMentorTTS()" title="Toggle Voice Playback">🔊</button>
+                <input type="text" id="mentor-user-input" placeholder="Ask about AI/ML, Big Data, debugging, or projects..." onkeydown="if(event.key==='Enter') sendMentorMessage()">
+                <button class="mentor-send-btn" id="btn-mentor-send" onclick="sendMentorMessage()">Send</button>
+            </div>
+        </div>
     </div>
 
     <!-- ==========================================================================
@@ -634,15 +765,15 @@
         </div>
         <div class="profile-item">
             <h4>Dr. Umesh D. R. — Professor (CAS) & Controller of Examinations</h4>
-            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Professor in CSE (AI & ML) and Controller of Examinations (COE), PESCE Mandya.</p>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;">Professor in CSE (AI & ML) and Controller of Examinations (COE), PESCE Mandya. Research: Data Analytics, AI & ML.</p>
         </div>
         <div class="profile-item">
             <h4>CSE (AI & ML) Faculty Roster — PESCE Mandya</h4>
-            <p style="font-size:0.76rem; color:#cbd5e1; margin-top:4px;">Prof. Chetan Kumar V. • Prof. Sindhu P. • Prof. Ashwini M. C. • Prof. M. S. Shanthi Swaroop • Prof. Renuka H. R. • Prof. Ashwitha B. M. • Prof. Pavan Krishna K.</p>
+            <p style="font-size:0.76rem; color:#cbd5e1; margin-top:4px;">Prof. Chetan Kumar V. (Big Data Analytics) • Prof. Sindhu P. • Prof. Ashwini M. C. • Prof. M. S. Shanthi Swaroop • Prof. Renuka H. R. • Prof. Ashwitha B. M. • Prof. Pavan Krishna K.</p>
         </div>
         <div class="profile-item">
             <h4>TACHYON AIML Club Leadership</h4>
-            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;"><strong>President:</strong> Shivakumar Patil (@shivu) • <strong>Vice President:</strong> Suhas (@suhas) • Leading AI Agent deployments, hackathons, and the PESCE Digital Twin.</p>
+            <p style="font-size:0.78rem; color:#cbd5e1; margin-top:4px;"><strong>President:</strong> Shivakumar Patil (@shivu) • <strong>Vice President:</strong> Pavan Bhargav • Leading AI Agent deployments, hackathons, and the PESCE Digital Twin.</p>
         </div>
     </div>
 
@@ -685,6 +816,16 @@
         <aside class="zone-panel">
             <button class="hub-return-btn" onclick="teleportTo('quad')">🏛️ RETURN TO MAIN CAMPUS HUB</button>
 
+            <div class="zone-panel-title" style="color:var(--gold);">🎓 Interactive Faculty Mentors</div>
+            <button class="mentor-locate-btn" onclick="walkToFacultyMentor('umesh')">
+                <span>👨‍🏫 Meet Dr. Umesh D. R.</span>
+                <span>AI/ML</span>
+            </button>
+            <button class="mentor-locate-btn" onclick="walkToFacultyMentor('chetan')">
+                <span>👨‍💻 Meet Prof. Chetan Kumar</span>
+                <span>Big Data</span>
+            </button>
+
             <div class="zone-panel-title">🏢 Main AI & ML Block</div>
             <button class="zone-btn active" id="zbtn-quad" onclick="teleportTo('quad', this)"><span>⛲ Central Quad & Notice Board</span> <span>1</span></button>
             <button class="zone-btn" id="zbtn-portico" onclick="teleportTo('portico', this)"><span>🚪 AI & ML Main Foyer</span> <span>2</span></button>
@@ -726,10 +867,10 @@
             <div class="info-card" id="zone-info">
                 <h3 id="info-title">⛲ Central Campus Quad</h3>
                 <p id="info-desc">
-                    Walk to the Notice Board (Press E) to post announcements, or head to the Football Stadium (Zone 9) to play live multiplayer football with friends!
+                    Walk up to Dr. Umesh D. R. or Prof. Chetan Kumar V. (Press E) for face-to-face AI mentoring, check the Notice Board, or play Football in Zone 9!
                 </p>
                 <div class="telemetry-row">
-                    <span id="actor-status">🟢 Multiplayer Synced</span>
+                    <span id="actor-status">🟢 2 Faculty Mentors Roaming</span>
                     <span id="floor-status">Elev: 0.0m</span>
                 </div>
             </div>
@@ -752,7 +893,7 @@
     <div class="multiplayer-chat-dock" id="bottom-chat-dock">
         <button class="chat-slide-handle" id="chat-drawer-btn" onclick="toggleBottomChatDock()">💬 Hide Chat ▼</button>
         <div class="chat-feed-mini" id="multiplayer-chat-feed">
-            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near any Notice Board to read/post notices, or walk to the Football Pitch and press <strong>F</strong> to kick the ball!</div>
+            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near <strong>Dr. Umesh D. R.</strong> or <strong>Prof. Chetan Kumar V.</strong> to chat face-to-face with live hand gestures!</div>
         </div>
         <div class="chat-input-row">
             <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Type message to display above your head... (Press Enter)">
@@ -778,9 +919,9 @@
         </div>
         <div class="sarvam-quick-chips">
             <button class="s-chip" onclick="askSarvamPreset('Who are the President, Vice President, and Faculty of CSE AI & ML at PESCE Mandya?')">👨‍🏫 Faculty & Club Leaders?</button>
+            <button class="s-chip" onclick="askSarvamPreset('Where can I meet Dr. Umesh D. R. and Prof. Chetan Kumar V.?')">🎓 Locate Faculty Mentors?</button>
             <button class="s-chip" onclick="askSarvamPreset('Where is the football field?')">⚽ Football Field?</button>
             <button class="s-chip" onclick="askSarvamPreset('How do I publish a notice?')">📌 Publish Notice?</button>
-            <button class="s-chip" onclick="askSarvamPreset('Where can I find the AI/ML laboratory?')">💻 AI/ML Lab?</button>
         </div>
         <div class="sarvam-input-area">
             <input type="text" id="sarvam-user-input" placeholder="Ask about faculty, club leaders, or anything..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
@@ -788,10 +929,11 @@
         </div>
     </div>
 
-    <!-- Three.js r128 Core -->
+    <!-- Three.js r128 Core + GLTFLoader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
-    <!-- Main 3D Campus Engine + Multiplayer Football + Shared Notice Board + Sarvam AI -->
+    <!-- Main 3D Campus Engine + Multiplayer Football + Shared Notice Board + Faculty Mentors + Sarvam AI -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -840,7 +982,6 @@
             btn.textContent = isCollapsed ? '💬 Open Overhead Chat ▲' : '💬 Hide Chat ▼';
         };
 
-        // Automatically slide side drawers closed on small mobile screens for a clear 3D view
         if (window.innerWidth <= 900) {
             window.toggleLeftDrawer(true);
             window.toggleRightDrawer(true);
@@ -918,9 +1059,16 @@ Always answer clearly, accurately, and concisely.
         };
 
         function getVerifiedCampusGuideReply(queryLower) {
+            if (queryLower.includes('umesh') || queryLower.includes('chetan') || queryLower.includes('meet') || queryLower.includes('locate')) {
+                return {
+                    text: "🎓 Both Faculty Mentors roam the 3D campus autonomously:\n• Dr. Umesh D. R. patrols the Central Quad & AI/ML Portico.\n• Prof. Chetan Kumar V. patrols the AI & ML Foyer & TACHYON Project Lab.\nApproach either mentor and press [E] for face-to-face mentoring!",
+                    actionLabel: "👨‍🏫 Walk to Dr. Umesh D. R.",
+                    actionFn: () => window.walkToFacultyMentor('umesh')
+                };
+            }
             if (queryLower.includes('president') || queryLower.includes('vice') || queryLower.includes('faculty') || queryLower.includes('hod') || queryLower.includes('prof') || queryLower.includes('teacher') || queryLower.includes('principal')) {
                 return {
-                    text: "🏛️ PESCE Mandya CSE (AI & ML) & TACHYON Leadership:\n• Principal: Dr. Vinay S.\n• HoD, CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• AI & ML Faculty: Prof. Chetan Kumar V., Prof. Sindhu P., Prof. Ashwini M. C., Prof. M. S. Shanthi Swaroop, Prof. Renuka H. R., Prof. Ashwitha B. M., Prof. Pavan Krishna K.\n• TACHYON Club President: Shivakumar Patil (@shivu)\n• Vice President: Suhas (@suhas)",
+                    text: "🏛️ PESCE Mandya CSE (AI & ML) & TACHYON Leadership:\n• Principal: Dr. Vinay S.\n• HoD, CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• AI & ML Faculty: Prof. Chetan Kumar V., Prof. Sindhu P., Prof. Ashwini M. C., Prof. M. S. Shanthi Swaroop, Prof. Renuka H. R., Prof. Ashwitha B. M., Prof. Pavan Krishna K.\n• TACHYON Club President: Shivakumar Patil (@shivu)\n• Vice President: Pavan Bhargav",
                     actionLabel: "👨‍🏫 Open Faculty & Leadership Directory",
                     actionFn: () => { document.getElementById('profile-modal').style.display = 'flex'; }
                 };
@@ -949,7 +1097,6 @@ Always answer clearly, accurately, and concisely.
             return null;
         }
 
-        // Fetch live web snippets from Wikipedia REST API for open-domain web questions
         async function fetchLiveWebSnippet(userQuery) {
             try {
                 const cleaned = userQuery.replace(/[?.,!]/g, '').trim();
@@ -1009,7 +1156,6 @@ Always answer clearly, accurately, and concisely.
 
             let finalReply = null;
 
-            // 1. Try server-side proxy (/api/sarvam) first if deployed
             try {
                 const serverRes = await fetch("/api/sarvam", {
                     method: "POST",
@@ -1022,7 +1168,6 @@ Always answer clearly, accurately, and concisely.
                 }
             } catch (e) {}
 
-            // 2. Direct Sarvam AI v1/chat/completions call using sarvam-105b with reasoning_effort: null
             if (!finalReply) {
                 try {
                     const directRes = await fetch("https://api.sarvam.ai/v1/chat/completions", {
@@ -1055,7 +1200,7 @@ Always answer clearly, accurately, and concisely.
             } else if (campusMatch) {
                 appendChatMsg('bot', campusMatch.text, campusMatch);
             } else {
-                appendChatMsg('bot', "🏛️ TACHYON Campus Assistant:\n• Principal: Dr. Vinay S.\n• HoD CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• TACHYON President: Shivakumar Patil (@shivu)\n• Vice President: Suhas (@suhas)");
+                appendChatMsg('bot', "🏛️ TACHYON Campus Assistant:\n• Principal: Dr. Vinay S.\n• HoD CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• Assistant Professor: Prof. Chetan Kumar V.\n• TACHYON President: Shivakumar Patil (@shivu)");
             }
         };
 
@@ -1708,7 +1853,6 @@ Always answer clearly, accurately, and concisely.
                 PhysicsWorld.addCollider(c - 1.15, c + 1.15, r - 0.35, r + 0.35, 4.0, 5.5);
             }
         }
-
         // ============================================================================
         // PESCE CENTRAL LIBRARY, AUDITORIUM & CAFETERIA
         // ============================================================================
@@ -2561,7 +2705,29 @@ Always answer clearly, accurately, and concisely.
             };
         }
 
-        function animateBonePose(b, state, t) {
+        function animateBonePose(b, state, t, isChattingWithFaculty = false) {
+            if (isChattingWithFaculty) {
+                // Interactive Chatting Emote for Student Avatar (Active hand gestures + nodding)
+                b.hips.position.y = 0.88 + Math.sin(t * 2.2) * 0.01;
+                b.leftUpLeg.rotation.x = 0; b.rightUpLeg.rotation.x = 0;
+                b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0;
+                b.leftArm.rotation.x = -0.42 + Math.sin(t * 3.8) * 0.16;
+                b.leftArm.rotation.z = 0.12;
+                b.leftForeArm.rotation.x = -0.68 + Math.cos(t * 4.2) * 0.14;
+                b.rightArm.rotation.x = -0.22 + Math.cos(t * 3.1) * 0.10;
+                b.rightArm.rotation.z = -0.08;
+                b.rightForeArm.rotation.x = -0.45;
+                b.head.rotation.y = Math.sin(t * 1.6) * 0.08;
+                b.head.rotation.x = Math.sin(t * 2.7) * 0.04;
+                return;
+            }
+
+            b.leftArm.rotation.z = 0;
+            b.rightArm.rotation.z = 0;
+            b.leftForeArm.rotation.x = 0;
+            b.rightForeArm.rotation.x = 0;
+            b.head.rotation.x = 0;
+
             if (state === 'walk' || state === 'run') {
                 const freq = state === 'run' ? 11.0 : 7.0;
                 const amp = state === 'run' ? 0.65 : 0.42;
@@ -2581,6 +2747,627 @@ Always answer clearly, accurately, and concisely.
                 b.head.rotation.y = Math.sin(t * 1.1) * 0.15;
             }
         }
+
+        // ============================================================================
+        // REALISTIC PBR FACULTY MENTORS (DR. UMESH D. R. & PROF. CHETAN KUMAR V.)
+        // ============================================================================
+        function createRealisticFaceSkinTexture(app) {
+            const c = document.createElement("canvas"); c.width = 512; c.height = 512;
+            const ctx = c.getContext("2d");
+            ctx.fillStyle = "#" + new THREE.Color(app.skinHex).getHexString();
+            ctx.fillRect(0, 0, 512, 512);
+
+            ctx.fillStyle = "#161920";
+            fillStrokeRoundRect(ctx, 184, 192, 52, 10, 4);
+            fillStrokeRoundRect(ctx, 276, 192, 52, 10, 4);
+
+            [210, 302].forEach(ex => {
+                ctx.fillStyle = "#f8fafc"; ctx.beginPath(); ctx.ellipse(ex, 222, 18, 10, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = app.eyeIrisHex || "#24160d"; ctx.beginPath(); ctx.arc(ex, 222, 8.5, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#05070a"; ctx.beginPath(); ctx.arc(ex, 222, 4.2, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(ex + 3, 219, 2.0, 0, Math.PI * 2); ctx.fill();
+            });
+
+            if (app.beardTrim) {
+                ctx.fillStyle = "rgba(22, 25, 32, 0.36)";
+                ctx.beginPath(); ctx.ellipse(256, 336, 86, 56, 0, 0.08 * Math.PI, 0.92 * Math.PI); ctx.fill();
+            }
+            if (app.mustache) {
+                ctx.fillStyle = "rgba(24, 26, 32, 0.85)";
+                fillStrokeRoundRect(ctx, 216, 282, 80, 11, 5);
+            }
+            ctx.fillStyle = "#8c4a42";
+            fillStrokeRoundRect(ctx, 228, 304, 56, 8, 3);
+
+            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
+            return tex;
+        }
+
+        function createFacultyOverheadBadge(name, designation, borderHex = "#FFC857", stateLabel = "") {
+            const c = document.createElement("canvas"); c.width = 640; c.height = 180;
+            const ctx = c.getContext("2d"); ctx.clearRect(0, 0, 640, 180);
+
+            ctx.fillStyle = "rgba(11, 16, 32, 0.90)"; ctx.strokeStyle = borderHex; ctx.lineWidth = 4;
+            fillStrokeRoundRect(ctx, 30, 22, 580, 130, 18);
+
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px Orbitron, Segoe UI, Arial"; ctx.textAlign = "center";
+            ctx.fillText(name, 320, 68);
+
+            ctx.fillStyle = borderHex; ctx.font = "600 21px Inter, Segoe UI, Arial";
+            ctx.fillText(designation, 320, 104);
+
+            ctx.fillStyle = "#5CFFB1"; ctx.font = "bold 18px JetBrains Mono, monospace";
+            ctx.fillText(stateLabel || "🎓 FACULTY MENTOR • PRESS [E] TO CHAT", 320, 136);
+
+            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
+            return tex;
+        }
+
+        function buildRealisticPBRFacultyRig(config) {
+            const app = config.appearance;
+            const s = app.heightScale || 1.0;
+            const root = new THREE.Group();
+
+            const skinMat = new THREE.MeshStandardMaterial({ color: app.skinHex, roughness: 0.52, metalness: 0.03 });
+            const hairMat = new THREE.MeshStandardMaterial({ color: app.hairHex, roughness: 0.78, metalness: 0.04 });
+            const shirtMat = new THREE.MeshStandardMaterial({ color: app.shirtHex, roughness: 0.68, metalness: 0.03 });
+            const jacketMat = app.jacketHex ? new THREE.MeshStandardMaterial({ color: app.jacketHex, roughness: 0.62, metalness: 0.05 }) : null;
+            const trouserMat = new THREE.MeshStandardMaterial({ color: app.trouserHex, roughness: 0.72, metalness: 0.03 });
+            const shoeMat = new THREE.MeshStandardMaterial({ color: app.shoeHex, roughness: 0.28, metalness: 0.12 });
+
+            const hips = new THREE.Group(); hips.position.y = 0.94 * s; root.add(hips);
+            const pelvisMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.165 * s, 0.155 * s, 0.18 * s, 18), trouserMat);
+            pelvisMesh.scale.set(1.0, 1.0, 0.74); pelvisMesh.castShadow = true; hips.add(pelvisMesh);
+
+            const spine = new THREE.Group(); spine.position.y = 0.09 * s; hips.add(spine);
+            const torsoWidth = app.shoulderWidth;
+            const chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(torsoWidth * s, 0.158 * s, 0.50 * s, 20), jacketMat || shirtMat);
+            chestMesh.scale.set(1.0, 1.0, 0.68); chestMesh.position.y = 0.25 * s; chestMesh.castShadow = true; spine.add(chestMesh);
+
+            const shirtFront = new THREE.Mesh(new THREE.BoxGeometry(0.13 * s, 0.46 * s, 0.025 * s), shirtMat);
+            shirtFront.position.set(0, 0.26 * s, 0.108 * s); spine.add(shirtFront);
+
+            if (app.tieHex) {
+                const tieMat = new THREE.MeshStandardMaterial({ color: app.tieHex, roughness: 0.42 });
+                const tieMesh = new THREE.Mesh(new THREE.BoxGeometry(0.042 * s, 0.34 * s, 0.03 * s), tieMat);
+                tieMesh.position.set(0, 0.25 * s, 0.118 * s); spine.add(tieMesh);
+            }
+
+            const neck = new THREE.Group(); neck.position.y = 0.52 * s; spine.add(neck);
+            const neckCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.058 * s, 0.065 * s, 0.10 * s, 16), skinMat);
+            neckCyl.position.y = 0.06 * s; neck.add(neckCyl);
+
+            const headGroup = new THREE.Group(); headGroup.position.y = 0.11 * s; neck.add(headGroup);
+            const faceMat = new THREE.MeshStandardMaterial({ map: createRealisticFaceSkinTexture(app), roughness: 0.52 });
+            const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.128 * s, 28, 24), faceMat);
+            cranium.scale.set(0.92, 1.10, 0.98);
+            cranium.rotation.y = -Math.PI / 2; // Aligns face texture with +Z forward vector
+            cranium.position.y = 0.10 * s; cranium.castShadow = true; headGroup.add(cranium);
+
+            const noseMesh = new THREE.Mesh(new THREE.ConeGeometry(0.022 * s, 0.058 * s, 10), skinMat);
+            noseMesh.rotation.x = Math.PI * 0.42; noseMesh.position.set(0, 0.095 * s, 0.124 * s); headGroup.add(noseMesh);
+
+            const mouthAperture = new THREE.Mesh(new THREE.BoxGeometry(0.044 * s, 0.008 * s, 0.015 * s), new THREE.MeshBasicMaterial({ color: 0x2b1111 }));
+            mouthAperture.position.set(0, 0.042 * s, 0.116 * s); headGroup.add(mouthAperture);
+
+            const hairCrown = new THREE.Mesh(new THREE.SphereGeometry(0.133 * s, 22, 18, 0, Math.PI * 2, 0, Math.PI * 0.58), hairMat);
+            hairCrown.scale.set(0.94, 1.08, 1.01); hairCrown.position.y = 0.112 * s; hairCrown.rotation.x = -0.18; headGroup.add(hairCrown);
+
+            if (app.hasGlasses) {
+                const frameMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.75, roughness: 0.25 });
+                [-1, 1].forEach(side => {
+                    const rim = new THREE.Mesh(new THREE.RingGeometry(0.019 * s, 0.024 * s, 16), frameMat);
+                    rim.position.set(side * 0.042 * s, 0.112 * s, 0.124 * s); headGroup.add(rim);
+                });
+            }
+
+            const sleeveMat = jacketMat || shirtMat;
+            function buildArticulatedArm(side) {
+                const shoulder = new THREE.Group(); shoulder.position.set(side * (torsoWidth + 0.025) * s, 0.45 * s, 0); spine.add(shoulder);
+                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052 * s, 0.044 * s, 0.30 * s, 14), sleeveMat);
+                upperArm.position.y = -0.15 * s; upperArm.castShadow = true; shoulder.add(upperArm);
+                const elbow = new THREE.Group(); elbow.position.y = -0.30 * s; shoulder.add(elbow);
+                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.042 * s, 0.034 * s, 0.27 * s, 14), jacketMat ? jacketMat : skinMat);
+                foreArm.position.y = -0.135 * s; foreArm.castShadow = true; elbow.add(foreArm);
+                const hand = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.075 * s, 0.052 * s), skinMat);
+                hand.position.set(0, -0.29 * s, 0.008 * s); elbow.add(hand);
+                return { arm: shoulder, foreArm: elbow };
+            }
+
+            function buildArticulatedLeg(side) {
+                const hipJoint = new THREE.Group(); hipJoint.position.set(side * 0.092 * s, -0.04 * s, 0); hips.add(hipJoint);
+                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.074 * s, 0.058 * s, 0.44 * s, 14), trouserMat);
+                thigh.position.y = -0.22 * s; thigh.castShadow = true; hipJoint.add(thigh);
+                const knee = new THREE.Group(); knee.position.y = -0.44 * s; hipJoint.add(knee);
+                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.056 * s, 0.046 * s, 0.42 * s, 14), trouserMat);
+                shin.position.y = -0.21 * s; shin.castShadow = true; knee.add(shin);
+                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.092 * s, 0.068 * s, 0.21 * s), shoeMat);
+                shoe.position.set(0, -0.43 * s, 0.038 * s); shoe.castShadow = true; knee.add(shoe);
+                return { upLeg: hipJoint, leg: knee };
+            }
+
+            const leftArm = buildArticulatedArm(1), rightArm = buildArticulatedArm(-1);
+            const leftLeg = buildArticulatedLeg(1), rightLeg = buildArticulatedLeg(-1);
+
+            const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.95 * s, 0.95 * s), contactShadowMat);
+            shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = 0.015; root.add(shadowPlane);
+
+            const badgeTex = createFacultyOverheadBadge(config.name, config.designation, app.badgeBorderHex, "");
+            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: badgeTex, transparent: true, depthTest: false }));
+            tagSprite.position.set(0, 2.24 * s, 0); tagSprite.scale.set(2.35, 0.66, 1); tagSprite.renderOrder = 999; root.add(tagSprite);
+
+            return {
+                wrapper: root, tagSprite, baseHipY: 0.94 * s, lastBadgeHash: "",
+                updateBadgeState(stateText) {
+                    const hash = `${config.name}|${stateText}`;
+                    if (this.lastBadgeHash === hash) return;
+                    this.lastBadgeHash = hash;
+                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose();
+                    this.tagSprite.material.map = createFacultyOverheadBadge(config.name, config.designation, app.badgeBorderHex, stateText);
+                },
+                bones: {
+                    hips, spine, neck, head: headGroup,
+                    leftArm: leftArm.arm, leftForeArm: leftArm.foreArm,
+                    rightArm: rightArm.arm, rightForeArm: rightArm.foreArm,
+                    leftUpLeg: leftLeg.upLeg, leftLeg: leftLeg.leg,
+                    rightUpLeg: rightLeg.upLeg, rightLeg: rightLeg.leg,
+                    mouthAperture
+                }
+            };
+        }
+
+        function blendFacultySkeletalPose(rig, state, dt, elapsed, walkPhase, isSpeakingAudio = false) {
+            const b = rig.bones; if (!b) return;
+            const lerpRate = Math.min(1, dt * 10);
+            const lerp = (cur, target) => cur + (target - cur) * lerpRate;
+
+            let hipOffsetY = Math.sin(elapsed * 2.1) * 0.008;
+            let spineRotY = 0, headRotX = 0, headRotY = 0;
+            let lArmX = 0.04, lArmZ = 0.06, lForeX = -0.14;
+            let rArmX = 0.04, rArmZ = -0.06, rForeX = -0.14;
+            let lUpLegX = 0, lKneeX = 0, rUpLegX = 0, rKneeX = 0;
+
+            if (state === "walk") {
+                const amp = 0.40;
+                const s = Math.sin(walkPhase), c = Math.cos(walkPhase);
+                hipOffsetY = Math.abs(s) * 0.028 - 0.01;
+                spineRotY = -s * 0.075;
+                lUpLegX = s * amp; rUpLegX = -s * amp;
+                lKneeX = Math.max(0, -c * amp * 1.15); rKneeX = Math.max(0, c * amp * 1.15);
+                lArmX = -s * (amp * 0.72); rArmX = s * (amp * 0.72);
+                lForeX = -0.22 - Math.max(0, -s) * 0.18; rForeX = -0.22 - Math.max(0, s) * 0.18;
+            } else if (state === "listen") {
+                headRotX = Math.sin(elapsed * 2.2) * 0.04 + 0.02;
+                lArmX = -0.22; lArmZ = 0.08; lForeX = -0.58;
+                rArmX = 0.05;  rArmZ = -0.06; rForeX = -0.20;
+            } else if (state === "explain") {
+                // Active Face-to-Face Chatting & Explaining Hand Gestures
+                headRotX = Math.sin(elapsed * 2.8) * 0.045;
+                headRotY = Math.sin(elapsed * 1.5) * 0.08;
+                spineRotY = Math.sin(elapsed * 1.3) * 0.05;
+                lArmX = -0.48 + Math.sin(elapsed * 3.6) * 0.18;
+                lArmZ = 0.14 + Math.cos(elapsed * 2.5) * 0.06;
+                lForeX = -0.82 + Math.sin(elapsed * 4.2) * 0.16;
+                rArmX = -0.38 + Math.cos(elapsed * 3.2) * 0.16;
+                rArmZ = -0.12;
+                rForeX = -0.74 + Math.cos(elapsed * 3.8) * 0.14;
+            }
+
+            b.hips.position.y = lerp(b.hips.position.y, rig.baseHipY + hipOffsetY);
+            b.spine.rotation.y = lerp(b.spine.rotation.y, spineRotY);
+            b.head.rotation.x = lerp(b.head.rotation.x, headRotX);
+            b.head.rotation.y = lerp(b.head.rotation.y, headRotY);
+            b.leftArm.rotation.x = lerp(b.leftArm.rotation.x, lArmX);
+            b.leftArm.rotation.z = lerp(b.leftArm.rotation.z, lArmZ);
+            b.leftForeArm.rotation.x = lerp(b.leftForeArm.rotation.x, lForeX);
+            b.rightArm.rotation.x = lerp(b.rightArm.rotation.x, rArmX);
+            b.rightArm.rotation.z = lerp(b.rightArm.rotation.z, rArmZ);
+            b.rightForeArm.rotation.x = lerp(b.rightForeArm.rotation.x, rForeX);
+            b.leftUpLeg.rotation.x = lerp(b.leftUpLeg.rotation.x, lUpLegX);
+            b.leftLeg.rotation.x = lerp(b.leftLeg.rotation.x, lKneeX);
+            b.rightUpLeg.rotation.x = lerp(b.rightUpLeg.rotation.x, rUpLegX);
+            b.rightLeg.rotation.x = lerp(b.rightLeg.rotation.x, rKneeX);
+
+            if (isSpeakingAudio || state === "explain") {
+                b.mouthAperture.scale.y = 0.6 + Math.abs(Math.sin(elapsed * 14.0)) * 2.0;
+            } else {
+                b.mouthAperture.scale.y = 0.25;
+            }
+        }
+
+        const FACULTY_CONFIGS = {
+            umesh: {
+                id: "umesh",
+                name: "Dr. Umesh D. R.",
+                designation: "Professor & COE, CSE (AI & ML)",
+                roleShort: "Professor & COE — CSE (AI & ML), PESCE Mandya",
+                researchText: "Research: Data Analytics, AI & Machine Learning",
+                systemPrompt: `You are a virtual academic mentor simulation of Dr. Umesh D. R., Professor (CAS) & Controller of Examinations in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research areas: Data Analytics, Artificial Intelligence, and Machine Learning. Be academically rigorous, structured, and encouraging. Ask 1 concise follow-up question to test the student's fundamentals. Keep responses concise (3-5 sentences).`,
+                appearance: {
+                    heightScale: 1.03, shoulderWidth: 0.235, skinHex: 0xc68b63, hairHex: 0x1c2128,
+                    mustache: true, beardTrim: false, hasGlasses: true,
+                    shirtHex: 0xe2e8f0, jacketHex: 0x1e293b, tieHex: 0x881337,
+                    trouserHex: 0x0f172a, shoeHex: 0x1c1917, eyeIrisHex: "#2c1d11", badgeBorderHex: "#FFC857"
+                },
+                patrolSpeed: 1.50, strideLength: 0.74,
+                waypoints: [
+                    { x: 0.0,  y: 0.0, z: 36.0, pauseSec: 4.0 },
+                    { x: 5.2,  y: 0.0, z: 26.0, pauseSec: 2.5 },
+                    { x: 3.4,  y: 0.0, z: 10.5, pauseSec: 4.5 },
+                    { x: -3.4, y: 0.0, z: 12.0, pauseSec: 3.0 },
+                    { x: -5.2, y: 0.0, z: 28.0, pauseSec: 3.0 }
+                ],
+                greetings: [
+                    "Tell me what you're working on. Start with the problem statement, explain your approach, and let's examine whether your solution actually works.",
+                    "Hello! What AI, Machine Learning, or Data Analytics problem are you investigating today? Let's examine your methodology."
+                ],
+                suggestedQuestions: [
+                    "How do I validate my ML model beyond accuracy?",
+                    "How should I structure my AI research problem statement?",
+                    "What are common pitfalls in data analytics pipelines?"
+                ]
+            },
+            chetan: {
+                id: "chetan",
+                name: "Prof. Chetan Kumar V.",
+                designation: "Assistant Professor, CSE (AI & ML)",
+                roleShort: "Assistant Professor — CSE (AI & ML), PESCE Mandya",
+                researchText: "Research Area: Big Data Analytics & Practical Systems",
+                systemPrompt: `You are a virtual academic mentor simulation of Prof. Chetan Kumar V., Assistant Professor in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research area: Big Data Analytics. Be practical, analytical, and encouraging. Help students debug code, design scalable data pipelines, and turn hackathon ideas into working engineering systems. Keep responses concise (3-5 sentences).`,
+                appearance: {
+                    heightScale: 0.99, shoulderWidth: 0.218, skinHex: 0xd1976e, hairHex: 0x11141a,
+                    mustache: true, beardTrim: true, hasGlasses: false,
+                    shirtHex: 0x1d4ed8, jacketHex: null, tieHex: null,
+                    trouserHex: 0x334155, shoeHex: 0x27272a, eyeIrisHex: "#1e150d", badgeBorderHex: "#29E7F2"
+                },
+                patrolSpeed: 1.75, strideLength: 0.78,
+                waypoints: [
+                    { x: 10.5, y: 0.20, z: -6.5,  pauseSec: 4.0 },
+                    { x: 14.8, y: 0.20, z: -10.2, pauseSec: 3.5 },
+                    { x: 4.2,  y: 0.20, z: -4.2,  pauseSec: 2.5 },
+                    { x: 0.0,  y: 0.20, z: 2.0,   pauseSec: 3.5 },
+                    { x: -6.5, y: 0.20, z: -4.5,  pauseSec: 3.0 }
+                ],
+                greetings: [
+                    "What are you building right now? Explain what works, what doesn't, and what you've tried so far. We'll work through the problem step by step.",
+                    "Hi! Show me your project architecture or Big Data pipeline—let's see how we can make it practical and scalable."
+                ],
+                suggestedQuestions: [
+                    "How do I design a scalable Big Data processing pipeline?",
+                    "How should I debug a slow query or API bottleneck?",
+                    "How can I turn my hackathon prototype into a working system?"
+                ]
+            }
+        };
+
+        class AutonomousFacultyMentor {
+            constructor(config) {
+                this.config = config;
+                this.id = config.id;
+                this.name = config.name;
+                this.waypoints = config.waypoints.map(w => ({ pos: new THREE.Vector3(w.x, w.y, w.z), pauseSec: w.pauseSec || 3.0 }));
+                this.currentWpIndex = 0;
+                this.pauseTimer = 1.5;
+                this.walkPhase = Math.random() * Math.PI * 2;
+                this.isEngagedInDialogue = false;
+                this.isSpeakingAudio = false;
+                this.state = "walk";
+
+                this.rig = buildRealisticPBRFacultyRig(config);
+                this.rig.wrapper.position.copy(this.waypoints[0].pos);
+                scene.add(this.rig.wrapper);
+
+                const hitbox = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.55, 0.55, 2.1, 10),
+                    new THREE.MeshBasicMaterial({ visible: false })
+                );
+                hitbox.position.y = 1.05;
+                hitbox.userData = {
+                    interactType: "mentor",
+                    mentorId: this.id,
+                    getPrompt: () => `👨‍🏫 ${this.name} — Press E to Chat Face-to-Face`
+                };
+                this.rig.wrapper.add(hitbox);
+                interactableObjects.push(hitbox);
+            }
+
+            normalizeAngle(a) {
+                while (a < -Math.PI) a += Math.PI * 2;
+                while (a > Math.PI) a -= Math.PI * 2;
+                return a;
+            }
+
+            rotateSmoothlyToward(targetYaw, maxStep) {
+                const diff = this.normalizeAngle(targetYaw - this.rig.wrapper.rotation.y);
+                this.rig.wrapper.rotation.y += diff * Math.min(1, maxStep);
+            }
+
+            update(dt, elapsed, playerPos) {
+                const pos = this.rig.wrapper.position;
+                const dxPlayer = playerPos.x - pos.x;
+                const dzPlayer = playerPos.z - pos.z;
+                const distToPlayer = Math.hypot(dxPlayer, dzPlayer);
+
+                // +Z is the front of the character rig, so Math.atan2(dxPlayer, dzPlayer) faces the player directly!
+                const angleFacingPlayer = Math.atan2(dxPlayer, dzPlayer);
+
+                if (this.isEngagedInDialogue) {
+                    this.rotateSmoothlyToward(angleFacingPlayer, dt * 10.0);
+                    this.rig.updateBadgeState("💬 IN FACE-TO-FACE MENTORING");
+                    blendFacultySkeletalPose(this.rig, "explain", dt, elapsed, this.walkPhase, this.isSpeakingAudio);
+                    return;
+                }
+
+                if (distToPlayer <= 3.0) {
+                    // Stop and face the student directly when they approach
+                    this.rotateSmoothlyToward(angleFacingPlayer, dt * 8.0);
+                    this.rig.updateBadgeState("👋 PRESS [E] TO CHAT FACE-TO-FACE");
+                    blendFacultySkeletalPose(this.rig, "listen", dt, elapsed, this.walkPhase, false);
+                } else {
+                    this.rig.updateBadgeState("🎓 FACULTY MENTOR • ON PATROL");
+                    if (this.pauseTimer > 0) {
+                        this.pauseTimer -= dt;
+                        blendFacultySkeletalPose(this.rig, "listen", dt, elapsed, this.walkPhase, false);
+                    } else {
+                        const targetWp = this.waypoints[this.currentWpIndex];
+                        const dx = targetWp.pos.x - pos.x;
+                        const dz = targetWp.pos.z - pos.z;
+                        const distWp = Math.hypot(dx, dz);
+
+                        if (distWp < 0.35) {
+                            this.pauseTimer = targetWp.pauseSec;
+                            this.currentWpIndex = (this.currentWpIndex + 1) % this.waypoints.length;
+                        } else {
+                            const moveYaw = Math.atan2(dx, dz);
+                            this.rotateSmoothlyToward(moveYaw, dt * 6.0);
+                            const step = this.config.patrolSpeed * dt;
+                            const nx = pos.x + (dx / distWp) * step;
+                            const nz = pos.z + (dz / distWp) * step;
+                            if (!PhysicsWorld.checkHorizontalCollision(nx, pos.y, nz, 0.35)) {
+                                pos.x = nx;
+                                pos.z = nz;
+                            } else {
+                                this.currentWpIndex = (this.currentWpIndex + 1) % this.waypoints.length;
+                            }
+                            this.walkPhase += (step / this.config.strideLength) * Math.PI * 2;
+                        }
+                        blendFacultySkeletalPose(this.rig, "walk", dt, elapsed, this.walkPhase, false);
+                    }
+                }
+
+                const supportY = PhysicsWorld.getSupportingFloorY(pos.x, pos.y, pos.z);
+                pos.y += (supportY - pos.y) * Math.min(1, dt * 12);
+            }
+        }
+
+        const facultyNPCs = [
+            new AutonomousFacultyMentor(FACULTY_CONFIGS.umesh),
+            new AutonomousFacultyMentor(FACULTY_CONFIGS.chetan)
+        ];
+
+        // ============================================================================
+        // FACE-TO-FACE MENTOR CHAT CONTROLLER (WITH VOICE & DIRECT SARVAM FALLBACK)
+        // ============================================================================
+        let activeMentorId = null;
+        let isMentorRequestInFlight = false;
+        let mentorTTSEnabled = true;
+        const mentorHistories = { umesh: [], chetan: [] };
+
+        function drawMentorPortraitThumbnail(config) {
+            const c = document.getElementById("mentor-portrait-canvas");
+            if (!c) return;
+            const ctx = c.getContext("2d");
+            const app = config.appearance;
+            ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, 92, 92);
+            ctx.fillStyle = "#" + new THREE.Color(app.jacketHex || app.shirtHex).getHexString();
+            ctx.beginPath(); ctx.ellipse(46, 88, 34, 22, 0, Math.PI, 0); ctx.fill();
+            ctx.fillStyle = "#" + new THREE.Color(app.skinHex).getHexString();
+            ctx.fillRect(38, 56, 16, 15);
+            ctx.beginPath(); ctx.ellipse(46, 42, 18, 22, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#" + new THREE.Color(app.hairHex).getHexString();
+            ctx.beginPath(); ctx.arc(46, 36, 19, Math.PI * 1.05, Math.PI * 1.95); ctx.fill();
+            ctx.fillStyle = "#111827";
+            ctx.beginPath(); ctx.arc(39, 40, 2.3, 0, Math.PI * 2); ctx.arc(53, 40, 2.3, 0, Math.PI * 2); ctx.fill();
+            if (app.hasGlasses) {
+                ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1.8;
+                ctx.strokeRect(32, 35, 13, 9); ctx.strokeRect(47, 35, 13, 9);
+            }
+        }
+
+        window.walkToFacultyMentor = function(mentorId) {
+            const npc = facultyNPCs.find(n => n.id === mentorId);
+            if (!npc) return;
+            orbitMode = false;
+            document.getElementById('btn-orbit').classList.remove('active-mode');
+            const mPos = npc.rig.wrapper.position;
+            const fwdX = Math.sin(npc.rig.wrapper.rotation.y);
+            const fwdZ = Math.cos(npc.rig.wrapper.rotation.y);
+            playerFootPos.set(mPos.x + fwdX * 1.85, mPos.y, mPos.z + fwdZ * 1.85);
+            playerAvatar.wrapper.position.copy(playerFootPos);
+            if (window.innerWidth <= 900) window.toggleLeftDrawer(true);
+        };
+
+        window.openMentorChatModal = function(mentorId) {
+            const npc = facultyNPCs.find(n => n.id === mentorId);
+            if (!npc) return;
+
+            facultyNPCs.forEach(n => { n.isEngagedInDialogue = (n.id === mentorId); });
+            activeMentorId = mentorId;
+            targetTeleport = null;
+
+            // Position the student avatar cleanly 1.75m in front of the faculty member face-to-face
+            const mPos = npc.rig.wrapper.position;
+            const dirX = playerFootPos.x - mPos.x;
+            const dirZ = playerFootPos.z - mPos.z;
+            const len = Math.hypot(dirX, dirZ) || 1;
+            const standX = mPos.x + (dirX / len) * 1.75;
+            const standZ = mPos.z + (dirZ / len) * 1.75;
+            if (!PhysicsWorld.checkHorizontalCollision(standX, mPos.y, standZ)) {
+                playerFootPos.set(standX, mPos.y, standZ);
+                playerAvatar.wrapper.position.copy(playerFootPos);
+            }
+
+            // Force third-person view so the user sees both characters chatting with hand gestures
+            if (!isThirdPerson) window.togglePerspectiveMode();
+
+            drawMentorPortraitThumbnail(npc.config);
+            document.getElementById("mentor-name-display").textContent = npc.config.name;
+            document.getElementById("mentor-role-display").textContent = npc.config.roleShort;
+            document.getElementById("mentor-research-display").textContent = npc.config.researchText;
+            document.getElementById("mentor-anim-state-badge").textContent = "● Face-to-Face Chat Emote Active";
+
+            const chipsBar = document.getElementById("mentor-suggested-chips");
+            chipsBar.innerHTML = "";
+            npc.config.suggestedQuestions.forEach(q => {
+                const chip = document.createElement("button");
+                chip.className = "mentor-chip";
+                chip.textContent = q;
+                chip.onclick = () => {
+                    document.getElementById("mentor-user-input").value = q;
+                    window.sendMentorMessage();
+                };
+                chipsBar.appendChild(chip);
+            });
+
+            const msgContainer = document.getElementById("mentor-messages-container");
+            msgContainer.innerHTML = "";
+            if (mentorHistories[mentorId].length === 0) {
+                const greeting = npc.config.greetings[Math.floor(Math.random() * npc.config.greetings.length)];
+                mentorHistories[mentorId].push({ role: "assistant", content: greeting });
+                speakMentorUtterance(npc, greeting);
+            }
+            mentorHistories[mentorId].forEach(item => {
+                appendMentorBubble(item.role === "user" ? "user" : "bot", item.content);
+            });
+
+            document.getElementById("mentor-chat-modal").style.display = "block";
+            setTimeout(() => document.getElementById("mentor-user-input").focus(), 80);
+        };
+
+        window.closeMentorChatModal = function() {
+            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+            facultyNPCs.forEach(n => {
+                n.isEngagedInDialogue = false;
+                n.isSpeakingAudio = false;
+            });
+            activeMentorId = null;
+            document.getElementById("mentor-chat-modal").style.display = "none";
+        };
+
+        window.toggleMentorTTS = function() {
+            mentorTTSEnabled = !mentorTTSEnabled;
+            const btn = document.getElementById("btn-mentor-tts");
+            btn.classList.toggle("active", mentorTTSEnabled);
+            btn.textContent = mentorTTSEnabled ? "🔊" : "🔇";
+            if (!mentorTTSEnabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+        };
+
+        function speakMentorUtterance(npc, text) {
+            if (!mentorTTSEnabled || !("speechSynthesis" in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text.replace(/[*#`_~]/g, ""));
+                utter.lang = "en-IN";
+                utter.rate = npc.id === "umesh" ? 0.96 : 1.03;
+                utter.onstart = () => { npc.isSpeakingAudio = true; };
+                utter.onend = () => { npc.isSpeakingAudio = false; };
+                utter.onerror = () => { npc.isSpeakingAudio = false; };
+                window.speechSynthesis.speak(utter);
+            } catch (e) {}
+        }
+
+        function appendMentorBubble(role, text) {
+            const box = document.getElementById("mentor-messages-container");
+            const div = document.createElement("div");
+            div.className = `m-msg ${role}`;
+            div.textContent = text;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            return div;
+        }
+
+        window.sendMentorMessage = async function() {
+            if (isMentorRequestInFlight || !activeMentorId) return;
+            const inputEl = document.getElementById("mentor-user-input");
+            const text = inputEl.value.trim();
+            if (!text) return;
+            inputEl.value = "";
+
+            const mentorId = activeMentorId;
+            const npc = facultyNPCs.find(n => n.id === mentorId);
+            if (!npc) return;
+
+            appendMentorBubble("user", text);
+            mentorHistories[mentorId].push({ role: "user", content: text });
+
+            // Also show what the student typed in their overhead speech bubble!
+            myChatText = text;
+            myChatTimestamp = Date.now();
+            playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
+
+            isMentorRequestInFlight = true;
+            document.getElementById("btn-mentor-send").disabled = true;
+            const loadingDiv = appendMentorBubble("bot", `⏳ ${npc.name} is thinking...`);
+
+            const messagesPayload = [
+                { role: "system", content: npc.config.systemPrompt },
+                ...mentorHistories[mentorId].slice(-8)
+            ];
+
+            let replyText = null;
+
+            // 1. Try serverless /api/sarvam if hosted on Vercel
+            try {
+                const res = await fetch("/api/sarvam", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ persona: mentorId, messages: messagesPayload })
+                });
+                if (res.ok) {
+                    const sData = await res.json();
+                    if (sData?.reply) replyText = sData.reply;
+                }
+            } catch (e) {}
+
+            // 2. Automatic fallback to direct Sarvam AI call (works on GitHub Pages & local static servers!)
+            if (!replyText) {
+                try {
+                    const directRes = await fetch("https://api.sarvam.ai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "api-subscription-key": SARVAM_SUBSCRIPTION_KEY,
+                            "Authorization": `Bearer ${SARVAM_SUBSCRIPTION_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "sarvam-105b",
+                            messages: messagesPayload,
+                            temperature: 0.4,
+                            max_tokens: 500,
+                            reasoning_effort: null
+                        })
+                    });
+                    const dData = await directRes.json();
+                    const choiceMsg = dData?.choices?.[0]?.message;
+                    replyText = choiceMsg?.content || choiceMsg?.reasoning_content || null;
+                } catch (err) {}
+            }
+
+            loadingDiv.remove();
+
+            if (!replyText) {
+                replyText = mentorId === "umesh"
+                    ? "That is an important problem. Start by defining your evaluation metrics and checking your dataset for leakage before scaling the model architecture. What baseline metric have you recorded so far?"
+                    : "Let's break that down practically. First isolate the data ingestion bottleneck, benchmark your query latency, and test with a smaller batch. What logs or metrics are you seeing right now?";
+            }
+
+            mentorHistories[mentorId].push({ role: "assistant", content: replyText });
+            appendMentorBubble("bot", replyText);
+            speakMentorUtterance(npc, replyText);
+
+            isMentorRequestInFlight = false;
+            document.getElementById("btn-mentor-send").disabled = false;
+        };
 
         // ============================================================================
         // DISTRIBUTED ANTI-CROWDING SPAWN SYSTEM & MULTIPLAYER SYNC
@@ -2664,7 +3451,7 @@ Always answer clearly, accurately, and concisely.
                     y: Number(playerFootPos.y.toFixed(2)),
                     z: Number(playerFootPos.z.toFixed(2)),
                     yaw: Number(playerAvatar.wrapper.rotation.y.toFixed(2)),
-                    state: currentLocomotionState,
+                    state: activeMentorId ? 'chatting' : currentLocomotionState,
                     chatMessage: activeMsg,
                     chatTimestamp: myChatTimestamp,
                     lastSeen: Date.now()
@@ -2828,9 +3615,18 @@ Always answer clearly, accurately, and concisely.
                 mCtx.fillText(b.label, (p1.cx + p2.cx) / 2, (p1.cy + p2.cy) / 2 + 3);
             });
 
+            // Faculty Mentors on Radar
+            facultyNPCs.forEach(npc => {
+                const fMap = worldToMinimap(npc.rig.wrapper.position.x, npc.rig.wrapper.position.z);
+                mCtx.beginPath(); mCtx.arc(fMap.cx, fMap.cy, 4, 0, Math.PI * 2);
+                mCtx.fillStyle = '#FFC857'; mCtx.fill();
+                mCtx.fillStyle = '#FFC857'; mCtx.font = 'bold 8px Inter, sans-serif';
+                mCtx.fillText(npc.id === 'umesh' ? 'Dr.Umesh' : 'Prof.Chetan', fMap.cx, fMap.cy - 6);
+            });
+
             const ballMap = worldToMinimap(ballState.pos.x, ballState.pos.z);
             mCtx.beginPath(); mCtx.arc(ballMap.cx, ballMap.cy, 3, 0, Math.PI * 2);
-            mCtx.fillStyle = '#FFC857'; mCtx.fill();
+            mCtx.fillStyle = '#ffffff'; mCtx.fill();
 
             for (let uid in remotePlayers) {
                 const rp = remotePlayers[uid];
@@ -2860,10 +3656,10 @@ Always answer clearly, accurately, and concisely.
         // EXPANDED CAMPUS VIEWPOINTS, TELEPORTATION & CONTROLS
         // ============================================================================
         const viewpoints = {
-            quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05, title: "⛲ Central Campus Quad", desc: "Walk to the Student Notice Board (Press E) to read or post announcements, or head to Zone 9 to play Multiplayer Football!" },
+            quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05, title: "⛲ Central Campus Quad", desc: "Walk up to Dr. Umesh D. R. (Press E) for face-to-face mentoring, open the Notice Board, or head to Zone 9 for Football!" },
             portico: { foot: { x: 0, y: 0.18, z: 4.8 }, yaw: 0, pitch: 0.04, title: "🚪 AI & ML Main Entrance Foyer", desc: "Check the Department Notice Board on your right, visit Ground-Floor HOD Cabins, or climb the Switchback Staircase." },
             hod: { foot: { x: -15.5, y: 0.20, z: -6.0 }, yaw: 0.4, pitch: 0.0, title: "👨‍🏫 HOD & Faculty Cabins (Ground West)", desc: "Ground-floor administrative and faculty research wing. Press E on the board to view leadership profiles." },
-            project: { foot: { x: 11.5, y: 0.20, z: -4.5 }, yaw: 0, pitch: -0.04, title: "🤖 TACHYON AI & Robotics Project Lab", desc: "Student innovation space equipped with autonomous drone rigs and edge-AI testbenches." },
+            project: { foot: { x: 11.5, y: 0.20, z: -4.5 }, yaw: 0, pitch: -0.04, title: "🤖 TACHYON AI & Robotics Project Lab", desc: "Meet Prof. Chetan Kumar V. here (Press E) to discuss Big Data pipelines and hackathon prototypes!" },
             stairs: { foot: { x: -9.5, y: 0.20, z: -0.6 }, yaw: 0, pitch: 0.12, title: "🪜 Switchback Staircase", desc: "Walk forward up the granite steps to reach the 1st-Floor AI & ML Corridor." },
             corridor: { foot: { x: -7.5, y: 4.12, z: 0.25 }, yaw: -1.57, pitch: -0.02, title: "🚶 1st Floor AI & ML Corridor", desc: "Matte-brown floor tiles leading to the Deep Learning Lab and Smart Classroom 101." },
             lab: { foot: { x: -2.0, y: 4.12, z: -2.5 }, yaw: 0.25, pitch: -0.06, title: "💻 AI & ML Deep Learning Lab", desc: "High-performance dual-monitor GPU workstation cluster on the 1st Floor." },
@@ -2885,7 +3681,9 @@ Always answer clearly, accurately, and concisely.
         window.triggerActiveInteraction = function() {
             if (!activeHoveredTarget || !activeHoveredTarget.userData) return;
             const ud = activeHoveredTarget.userData;
-            if (ud.interactType === 'door_toggle' && ud.doorRef) {
+            if (ud.interactType === 'mentor' && ud.mentorId) {
+                window.openMentorChatModal(ud.mentorId);
+            } else if (ud.interactType === 'door_toggle' && ud.doorRef) {
                 ud.doorRef.isOpen = !ud.doorRef.isOpen;
                 ud.doorRef.collider.active = !ud.doorRef.isOpen;
             } else if (ud.interactType === 'faculty_modal') {
@@ -2910,6 +3708,7 @@ Always answer clearly, accurately, and concisely.
         };
 
         window.teleportTo = function(zoneKey, btnEl) {
+            if (activeMentorId) window.closeMentorChatModal();
             orbitMode = false;
             document.getElementById('btn-orbit').classList.remove('active-mode');
             const v = viewpoints[zoneKey];
@@ -2921,7 +3720,6 @@ Always answer clearly, accurately, and concisely.
             document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
             const matchBtn = btnEl || document.getElementById('zbtn-' + zoneKey);
             if (matchBtn) matchBtn.classList.add('active');
-            // Auto-hide left drawer on mobile after picking a zone for a clear view
             if (window.innerWidth <= 900) window.toggleLeftDrawer(true);
         };
 
@@ -2936,6 +3734,7 @@ Always answer clearly, accurately, and concisely.
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 window.closeNoticeBoardModal();
+                window.closeMentorChatModal();
                 document.getElementById('profile-modal').style.display = 'none';
                 return;
             }
@@ -2947,7 +3746,7 @@ Always answer clearly, accurately, and concisely.
             if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
             if (e.key === 'Shift') keys.shift = true;
             if (k === 'v') window.togglePerspectiveMode();
-            if (k === 'e') window.triggerActiveInteraction();
+            if (k === 'e' && !e.repeat) window.triggerActiveInteraction();
             if (k === 'f') window.kickFootball(14.5, 2.2);
             if (k === 'g') window.kickFootball(17.5, 5.2);
             if (e.code === 'Space' && isGrounded) { playerVelY = 6.2; isGrounded = false; }
@@ -3031,7 +3830,7 @@ Always answer clearly, accurately, and concisely.
         const promptLabelEl = document.getElementById('interact-label');
 
         // ============================================================================
-        // MASTER ANIMATION, FOOTBALL PHYSICS & MULTIPLAYER RENDER LOOP
+        // MASTER ANIMATION, FACULTY MENTORS, FOOTBALL PHYSICS & RENDER LOOP
         // ============================================================================
         function animate() {
             requestAnimationFrame(animate);
@@ -3057,6 +3856,9 @@ Always answer clearly, accurately, and concisely.
 
             updateFootballPhysics(dt);
 
+            // Update Autonomous Faculty Mentors
+            facultyNPCs.forEach(npc => npc.update(dt, elapsed, playerFootPos));
+
             if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
                 myChatText = "";
                 playerAvatar.updateOverheadTag(myCallsign, myTitle, "");
@@ -3066,22 +3868,46 @@ Always answer clearly, accurately, and concisely.
                 const rp = remotePlayers[uid];
                 rp.actor.wrapper.position.lerp(rp.targetPos, Math.min(1, dt * 8));
                 rp.actor.wrapper.rotation.y += (rp.targetYaw - rp.actor.wrapper.rotation.y) * Math.min(1, dt * 8);
-                animateBonePose(rp.actor.bones, rp.state, elapsed);
+                animateBonePose(rp.actor.bones, rp.state, elapsed, rp.state === 'chatting');
             }
 
-            if (!orbitMode) {
-                raycaster.setFromCamera({ x: 0, y: 0 }, camera);
-                const hits = raycaster.intersectObjects(interactableObjects);
-                if (hits.length > 0 && hits[0].distance < 8.5) {
-                    activeHoveredTarget = hits[0].object;
+            // Proximity + Raycast Interaction Detection
+            if (!orbitMode && !activeMentorId) {
+                let nearMentorHitbox = null;
+                let minMentorDist = 2.85;
+                for (const obj of interactableObjects) {
+                    if (obj.userData?.interactType === 'mentor') {
+                        const wp = new THREE.Vector3();
+                        obj.getWorldPosition(wp);
+                        const d = Math.hypot(wp.x - playerFootPos.x, wp.z - playerFootPos.z);
+                        if (d < minMentorDist) {
+                            minMentorDist = d;
+                            nearMentorHitbox = obj;
+                        }
+                    }
+                }
+
+                if (nearMentorHitbox) {
+                    activeHoveredTarget = nearMentorHitbox;
                     reticleEl.classList.add('hover-active');
-                    promptLabelEl.textContent = activeHoveredTarget.userData.getPrompt ? activeHoveredTarget.userData.getPrompt() : 'Interact';
+                    promptLabelEl.textContent = nearMentorHitbox.userData.getPrompt();
                     promptEl.style.display = 'flex';
                 } else {
-                    activeHoveredTarget = null;
-                    reticleEl.classList.remove('hover-active');
-                    promptEl.style.display = 'none';
+                    raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+                    const hits = raycaster.intersectObjects(interactableObjects);
+                    if (hits.length > 0 && hits[0].distance < 8.5) {
+                        activeHoveredTarget = hits[0].object;
+                        reticleEl.classList.add('hover-active');
+                        promptLabelEl.textContent = activeHoveredTarget.userData.getPrompt ? activeHoveredTarget.userData.getPrompt() : 'Interact';
+                        promptEl.style.display = 'flex';
+                    } else {
+                        activeHoveredTarget = null;
+                        reticleEl.classList.remove('hover-active');
+                        promptEl.style.display = 'none';
+                    }
                 }
+            } else {
+                promptEl.style.display = 'none';
             }
 
             if (orbitMode) {
@@ -3103,10 +3929,13 @@ Always answer clearly, accurately, and concisely.
                 const rightX = Math.cos(camYaw), rightZ = -Math.sin(camYaw);
 
                 let moveX = 0, moveZ = 0;
-                if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
-                if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
-                if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
-                if (keys.right) { moveX += rightX * moveSpeed; moveZ += rightZ * moveSpeed; }
+                // Only move player if not typing inside an input box
+                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                    if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
+                    if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
+                    if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
+                    if (keys.right) { moveX += rightX * moveSpeed; moveZ += rightZ * moveSpeed; }
+                }
 
                 const candX = Math.max(-125, Math.min(125, playerFootPos.x + moveX));
                 if (!PhysicsWorld.checkHorizontalCollision(candX, playerFootPos.y, playerFootPos.z)) playerFootPos.x = candX;
@@ -3126,23 +3955,68 @@ Always answer clearly, accurately, and concisely.
 
                 const movingNow = Math.hypot(moveX, moveZ) > 0.002;
                 currentLocomotionState = movingNow ? (keys.shift ? 'run' : 'walk') : 'idle';
-                animateBonePose(playerAvatar.bones, currentLocomotionState, elapsed);
                 playerAvatar.wrapper.position.copy(playerFootPos);
-                if (movingNow) playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
+
+                // Auto-close mentor chat if player walks away (> 4.2m)
+                if (activeMentorId) {
+                    const activeNpc = facultyNPCs.find(n => n.id === activeMentorId);
+                    if (activeNpc) {
+                        const mPos = activeNpc.rig.wrapper.position;
+                        const distToMentor = Math.hypot(mPos.x - playerFootPos.x, mPos.z - playerFootPos.z);
+                        if (distToMentor > 4.2) {
+                            window.closeMentorChatModal();
+                        } else {
+                            // Lock Student Avatar to face the Faculty Mentor face-to-face & perform chatting hand gestures!
+                            const angleToMentor = Math.atan2(mPos.x - playerFootPos.x, mPos.z - playerFootPos.z);
+                            let diff = angleToMentor - playerAvatar.wrapper.rotation.y;
+                            while (diff < -Math.PI) diff += Math.PI * 2;
+                            while (diff > Math.PI) diff -= Math.PI * 2;
+                            playerAvatar.wrapper.rotation.y += diff * Math.min(1, dt * 10);
+                        }
+                    }
+                } else if (movingNow) {
+                    playerAvatar.wrapper.rotation.y = Math.atan2(moveX, moveZ);
+                }
+
+                animateBonePose(playerAvatar.bones, currentLocomotionState, elapsed, !!activeMentorId && !movingNow);
 
                 const eyeH = PhysicsWorld.playerEyeHeight;
-                if (isThirdPerson) {
+                if (activeMentorId && isThirdPerson) {
+                    // Cinematic side-angle framing so both Student & Faculty Mentor are visible on the left while chatting!
+                    const activeNpc = facultyNPCs.find(n => n.id === activeMentorId);
+                    if (activeNpc) {
+                        const mPos = activeNpc.rig.wrapper.position;
+                        const midX = (playerFootPos.x + mPos.x) * 0.5;
+                        const midZ = (playerFootPos.z + mPos.z) * 0.5;
+                        const dx = mPos.x - playerFootPos.x;
+                        const dz = mPos.z - playerFootPos.z;
+                        const len = Math.hypot(dx, dz) || 1;
+                        // Perpendicular side vector
+                        const sideX = -dz / len;
+                        const sideZ = dx / len;
+                        const desiredCamPos = new THREE.Vector3(
+                            midX + sideX * 2.55 - (dx / len) * 0.7,
+                            playerFootPos.y + 1.55,
+                            midZ + sideZ * 2.55 - (dz / len) * 0.7
+                        );
+                        camera.position.lerp(desiredCamPos, Math.min(1, dt * 6));
+                        camera.lookAt(midX - sideX * 0.45, playerFootPos.y + 1.32, midZ - sideZ * 0.45);
+                    }
+                } else if (isThirdPerson) {
                     camera.position.set(
                         playerFootPos.x + Math.sin(camYaw) * 2.9,
                         playerFootPos.y + eyeH + 0.45,
                         playerFootPos.z + Math.cos(camYaw) * 2.9
                     );
+                    camera.rotation.order = 'YXZ';
+                    camera.rotation.y = camYaw;
+                    camera.rotation.x = camPitch;
                 } else {
                     camera.position.set(playerFootPos.x, playerFootPos.y + eyeH, playerFootPos.z);
+                    camera.rotation.order = 'YXZ';
+                    camera.rotation.y = camYaw;
+                    camera.rotation.x = camPitch;
                 }
-                camera.rotation.order = 'YXZ';
-                camera.rotation.y = camYaw;
-                camera.rotation.x = camPitch;
 
                 floorStatusEl.textContent = `Elev: ${playerFootPos.y.toFixed(1)}m`;
             }
