@@ -105,6 +105,123 @@
         .hud-select option { background: #0f172a; color: #fff; }
 
         /* ==========================================================================
+           CHARACTER CUSTOMIZER STUDIO MODAL
+           ========================================================================== */
+        .customizer-card {
+            background: rgba(11, 16, 32, 0.97);
+            border: 1.5px solid var(--purple);
+            border-radius: 22px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 88dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 65px rgba(0,0,0,0.85), 0 0 35px rgba(155, 92, 255, 0.25);
+            user-select: text;
+        }
+        .customizer-header {
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(155, 92, 255, 0.22), rgba(41, 231, 242, 0.16));
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .customizer-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.02rem;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .customizer-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .cust-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .cust-row label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+        .cust-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .cust-text-input, .cust-select-input {
+            background: #070b16;
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            outline: none;
+        }
+        .cust-text-input:focus, .cust-select-input:focus {
+            border-color: var(--cyan);
+        }
+        .swatch-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .color-swatch {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.selected {
+            border-color: #ffffff;
+            box-shadow: 0 0 12px var(--cyan);
+            transform: scale(1.12);
+        }
+        .acc-pill-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .acc-pill {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.16);
+            color: #e2e8f0;
+            padding: 7px 14px;
+            border-radius: 10px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .acc-pill.selected {
+            background: rgba(41, 231, 242, 0.22);
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+        .customizer-footer {
+            padding: 14px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(2, 6, 23, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ==========================================================================
            SLIDABLE LEFT CAMPUS NAVIGATION DRAWER
            ========================================================================== */
         .left-drawer-wrap {
@@ -672,6 +789,73 @@
     </div>
 
     <!-- ==========================================================================
+         CHARACTER CUSTOMIZER STUDIO MODAL
+         ========================================================================== -->
+    <div class="modal-overlay" id="avatar-customizer-modal">
+        <div class="customizer-card">
+            <div class="customizer-header">
+                <h2>🎨 TACHYON AVATAR CUSTOMIZER STUDIO</h2>
+                <button class="hud-pill-btn" onclick="closeAvatarCustomizer()">✕ Close [Esc]</button>
+            </div>
+            <div class="customizer-body">
+                <div class="cust-input-grid">
+                    <div class="cust-row">
+                        <label>Student Callsign / Handle</label>
+                        <input type="text" id="cust-name-input" class="cust-text-input" maxlength="20" placeholder="e.g., shivu">
+                    </div>
+                    <div class="cust-row">
+                        <label>Equipped Campus Title</label>
+                        <select id="cust-title-select" class="cust-select-input">
+                            <option value="Tachyon Explorer">Tachyon Explorer</option>
+                            <option value="AI Agent Builder">AI Agent Builder</option>
+                            <option value="Deep Learning Researcher">Deep Learning Researcher</option>
+                            <option value="Hackathon Finalist">Hackathon Finalist</option>
+                            <option value="Full-Stack Innovator">Full-Stack Innovator</option>
+                            <option value="TACHYON Club Operative">TACHYON Club Operative</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="cust-row">
+                    <label>👕 Outfit / Jacket Color</label>
+                    <div class="swatch-row" id="swatch-shirt"></div>
+                </div>
+
+                <div class="cust-row">
+                    <label>👖 Trousers / Pants Color</label>
+                    <div class="swatch-row" id="swatch-pants"></div>
+                </div>
+
+                <div class="cust-row">
+                    <label>💇 Hairstyle Color</label>
+                    <div class="swatch-row" id="swatch-hair"></div>
+                </div>
+
+                <div class="cust-row">
+                    <label>👁️ Eye Iris Color</label>
+                    <div class="swatch-row" id="swatch-eyes"></div>
+                </div>
+
+                <div class="cust-row">
+                    <label>🕶️ Headwear & Accessories</label>
+                    <div class="acc-pill-row" id="acc-selector-row">
+                        <button class="acc-pill selected" data-acc="none" onclick="selectAvatarAccessory('none', this)">✨ None</button>
+                        <button class="acc-pill" data-acc="glasses" onclick="selectAvatarAccessory('glasses', this)">👓 Tech Glasses</button>
+                        <button class="acc-pill" data-acc="cap" onclick="selectAvatarAccessory('cap', this)">🧢 TACHYON Cap</button>
+                    </div>
+                </div>
+            </div>
+            <div class="customizer-footer">
+                <span id="cust-save-status" style="font-size:0.75rem; color:var(--emerald);">Changes apply live in 3D & sync to multiplayer!</span>
+                <div style="display:flex; gap:8px;">
+                    <button class="hud-pill-btn" onclick="resetAvatarDefault()">Reset Default</button>
+                    <button class="chat-send-btn" onclick="saveAvatarCustomization()">💾 Save & Equip Look</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
          DOCKED FACULTY MENTOR CONVERSATION MODAL (FACE-TO-FACE CHATTING EMOTE)
          ========================================================================== -->
     <div id="mentor-chat-modal">
@@ -796,6 +980,7 @@
         </div>
 
         <div class="top-controls">
+            <button class="hud-pill-btn" style="border-color:var(--purple); color:#e9d5ff; background:rgba(155, 92, 255, 0.2);" onclick="openAvatarCustomizer()">🎨 Customize [C]</button>
             <button class="hud-pill-btn" style="border-color:var(--gold); color:var(--gold);" onclick="openNoticeBoardModal()">📌 Notice Board</button>
             <span class="hud-pill-btn" id="my-online-badge" style="border-color:var(--emerald); color:var(--emerald);">🟢 Online Mode</span>
             <button class="hud-pill-btn active-mode" id="btn-viewmode" onclick="togglePerspectiveMode()">🧍 View: 3rd Person</button>
@@ -815,6 +1000,10 @@
     <div class="left-drawer-wrap" id="left-drawer">
         <aside class="zone-panel">
             <button class="hub-return-btn" onclick="teleportTo('quad')">🏛️ RETURN TO MAIN CAMPUS HUB</button>
+            <button class="mentor-locate-btn" style="border-color:var(--purple); color:#e9d5ff; margin-bottom:2px;" onclick="openAvatarCustomizer()">
+                <span>🎨 Customize My Character</span>
+                <span>[C]</span>
+            </button>
 
             <div class="zone-panel-title" style="color:var(--gold);">🎓 Interactive Faculty Mentors</div>
             <button class="mentor-locate-btn" onclick="walkToFacultyMentor('umesh')">
@@ -822,7 +1011,7 @@
                 <span>AI/ML</span>
             </button>
             <button class="mentor-locate-btn" onclick="walkToFacultyMentor('chetan')">
-                <span>👨‍💻 Meet Dr. Chetan Kumar V  </span>
+                <span>👨‍💻 Meet Prof. Chetan Kumar</span>
                 <span>Big Data</span>
             </button>
 
@@ -867,7 +1056,7 @@
             <div class="info-card" id="zone-info">
                 <h3 id="info-title">⛲ Central Campus Quad</h3>
                 <p id="info-desc">
-                    Walk up to Dr. Umesh D. R. or Prof. Chetan Kumar V. (Press E) for face-to-face AI mentoring, check the Notice Board, or play Football in Zone 9!
+                    Walk up to Dr. Umesh D. R. or Prof. Chetan Kumar V. (Press E) for face-to-face AI mentoring, press C to customize your avatar, or play Football in Zone 9!
                 </p>
                 <div class="telemetry-row">
                     <span id="actor-status">🟢 2 Faculty Mentors Roaming</span>
@@ -893,7 +1082,7 @@
     <div class="multiplayer-chat-dock" id="bottom-chat-dock">
         <button class="chat-slide-handle" id="chat-drawer-btn" onclick="toggleBottomChatDock()">💬 Hide Chat ▼</button>
         <div class="chat-feed-mini" id="multiplayer-chat-feed">
-            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near <strong>Dr. Umesh D. R.</strong> or <strong>Prof. Chetan Kumar V.</strong> to chat face-to-face with live hand gestures!</div>
+            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near <strong>Dr. Umesh D. R.</strong> or <strong>Prof. Chetan Kumar V.</strong> to chat face-to-face, or press <strong>C</strong> to customize your avatar!</div>
         </div>
         <div class="chat-input-row">
             <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Type message to display above your head... (Press Enter)">
@@ -932,8 +1121,7 @@
     <!-- Three.js r128 Core + GLTFLoader -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
-    <!-- Main 3D Campus Engine + Multiplayer Football + Shared Notice Board + Faculty Mentors + Sarvam AI -->
+    <!-- Main 3D Campus Engine + Multiplayer Football + Shared Notice Board + Faculty Mentors + Avatar Customizer -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -1025,13 +1213,11 @@ OFFICIAL PESCE MANDYA & TACHYON CLUB DIRECTORY (VERIFIED FROM PESCE.AC.IN):
      * Prof. Renuka H. R. (Assistant Professor)
      * Prof. Ashwitha B. M. (Assistant Professor)
      * Prof. Pavan Krishna K. (Assistant Professor)
-   - Senior Professors in Core CSE at PESCE Mandya:
-     * Dr. Anitha M. L. (Professor & HoD, CSE), Dr. M. C. Padma (Professor), Dr. H. P. Mohan Kumar (Professor), Dr. Nagarathna (Professor), Dr. Veena M. N., Dr. Girish Babu M. C., Dr. Prasanna Kumar R. S., Dr. H. R. Divakar, Dr. Deepika, Dr. Bhavya D.
 3. TACHYON AIML Club Leadership:
    - Motto: "Guide by Light, Driven by Intelligence"
    - President: Shivakumar Patil (@shivu)
-   - Vice President: pavan bhargav 
-   - Core Club Operatives: Nandish, harshith and PESCE AI & ML student builders.
+   - Vice President: Pavan Bhargav
+   - Core Club Operatives: Nandish, Harshith and PESCE AI & ML student builders.
 4. 3D Digital Twin Campus Locations:
    - Zone 1: Central Campus Quad & Student Notice Board (X:0, Z:34)
    - Zone 2: AI & ML Main Entrance Foyer (X:0, Z:4.8)
@@ -1061,9 +1247,16 @@ Always answer clearly, accurately, and concisely.
         function getVerifiedCampusGuideReply(queryLower) {
             if (queryLower.includes('umesh') || queryLower.includes('chetan') || queryLower.includes('meet') || queryLower.includes('locate')) {
                 return {
-                    text: "🎓 Both Faculty Mentors roam the 3D campus autonomously:\n• Dr. Umesh D. R. patrols the Central Quad & AI/ML Portico.\n• Prof. Chetan Kumar V. patrols the AI & ML Foyer & TACHYON Project Lab.\nApproach either mentor and press [E] for face-to-face mentoring!",
+                    text: "🎓 Both Faculty Mentors roam the 3D campus in tailored black suits:\n• Dr. Umesh D. R. patrols the Central Quad & AI/ML Portico.\n• Prof. Chetan Kumar V. patrols the AI & ML Foyer & TACHYON Project Lab.\nApproach either mentor and press [E] for face-to-face mentoring!",
                     actionLabel: "👨‍🏫 Walk to Dr. Umesh D. R.",
                     actionFn: () => window.walkToFacultyMentor('umesh')
+                };
+            }
+            if (queryLower.includes('custom') || queryLower.includes('avatar') || queryLower.includes('outfit') || queryLower.includes('dress')) {
+                return {
+                    text: "🎨 You can customize your student avatar's outfit color, pants, hairstyle color, eye color, title, and accessories (Glasses / TACHYON Cap) anytime by pressing [C] or clicking '🎨 Customize' in the top bar!",
+                    actionLabel: "🎨 Open Avatar Customizer",
+                    actionFn: () => window.openAvatarCustomizer()
                 };
             }
             if (queryLower.includes('president') || queryLower.includes('vice') || queryLower.includes('faculty') || queryLower.includes('hod') || queryLower.includes('prof') || queryLower.includes('teacher') || queryLower.includes('principal')) {
@@ -1853,6 +2046,7 @@ Always answer clearly, accurately, and concisely.
                 PhysicsWorld.addCollider(c - 1.15, c + 1.15, r - 0.35, r + 0.35, 4.0, 5.5);
             }
         }
+
         // ============================================================================
         // PESCE CENTRAL LIBRARY, AUDITORIUM & CAFETERIA
         // ============================================================================
@@ -2561,9 +2755,8 @@ Always answer clearly, accurately, and concisely.
             [-32, 60, 1.3], [32, 60, 1.3], [-82, 22, 1.45], [82, 22, 1.45],
             [-22, 92, 1.4], [22, 92, 1.4], [-75, 75, 1.35], [90, 75, 1.35]
         ].forEach(([tx, tz, sc]) => createTree(tx, tz, sc));
-
         // ============================================================================
-        // 3D CHARACTER BUILDER + FLOATING NAMEPLATE & OVERHEAD SPEECH BUBBLE SPRITE
+        // CUSTOMIZABLE 3D STUDENT AVATAR BUILDER + ACCESSORIES + OVERHEAD BUBBLE
         // ============================================================================
         function createAnimeFaceTexture(eyeColorHex) {
             const canvas = document.createElement('canvas');
@@ -2572,7 +2765,7 @@ Always answer clearly, accurately, and concisely.
             ctx.fillStyle = '#ffe4d0'; ctx.fillRect(0, 0, 256, 256);
             [80, 176].forEach(ex => {
                 ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(ex, 122, 20, 22, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = eyeColorHex; ctx.beginPath(); ctx.ellipse(ex, 124, 13, 17, 0, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = eyeColorHex || '#2563eb'; ctx.beginPath(); ctx.ellipse(ex, 124, 13, 17, 0, 0, Math.PI * 2); ctx.fill();
                 ctx.fillStyle = '#090d16'; ctx.beginPath(); ctx.ellipse(ex, 126, 7, 10, 0, 0, Math.PI * 2); ctx.fill();
             });
             const tex = new THREE.CanvasTexture(canvas);
@@ -2632,7 +2825,7 @@ Always answer clearly, accurately, and concisely.
             const root = new THREE.Group();
             const skinMat = new THREE.MeshToonMaterial({ color: 0xffe4d0, gradientMap: animeToonGrad });
             const hairMat = new THREE.MeshToonMaterial({ color: config.hairColor || 0x1e293b, gradientMap: animeToonGrad });
-            const topMat = new THREE.MeshToonMaterial({ color: config.shirtColor || 0x2563eb, gradientMap: animeToonGrad });
+            const topMat = new THREE.MeshToonMaterial({ color: config.shirtColor || 0x0284c7, gradientMap: animeToonGrad });
             const pantsMat = new THREE.MeshToonMaterial({ color: config.pantsColor || 0x1e293b, gradientMap: animeToonGrad });
             const shoeMat = new THREE.MeshToonMaterial({ color: 0x0f172a, gradientMap: animeToonGrad });
 
@@ -2645,12 +2838,39 @@ Always answer clearly, accurately, and concisely.
             const neck = new THREE.Group(); neck.position.y = 0.46; spine.add(neck);
             const headGroup = new THREE.Group(); headGroup.position.y = 0.08; neck.add(headGroup);
 
-            const faceTex = createAnimeFaceTexture(config.eyeColor || '#2563eb');
-            const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20), new THREE.MeshToonMaterial({ map: faceTex, gradientMap: animeToonGrad }));
+            const faceMat = new THREE.MeshToonMaterial({ map: createAnimeFaceTexture(config.eyeColor || '#2563eb'), gradientMap: animeToonGrad });
+            const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.145, 20, 20), faceMat);
             headMesh.rotation.y = -Math.PI / 2; headMesh.position.y = 0.11; headGroup.add(headMesh);
 
             const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.154, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.62), hairMat);
             hairCap.position.y = 0.12; headGroup.add(hairCap);
+
+            // Accessory 1: Tech Glasses
+            const glassesGroup = new THREE.Group();
+            const gFrameMat = new THREE.MeshStandardMaterial({ color: 0x29E7F2, metalness: 0.7, roughness: 0.2 });
+            [-1, 1].forEach(side => {
+                const rim = new THREE.Mesh(new THREE.BoxGeometry(0.058, 0.036, 0.02), gFrameMat);
+                rim.position.set(side * 0.046, 0.11, 0.138);
+                glassesGroup.add(rim);
+            });
+            const gBridge = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.008, 0.015), gFrameMat);
+            gBridge.position.set(0, 0.115, 0.14);
+            glassesGroup.add(gBridge);
+            glassesGroup.visible = config.accessory === 'glasses';
+            headGroup.add(glassesGroup);
+
+            // Accessory 2: TACHYON Cap
+            const capGroup = new THREE.Group();
+            const capMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+            const visorMat = new THREE.MeshStandardMaterial({ color: 0x29E7F2, roughness: 0.35 });
+            const capDome = new THREE.Mesh(new THREE.SphereGeometry(0.158, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.52), capMat);
+            capDome.position.y = 0.135;
+            const capVisor = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.016, 0.13), visorMat);
+            capVisor.position.set(0, 0.155, 0.135);
+            capVisor.rotation.x = 0.12;
+            capGroup.add(capDome, capVisor);
+            capGroup.visible = config.accessory === 'cap';
+            headGroup.add(capGroup);
 
             function buildArm(side) {
                 const shoulder = new THREE.Group(); shoulder.position.set(side * 0.20, 0.38, 0); spine.add(shoulder);
@@ -2687,7 +2907,25 @@ Always answer clearly, accurately, and concisely.
             return {
                 wrapper: root,
                 tagSprite,
+                materials: { topMat, pantsMat, hairMat, faceMat },
+                accessories: { glassesGroup, capGroup },
                 lastRenderedHash: '',
+                lastStyleHash: '',
+                applyCustomization(style) {
+                    const sHash = `${style.shirtColor}|${style.pantsColor}|${style.hairColor}|${style.eyeColor}|${style.accessory}`;
+                    if (this.lastStyleHash === sHash) return;
+                    this.lastStyleHash = sHash;
+                    if (style.shirtColor) this.materials.topMat.color.set(style.shirtColor);
+                    if (style.pantsColor) this.materials.pantsMat.color.set(style.pantsColor);
+                    if (style.hairColor) this.materials.hairMat.color.set(style.hairColor);
+                    if (style.eyeColor) {
+                        if (this.materials.faceMat.map) this.materials.faceMat.map.dispose();
+                        this.materials.faceMat.map = createAnimeFaceTexture(style.eyeColor);
+                        this.materials.faceMat.needsUpdate = true;
+                    }
+                    this.accessories.glassesGroup.visible = style.accessory === 'glasses';
+                    this.accessories.capGroup.visible = style.accessory === 'cap';
+                },
                 updateOverheadTag(callsign, title, chatMsg) {
                     const hash = `${callsign}|${title}|${chatMsg}`;
                     if (this.lastRenderedHash === hash) return;
@@ -2707,7 +2945,6 @@ Always answer clearly, accurately, and concisely.
 
         function animateBonePose(b, state, t, isChattingWithFaculty = false) {
             if (isChattingWithFaculty) {
-                // Interactive Chatting Emote for Student Avatar (Active hand gestures + nodding)
                 b.hips.position.y = 0.88 + Math.sin(t * 2.2) * 0.01;
                 b.leftUpLeg.rotation.x = 0; b.rightUpLeg.rotation.x = 0;
                 b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0;
@@ -2749,7 +2986,7 @@ Always answer clearly, accurately, and concisely.
         }
 
         // ============================================================================
-        // REALISTIC PBR FACULTY MENTORS (DR. UMESH D. R. & PROF. CHETAN KUMAR V.)
+        // EXECUTIVE BLACK-SUIT PBR FACULTY MENTORS (DR. UMESH D. R. & PROF. CHETAN)
         // ============================================================================
         function createRealisticFaceSkinTexture(app) {
             const c = document.createElement("canvas"); c.width = 512; c.height = 512;
@@ -2810,10 +3047,11 @@ Always answer clearly, accurately, and concisely.
 
             const skinMat = new THREE.MeshStandardMaterial({ color: app.skinHex, roughness: 0.52, metalness: 0.03 });
             const hairMat = new THREE.MeshStandardMaterial({ color: app.hairHex, roughness: 0.78, metalness: 0.04 });
-            const shirtMat = new THREE.MeshStandardMaterial({ color: app.shirtHex, roughness: 0.68, metalness: 0.03 });
-            const jacketMat = app.jacketHex ? new THREE.MeshStandardMaterial({ color: app.jacketHex, roughness: 0.62, metalness: 0.05 }) : null;
-            const trouserMat = new THREE.MeshStandardMaterial({ color: app.trouserHex, roughness: 0.72, metalness: 0.03 });
-            const shoeMat = new THREE.MeshStandardMaterial({ color: app.shoeHex, roughness: 0.28, metalness: 0.12 });
+            const shirtMat = new THREE.MeshStandardMaterial({ color: app.shirtHex, roughness: 0.62, metalness: 0.04 });
+            // Tailored Executive Black Suit Material
+            const suitJacketMat = new THREE.MeshStandardMaterial({ color: app.jacketHex || 0x0f172a, roughness: 0.48, metalness: 0.08 });
+            const trouserMat = new THREE.MeshStandardMaterial({ color: app.trouserHex || 0x090d16, roughness: 0.55, metalness: 0.06 });
+            const shoeMat = new THREE.MeshStandardMaterial({ color: app.shoeHex || 0x050505, roughness: 0.22, metalness: 0.18 });
 
             const hips = new THREE.Group(); hips.position.y = 0.94 * s; root.add(hips);
             const pelvisMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.165 * s, 0.155 * s, 0.18 * s, 18), trouserMat);
@@ -2821,17 +3059,33 @@ Always answer clearly, accurately, and concisely.
 
             const spine = new THREE.Group(); spine.position.y = 0.09 * s; hips.add(spine);
             const torsoWidth = app.shoulderWidth;
-            const chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(torsoWidth * s, 0.158 * s, 0.50 * s, 20), jacketMat || shirtMat);
+            const chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(torsoWidth * s, 0.158 * s, 0.50 * s, 20), suitJacketMat);
             chestMesh.scale.set(1.0, 1.0, 0.68); chestMesh.position.y = 0.25 * s; chestMesh.castShadow = true; spine.add(chestMesh);
 
-            const shirtFront = new THREE.Mesh(new THREE.BoxGeometry(0.13 * s, 0.46 * s, 0.025 * s), shirtMat);
+            // Crisp dress shirt V-front & executive lapels
+            const shirtFront = new THREE.Mesh(new THREE.BoxGeometry(0.125 * s, 0.45 * s, 0.025 * s), shirtMat);
             shirtFront.position.set(0, 0.26 * s, 0.108 * s); spine.add(shirtFront);
 
+            [-1, 1].forEach(side => {
+                const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.052 * s, 0.38 * s, 0.032 * s), suitJacketMat);
+                lapel.position.set(side * 0.062 * s, 0.28 * s, 0.114 * s);
+                lapel.rotation.z = -side * 0.14;
+                spine.add(lapel);
+            });
+
             if (app.tieHex) {
-                const tieMat = new THREE.MeshStandardMaterial({ color: app.tieHex, roughness: 0.42 });
-                const tieMesh = new THREE.Mesh(new THREE.BoxGeometry(0.042 * s, 0.34 * s, 0.03 * s), tieMat);
-                tieMesh.position.set(0, 0.25 * s, 0.118 * s); spine.add(tieMesh);
+                const tieMat = new THREE.MeshStandardMaterial({ color: app.tieHex, roughness: 0.35, metalness: 0.1 });
+                const tieMesh = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.34 * s, 0.033 * s), tieMat);
+                tieMesh.position.set(0, 0.25 * s, 0.120 * s); spine.add(tieMesh);
             }
+
+            // Pocket square accent for visual distinction
+            const pocketSq = new THREE.Mesh(
+                new THREE.BoxGeometry(0.035 * s, 0.018 * s, 0.015 * s),
+                new THREE.MeshBasicMaterial({ color: app.tieHex || 0x29E7F2 })
+            );
+            pocketSq.position.set(-0.095 * s, 0.36 * s, 0.115 * s);
+            spine.add(pocketSq);
 
             const neck = new THREE.Group(); neck.position.y = 0.52 * s; spine.add(neck);
             const neckCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.058 * s, 0.065 * s, 0.10 * s, 16), skinMat);
@@ -2841,7 +3095,7 @@ Always answer clearly, accurately, and concisely.
             const faceMat = new THREE.MeshStandardMaterial({ map: createRealisticFaceSkinTexture(app), roughness: 0.52 });
             const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.128 * s, 28, 24), faceMat);
             cranium.scale.set(0.92, 1.10, 0.98);
-            cranium.rotation.y = -Math.PI / 2; // Aligns face texture with +Z forward vector
+            cranium.rotation.y = -Math.PI / 2;
             cranium.position.y = 0.10 * s; cranium.castShadow = true; headGroup.add(cranium);
 
             const noseMesh = new THREE.Mesh(new THREE.ConeGeometry(0.022 * s, 0.058 * s, 10), skinMat);
@@ -2861,16 +3115,18 @@ Always answer clearly, accurately, and concisely.
                 });
             }
 
-            const sleeveMat = jacketMat || shirtMat;
             function buildArticulatedArm(side) {
                 const shoulder = new THREE.Group(); shoulder.position.set(side * (torsoWidth + 0.025) * s, 0.45 * s, 0); spine.add(shoulder);
-                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052 * s, 0.044 * s, 0.30 * s, 14), sleeveMat);
+                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052 * s, 0.044 * s, 0.30 * s, 14), suitJacketMat);
                 upperArm.position.y = -0.15 * s; upperArm.castShadow = true; shoulder.add(upperArm);
                 const elbow = new THREE.Group(); elbow.position.y = -0.30 * s; shoulder.add(elbow);
-                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.042 * s, 0.034 * s, 0.27 * s, 14), jacketMat ? jacketMat : skinMat);
-                foreArm.position.y = -0.135 * s; foreArm.castShadow = true; elbow.add(foreArm);
+                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.044 * s, 0.036 * s, 0.26 * s, 14), suitJacketMat);
+                foreArm.position.y = -0.13 * s; foreArm.castShadow = true; elbow.add(foreArm);
+                // Crisp shirt cuff peeking out of black suit sleeve
+                const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.037 * s, 0.037 * s, 0.025 * s, 12), shirtMat);
+                cuff.position.y = -0.255 * s; elbow.add(cuff);
                 const hand = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.075 * s, 0.052 * s), skinMat);
-                hand.position.set(0, -0.29 * s, 0.008 * s); elbow.add(hand);
+                hand.position.set(0, -0.295 * s, 0.008 * s); elbow.add(hand);
                 return { arm: shoulder, foreArm: elbow };
             }
 
@@ -2941,7 +3197,6 @@ Always answer clearly, accurately, and concisely.
                 lArmX = -0.22; lArmZ = 0.08; lForeX = -0.58;
                 rArmX = 0.05;  rArmZ = -0.06; rForeX = -0.20;
             } else if (state === "explain") {
-                // Active Face-to-Face Chatting & Explaining Hand Gestures
                 headRotX = Math.sin(elapsed * 2.8) * 0.045;
                 headRotY = Math.sin(elapsed * 1.5) * 0.08;
                 spineRotY = Math.sin(elapsed * 1.3) * 0.05;
@@ -2986,8 +3241,12 @@ Always answer clearly, accurately, and concisely.
                 appearance: {
                     heightScale: 1.03, shoulderWidth: 0.235, skinHex: 0xc68b63, hairHex: 0x1c2128,
                     mustache: true, beardTrim: false, hasGlasses: true,
-                    shirtHex: 0xe2e8f0, jacketHex: 0x1e293b, tieHex: 0x881337,
-                    trouserHex: 0x0f172a, shoeHex: 0x1c1917, eyeIrisHex: "#2c1d11", badgeBorderHex: "#FFC857"
+                    shirtHex: 0xffffff,      // Crisp white executive shirt
+                    jacketHex: 0x0c1017,     // Tailored midnight-black suit jacket
+                    tieHex: 0x991b1b,        // Deep burgundy silk tie
+                    trouserHex: 0x090d16,    // Matching black formal suit trousers
+                    shoeHex: 0x050505,       // Polished black oxfords
+                    eyeIrisHex: "#2c1d11", badgeBorderHex: "#FFC857"
                 },
                 patrolSpeed: 1.50, strideLength: 0.74,
                 waypoints: [
@@ -3017,8 +3276,12 @@ Always answer clearly, accurately, and concisely.
                 appearance: {
                     heightScale: 0.99, shoulderWidth: 0.218, skinHex: 0xd1976e, hairHex: 0x11141a,
                     mustache: true, beardTrim: true, hasGlasses: false,
-                    shirtHex: 0x1d4ed8, jacketHex: null, tieHex: null,
-                    trouserHex: 0x334155, shoeHex: 0x27272a, eyeIrisHex: "#1e150d", badgeBorderHex: "#29E7F2"
+                    shirtHex: 0xe0f2fe,      // Crisp ice-blue dress shirt under black suit
+                    jacketHex: 0x111827,     // Tailored jet-black suit blazer
+                    tieHex: 0x0284c7,        // Royal cyan-blue tie
+                    trouserHex: 0x0b0f19,    // Matching black suit trousers
+                    shoeHex: 0x050505,
+                    eyeIrisHex: "#1e150d", badgeBorderHex: "#29E7F2"
                 },
                 patrolSpeed: 1.75, strideLength: 0.78,
                 waypoints: [
@@ -3087,8 +3350,6 @@ Always answer clearly, accurately, and concisely.
                 const dxPlayer = playerPos.x - pos.x;
                 const dzPlayer = playerPos.z - pos.z;
                 const distToPlayer = Math.hypot(dxPlayer, dzPlayer);
-
-                // +Z is the front of the character rig, so Math.atan2(dxPlayer, dzPlayer) faces the player directly!
                 const angleFacingPlayer = Math.atan2(dxPlayer, dzPlayer);
 
                 if (this.isEngagedInDialogue) {
@@ -3099,7 +3360,6 @@ Always answer clearly, accurately, and concisely.
                 }
 
                 if (distToPlayer <= 3.0) {
-                    // Stop and face the student directly when they approach
                     this.rotateSmoothlyToward(angleFacingPlayer, dt * 8.0);
                     this.rig.updateBadgeState("👋 PRESS [E] TO CHAT FACE-TO-FACE");
                     blendFacultySkeletalPose(this.rig, "listen", dt, elapsed, this.walkPhase, false);
@@ -3146,7 +3406,7 @@ Always answer clearly, accurately, and concisely.
         ];
 
         // ============================================================================
-        // FACE-TO-FACE MENTOR CHAT CONTROLLER (WITH VOICE & DIRECT SARVAM FALLBACK)
+        // FACE-TO-FACE MENTOR CHAT CONTROLLER
         // ============================================================================
         let activeMentorId = null;
         let isMentorRequestInFlight = false;
@@ -3159,8 +3419,10 @@ Always answer clearly, accurately, and concisely.
             const ctx = c.getContext("2d");
             const app = config.appearance;
             ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, 92, 92);
-            ctx.fillStyle = "#" + new THREE.Color(app.jacketHex || app.shirtHex).getHexString();
+            ctx.fillStyle = "#0c1017";
             ctx.beginPath(); ctx.ellipse(46, 88, 34, 22, 0, Math.PI, 0); ctx.fill();
+            ctx.fillStyle = "#" + new THREE.Color(app.tieHex || 0x991b1b).getHexString();
+            ctx.fillRect(43, 68, 6, 20);
             ctx.fillStyle = "#" + new THREE.Color(app.skinHex).getHexString();
             ctx.fillRect(38, 56, 16, 15);
             ctx.beginPath(); ctx.ellipse(46, 42, 18, 22, 0, 0, Math.PI * 2); ctx.fill();
@@ -3195,7 +3457,6 @@ Always answer clearly, accurately, and concisely.
             activeMentorId = mentorId;
             targetTeleport = null;
 
-            // Position the student avatar cleanly 1.75m in front of the faculty member face-to-face
             const mPos = npc.rig.wrapper.position;
             const dirX = playerFootPos.x - mPos.x;
             const dirZ = playerFootPos.z - mPos.z;
@@ -3207,7 +3468,6 @@ Always answer clearly, accurately, and concisely.
                 playerAvatar.wrapper.position.copy(playerFootPos);
             }
 
-            // Force third-person view so the user sees both characters chatting with hand gestures
             if (!isThirdPerson) window.togglePerspectiveMode();
 
             drawMentorPortraitThumbnail(npc.config);
@@ -3300,7 +3560,6 @@ Always answer clearly, accurately, and concisely.
             appendMentorBubble("user", text);
             mentorHistories[mentorId].push({ role: "user", content: text });
 
-            // Also show what the student typed in their overhead speech bubble!
             myChatText = text;
             myChatTimestamp = Date.now();
             playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
@@ -3316,7 +3575,6 @@ Always answer clearly, accurately, and concisely.
 
             let replyText = null;
 
-            // 1. Try serverless /api/sarvam if hosted on Vercel
             try {
                 const res = await fetch("/api/sarvam", {
                     method: "POST",
@@ -3329,7 +3587,6 @@ Always answer clearly, accurately, and concisely.
                 }
             } catch (e) {}
 
-            // 2. Automatic fallback to direct Sarvam AI call (works on GitHub Pages & local static servers!)
             if (!replyText) {
                 try {
                     const directRes = await fetch("https://api.sarvam.ai/v1/chat/completions", {
@@ -3370,7 +3627,7 @@ Always answer clearly, accurately, and concisely.
         };
 
         // ============================================================================
-        // DISTRIBUTED ANTI-CROWDING SPAWN SYSTEM & MULTIPLAYER SYNC
+        // CHARACTER CUSTOMIZER STUDIO & MULTIPLAYER PRESENCE SYNC
         // ============================================================================
         const SAFE_SPAWN_POINTS = [
             { x: 0, z: 22, yaw: 0 },
@@ -3395,9 +3652,23 @@ Always answer clearly, accurately, and concisely.
             return { x: baseSpot.x, z: baseSpot.z, yaw: baseSpot.yaw };
         }
 
+        const DEFAULT_AVATAR_STYLE = {
+            shirtColor: "#0284c7",
+            pantsColor: "#1e293b",
+            hairColor: "#1e293b",
+            eyeColor: "#2563eb",
+            accessory: "none"
+        };
+
         let myUid = "guest_" + Math.random().toString(36).substring(2, 7);
-        let myCallsign = "Guest_" + myUid.slice(-3);
-        let myTitle = "Tachyon Explorer";
+        let myCallsign = localStorage.getItem("tachyon_callsign") || ("Guest_" + myUid.slice(-3));
+        let myTitle = localStorage.getItem("tachyon_title") || "Tachyon Explorer";
+        let myAvatarStyle = { ...DEFAULT_AVATAR_STYLE };
+        try {
+            const savedStyle = JSON.parse(localStorage.getItem("tachyon_avatar_style"));
+            if (savedStyle) myAvatarStyle = { ...DEFAULT_AVATAR_STYLE, ...savedStyle };
+        } catch (e) {}
+
         let myChatText = "";
         let myChatTimestamp = 0;
         let isThirdPerson = true;
@@ -3408,13 +3679,105 @@ Always answer clearly, accurately, and concisely.
         let camPitch = 0.08;
 
         const playerAvatar = buildStylizedAnimeActor({
-            callsign: myCallsign, title: myTitle, shirtColor: 0x0284c7
+            callsign: myCallsign,
+            title: myTitle,
+            ...myAvatarStyle
         });
+        playerAvatar.applyCustomization(myAvatarStyle);
         playerAvatar.wrapper.position.copy(playerFootPos);
         scene.add(playerAvatar.wrapper);
 
+        // Build Swatch Palettes inside the Customizer Modal
+        const SWATCH_PALETTES = {
+            shirt: ["#0284c7", "#111827", "#7c3aed", "#059669", "#e11d48", "#d97706", "#29E7F2", "#f8fafc"],
+            pants: ["#1e293b", "#090d16", "#334155", "#1e3a8a", "#3f3f46", "#451a03"],
+            hair:  ["#1e293b", "#090d16", "#451a03", "#78350f", "#991b1b", "#6b7280", "#29E7F2"],
+            eyes:  ["#2563eb", "#10b981", "#f59e0b", "#9B5CFF", "#1e293b", "#e11d48"]
+        };
+
+        function renderCustomizerSwatches() {
+            const bindSwatches = (containerId, colors, styleKey) => {
+                const el = document.getElementById(containerId);
+                if (!el) return;
+                el.innerHTML = "";
+                colors.forEach(hex => {
+                    const btn = document.createElement("div");
+                    btn.className = "color-swatch" + (myAvatarStyle[styleKey].toLowerCase() === hex.toLowerCase() ? " selected" : "");
+                    btn.style.backgroundColor = hex;
+                    btn.onclick = () => {
+                        myAvatarStyle[styleKey] = hex;
+                        playerAvatar.applyCustomization(myAvatarStyle);
+                        renderCustomizerSwatches();
+                    };
+                    el.appendChild(btn);
+                });
+            };
+            bindSwatches("swatch-shirt", SWATCH_PALETTES.shirt, "shirtColor");
+            bindSwatches("swatch-pants", SWATCH_PALETTES.pants, "pantsColor");
+            bindSwatches("swatch-hair", SWATCH_PALETTES.hair, "hairColor");
+            bindSwatches("swatch-eyes", SWATCH_PALETTES.eyes, "eyeColor");
+
+            document.querySelectorAll("#acc-selector-row .acc-pill").forEach(btn => {
+                btn.classList.toggle("selected", btn.getAttribute("data-acc") === myAvatarStyle.accessory);
+            });
+        }
+
+        window.selectAvatarAccessory = function(accType, btnEl) {
+            myAvatarStyle.accessory = accType;
+            playerAvatar.applyCustomization(myAvatarStyle);
+            renderCustomizerSwatches();
+        };
+
+        window.openAvatarCustomizer = function() {
+            document.getElementById("cust-name-input").value = myCallsign;
+            document.getElementById("cust-title-select").value = myTitle;
+            renderCustomizerSwatches();
+            document.getElementById("avatar-customizer-modal").style.display = "flex";
+        };
+
+        window.closeAvatarCustomizer = function() {
+            document.getElementById("avatar-customizer-modal").style.display = "none";
+        };
+
+        window.resetAvatarDefault = function() {
+            myAvatarStyle = { ...DEFAULT_AVATAR_STYLE };
+            playerAvatar.applyCustomization(myAvatarStyle);
+            renderCustomizerSwatches();
+        };
+
+        window.saveAvatarCustomization = async function() {
+            const nameVal = document.getElementById("cust-name-input").value.trim().replace(/\s+/g, "_");
+            const titleVal = document.getElementById("cust-title-select").value;
+            if (nameVal.length >= 2) myCallsign = nameVal;
+            if (titleVal) myTitle = titleVal;
+
+            localStorage.setItem("tachyon_callsign", myCallsign);
+            localStorage.setItem("tachyon_title", myTitle);
+            localStorage.setItem("tachyon_avatar_style", JSON.stringify(myAvatarStyle));
+
+            playerAvatar.applyCustomization(myAvatarStyle);
+            playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
+            document.getElementById('my-online-badge').innerText = `🟢 Online as @${myCallsign}`;
+
+            const statusEl = document.getElementById("cust-save-status");
+            statusEl.textContent = "✅ Equipped & synced across multiplayer campus!";
+
+            if (auth.currentUser) {
+                try {
+                    await setDoc(doc(db, "users", auth.currentUser.uid), {
+                        customName: myCallsign,
+                        equippedTitle: myTitle,
+                        avatarStyle: myAvatarStyle,
+                        updatedAt: serverTimestamp()
+                    }, { merge: true });
+                } catch (e) {}
+            }
+            broadcastMyPresence();
+            setTimeout(() => { window.closeAvatarCustomizer(); }, 650);
+        };
+
         const remotePlayers = {};
-        const colorPalette = [0x9B5CFF, 0x10b981, 0xf43f5e, 0xf59e0b, 0x06b6d4, 0xec4899];
+        const colorPalette = ["#9B5CFF", "#10b981", "#f43f5e", "#f59e0b", "#06b6d4", "#ec4899"];
 
         onAuthStateChanged(auth, async (user) => {
             const badgeEl = document.getElementById('my-online-badge');
@@ -3424,17 +3787,22 @@ Always answer clearly, accurately, and concisely.
                 playerFootPos.set(userSpawn.x, 0.0, userSpawn.z);
 
                 const snap = await getDoc(doc(db, "users", user.uid));
-                if (snap.exists() && snap.data().customName) {
-                    myCallsign = snap.data().customName;
-                    myTitle = snap.data().equippedTitle || "Arena Champion";
-                } else {
+                if (snap.exists()) {
+                    const uData = snap.data();
+                    if (uData.customName) myCallsign = uData.customName;
+                    if (uData.equippedTitle) myTitle = uData.equippedTitle;
+                    if (uData.avatarStyle) {
+                        myAvatarStyle = { ...DEFAULT_AVATAR_STYLE, ...uData.avatarStyle };
+                        playerAvatar.applyCustomization(myAvatarStyle);
+                    }
+                } else if (!localStorage.getItem("tachyon_callsign")) {
                     myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, '');
                 }
                 badgeEl.innerText = `🟢 Online as @${myCallsign}`;
                 playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
                 broadcastMyPresence();
             } else {
-                badgeEl.innerText = `🔑 Sign In for Custom Name`;
+                badgeEl.innerText = `🟢 @${myCallsign} (Sign In)`;
                 badgeEl.onclick = () => signInWithPopup(auth, provider);
             }
         });
@@ -3447,6 +3815,11 @@ Always answer clearly, accurately, and concisely.
                     uid: myUid,
                     name: myCallsign,
                     title: myTitle,
+                    shirtColor: myAvatarStyle.shirtColor,
+                    pantsColor: myAvatarStyle.pantsColor,
+                    hairColor: myAvatarStyle.hairColor,
+                    eyeColor: myAvatarStyle.eyeColor,
+                    accessory: myAvatarStyle.accessory,
                     x: Number(playerFootPos.x.toFixed(2)),
                     y: Number(playerFootPos.y.toFixed(2)),
                     z: Number(playerFootPos.z.toFixed(2)),
@@ -3492,6 +3865,7 @@ Always answer clearly, accurately, and concisely.
             const selfChip = document.createElement('div');
             selfChip.className = 'online-user-chip';
             selfChip.textContent = `🟢 @${myCallsign} (You)`;
+            selfChip.onclick = () => window.openAvatarCustomizer();
             rosterEl.appendChild(selfChip);
 
             snapshot.forEach((docSnap) => {
@@ -3514,12 +3888,20 @@ Always answer clearly, accurately, and concisely.
                 chip.onclick = () => window.teleportNearPlayer(p.x || 0, p.y || 0, p.z || 20);
                 rosterEl.appendChild(chip);
 
+                const fallbackShirt = colorPalette[p.uid.charCodeAt(0) % colorPalette.length];
+                const remoteStyle = {
+                    shirtColor: p.shirtColor || fallbackShirt,
+                    pantsColor: p.pantsColor || "#1e293b",
+                    hairColor: p.hairColor || "#1e293b",
+                    eyeColor: p.eyeColor || "#2563eb",
+                    accessory: p.accessory || "none"
+                };
+
                 if (!remotePlayers[p.uid]) {
-                    const colorHash = p.uid.charCodeAt(0) % colorPalette.length;
                     const newActor = buildStylizedAnimeActor({
                         callsign: p.name,
                         title: p.title || 'Operative',
-                        shirtColor: colorPalette[colorHash]
+                        ...remoteStyle
                     });
                     newActor.wrapper.position.set(p.x || 0, p.y || 0, p.z || 20);
                     scene.add(newActor.wrapper);
@@ -3538,6 +3920,7 @@ Always answer clearly, accurately, and concisely.
                 rp.targetPos.set(p.x || 0, p.y || 0, p.z || 20);
                 rp.targetYaw = p.yaw || 0;
                 rp.state = p.state || 'idle';
+                rp.actor.applyCustomization(remoteStyle);
 
                 const bubbleActive = p.chatMessage && (now - (p.chatTimestamp || 0) < 12000);
                 rp.actor.updateOverheadTag(p.name, p.title || 'Operative', bubbleActive ? p.chatMessage : '');
@@ -3615,7 +3998,6 @@ Always answer clearly, accurately, and concisely.
                 mCtx.fillText(b.label, (p1.cx + p2.cx) / 2, (p1.cy + p2.cy) / 2 + 3);
             });
 
-            // Faculty Mentors on Radar
             facultyNPCs.forEach(npc => {
                 const fMap = worldToMinimap(npc.rig.wrapper.position.x, npc.rig.wrapper.position.z);
                 mCtx.beginPath(); mCtx.arc(fMap.cx, fMap.cy, 4, 0, Math.PI * 2);
@@ -3656,7 +4038,7 @@ Always answer clearly, accurately, and concisely.
         // EXPANDED CAMPUS VIEWPOINTS, TELEPORTATION & CONTROLS
         // ============================================================================
         const viewpoints = {
-            quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05, title: "⛲ Central Campus Quad", desc: "Walk up to Dr. Umesh D. R. (Press E) for face-to-face mentoring, open the Notice Board, or head to Zone 9 for Football!" },
+            quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05, title: "⛲ Central Campus Quad", desc: "Walk up to Dr. Umesh D. R. (Press E) for face-to-face mentoring, press C to customize your avatar, or head to Zone 9 for Football!" },
             portico: { foot: { x: 0, y: 0.18, z: 4.8 }, yaw: 0, pitch: 0.04, title: "🚪 AI & ML Main Entrance Foyer", desc: "Check the Department Notice Board on your right, visit Ground-Floor HOD Cabins, or climb the Switchback Staircase." },
             hod: { foot: { x: -15.5, y: 0.20, z: -6.0 }, yaw: 0.4, pitch: 0.0, title: "👨‍🏫 HOD & Faculty Cabins (Ground West)", desc: "Ground-floor administrative and faculty research wing. Press E on the board to view leadership profiles." },
             project: { foot: { x: 11.5, y: 0.20, z: -4.5 }, yaw: 0, pitch: -0.04, title: "🤖 TACHYON AI & Robotics Project Lab", desc: "Meet Prof. Chetan Kumar V. here (Press E) to discuss Big Data pipelines and hackathon prototypes!" },
@@ -3735,10 +4117,11 @@ Always answer clearly, accurately, and concisely.
             if (e.key === 'Escape') {
                 window.closeNoticeBoardModal();
                 window.closeMentorChatModal();
+                window.closeAvatarCustomizer();
                 document.getElementById('profile-modal').style.display = 'none';
                 return;
             }
-            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') return;
             const k = e.key.toLowerCase();
             if (k === 'w' || e.key === 'ArrowUp') keys.forward = true;
             if (k === 's' || e.key === 'ArrowDown') keys.backward = true;
@@ -3746,6 +4129,7 @@ Always answer clearly, accurately, and concisely.
             if (k === 'd' || e.key === 'ArrowRight') keys.right = true;
             if (e.key === 'Shift') keys.shift = true;
             if (k === 'v') window.togglePerspectiveMode();
+            if (k === 'c') window.openAvatarCustomizer();
             if (k === 'e' && !e.repeat) window.triggerActiveInteraction();
             if (k === 'f') window.kickFootball(14.5, 2.2);
             if (k === 'g') window.kickFootball(17.5, 5.2);
@@ -3856,7 +4240,6 @@ Always answer clearly, accurately, and concisely.
 
             updateFootballPhysics(dt);
 
-            // Update Autonomous Faculty Mentors
             facultyNPCs.forEach(npc => npc.update(dt, elapsed, playerFootPos));
 
             if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
@@ -3871,7 +4254,6 @@ Always answer clearly, accurately, and concisely.
                 animateBonePose(rp.actor.bones, rp.state, elapsed, rp.state === 'chatting');
             }
 
-            // Proximity + Raycast Interaction Detection
             if (!orbitMode && !activeMentorId) {
                 let nearMentorHitbox = null;
                 let minMentorDist = 2.85;
@@ -3929,8 +4311,7 @@ Always answer clearly, accurately, and concisely.
                 const rightX = Math.cos(camYaw), rightZ = -Math.sin(camYaw);
 
                 let moveX = 0, moveZ = 0;
-                // Only move player if not typing inside an input box
-                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'SELECT') {
                     if (keys.forward) { moveX += forwardX * moveSpeed; moveZ += forwardZ * moveSpeed; }
                     if (keys.backward) { moveX -= forwardX * moveSpeed; moveZ -= forwardZ * moveSpeed; }
                     if (keys.left) { moveX -= rightX * moveSpeed; moveZ -= rightZ * moveSpeed; }
@@ -3957,7 +4338,6 @@ Always answer clearly, accurately, and concisely.
                 currentLocomotionState = movingNow ? (keys.shift ? 'run' : 'walk') : 'idle';
                 playerAvatar.wrapper.position.copy(playerFootPos);
 
-                // Auto-close mentor chat if player walks away (> 4.2m)
                 if (activeMentorId) {
                     const activeNpc = facultyNPCs.find(n => n.id === activeMentorId);
                     if (activeNpc) {
@@ -3966,7 +4346,6 @@ Always answer clearly, accurately, and concisely.
                         if (distToMentor > 4.2) {
                             window.closeMentorChatModal();
                         } else {
-                            // Lock Student Avatar to face the Faculty Mentor face-to-face & perform chatting hand gestures!
                             const angleToMentor = Math.atan2(mPos.x - playerFootPos.x, mPos.z - playerFootPos.z);
                             let diff = angleToMentor - playerAvatar.wrapper.rotation.y;
                             while (diff < -Math.PI) diff += Math.PI * 2;
@@ -3982,7 +4361,6 @@ Always answer clearly, accurately, and concisely.
 
                 const eyeH = PhysicsWorld.playerEyeHeight;
                 if (activeMentorId && isThirdPerson) {
-                    // Cinematic side-angle framing so both Student & Faculty Mentor are visible on the left while chatting!
                     const activeNpc = facultyNPCs.find(n => n.id === activeMentorId);
                     if (activeNpc) {
                         const mPos = activeNpc.rig.wrapper.position;
@@ -3991,7 +4369,6 @@ Always answer clearly, accurately, and concisely.
                         const dx = mPos.x - playerFootPos.x;
                         const dz = mPos.z - playerFootPos.z;
                         const len = Math.hypot(dx, dz) || 1;
-                        // Perpendicular side vector
                         const sideX = -dz / len;
                         const sideZ = dx / len;
                         const desiredCamPos = new THREE.Vector3(
