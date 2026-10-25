@@ -1126,7 +1126,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, addDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-
+        import { initPlayerAvatar } from './scripts/AvatarController.js';
         const firebaseConfig = {
             apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
             authDomain: "digital-twin-6c779.firebaseapp.com",
@@ -3677,13 +3677,9 @@ Always answer clearly, accurately, and concisely.
         const playerFootPos = new THREE.Vector3(initialSpawn.x, 0.0, initialSpawn.z);
         let camYaw = initialSpawn.yaw;
         let camPitch = 0.08;
-
-        const playerAvatar = buildStylizedAnimeActor({
-            callsign: myCallsign,
-            title: myTitle,
-            ...myAvatarStyle
-        });
-        playerAvatar.applyCustomization(myAvatarStyle);
+        
+        const playerAvatar = initPlayerAvatar(scene, playerFootPos);
+        // playerAvatar.applyCustomization(myAvatarStyle);
         playerAvatar.wrapper.position.copy(playerFootPos);
         scene.add(playerAvatar.wrapper);
 
@@ -3706,7 +3702,7 @@ Always answer clearly, accurately, and concisely.
                     btn.style.backgroundColor = hex;
                     btn.onclick = () => {
                         myAvatarStyle[styleKey] = hex;
-                        playerAvatar.applyCustomization(myAvatarStyle);
+                        // playerAvatar.applyCustomization(myAvatarStyle);
                         renderCustomizerSwatches();
                     };
                     el.appendChild(btn);
@@ -3724,7 +3720,7 @@ Always answer clearly, accurately, and concisely.
 
         window.selectAvatarAccessory = function(accType, btnEl) {
             myAvatarStyle.accessory = accType;
-            playerAvatar.applyCustomization(myAvatarStyle);
+            // playerAvatar.applyCustomization(myAvatarStyle);
             renderCustomizerSwatches();
         };
 
@@ -3741,7 +3737,7 @@ Always answer clearly, accurately, and concisely.
 
         window.resetAvatarDefault = function() {
             myAvatarStyle = { ...DEFAULT_AVATAR_STYLE };
-            playerAvatar.applyCustomization(myAvatarStyle);
+            // playerAvatar.applyCustomization(myAvatarStyle);
             renderCustomizerSwatches();
         };
 
@@ -3755,7 +3751,7 @@ Always answer clearly, accurately, and concisely.
             localStorage.setItem("tachyon_title", myTitle);
             localStorage.setItem("tachyon_avatar_style", JSON.stringify(myAvatarStyle));
 
-            playerAvatar.applyCustomization(myAvatarStyle);
+            // playerAvatar.applyCustomization(myAvatarStyle);
             playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText);
             document.getElementById('my-online-badge').innerText = `🟢 Online as @${myCallsign}`;
 
@@ -3793,7 +3789,7 @@ Always answer clearly, accurately, and concisely.
                     if (uData.equippedTitle) myTitle = uData.equippedTitle;
                     if (uData.avatarStyle) {
                         myAvatarStyle = { ...DEFAULT_AVATAR_STYLE, ...uData.avatarStyle };
-                        playerAvatar.applyCustomization(myAvatarStyle);
+                        // playerAvatar.applyCustomization(myAvatarStyle);
                     }
                 } else if (!localStorage.getItem("tachyon_callsign")) {
                     myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, '');
