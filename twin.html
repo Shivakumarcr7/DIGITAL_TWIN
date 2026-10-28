@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PESCE Mandya — 3D Multiplayer Campus & Voxel Digital Twin</title>
+    <title>PESCE Mandya — 3D Multiplayer Campus, Football & Interactive Faculty</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -70,7 +70,6 @@
         .zone-panel-title { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--cyan); font-weight: 800; margin-top: 6px; margin-bottom: 2px; }
         .zone-btn { background: rgba(2, 6, 23, 0.65); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 6px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 600; text-align: left; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
         .zone-btn:hover, .zone-btn.active { background: rgba(41, 231, 242, 0.18); border-color: var(--cyan); color: #fff; transform: translateX(3px); }
-        
         .mentor-locate-btn { background: linear-gradient(135deg, rgba(255, 200, 87, 0.16), rgba(11, 16, 32, 0.9)); border: 1px solid rgba(255, 200, 87, 0.45); color: var(--gold); padding: 6px 10px; border-radius: 8px; font-size: 0.73rem; font-weight: 700; text-align: left; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; }
         .mentor-locate-btn:hover { background: rgba(255, 200, 87, 0.28); border-color: var(--gold); color: #fff; transform: translateX(3px); }
         .online-roster-box { margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 4px; }
@@ -88,7 +87,6 @@
         .info-card { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 12px; backdrop-filter: blur(16px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
         .info-card h3 { color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: 0.86rem; margin-bottom: 4px; }
         .info-card p { color: #cbd5e1; font-size: 0.75rem; line-height: 1.42; }
-        .telemetry-row { margin-top: 8px; padding: 5px 9px; border-radius: 8px; background: rgba(92, 255, 177, 0.12); border: 1px solid rgba(92, 255, 177, 0.35); color: var(--emerald); font-size: 0.69rem; font-weight: 600; display: flex; justify-content: space-between; }
 
         /* FOOTBALL, CHAT & FACULTY MODALS */
         .multiplayer-chat-dock { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 25; width: 92%; max-width: 540px; background: rgba(11, 16, 32, 0.92); border: 1.5px solid var(--cyan); border-radius: 16px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; backdrop-filter: blur(16px); transition: transform 0.35s; }
@@ -101,57 +99,28 @@
 
         #football-hud { position: absolute; top: 66px; left: 50%; transform: translateX(-50%); z-index: 16; background: rgba(11, 16, 32, 0.92); border: 1.5px solid var(--emerald); border-radius: 16px; padding: 10px 18px; display: none; flex-direction: column; align-items: center; gap: 6px; backdrop-filter: blur(16px); }
         .score-row { display: flex; align-items: center; gap: 16px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.05rem; }
-        .team-cyan { color: var(--cyan); } .team-gold { color: var(--gold); }
         .score-pill { background: #050811; border: 1px solid rgba(255,255,255,0.18); padding: 3px 14px; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 1.15rem; color: #fff; }
         .kick-action-btn { background: linear-gradient(135deg, var(--emerald), var(--cyan)); color: #0B1020; border: none; padding: 6px 14px; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.72rem; font-weight: 800; cursor: pointer; transition: 0.15s; }
-        #goal-banner { position: absolute; top: 28%; left: 50%; transform: translate(-50%, -50%); z-index: 28; background: linear-gradient(135deg, rgba(11,16,32,0.96), rgba(20,35,60,0.96)); border: 2px solid var(--gold); border-radius: 20px; padding: 18px 34px; font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 900; color: var(--gold); text-align: center; display: none; box-shadow: 0 0 50px rgba(255, 200, 87, 0.5); pointer-events: none; }
-
-        #interact-prompt { position: absolute; bottom: 145px; left: 50%; transform: translateX(-50%); z-index: 18; background: rgba(11, 16, 32, 0.94); border: 1.5px solid var(--gold); color: #fff; padding: 9px 18px; border-radius: 30px; font-size: 0.82rem; font-weight: 700; pointer-events: auto; cursor: pointer; display: none; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.65); }
+        
+        #interact-prompt { position: absolute; bottom: 145px; left: 50%; transform: translateX(-50%); z-index: 18; background: rgba(11, 16, 32, 0.94); border: 1.5px solid var(--gold); color: #fff; padding: 9px 18px; border-radius: 30px; font-size: 0.82rem; font-weight: 700; pointer-events: auto; cursor: pointer; display: none; align-items: center; gap: 8px; }
         #interact-prompt span.key-badge { background: var(--gold); color: #030712; padding: 3px 8px; border-radius: 6px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 0.72rem; }
 
-        /* Mentor Chat Drawer */
         #mentor-chat-modal { position: fixed; top: 68px; right: 16px; bottom: 82px; width: 420px; max-width: calc(100vw - 28px); z-index: 55; display: none; pointer-events: auto; }
         .mentor-modal-card { background: rgba(11, 16, 32, 0.94); border: 1.5px solid var(--gold); border-radius: 20px; width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(18px); box-shadow: -10px 20px 60px rgba(0,0,0,0.75); animation: slideInMentor 0.28s; }
         @keyframes slideInMentor { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
         .mentor-header { background: linear-gradient(90deg, rgba(255, 200, 87, 0.16), rgba(11, 16, 32, 0.95)); padding: 13px 16px; border-bottom: 1px solid rgba(255, 200, 87, 0.3); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .mentor-portrait-canvas { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--gold); background: #0f172a; flex-shrink: 0; }
-        .mentor-titles { display: flex; flex-direction: column; gap: 2px; }
-        .mentor-titles strong { font-family: 'Orbitron', sans-serif; font-size: 0.92rem; color: var(--gold); }
-        .mentor-titles span.role-sub { font-size: 0.71rem; color: #e2e8f0; font-weight: 600; }
         .mentor-messages { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.83rem; user-select: text; }
-        .m-msg { padding: 10px 14px; border-radius: 12px; line-height: 1.52; max-width: 90%; white-space: pre-wrap; word-break: break-word; }
+        .m-msg { padding: 10px 14px; border-radius: 12px; line-height: 1.52; max-width: 90%; white-space: pre-wrap; }
         .m-msg.bot { background: rgba(30, 41, 59, 0.88); border: 1px solid rgba(255, 200, 87, 0.32); color: #f8fafc; align-self: flex-start; }
         .m-msg.user { background: linear-gradient(135deg, var(--gold), #f59e0b); color: #0B1020; align-self: flex-end; font-weight: 600; }
-        .mentor-prompts-bar { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(2, 6, 23, 0.7); }
-        .mentor-chip { background: rgba(255, 200, 87, 0.12); border: 1px solid rgba(255, 200, 87, 0.35); color: var(--gold); padding: 5px 10px; border-radius: 14px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.2s; }
-        .mentor-chip:hover { background: var(--gold); color: #0B1020; }
         .mentor-input-area { padding: 10px 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 6px; background: rgba(2, 6, 23, 0.95); align-items: center; }
         .mentor-input-area input { flex: 1; background: #0B1020; border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 9px 12px; border-radius: 10px; outline: none; }
-        .voice-icon-btn { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.18); color: #cbd5e1; padding: 8px 10px; border-radius: 10px; cursor: pointer; }
-        .voice-icon-btn.active { border-color: var(--emerald); color: var(--emerald); background: rgba(92, 255, 177, 0.15); }
         
         .sarvam-fab { position: fixed; bottom: 14px; right: 14px; z-index: 40; background: linear-gradient(135deg, var(--purple), #FF4FD8); color: #fff; border: 1.5px solid var(--cyan); padding: 10px 16px; border-radius: 50px; font-family: 'Orbitron', sans-serif; font-size: 0.74rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(155, 92, 255, 0.5); }
         .sarvam-window { position: fixed; bottom: 68px; right: 14px; z-index: 45; width: 360px; max-width: calc(100vw - 28px); height: 465px; background: rgba(11, 16, 32, 0.96); border: 1.5px solid var(--cyan); border-radius: 18px; display: none; flex-direction: column; overflow: hidden; backdrop-filter: blur(20px); }
 
-        /* Notice Board Elements */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6, 10, 22, 0.78); backdrop-filter: blur(10px); z-index: 50; display: none; justify-content: center; align-items: center; padding: 16px; }
-        .notice-modal-card { background: rgba(13, 20, 38, 0.97); border: 1.5px solid var(--cyan); border-radius: 20px; width: 100%; max-width: 680px; max-height: 86dvh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 65px rgba(0,0,0,0.85); user-select: text; -webkit-user-select: text; }
-        .notice-modal-header { padding: 16px 20px; background: linear-gradient(90deg, rgba(41, 231, 242, 0.14), rgba(155, 92, 255, 0.14)); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .notice-modal-header h2 { font-family: 'Orbitron', sans-serif; font-size: 1.08rem; color: var(--cyan); display: flex; align-items: center; gap: 8px; }
-        .notice-toolbar { padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .notice-tabs { display: flex; gap: 6px; }
-        .n-tab { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
-        .n-tab.active { background: rgba(41, 231, 242, 0.2); border-color: var(--cyan); color: var(--cyan); }
-        .notice-body-scroll { flex: 1; padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .notice-post-card { background: rgba(6, 10, 22, 0.82); border: 1px solid rgba(255,255,255,0.12); border-left: 4px solid var(--cyan); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-        .notice-post-card.official-post { border-left-color: var(--gold); background: linear-gradient(135deg, rgba(40, 30, 10, 0.55), rgba(6, 10, 22, 0.9)); }
-        .n-post-title { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 800; color: #fff; }
-        .n-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
-        .n-badge.official { background: var(--gold); color: #0B1020; }
-        .n-badge.student { background: rgba(41, 231, 242, 0.15); color: var(--cyan); border: 1px solid rgba(41,231,242,0.35); }
-        .n-post-msg { font-size: 0.85rem; color: #e2e8f0; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
-        #notice-composer { display: none; flex-direction: column; gap: 10px; background: rgba(2, 6, 23, 0.95); border: 1px solid var(--cyan); border-radius: 12px; padding: 14px; margin-bottom: 6px; }
-        #notice-composer input, #notice-composer textarea { width: 100%; background: #0B1020; border: 1px solid rgba(255,255,255,0.18); color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 0.84rem; outline: none; }
 
         @media (max-width: 900px) {
             .left-drawer-wrap { top: 72px; left: 0; } .left-drawer-wrap.collapsed { transform: translateX(calc(-100% + 32px)); }
@@ -159,7 +128,6 @@
             .multiplayer-chat-dock { width: 94%; bottom: 8px; }
             #mentor-chat-modal { top: auto; bottom: 0; left: 0; right: 0; width: 100%; max-width: 100%; height: 60dvh; }
             .mentor-modal-card { border-radius: 20px 20px 0 0; }
-            .mobile-dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(2, 44px); gap: 5px; position: absolute; bottom: 88px; left: 14px; z-index: 15; }
         }
     </style>
 </head>
@@ -170,15 +138,11 @@
 
     <div id="football-hud">
         <div class="score-row"><span class="team-cyan">⚡ CYAN</span> <span class="score-pill"><span id="score-cyan">0</span> : <span id="score-gold">0</span></span> <span class="team-gold">GOLD 🔥</span></div>
-        <div id="football-last-event" style="font-size:0.7rem; color:#cbd5e1;">Walk into ball to dribble • Press F to Kick • G for Chip Shot</div>
         <div class="pitch-actions-row">
             <button class="kick-action-btn" onclick="kickFootball(14.5, 2.2)">⚽ KICK [F]</button>
             <button class="kick-action-btn" style="background:linear-gradient(135deg, var(--gold), #f97316);" onclick="kickFootball(17.5, 5.2)">🚀 POWER [G]</button>
-            <button class="reset-ball-btn" onclick="resetFootballMatch(false)">🔄 Center Ball</button>
         </div>
     </div>
-    <div id="goal-banner">⚽ GOOOAAALLL!</div>
-
     <div id="interact-prompt" onclick="triggerActiveInteraction()">
         <span class="key-badge">E / Click</span> <span id="interact-label">Interact</span>
     </div>
@@ -193,19 +157,11 @@
             <div class="customizer-body">
                 <div class="cust-input-grid">
                     <div class="cust-row"><label>Callsign</label><input type="text" id="cust-name-input" class="cust-text-input" maxlength="20"></div>
-                    <div class="cust-row"><label>Title</label><select id="cust-title-select" class="cust-select-input"><option>Tachyon Explorer</option><option>AI Agent Builder</option><option>Hackathon Finalist</option></select></div>
+                    <div class="cust-row"><label>Title</label><select id="cust-title-select" class="cust-select-input"><option>Tachyon Explorer</option><option>AI Agent Builder</option></select></div>
                 </div>
                 <div class="cust-row"><label>👕 Shirt Color</label><div class="swatch-row" id="swatch-shirt"></div></div>
                 <div class="cust-row"><label>👖 Pants Color</label><div class="swatch-row" id="swatch-pants"></div></div>
-                <div class="cust-row"><label>💇 Hair Color</label><div class="swatch-row" id="swatch-hair"></div></div>
-                <div class="cust-row">
-                    <label>🕶️ Accessories</label>
-                    <div class="acc-pill-row" id="acc-selector-row">
-                        <button class="acc-pill selected" data-acc="none" onclick="selectAvatarAccessory('none', this)">✨ None</button>
-                        <button class="acc-pill" data-acc="glasses" onclick="selectAvatarAccessory('glasses', this)">👓 Tech Glasses</button>
-                        <button class="acc-pill" data-acc="cap" onclick="selectAvatarAccessory('cap', this)">🧢 TACHYON Cap</button>
-                    </div>
-                </div>
+                <div class="cust-row"><label>🎒 Backpack / Accent</label><div class="swatch-row" id="swatch-eyes"></div></div>
             </div>
             <div class="customizer-footer">
                 <button class="chat-send-btn" onclick="saveAvatarCustomization()">💾 Save Voxel Avatar</button>
@@ -227,63 +183,12 @@
                 <button class="hud-pill-btn" onclick="closeMentorChatModal()">✕ End [Esc]</button>
             </div>
             <div class="mentor-messages" id="mentor-messages-container"></div>
-            <div class="mentor-prompts-bar" id="mentor-suggested-chips"></div>
             <div class="mentor-input-area">
-                <button class="voice-icon-btn active" id="btn-mentor-tts" onclick="toggleMentorTTS()">🔊</button>
                 <input type="text" id="mentor-user-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendMentorMessage()">
                 <button class="mentor-send-btn" id="btn-mentor-send" onclick="sendMentorMessage()">Send</button>
             </div>
         </div>
     </div>
-
-    <!-- NOTICE BOARD MODAL -->
-    <div class="modal-overlay" id="notice-board-modal">
-        <div class="notice-modal-card">
-            <div class="notice-modal-header">
-                <h2>📌 PESCE CAMPUS STUDENT NOTICE BOARD</h2>
-                <div style="display:flex; gap:8px;">
-                    <button class="chat-send-btn" id="btn-open-composer" onclick="toggleNoticeComposer()">+ Write a Notice</button>
-                    <button class="hud-pill-btn" onclick="closeNoticeBoardModal()">✕ Close [Esc]</button>
-                </div>
-            </div>
-            <div class="notice-toolbar">
-                <div class="notice-tabs">
-                    <button class="n-tab active" onclick="setNoticeFilter('all', this)">🌐 All Notices (<span id="notice-total-count">0</span>)</button>
-                    <button class="n-tab" onclick="setNoticeFilter('official', this)">👑 Official</button>
-                </div>
-                <span id="notice-auth-badge" style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--emerald);">Verified Account</span>
-            </div>
-            <div class="notice-body-scroll">
-                <div id="notice-composer">
-                    <strong style="color:var(--cyan); font-size:0.82rem;" id="composer-heading">✍️ Publish Campus Notice</strong>
-                    <input type="text" id="notice-title-input" maxlength="80" placeholder="Notice Title">
-                    <textarea id="notice-msg-input" rows="4" maxlength="600" placeholder="Write your announcement..."></textarea>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span id="notice-status-msg" style="font-size:0.74rem; color:var(--gold);"></span>
-                        <div style="display:flex; gap:8px;"><button class="hud-pill-btn" onclick="toggleNoticeComposer(false)">Cancel</button><button class="chat-send-btn" id="notice-submit-btn" onclick="publishStudentNotice()">Publish</button></div>
-                    </div>
-                </div>
-                <div id="notices-list-container" style="display:flex; flex-direction:column; gap:10px;"></div>
-                <button class="hud-pill-btn" id="btn-load-more-notices" style="align-self:center; display:none;" onclick="loadMoreNotices()">Load More ↓</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- SARVAM WEB ASSISTANT MODAL -->
-    <div class="sarvam-window" id="sarvam-window">
-        <div class="sarvam-header">
-            <div><strong>🇮🇳 TACHYON × SARVAM AI</strong></div>
-            <button class="hud-pill-btn" style="padding:4px 8px;" onclick="toggleSarvamChatbot()">✕</button>
-        </div>
-        <div class="sarvam-messages" id="sarvam-messages">
-            <div class="s-msg bot">Namaskara! 👋 I am your TACHYON Assistant. Ask me about faculty, campus navigation, or any general question!</div>
-        </div>
-        <div class="sarvam-input-area">
-            <input type="text" id="sarvam-user-input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter') sendSarvamMessage()">
-            <button class="chat-send-btn" onclick="sendSarvamMessage()">Send</button>
-        </div>
-    </div>
-    <button class="sarvam-fab" onclick="toggleSarvamChatbot()">🤖 Ask AI</button>
 
     <header>
         <div class="brand-nav-wrap">
@@ -291,7 +196,6 @@
                 <img src="WhatsApp Image 2026-10-19 at 2.21.46 PM.jpeg" onerror="this.onerror=null; this.src='tachyon-logo.jpg';">
                 <div class="club-logo-text"><strong>TACHYON</strong><span>VIRTUAL CAMPUS</span></div>
             </a>
-            <nav class="stage-nav"><a href="index.html">01 / Welcome</a><a href="twin.html" class="active">02 / 3D Campus Twin</a><a href="hub.html">03 / AI Agent Arena</a></nav>
         </div>
         <div class="top-controls">
             <button class="hud-pill-btn" style="border-color:var(--purple); color:#e9d5ff;" onclick="openAvatarCustomizer()">🎨 Customize [C]</button>
@@ -308,16 +212,10 @@
 
             <div class="zone-panel-title">🏢 Campus Zones</div>
             <button class="zone-btn active" onclick="teleportTo('quad')"><span>⛲ Central Quad</span></button>
-            <button class="zone-btn" onclick="teleportTo('main')"><span>🏢 Main AI & ML Block</span></button>
-            <button class="zone-btn" onclick="teleportTo('crc')"><span>🏙️ CRC Glass Tower</span></button>
+            <button class="zone-btn" onclick="teleportTo('crc')"><span>🏢 CRC Glass Tower</span></button>
             <button class="zone-btn" onclick="teleportTo('gbl')"><span>🏛️ GBL Heritage Block</span></button>
             <button class="zone-btn" onclick="teleportTo('pavilion')"><span>🚀 Innovation Pavilion</span></button>
             <button class="zone-btn" onclick="teleportTo('sports')"><span>⚽ Football Stadium</span></button>
-            
-            <div class="online-roster-box">
-                <div class="zone-panel-title" style="color:var(--emerald);">🟢 Live Online Students (<span id="online-count">1</span>)</div>
-                <div id="online-players-list" style="display:flex; flex-direction:column; gap:4px;"></div>
-            </div>
         </aside>
         <button class="drawer-tab-btn left-tab-btn" id="left-drawer-btn" onclick="toggleLeftDrawer()">◀ ZONES</button>
     </div>
@@ -326,931 +224,536 @@
         <button class="drawer-tab-btn right-tab-btn" id="right-drawer-btn" onclick="toggleRightDrawer()">📡 MAP ▶</button>
         <aside class="right-hud-stack">
             <div class="minimap-card">
-                <div class="minimap-header"><span>📡 LIVE RADAR</span><span id="radar-coords" style="font-size:0.64rem; color:#9AA8C2;">X:0 Z:0</span></div>
                 <canvas id="minimap-canvas" width="275" height="165"></canvas>
-            </div>
-            <div class="info-card" id="zone-info">
-                <h3 id="info-title">⛲ Central Campus Quad</h3>
-                <p id="info-desc">Walk up to Faculty Mentors (Press E) for face-to-face AI mentoring, or play Football in Zone 9!</p>
-                <div class="telemetry-row"><span id="actor-status">🟢 Live Multiplayer</span><span id="floor-status">Elev: 0.0m</span></div>
             </div>
         </aside>
     </div>
 
-    <div class="multiplayer-chat-dock" id="bottom-chat-dock">
-        <button class="chat-slide-handle" id="chat-drawer-btn" onclick="toggleBottomChatDock()">💬 Hide Chat ▼</button>
-        <div class="chat-feed-mini" id="multiplayer-chat-feed">
-            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near Faculty to chat face-to-face, or press <strong>C</strong> to customize your avatar!</div>
-        </div>
-        <div class="chat-input-row">
-            <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Type message to display above your head... (Press Enter)">
-            <button class="chat-send-btn" onclick="sendOverheadChatMessage()">SAY 🗣️</button>
-        </div>
-    </div>
-    
-    <div class="mobile-dpad">
-        <div></div><button class="dpad-btn" id="btn-up">▲</button><div></div>
-        <button class="dpad-btn" id="btn-left">◀</button><button class="dpad-btn" id="btn-down">▼</button><button class="dpad-btn" id="btn-right">▶</button>
-    </div>
-
     <!-- MAIN SCRIPT INITIALIZATION -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    // ============================================================================
-        // PROCEDURAL TEXTURES & SHARED MATERIALS
-        // ============================================================================
-        function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
-            const canvas = document.createElement('canvas');
-            canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, width, height);
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = 10;
-            ctx.strokeRect(8, 8, width - 16, height - 16);
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            lines.forEach((line, i) => {
-                ctx.font = line.font || 'bold 42px Segoe UI, Arial';
-                ctx.fillStyle = line.color || '#ffffff';
-                ctx.fillText(line.text, width / 2, (height / (lines.length + 1)) * (i + 1));
-            });
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            return tex;
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyB1fKcRG0NOjQ2wrP2_zbhXelWRAOtXv08",
+            authDomain: "digital-twin-6c779.firebaseapp.com",
+            projectId: "digital-twin-6c779",
+            storageBucket: "digital-twin-6c779.firebasestorage.app",
+            messagingSenderId: "445832291229",
+            appId: "1:445832291229:web:00d7de2c4c4ade9646c574"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        window.toggleLeftDrawer = function(forceCollapse) { const d = document.getElementById('left-drawer'); const b = document.getElementById('left-drawer-btn'); const c = typeof forceCollapse === 'boolean' ? forceCollapse : !d.classList.contains('collapsed'); d.classList.toggle('collapsed', c); b.textContent = c ? '🧭 ZONES ▶' : '◀ HIDE'; };
+        window.toggleRightDrawer = function(forceCollapse) { const d = document.getElementById('right-drawer'); const b = document.getElementById('right-drawer-btn'); const c = typeof forceCollapse === 'boolean' ? forceCollapse : !d.classList.contains('collapsed'); d.classList.toggle('collapsed', c); b.textContent = c ? '◀ 📡 MAP' : 'HIDE ▶'; };
+        if (window.innerWidth <= 900) { window.toggleLeftDrawer(true); window.toggleRightDrawer(true); }
+
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x9bc9e8); scene.fog = new THREE.FogExp2(0xc8dff0, 0.0022);
+        const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 420);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.72); scene.add(ambientLight);
+        const hemiLight = new THREE.HemisphereLight(0xf0f7ff, 0x6e6a5e, 0.75); hemiLight.position.set(0, 80, 0); scene.add(hemiLight);
+        const sunLight = new THREE.DirectionalLight(0xfff9ed, 1.25); sunLight.position.set(45, 75, 55); sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048; sunLight.shadow.mapSize.height = 2048; sunLight.shadow.bias = -0.0004;
+        sunLight.shadow.camera.near = 1; sunLight.shadow.camera.far = 240; sunLight.shadow.camera.left = -85; sunLight.shadow.camera.right = 85; sunLight.shadow.camera.top = 85; sunLight.shadow.camera.bottom = -85;
+        scene.add(sunLight);
+
+        const clock = new THREE.Clock();
+        const PhysicsWorld = {
+            colliders: [], floorVolumes: [], gravity: -19.6, stepUpHeight: 0.38, playerRadius: 0.34, playerEyeHeight: 1.68,
+            addCollider(minX, maxX, minZ, maxZ, minY = 0, maxY = 12, id = null) { const box = { minX, maxX, minZ, maxZ, minY, maxY, active: true, id }; this.colliders.push(box); return box; },
+            addFloorVolume(minX, maxX, minZ, maxZ, surfaceY, ceilingY = 15) { this.floorVolumes.push({ minX, maxX, minZ, maxZ, surfaceY, ceilingY }); },
+            checkHorizontalCollision(x, footY, z, radius = this.playerRadius) {
+                const headY = footY + 1.62;
+                for (let i = 0; i < this.colliders.length; i++) {
+                    const c = this.colliders[i];
+                    if (!c.active) continue;
+                    if (headY <= c.minY || footY + this.stepUpHeight >= c.maxY) continue;
+                    if (x + radius > c.minX && x - radius < c.maxX && z + radius > c.minZ && z - radius < c.maxZ) return true;
+                }
+                return false;
+            },
+            getSupportingFloorY(x, currentFootY, z) {
+                let bestY = 0.0;
+                for (let i = 0; i < this.floorVolumes.length; i++) {
+                    const f = this.floorVolumes[i];
+                    if (x >= f.minX && x <= f.maxX && z >= f.minZ && z <= f.maxZ) {
+                        if (f.surfaceY <= currentFootY + this.stepUpHeight && f.surfaceY > bestY) bestY = f.surfaceY;
+                    }
+                }
+                return bestY;
+            }
+        };
+
+        // ============================================================================
+        // PROCEDURAL TEXTURES & SHARED VOXEL MATERIALS
+        // ============================================================================
         function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.025, repeatX = 1, repeatY = 1) {
             const size = 512;
             const diffCanvas = document.createElement('canvas');
             diffCanvas.width = diffCanvas.height = size;
             const dCtx = diffCanvas.getContext('2d');
             dCtx.fillStyle = baseHex; dCtx.fillRect(0, 0, size, size);
-
             for (let i = 0; i < 2800; i++) {
                 const x = Math.random() * size, y = Math.random() * size, w = 2 + Math.random() * 3;
                 dCtx.fillStyle = i % 2 === 0 ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
                 dCtx.fillRect(x, y, w, w);
             }
             if (divisions > 1) {
-                const step = size / divisions;
-                dCtx.strokeStyle = groutHex; dCtx.lineWidth = 3;
+                const step = size / divisions; dCtx.strokeStyle = groutHex; dCtx.lineWidth = 3;
                 for (let i = 0; i <= divisions; i++) {
-                    const p = i * step;
-                    dCtx.beginPath(); dCtx.moveTo(p, 0); dCtx.lineTo(p, size); dCtx.stroke();
+                    const p = i * step; dCtx.beginPath(); dCtx.moveTo(p, 0); dCtx.lineTo(p, size); dCtx.stroke();
                     dCtx.beginPath(); dCtx.moveTo(0, p); dCtx.lineTo(size, p); dCtx.stroke();
                 }
             }
-            const map = new THREE.CanvasTexture(diffCanvas);
-            map.encoding = THREE.sRGBEncoding;
-            map.wrapS = map.wrapT = THREE.RepeatWrapping;
-            map.repeat.set(repeatX, repeatY);
+            const map = new THREE.CanvasTexture(diffCanvas); map.encoding = THREE.sRGBEncoding; map.wrapS = map.wrapT = THREE.RepeatWrapping; map.repeat.set(repeatX, repeatY);
             return { map };
         }
 
-        function createContactShadowTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.16)');
-            grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-            return new THREE.CanvasTexture(canvas);
-        }
-        const contactShadowMat = new THREE.MeshBasicMaterial({ map: createContactShadowTexture(), transparent: true, depthWrite: false });
-
-        function createToonGradientMap() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 4; canvas.height = 1;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#758296'; ctx.fillRect(0, 0, 1, 1);
-            ctx.fillStyle = '#b4c0d4'; ctx.fillRect(1, 0, 1, 1);
-            ctx.fillStyle = '#e8eef5'; ctx.fillRect(2, 0, 1, 1);
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(3, 0, 1, 1);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            return tex;
-        }
-        const animeToonGrad = createToonGradientMap();
-
         const matCreamWall = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#f5f0e1', '#e6dec5', 1, 0.02, 4, 2).map, roughness: 0.80, metalness: 0.02 });
-        const matGreyDado = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.018, 4, 1).map, roughness: 0.65, metalness: 0.04 });
-        const matTerracotta = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.025, 2, 2).map, roughness: 0.70, metalness: 0.04 });
+        const matGreyDado = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.65, metalness: 0.1 });
+        const matTerracotta = new THREE.MeshStandardMaterial({ color: 0x991b1b, roughness: 0.70, metalness: 0.04 });
         const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.42, metalness: 0.05 });
-        const matDarkGranite = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#2d333b', '#1b1f24', 2, 0.035, 2, 2).map, roughness: 0.26, metalness: 0.14 });
-        const matGreySteps = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#a6acb2', '#858b91', 1, 0.03, 2, 2).map, roughness: 0.74, metalness: 0.04 });
-        const woodMap = createPBRSurfaceSet('#4d281a', '#361b11', 1, 0.02, 2, 1).map;
-        const matWoodRack = new THREE.MeshStandardMaterial({ map: woodMap, roughness: 0.46, metalness: 0.05 });
-        const matDoorWood = new THREE.MeshStandardMaterial({ map: woodMap, color: 0xd9b38c, roughness: 0.45, metalness: 0.05 });
+        const matDarkGranite = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.2 });
         const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.55, roughness: 0.1, metalness: 0.4 });
         const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.5 });
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#6e4e44', '#422c26', 4, 0.02, 20, 4).map, roughness: 0.42, metalness: 0.06 });
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#b8b3ae', '#78716c', 10, 0.035, 24, 24).map, roughness: 0.78, metalness: 0.04 });
-        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#ad4f3e', '#662b20', 8, 0.03, 4, 24).map, roughness: 0.76, metalness: 0.04 });
         const matAsphalt = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#272b33', '#1e2229', 1, 0.04, 30, 30).map, roughness: 0.88, metalness: 0.02 });
         const matCampusLawn = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#3b6e2c', '#2e5a22', 1, 0.04, 40, 40).map, roughness: 0.88, metalness: 0.02 });
 
-        // ============================================================================
-        // CAMPUS TERRAIN & ROADS
-        // ============================================================================
         const campusGround = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), matCampusLawn);
-        campusGround.rotation.x = -Math.PI / 2;
-        campusGround.receiveShadow = true;
-        scene.add(campusGround);
+        campusGround.rotation.x = -Math.PI / 2; campusGround.receiveShadow = true; scene.add(campusGround);
 
         const mainAvenue = new THREE.Mesh(new THREE.PlaneGeometry(24, 200), matAsphalt);
-        mainAvenue.rotation.x = -Math.PI / 2;
-        mainAvenue.position.set(0, 0.02, 40);
-        mainAvenue.receiveShadow = true;
-        scene.add(mainAvenue);
+        mainAvenue.rotation.x = -Math.PI / 2; mainAvenue.position.set(0, 0.02, 40); mainAvenue.receiveShadow = true; scene.add(mainAvenue);
 
         const crossRoad = new THREE.Mesh(new THREE.PlaneGeometry(260, 16), matAsphalt);
-        crossRoad.rotation.x = -Math.PI / 2;
-        crossRoad.position.set(0, 0.025, 48);
-        crossRoad.receiveShadow = true;
-        scene.add(crossRoad);
-
-        for (let rx = -115; rx <= 115; rx += 8) {
-            if (Math.abs(rx) < 18) continue;
-            const dash = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 0.28), matWhiteTrim);
-            dash.rotation.x = -Math.PI / 2;
-            dash.position.set(rx, 0.032, 48);
-            scene.add(dash);
-        }
-
-        [-2.2, 2.2].forEach(rx => {
-            const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 38), matRedPaverStrip);
-            runner.rotation.x = -Math.PI / 2;
-            runner.position.set(rx, 0.03, 21);
-            scene.add(runner);
-        });
+        crossRoad.rotation.x = -Math.PI / 2; crossRoad.position.set(0, 0.025, 48); crossRoad.receiveShadow = true; scene.add(crossRoad);
 
         // ============================================================================
-        // CENTRAL QUAD & FOUNTAIN
-        // ============================================================================
-        const quadPlaza = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.08, 36), matCourtyard);
-        quadPlaza.position.set(0, 0.04, 48);
-        quadPlaza.receiveShadow = true;
-        scene.add(quadPlaza);
-
-        const fountainGroup = new THREE.Group();
-        fountainGroup.position.set(0, 0, 48);
-        const fBasinOuter = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.5, 0.75, 28), matTerracotta);
-        fBasinOuter.position.y = 0.38;
-        const fWater = new THREE.Mesh(
-            new THREE.CylinderGeometry(3.8, 3.8, 0.65, 28),
-            new THREE.MeshStandardMaterial({ color: 0x0ea5e9, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.82 })
-        );
-        fWater.position.y = 0.42;
-        const fPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.9, 2.4, 16), matWhiteTrim);
-        fPillar.position.y = 1.2;
-        const fCrown = new THREE.Mesh(new THREE.OctahedronGeometry(0.85, 0), new THREE.MeshStandardMaterial({ color: 0x29E7F2, emissive: 0x0284c7, emissiveIntensity: 0.4, roughness: 0.2 }));
-        fCrown.position.y = 2.9;
-        fountainGroup.add(fBasinOuter, fWater, fPillar, fCrown);
-        scene.add(fountainGroup);
-        PhysicsWorld.addCollider(-4.3, 4.3, 43.7, 52.3, 0, 3.5);
-
-        // ============================================================================
-        // LIVING GRASS SHADER SYSTEM
-        // ============================================================================
-        const grassUniforms = { uTime: { value: 0 } };
-        function createCrossedGrassGeometry() {
-            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4); b1.translate(0, 0.22, 0);
-            const b2 = b1.clone(); b2.rotateY(Math.PI / 2.3);
-            [b1, b2].forEach((geo, idx) => {
-                const pos = geo.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const y = pos.getY(i), hRatio = y / 0.44;
-                    pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
-                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * (idx === 0 ? 1 : -1));
-                }
-                geo.computeVertexNormals();
-            });
-            const merged = new THREE.BufferGeometry();
-            const pos1 = b1.attributes.position.array, pos2 = b2.attributes.position.array;
-            const norm1 = b1.attributes.normal.array, norm2 = b2.attributes.normal.array;
-            const uv1 = b1.attributes.uv.array, uv2 = b2.attributes.uv.array;
-            const idx1 = b1.index.array, idx2 = b2.index.array;
-            const combinedPos = new Float32Array(pos1.length + pos2.length); combinedPos.set(pos1, 0); combinedPos.set(pos2, pos1.length);
-            const combinedNorm = new Float32Array(norm1.length + norm2.length); combinedNorm.set(norm1, 0); combinedNorm.set(norm2, norm1.length);
-            const combinedUV = new Float32Array(uv1.length + uv2.length); combinedUV.set(uv1, 0); combinedUV.set(uv2, uv1.length);
-            const combinedIdx = new Uint16Array(idx1.length + idx2.length); combinedIdx.set(idx1, 0);
-            const vertexOffset = pos1.length / 3;
-            for (let i = 0; i < idx2.length; i++) combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
-            merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
-            merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
-            merged.setAttribute('uv', new THREE.BufferAttribute(combinedUV, 2));
-            merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
-            return merged;
-        }
-        const grassBladeGeo = createCrossedGrassGeometry();
-        const grassMat = new THREE.MeshStandardMaterial({ color: 0x4d823b, roughness: 0.74, metalness: 0.02, side: THREE.DoubleSide });
-        grassMat.onBeforeCompile = (shader) => {
-            shader.uniforms.uTime = grassUniforms.uTime;
-            shader.vertexShader = `uniform float uTime;\n` + shader.vertexShader.replace(
-                '#include <begin_vertex>',
-                `#include <begin_vertex>
-                float hFactor = clamp(position.y / 0.44, 0.0, 1.0);
-                vec3 wp = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-                float sway = sin(uTime * 2.1 + wp.x * 0.4 + wp.z * 0.4) * 0.07 * hFactor * hFactor;
-                transformed.x += sway; transformed.z += sway * 0.6;`
-            );
-        };
-        let grassInstancedMesh = null;
-        function buildLivingGrassField(bladeCount) {
-            if (grassInstancedMesh) { scene.remove(grassInstancedMesh); grassInstancedMesh.dispose(); }
-            grassInstancedMesh = new THREE.InstancedMesh(grassBladeGeo, grassMat, bladeCount);
-            const dummy = new THREE.Object3D(), color = new THREE.Color();
-            const greenPalette = [0x3b6e2c, 0x4d7c3f, 0x2e5a22, 0x558b3e, 0x3f6a2e];
-            let placed = 0;
-            while (placed < bladeCount) {
-                const isLeft = Math.random() < 0.5;
-                const x = isLeft ? (-12 - Math.random() * 32) : (12 + Math.random() * 32);
-                const z = 4 + Math.random() * 34;
-                dummy.position.set(x, 0, z); dummy.rotation.y = Math.random() * Math.PI * 2;
-                dummy.scale.set(1, 0.75 + Math.random() * 0.65, 1); dummy.updateMatrix();
-                grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
-                color.setHex(greenPalette[placed % greenPalette.length]);
-                grassInstancedMesh.setColorAt(placed, color);
-                placed++;
-            }
-            grassInstancedMesh.instanceMatrix.needsUpdate = true;
-            if (grassInstancedMesh.instanceColor) grassInstancedMesh.instanceColor.needsUpdate = true;
-            scene.add(grassInstancedMesh);
-        }
-
-        // ============================================================================
-        // CAMPUS BENCHES & LIGHTING
-        // ============================================================================
-        function createCampusBench(x, z, rotY = 0) {
-            const bench = new THREE.Group();
-            bench.position.set(x, 0, z);
-            bench.rotation.y = rotY;
-            const seat = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.08, 0.55), matWoodRack);
-            seat.position.y = 0.48;
-            const back = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.45, 0.06), matWoodRack);
-            back.position.set(0, 0.72, -0.24);
-            const legL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.48, 0.5), matBlackMetal);
-            legL.position.set(-0.9, 0.24, 0);
-            const legR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.48, 0.5), matBlackMetal);
-            legR.position.set(0.9, 0.24, 0);
-            bench.add(seat, back, legL, legR);
-            scene.add(bench);
-            PhysicsWorld.addCollider(x - 1.1, x + 1.1, z - 0.4, z + 0.4, 0, 1.0);
-        }
-        createCampusBench(-9.5, 22, Math.PI / 2);
-        createCampusBench(9.5, 22, -Math.PI / 2);
-        createCampusBench(-11, 58, Math.PI / 4);
-        createCampusBench(11, 58, -Math.PI / 4);
-
-        function createStreetLight(x, z) {
-            const lamp = new THREE.Group();
-            lamp.position.set(x, 0, z);
-            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 5.8, 8), matBlackMetal);
-            pole.position.y = 2.9;
-            const arm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.08), matBlackMetal);
-            arm.position.set(0.35, 5.75, 0);
-            const bulb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.08, 0.22), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-            bulb.position.set(0.7, 5.7, 0);
-            lamp.add(pole, arm, bulb);
-            scene.add(lamp);
-        }
-        [[-10.5, 16], [10.5, 16], [-10.5, 38], [10.5, 38], [-32, 40], [32, 40], [-60, 40], [60, 40], [-10.5, 68], [10.5, 68]].forEach(([lx, lz]) => createStreetLight(lx, lz));
-
-        // ============================================================================
-        // PROCEDURAL MULTI-STORY BUILDING GENERATOR (CRC, Heritage, Pavilion)
+        // PROCEDURAL MULTI-STORY BUILDING GENERATOR (Voxel / Blocky Aesthetic)
         // ============================================================================
         const interactableObjects = [];
-        const hingedDoors = []; // Kept for logic compatibility
-        const interiorLODGroups = []; // Kept for logic compatibility
 
         function buildMultiStoryBlock(x, z, width, depth, floors, type, titleLabel) {
-            const group = new THREE.Group();
-            group.position.set(x, 0, z);
-            const floorHeight = 4.2;
-            
-            // Base Plinth
+            const group = new THREE.Group(); group.position.set(x, 0, z); const floorHeight = 4.2;
             const plinth = new THREE.Mesh(new THREE.BoxGeometry(width + 2, 0.3, depth + 2), matDarkGranite);
-            plinth.position.y = 0.15;
-            group.add(plinth);
+            plinth.position.y = 0.15; group.add(plinth);
             PhysicsWorld.addFloorVolume(x - width/2 - 1, x + width/2 + 1, z - depth/2 - 1, z + depth/2 + 1, 0.3, floors * floorHeight);
             PhysicsWorld.addCollider(x - width/2, x + width/2, z - depth/2, z + depth/2, 0.3, floors * floorHeight);
 
             for (let i = 0; i < floors; i++) {
                 const yBase = 0.3 + (i * floorHeight);
                 const slab = new THREE.Mesh(new THREE.BoxGeometry(width + 0.5, 0.3, depth + 0.5), matWhiteTrim);
-                slab.position.y = yBase + floorHeight - 0.15;
-                group.add(slab);
+                slab.position.y = yBase + floorHeight - 0.15; group.add(slab);
 
                 if (type === 'glass_tower') {
-                    // Modern CRC Glass Ribbon Facade
                     const glassW = new THREE.Mesh(new THREE.BoxGeometry(width, floorHeight - 0.8, depth), matGlass);
-                    glassW.position.y = yBase + floorHeight/2;
-                    group.add(glassW);
-                    [-1, 1].forEach(dx => {
-                        [-1, 1].forEach(dz => {
-                            const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.2, floorHeight, 1.2), matDarkGranite);
-                            pillar.position.set(dx * (width/2 - 0.6), yBase + floorHeight/2, dz * (depth/2 - 0.6));
-                            group.add(pillar);
-                        });
-                    });
+                    glassW.position.y = yBase + floorHeight/2; group.add(glassW);
+                    [-1, 1].forEach(dx => { [-1, 1].forEach(dz => { const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.2, floorHeight, 1.2), matDarkGranite); pillar.position.set(dx * (width/2 - 0.6), yBase + floorHeight/2, dz * (depth/2 - 0.6)); group.add(pillar); }); });
                 } else if (type === 'heritage') {
-                    // GBL Heritage Punched Windows
                     const wallMat = i === 0 ? matGreyDado : matCreamWall;
                     const core = new THREE.Mesh(new THREE.BoxGeometry(width - 0.2, floorHeight, depth - 0.2), wallMat);
-                    core.position.y = yBase + floorHeight/2;
-                    group.add(core);
+                    core.position.y = yBase + floorHeight/2; group.add(core);
                     for (let cx = -width/2 + 2; cx <= width/2 - 2; cx += 5) {
-                        const colFront = new THREE.Mesh(new THREE.BoxGeometry(0.8, floorHeight, 0.6), matWhiteTrim);
-                        colFront.position.set(cx, yBase + floorHeight/2, depth/2);
-                        group.add(colFront);
-                        const win = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.8, 0.7), matBlackMetal);
-                        win.position.set(cx + 2.5, yBase + 1.8, depth/2);
-                        group.add(win);
-                        const glass = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.6, 0.8), matGlass);
-                        glass.position.set(cx + 2.5, yBase + 1.8, depth/2);
-                        group.add(glass);
+                        const colFront = new THREE.Mesh(new THREE.BoxGeometry(0.8, floorHeight, 0.6), matWhiteTrim); colFront.position.set(cx, yBase + floorHeight/2, depth/2); group.add(colFront);
+                        const win = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.8, 0.7), matBlackMetal); win.position.set(cx + 2.5, yBase + 1.8, depth/2); group.add(win);
+                        const glass = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.6, 0.8), matGlass); glass.position.set(cx + 2.5, yBase + 1.8, depth/2); group.add(glass);
                     }
                 } else {
-                    // Standard Pavilion Wrap-around Window
                     const core = new THREE.Mesh(new THREE.BoxGeometry(width, floorHeight, depth), matCreamWall);
-                    core.position.y = yBase + floorHeight/2;
-                    group.add(core);
+                    core.position.y = yBase + floorHeight/2; group.add(core);
                     const ribbon = new THREE.Mesh(new THREE.BoxGeometry(width + 0.2, 1.6, depth + 0.2), matGlass);
-                    ribbon.position.y = yBase + 2.2;
-                    group.add(ribbon);
+                    ribbon.position.y = yBase + 2.2; group.add(ribbon);
                 }
             }
 
-            // Heritage Clock Tower Roof
             if (type === 'heritage') {
-                const roof = new THREE.Mesh(new THREE.BoxGeometry(width + 1, 1.2, depth + 1), matTerracotta);
-                roof.position.y = 0.3 + (floors * floorHeight) + 0.6;
-                group.add(roof);
-                const tower = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 6), matCreamWall);
-                tower.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 - 2);
-                const clockFace = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.2, 16), matWhiteTrim);
-                clockFace.rotation.x = Math.PI / 2;
-                clockFace.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 + 1.1);
-                group.add(tower, clockFace);
+                const roof = new THREE.Mesh(new THREE.BoxGeometry(width + 1, 1.2, depth + 1), matTerracotta); roof.position.y = 0.3 + (floors * floorHeight) + 0.6; group.add(roof);
+                const tower = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 6), matCreamWall); tower.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 - 2);
+                const clockFace = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.2, 16), matWhiteTrim); clockFace.rotation.x = Math.PI / 2; clockFace.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 + 1.1); group.add(tower, clockFace);
             }
 
             if (titleLabel) {
-                const c = document.createElement('canvas'); c.width = 512; c.height = 128;
-                const ctx = c.getContext('2d');
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 128);
-                ctx.strokeStyle = '#29E7F2'; ctx.lineWidth = 6; ctx.strokeRect(4, 4, 504, 120);
-                ctx.fillStyle = '#FFC857'; ctx.font = 'bold 36px Orbitron, sans-serif';
-                ctx.textAlign = 'center'; ctx.fillText(titleLabel, 256, 75);
+                const c = document.createElement('canvas'); c.width = 512; c.height = 128; const ctx = c.getContext('2d');
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 128); ctx.strokeStyle = '#29E7F2'; ctx.lineWidth = 6; ctx.strokeRect(4, 4, 504, 120);
+                ctx.fillStyle = '#FFC857'; ctx.font = 'bold 36px Orbitron, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(titleLabel, 256, 75);
                 const signTex = new THREE.CanvasTexture(c); signTex.encoding = THREE.sRGBEncoding;
-                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 0.2), new THREE.MeshStandardMaterial({map: signTex}));
-                signMesh.position.set(0, 2.8, depth/2 + 0.2);
-                group.add(signMesh);
+                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 0.2), new THREE.MeshStandardMaterial({map: signTex})); signMesh.position.set(0, 2.8, depth/2 + 0.2); group.add(signMesh);
             }
-
-            scene.add(group);
-            return group;
+            scene.add(group); return group;
         }
 
-        // 1. AI & ML Main Block (East, 2 Floors)
-        const mainBlock = buildMultiStoryBlock(28, -25, 40, 22, 2, 'standard', 'AI & ML DEPARTMENT');
-        
-        // Add the interactive HOD Board to the Main Block exterior
-        const hodSignTex = createSignTexture('#0f172a', '#FFC857', [{ text: 'HOD & FACULTY DIRECTORY', font: 'bold 34px Arial', color: '#FFC857' }, { text: 'Dr. Mahesh Kaluti (HoD) • Dr. Umesh D. R.', font: 'bold 25px Arial', color: '#ffffff' }], 1024, 200);
-        const hodBoard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.75, 0.06), new THREE.MeshStandardMaterial({ map: hodSignTex }));
-        hodBoard.position.set(-8, 2.5, 11.2);
-        hodBoard.userData = { interactType: 'faculty_modal', getPrompt: () => 'Press E or Click to View Faculty Directory' };
-        interactableObjects.push(hodBoard);
-        mainBlock.add(hodBoard);
-
-        // 2. CRC Glass Tower (North-West, 3 Floors)
+        buildMultiStoryBlock(28, -25, 40, 22, 2, 'standard', 'AI & ML DEPARTMENT');
         buildMultiStoryBlock(-35, -35, 26, 26, 3, 'glass_tower', 'CRC GLASS TOWER (3F)');
-        
-        // 3. GBL Heritage Block with Clock Tower (West, 2 Floors)
         buildMultiStoryBlock(-42, 20, 36, 18, 2, 'heritage', 'GBL HERITAGE BLOCK');
-        
-        // 4. Innovation Vault Pavilion (South-West, 2 Floors)
         buildMultiStoryBlock(-30, 75, 28, 20, 2, 'standard', 'INNOVATION PAVILION');
 
         // ============================================================================
-        // TREES & LANDSCAPING
+        // 3D VOXEL / BLOCKY CHARACTER BUILDER + OVERHEAD BUBBLE
         // ============================================================================
-        const animatedTreeCrowns = [];
-        function createTree(x, z, scale = 1) {
-            const tree = new THREE.Group();
-            const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.32 * scale, 0.48 * scale, 4 * scale, 10),
-                new THREE.MeshStandardMaterial({ color: 0x4a3525, roughness: 0.92 })
-            );
-            trunk.position.y = 2 * scale;
-            trunk.castShadow = true;
-            tree.add(trunk);
-
-            const crownGroup = new THREE.Group();
-            crownGroup.position.set(0, 4.2 * scale, 0);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.78 });
-            const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 12, 12), foliageMat);
-            c1.position.set(0, 0.6 * scale, 0);
-            const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 10, 10), foliageMat);
-            c2.position.set(1.2 * scale, 0, 0.8 * scale);
-            const c3 = new THREE.Mesh(new THREE.SphereGeometry(1.9 * scale, 10, 10), foliageMat);
-            c3.position.set(-1.1 * scale, 0.2 * scale, -0.6 * scale);
-            crownGroup.add(c1, c2, c3);
-
-            const treeShadow = new THREE.Mesh(new THREE.PlaneGeometry(5.5 * scale, 5.5 * scale), contactShadowMat);
-            treeShadow.rotation.x = -Math.PI / 2;
-            treeShadow.position.y = 0.02;
-            tree.add(crownGroup, treeShadow);
-            tree.position.set(x, 0, z);
-            scene.add(tree);
-            animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
-            PhysicsWorld.addCollider(x - 0.5, x + 0.5, z - 0.5, z + 0.5, 0, 4);
-        }
-
-        [
-            [-28, 12, 1.35], [-36, 28, 1.4], [-28, -8, 1.25], [28, 12, 1.3], [36, 28, 1.35],
-            [-32, 60, 1.3], [32, 60, 1.3], [-82, 22, 1.45], [82, 22, 1.45],
-            [-22, 92, 1.4], [22, 92, 1.4], [-75, 75, 1.35], [90, 75, 1.35]
-        ].forEach(([tx, tz, sc]) => createTree(tx, tz, sc));
-                        // ============================================================================
-        // PROCEDURAL TEXTURES & SHARED MATERIALS
-        // ============================================================================
-        function createSignTexture(bgColor, borderColor, lines, width = 1024, height = 256) {
-            const canvas = document.createElement('canvas');
-            canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, width, height);
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = 10;
-            ctx.strokeRect(8, 8, width - 16, height - 16);
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            lines.forEach((line, i) => {
-                ctx.font = line.font || 'bold 42px Segoe UI, Arial';
-                ctx.fillStyle = line.color || '#ffffff';
-                ctx.fillText(line.text, width / 2, (height / (lines.length + 1)) * (i + 1));
-            });
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.encoding = THREE.sRGBEncoding;
-            return tex;
-        }
-
-        function createPBRSurfaceSet(baseHex, groutHex, divisions = 8, grainIntensity = 0.025, repeatX = 1, repeatY = 1) {
-            const size = 512;
-            const diffCanvas = document.createElement('canvas');
-            diffCanvas.width = diffCanvas.height = size;
-            const dCtx = diffCanvas.getContext('2d');
-            dCtx.fillStyle = baseHex; dCtx.fillRect(0, 0, size, size);
-
-            for (let i = 0; i < 2800; i++) {
-                const x = Math.random() * size, y = Math.random() * size, w = 2 + Math.random() * 3;
-                dCtx.fillStyle = i % 2 === 0 ? `rgba(255,255,255,${grainIntensity})` : `rgba(0,0,0,${grainIntensity})`;
-                dCtx.fillRect(x, y, w, w);
+        function createOverheadHeadTagCanvas(callsign, title, chatMsg) {
+            const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 220; const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, 512, 220);
+            if (chatMsg && chatMsg.trim().length > 0) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.96)'; ctx.strokeStyle = '#29E7F2'; ctx.lineWidth = 5;
+                ctx.beginPath(); ctx.roundRect(20, 10, 472, 90, 22); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(240, 100); ctx.lineTo(256, 122); ctx.lineTo(272, 100); ctx.closePath(); ctx.fill();
+                ctx.fillStyle = '#0B1020'; ctx.font = 'bold 24px Inter, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                const clipped = chatMsg.length > 36 ? chatMsg.substring(0, 35) + '…' : chatMsg; ctx.fillText('💬 ' + clipped, 256, 55);
             }
-            if (divisions > 1) {
-                const step = size / divisions;
-                dCtx.strokeStyle = groutHex; dCtx.lineWidth = 3;
-                for (let i = 0; i <= divisions; i++) {
-                    const p = i * step;
-                    dCtx.beginPath(); dCtx.moveTo(p, 0); dCtx.lineTo(p, size); dCtx.stroke();
-                    dCtx.beginPath(); dCtx.moveTo(0, p); dCtx.lineTo(size, p); dCtx.stroke();
-                }
+            ctx.fillStyle = 'rgba(11, 16, 32, 0.88)'; ctx.strokeStyle = '#29E7F2'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.roundRect(96, 132, 320, 74, 18); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = '#29E7F2'; ctx.font = 'bold 28px Orbitron, Segoe UI, Arial'; ctx.textAlign = 'center'; ctx.fillText('@' + (callsign || 'Student'), 256, 162);
+            ctx.fillStyle = '#FFC857'; ctx.font = 'bold 17px JetBrains Mono, monospace'; ctx.fillText('★ ' + (title || 'Tachyon Explorer'), 256, 190);
+            const tex = new THREE.CanvasTexture(canvas); tex.encoding = THREE.sRGBEncoding; tex.needsUpdate = true; return tex;
+        }
+
+        function buildVoxelActor(config) {
+            const root = new THREE.Group();
+            const matSkin = new THREE.MeshStandardMaterial({ color: 0xffd1b3, roughness: 0.9 });
+            const matShirt = new THREE.MeshStandardMaterial({ color: config.shirtColor || 0x0284c7, roughness: 0.8 });
+            const matPants = new THREE.MeshStandardMaterial({ color: config.pantsColor || 0x1e293b, roughness: 0.9 });
+            const matHair = new THREE.MeshStandardMaterial({ color: config.hairColor || 0x111827, roughness: 0.9 });
+            const matShoe = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
+            const matBackpack = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
+
+            const s = config.scale || 1.0;
+            const hips = new THREE.Group(); hips.position.y = 0.85 * s; root.add(hips);
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.4*s, 0.6*s, 0.2*s), matShirt); torso.position.y = 0.3 * s; torso.castShadow = true; hips.add(torso);
+            const backpack = new THREE.Mesh(new THREE.BoxGeometry(0.32*s, 0.45*s, 0.15*s), matBackpack); backpack.position.set(0, 0.3*s, -0.15*s); hips.add(backpack);
+
+            const headGroup = new THREE.Group(); headGroup.position.y = 0.65 * s; hips.add(headGroup);
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.35*s, 0.35*s, 0.35*s), matSkin); head.position.y = 0.175 * s; head.castShadow = true; headGroup.add(head);
+            const hair = new THREE.Mesh(new THREE.BoxGeometry(0.37*s, 0.1*s, 0.37*s), matHair); hair.position.y = 0.35 * s; headGroup.add(hair);
+            
+            const glassesGroup = new THREE.Group();
+            const gFrame = new THREE.Mesh(new THREE.BoxGeometry(0.36*s, 0.08*s, 0.05*s), new THREE.MeshStandardMaterial({color: 0x29E7F2, emissive: 0x0284c7}));
+            gFrame.position.set(0, 0.2*s, 0.18*s); glassesGroup.add(gFrame); glassesGroup.visible = config.accessory === 'glasses'; headGroup.add(glassesGroup);
+
+            function buildArm(side) {
+                const shoulder = new THREE.Group(); shoulder.position.set(side * 0.28 * s, 0.55 * s, 0); hips.add(shoulder);
+                const armMesh = new THREE.Mesh(new THREE.BoxGeometry(0.15*s, 0.6*s, 0.15*s), matSkin); armMesh.position.y = -0.3 * s; armMesh.castShadow = true; shoulder.add(armMesh);
+                const sleeve = new THREE.Mesh(new THREE.BoxGeometry(0.16*s, 0.25*s, 0.16*s), matShirt); sleeve.position.y = -0.125 * s; shoulder.add(sleeve);
+                return shoulder;
             }
-            const map = new THREE.CanvasTexture(diffCanvas);
-            map.encoding = THREE.sRGBEncoding;
-            map.wrapS = map.wrapT = THREE.RepeatWrapping;
-            map.repeat.set(repeatX, repeatY);
-            return { map };
+            function buildLeg(side) {
+                const hipJoint = new THREE.Group(); hipJoint.position.set(side * 0.11 * s, 0, 0); hips.add(hipJoint);
+                const legMesh = new THREE.Mesh(new THREE.BoxGeometry(0.18*s, 0.7*s, 0.18*s), matPants); legMesh.position.y = -0.35 * s; legMesh.castShadow = true; hipJoint.add(legMesh);
+                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.2*s, 0.15*s, 0.25*s), matShoe); shoe.position.set(0, -0.7*s, 0.03*s); shoe.castShadow = true; hipJoint.add(shoe);
+                return hipJoint;
+            }
+
+            const leftArm = buildArm(1), rightArm = buildArm(-1);
+            const leftLeg = buildLeg(1), rightLeg = buildLeg(-1);
+
+            const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.0*s, 1.0*s), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3, depthWrite: false }));
+            shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = 0.015; root.add(shadowPlane);
+
+            const tagTex = createOverheadHeadTagCanvas(config.callsign, config.title, '');
+            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tagTex, transparent: true, depthTest: false }));
+            tagSprite.position.set(0, 2.4 * s, 0); tagSprite.scale.set(2.4, 1.0, 1); tagSprite.renderOrder = 999; root.add(tagSprite);
+
+            return {
+                wrapper: root, tagSprite, materials: { matShirt, matPants, matHair }, accessories: { glassesGroup },
+                lastRenderedHash: '', lastStyleHash: '',
+                applyCustomization(style) {
+                    const sHash = `${style.shirtColor}|${style.pantsColor}|${style.hairColor}|${style.accessory}`;
+                    if (this.lastStyleHash === sHash) return; this.lastStyleHash = sHash;
+                    if (style.shirtColor) this.materials.matShirt.color.set(style.shirtColor);
+                    if (style.pantsColor) this.materials.matPants.color.set(style.pantsColor);
+                    if (style.hairColor) this.materials.matHair.color.set(style.hairColor);
+                    this.accessories.glassesGroup.visible = style.accessory === 'glasses';
+                },
+                updateOverheadTag(callsign, title, chatMsg) {
+                    const hash = `${callsign}|${title}|${chatMsg}`;
+                    if (this.lastRenderedHash === hash) return; this.lastRenderedHash = hash;
+                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose();
+                    this.tagSprite.material.map = createOverheadHeadTagCanvas(callsign, title, chatMsg);
+                },
+                bones: { hips, head: headGroup, leftArm, rightArm, leftLeg, rightLeg }
+            };
         }
 
-        function createContactShadowTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64, 64, 6, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(0, 0, 0, 0.48)');
-            grad.addColorStop(0.6, 'rgba(0, 0, 0, 0.16)');
-            grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-            return new THREE.CanvasTexture(canvas);
+        function animateVoxelPose(b, state, t) {
+            if (!b) return;
+            if (state === 'walk' || state === 'run') {
+                const freq = state === 'run' ? 12.0 : 8.0; const amp = state === 'run' ? 0.6 : 0.4;
+                b.hips.position.y = 0.85 + Math.abs(Math.sin(t * freq)) * 0.05;
+                b.leftLeg.rotation.x = Math.sin(t * freq) * amp; b.rightLeg.rotation.x = -Math.sin(t * freq) * amp;
+                b.leftArm.rotation.x = -Math.sin(t * freq) * amp; b.rightArm.rotation.x = Math.sin(t * freq) * amp;
+                b.head.rotation.y = Math.sin(t * (freq/2)) * 0.05;
+            } else if (state === 'chatting') {
+                b.hips.position.y = 0.85; b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0;
+                b.leftArm.rotation.x = -0.2 + Math.sin(t * 3.5) * 0.1; b.rightArm.rotation.x = Math.sin(t * 2.5) * 0.05;
+                b.head.rotation.y = Math.sin(t * 1.5) * 0.1; b.head.rotation.x = Math.sin(t * 2.1) * 0.05 + 0.05;
+            } else {
+                b.hips.position.y = 0.85 + Math.sin(t * 2.5) * 0.02;
+                b.leftLeg.rotation.x = 0; b.rightLeg.rotation.x = 0; b.leftArm.rotation.x = 0; b.rightArm.rotation.x = 0;
+                b.head.rotation.y = Math.sin(t * 1.0) * 0.05; b.head.rotation.x = 0;
+            }
         }
-        const contactShadowMat = new THREE.MeshBasicMaterial({ map: createContactShadowTexture(), transparent: true, depthWrite: false });
-
-        function createToonGradientMap() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 4; canvas.height = 1;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#758296'; ctx.fillRect(0, 0, 1, 1);
-            ctx.fillStyle = '#b4c0d4'; ctx.fillRect(1, 0, 1, 1);
-            ctx.fillStyle = '#e8eef5'; ctx.fillRect(2, 0, 1, 1);
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(3, 0, 1, 1);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.minFilter = tex.magFilter = THREE.NearestFilter;
-            return tex;
-        }
-        const animeToonGrad = createToonGradientMap();
-
-        const matCreamWall = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#f5f0e1', '#e6dec5', 1, 0.02, 4, 2).map, roughness: 0.80, metalness: 0.02 });
-        const matGreyDado = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#8d9399', '#7b8085', 1, 0.018, 4, 1).map, roughness: 0.65, metalness: 0.04 });
-        const matTerracotta = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#c24d3b', '#9e3b2b', 1, 0.025, 2, 2).map, roughness: 0.70, metalness: 0.04 });
-        const matWhiteTrim = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.42, metalness: 0.05 });
-        const matDarkGranite = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#2d333b', '#1b1f24', 2, 0.035, 2, 2).map, roughness: 0.26, metalness: 0.14 });
-        const matGreySteps = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#a6acb2', '#858b91', 1, 0.03, 2, 2).map, roughness: 0.74, metalness: 0.04 });
-        const woodMap = createPBRSurfaceSet('#4d281a', '#361b11', 1, 0.02, 2, 1).map;
-        const matWoodRack = new THREE.MeshStandardMaterial({ map: woodMap, roughness: 0.46, metalness: 0.05 });
-        const matDoorWood = new THREE.MeshStandardMaterial({ map: woodMap, color: 0xd9b38c, roughness: 0.45, metalness: 0.05 });
-        const matGlass = new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.55, roughness: 0.1, metalness: 0.4 });
-        const matBlackMetal = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.5 });
-        const matCorridorFloor = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#6e4e44', '#422c26', 4, 0.02, 20, 4).map, roughness: 0.42, metalness: 0.06 });
-        const matCourtyard = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#b8b3ae', '#78716c', 10, 0.035, 24, 24).map, roughness: 0.78, metalness: 0.04 });
-        const matRedPaverStrip = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#ad4f3e', '#662b20', 8, 0.03, 4, 24).map, roughness: 0.76, metalness: 0.04 });
-        const matAsphalt = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#272b33', '#1e2229', 1, 0.04, 30, 30).map, roughness: 0.88, metalness: 0.02 });
-        const matCampusLawn = new THREE.MeshStandardMaterial({ map: createPBRSurfaceSet('#3b6e2c', '#2e5a22', 1, 0.04, 40, 40).map, roughness: 0.88, metalness: 0.02 });
 
         // ============================================================================
-        // CAMPUS TERRAIN & ROADS
+        // MULTIPLAYER STATE, SPAWNING, AND LOCAL PLAYER SETUP
         // ============================================================================
-        const campusGround = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), matCampusLawn);
-        campusGround.rotation.x = -Math.PI / 2;
-        campusGround.receiveShadow = true;
-        scene.add(campusGround);
-
-        const mainAvenue = new THREE.Mesh(new THREE.PlaneGeometry(24, 200), matAsphalt);
-        mainAvenue.rotation.x = -Math.PI / 2;
-        mainAvenue.position.set(0, 0.02, 40);
-        mainAvenue.receiveShadow = true;
-        scene.add(mainAvenue);
-
-        const crossRoad = new THREE.Mesh(new THREE.PlaneGeometry(260, 16), matAsphalt);
-        crossRoad.rotation.x = -Math.PI / 2;
-        crossRoad.position.set(0, 0.025, 48);
-        crossRoad.receiveShadow = true;
-        scene.add(crossRoad);
-
-        for (let rx = -115; rx <= 115; rx += 8) {
-            if (Math.abs(rx) < 18) continue;
-            const dash = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 0.28), matWhiteTrim);
-            dash.rotation.x = -Math.PI / 2;
-            dash.position.set(rx, 0.032, 48);
-            scene.add(dash);
+        const SAFE_SPAWN_POINTS = [{ x: 0, z: 22, yaw: 0 }, { x: -5, z: 42, yaw: -0.3 }, { x: 7, z: 42, yaw: 0.3 }, { x: -24, z: 44, yaw: 1.57 }, { x: 24, z: 44, yaw: -1.57 }];
+        function pickSafeDistributedSpawn(uidStr) {
+            let hash = 0; for (let i = 0; i < uidStr.length; i++) hash = (hash * 31 + uidStr.charCodeAt(i)) % 1000;
+            const baseSpot = SAFE_SPAWN_POINTS[hash % SAFE_SPAWN_POINTS.length];
+            const candidateX = baseSpot.x + (((hash % 7) - 3) * 0.85), candidateZ = baseSpot.z + ((((hash >> 2) % 7) - 3) * 0.85);
+            if (!PhysicsWorld.checkHorizontalCollision(candidateX, 0, candidateZ)) return { x: candidateX, z: candidateZ, yaw: baseSpot.yaw };
+            return { x: baseSpot.x, z: baseSpot.z, yaw: baseSpot.yaw };
         }
 
-        [-2.2, 2.2].forEach(rx => {
-            const runner = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 38), matRedPaverStrip);
-            runner.rotation.x = -Math.PI / 2;
-            runner.position.set(rx, 0.03, 21);
-            scene.add(runner);
+        const DEFAULT_AVATAR_STYLE = { shirtColor: "#0284c7", pantsColor: "#1e293b", hairColor: "#111827", accessory: "glasses" };
+        let myUid = "guest_" + Math.random().toString(36).substring(2, 7);
+        let myCallsign = localStorage.getItem("tachyon_callsign") || ("Guest_" + myUid.slice(-3));
+        let myTitle = localStorage.getItem("tachyon_title") || "Tachyon Explorer";
+        let myAvatarStyle = { ...DEFAULT_AVATAR_STYLE };
+        try { const savedStyle = JSON.parse(localStorage.getItem("tachyon_avatar_style")); if (savedStyle) myAvatarStyle = { ...DEFAULT_AVATAR_STYLE, ...savedStyle }; } catch (e) {}
+
+        let myChatText = ""; let myChatTimestamp = 0; let isThirdPerson = true;
+        const initialSpawn = pickSafeDistributedSpawn(myUid);
+        const playerFootPos = new THREE.Vector3(initialSpawn.x, 0.0, initialSpawn.z);
+        let camYaw = initialSpawn.yaw; let camPitch = 0.08;
+
+        const playerAvatar = buildVoxelActor({ callsign: myCallsign, title: myTitle, ...myAvatarStyle });
+        playerAvatar.applyCustomization(myAvatarStyle); playerAvatar.wrapper.position.copy(playerFootPos); scene.add(playerAvatar.wrapper);
+
+        const SWATCH_PALETTES = {
+            shirt: ["#0284c7", "#111827", "#7c3aed", "#059669", "#e11d48", "#d97706", "#29E7F2", "#f8fafc"],
+            pants: ["#1e293b", "#090d16", "#334155", "#1e3a8a", "#3f3f46", "#451a03"],
+            hair:  ["#1e293b", "#090d16", "#451a03", "#78350f", "#991b1b", "#6b7280", "#29E7F2"],
+        };
+
+        function renderCustomizerSwatches() {
+            const bindSwatches = (containerId, colors, styleKey) => {
+                const el = document.getElementById(containerId); if (!el) return; el.innerHTML = "";
+                colors.forEach(hex => {
+                    const btn = document.createElement("div"); btn.className = "color-swatch" + (myAvatarStyle[styleKey].toLowerCase() === hex.toLowerCase() ? " selected" : ""); btn.style.backgroundColor = hex;
+                    btn.onclick = () => { myAvatarStyle[styleKey] = hex; playerAvatar.applyCustomization(myAvatarStyle); renderCustomizerSwatches(); };
+                    el.appendChild(btn);
+                });
+            };
+            bindSwatches("swatch-shirt", SWATCH_PALETTES.shirt, "shirtColor"); bindSwatches("swatch-pants", SWATCH_PALETTES.pants, "pantsColor"); bindSwatches("swatch-hair", SWATCH_PALETTES.hair, "hairColor");
+            document.querySelectorAll("#acc-selector-row .acc-pill").forEach(btn => { btn.classList.toggle("selected", btn.getAttribute("data-acc") === myAvatarStyle.accessory); });
+        }
+
+        window.selectAvatarAccessory = function(accType, btnEl) { myAvatarStyle.accessory = accType; playerAvatar.applyCustomization(myAvatarStyle); renderCustomizerSwatches(); };
+        window.openAvatarCustomizer = function() { document.getElementById("cust-name-input").value = myCallsign; document.getElementById("cust-title-select").value = myTitle; renderCustomizerSwatches(); document.getElementById("avatar-customizer-modal").style.display = "flex"; };
+        window.closeAvatarCustomizer = function() { document.getElementById("avatar-customizer-modal").style.display = "none"; };
+        window.saveAvatarCustomization = async function() {
+            const nameVal = document.getElementById("cust-name-input").value.trim().replace(/\s+/g, "_"), titleVal = document.getElementById("cust-title-select").value;
+            if (nameVal.length >= 2) myCallsign = nameVal; if (titleVal) myTitle = titleVal;
+            localStorage.setItem("tachyon_callsign", myCallsign); localStorage.setItem("tachyon_title", myTitle); localStorage.setItem("tachyon_avatar_style", JSON.stringify(myAvatarStyle));
+            playerAvatar.applyCustomization(myAvatarStyle); playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText); document.getElementById('my-online-badge').innerText = `🟢 Online as @${myCallsign}`;
+            if (auth.currentUser) { try { await setDoc(doc(db, "users", auth.currentUser.uid), { customName: myCallsign, equippedTitle: myTitle, avatarStyle: myAvatarStyle, updatedAt: serverTimestamp() }, { merge: true }); } catch (e) {} }
+            broadcastMyPresence(); setTimeout(() => { window.closeAvatarCustomizer(); }, 650);
+        };
+
+        const remotePlayers = {}; const colorPalette = ["#9B5CFF", "#10b981", "#f43f5e", "#f59e0b", "#06b6d4", "#ec4899"];
+
+        onAuthStateChanged(auth, async (user) => {
+            const badgeEl = document.getElementById('my-online-badge');
+            if (user) {
+                myUid = user.uid; const userSpawn = pickSafeDistributedSpawn(user.uid); playerFootPos.set(userSpawn.x, 0.0, userSpawn.z);
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) { const uData = snap.data(); if (uData.customName) myCallsign = uData.customName; if (uData.equippedTitle) myTitle = uData.equippedTitle; if (uData.avatarStyle) { myAvatarStyle = { ...DEFAULT_AVATAR_STYLE, ...uData.avatarStyle }; playerAvatar.applyCustomization(myAvatarStyle); } } 
+                else if (!localStorage.getItem("tachyon_callsign")) { myCallsign = (user.displayName || user.email.split('@')[0]).replace(/\s+/g, ''); }
+                badgeEl.innerText = `🟢 Online as @${myCallsign}`; playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText); broadcastMyPresence();
+            } else { badgeEl.innerText = `🟢 @${myCallsign} (Sign In)`; badgeEl.onclick = () => signInWithPopup(auth, provider); }
         });
 
-        // ============================================================================
-        // CENTRAL QUAD & FOUNTAIN
-        // ============================================================================
-        const quadPlaza = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 0.08, 36), matCourtyard);
-        quadPlaza.position.set(0, 0.04, 48);
-        quadPlaza.receiveShadow = true;
-        scene.add(quadPlaza);
-
-        const fountainGroup = new THREE.Group();
-        fountainGroup.position.set(0, 0, 48);
-        const fBasinOuter = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.5, 0.75, 28), matTerracotta);
-        fBasinOuter.position.y = 0.38;
-        const fWater = new THREE.Mesh(
-            new THREE.CylinderGeometry(3.8, 3.8, 0.65, 28),
-            new THREE.MeshStandardMaterial({ color: 0x0ea5e9, roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.82 })
-        );
-        fWater.position.y = 0.42;
-        const fPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.9, 2.4, 16), matWhiteTrim);
-        fPillar.position.y = 1.2;
-        const fCrown = new THREE.Mesh(new THREE.OctahedronGeometry(0.85, 0), new THREE.MeshStandardMaterial({ color: 0x29E7F2, emissive: 0x0284c7, emissiveIntensity: 0.4, roughness: 0.2 }));
-        fCrown.position.y = 2.9;
-        fountainGroup.add(fBasinOuter, fWater, fPillar, fCrown);
-        scene.add(fountainGroup);
-        PhysicsWorld.addCollider(-4.3, 4.3, 43.7, 52.3, 0, 3.5);
-
-        // ============================================================================
-        // LIVING GRASS SHADER SYSTEM
-        // ============================================================================
-        const grassUniforms = { uTime: { value: 0 } };
-        function createCrossedGrassGeometry() {
-            const b1 = new THREE.PlaneGeometry(0.11, 0.44, 1, 4); b1.translate(0, 0.22, 0);
-            const b2 = b1.clone(); b2.rotateY(Math.PI / 2.3);
-            [b1, b2].forEach((geo, idx) => {
-                const pos = geo.attributes.position;
-                for (let i = 0; i < pos.count; i++) {
-                    const y = pos.getY(i), hRatio = y / 0.44;
-                    pos.setX(i, pos.getX(i) * (1.0 - hRatio * 0.78));
-                    pos.setZ(i, pos.getZ(i) + Math.pow(hRatio, 2) * 0.045 * (idx === 0 ? 1 : -1));
-                }
-                geo.computeVertexNormals();
-            });
-            const merged = new THREE.BufferGeometry();
-            const pos1 = b1.attributes.position.array, pos2 = b2.attributes.position.array;
-            const norm1 = b1.attributes.normal.array, norm2 = b2.attributes.normal.array;
-            const uv1 = b1.attributes.uv.array, uv2 = b2.attributes.uv.array;
-            const idx1 = b1.index.array, idx2 = b2.index.array;
-            const combinedPos = new Float32Array(pos1.length + pos2.length); combinedPos.set(pos1, 0); combinedPos.set(pos2, pos1.length);
-            const combinedNorm = new Float32Array(norm1.length + norm2.length); combinedNorm.set(norm1, 0); combinedNorm.set(norm2, norm1.length);
-            const combinedUV = new Float32Array(uv1.length + uv2.length); combinedUV.set(uv1, 0); combinedUV.set(uv2, uv1.length);
-            const combinedIdx = new Uint16Array(idx1.length + idx2.length); combinedIdx.set(idx1, 0);
-            const vertexOffset = pos1.length / 3;
-            for (let i = 0; i < idx2.length; i++) combinedIdx[idx1.length + i] = idx2[i] + vertexOffset;
-            merged.setAttribute('position', new THREE.BufferAttribute(combinedPos, 3));
-            merged.setAttribute('normal', new THREE.BufferAttribute(combinedNorm, 3));
-            merged.setAttribute('uv', new THREE.BufferAttribute(combinedUV, 2));
-            merged.setIndex(new THREE.BufferAttribute(combinedIdx, 1));
-            return merged;
+        async function broadcastMyPresence() {
+            if (!myUid) return;
+            try {
+                const activeMsg = (Date.now() - myChatTimestamp < 10000) ? myChatText : "";
+                await setDoc(doc(db, "twin_players", myUid), { uid: myUid, name: myCallsign, title: myTitle, shirtColor: myAvatarStyle.shirtColor, pantsColor: myAvatarStyle.pantsColor, hairColor: myAvatarStyle.hairColor, accessory: myAvatarStyle.accessory, x: Number(playerFootPos.x.toFixed(2)), y: Number(playerFootPos.y.toFixed(2)), z: Number(playerFootPos.z.toFixed(2)), yaw: Number(playerAvatar.wrapper.rotation.y.toFixed(2)), state: activeMentorId ? 'chatting' : currentLocomotionState, chatMessage: activeMsg, chatTimestamp: myChatTimestamp, lastSeen: Date.now() }, { merge: true });
+            } catch (e) {}
         }
-        const grassBladeGeo = createCrossedGrassGeometry();
-        const grassMat = new THREE.MeshStandardMaterial({ color: 0x4d823b, roughness: 0.74, metalness: 0.02, side: THREE.DoubleSide });
-        grassMat.onBeforeCompile = (shader) => {
-            shader.uniforms.uTime = grassUniforms.uTime;
-            shader.vertexShader = `uniform float uTime;\n` + shader.vertexShader.replace(
-                '#include <begin_vertex>',
-                `#include <begin_vertex>
-                float hFactor = clamp(position.y / 0.44, 0.0, 1.0);
-                vec3 wp = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
-                float sway = sin(uTime * 2.1 + wp.x * 0.4 + wp.z * 0.4) * 0.07 * hFactor * hFactor;
-                transformed.x += sway; transformed.z += sway * 0.6;`
-            );
+
+        window.sendOverheadChatMessage = function() {
+            const input = document.getElementById('overhead-chat-input'); const msg = input.value.trim(); if (!msg) return; input.value = ''; myChatText = msg; myChatTimestamp = Date.now();
+            playerAvatar.updateOverheadTag(myCallsign, myTitle, myChatText); broadcastMyPresence();
+            const feed = document.getElementById('multiplayer-chat-feed'); const line = document.createElement('div'); line.textContent = `@${myCallsign}: ${msg}`; line.style.color = '#5CFFB1'; feed.appendChild(line); feed.scrollTop = feed.scrollHeight;
         };
-        let grassInstancedMesh = null;
-        function buildLivingGrassField(bladeCount) {
-            if (grassInstancedMesh) { scene.remove(grassInstancedMesh); grassInstancedMesh.dispose(); }
-            grassInstancedMesh = new THREE.InstancedMesh(grassBladeGeo, grassMat, bladeCount);
-            const dummy = new THREE.Object3D(), color = new THREE.Color();
-            const greenPalette = [0x3b6e2c, 0x4d7c3f, 0x2e5a22, 0x558b3e, 0x3f6a2e];
-            let placed = 0;
-            while (placed < bladeCount) {
-                const isLeft = Math.random() < 0.5;
-                const x = isLeft ? (-12 - Math.random() * 32) : (12 + Math.random() * 32);
-                const z = 4 + Math.random() * 34;
-                dummy.position.set(x, 0, z); dummy.rotation.y = Math.random() * Math.PI * 2;
-                dummy.scale.set(1, 0.75 + Math.random() * 0.65, 1); dummy.updateMatrix();
-                grassInstancedMesh.setMatrixAt(placed, dummy.matrix);
-                color.setHex(greenPalette[placed % greenPalette.length]);
-                grassInstancedMesh.setColorAt(placed, color);
-                placed++;
-            }
-            grassInstancedMesh.instanceMatrix.needsUpdate = true;
-            if (grassInstancedMesh.instanceColor) grassInstancedMesh.instanceColor.needsUpdate = true;
-            scene.add(grassInstancedMesh);
-        }
+        document.getElementById('overhead-chat-input').addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key === 'Enter') window.sendOverheadChatMessage(); });
 
-        // ============================================================================
-        // CAMPUS BENCHES & LIGHTING
-        // ============================================================================
-        function createCampusBench(x, z, rotY = 0) {
-            const bench = new THREE.Group();
-            bench.position.set(x, 0, z);
-            bench.rotation.y = rotY;
-            const seat = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.08, 0.55), matWoodRack);
-            seat.position.y = 0.48;
-            const back = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.45, 0.06), matWoodRack);
-            back.position.set(0, 0.72, -0.24);
-            const legL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.48, 0.5), matBlackMetal);
-            legL.position.set(-0.9, 0.24, 0);
-            const legR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.48, 0.5), matBlackMetal);
-            legR.position.set(0.9, 0.24, 0);
-            bench.add(seat, back, legL, legR);
-            scene.add(bench);
-            PhysicsWorld.addCollider(x - 1.1, x + 1.1, z - 0.4, z + 0.4, 0, 1.0);
-        }
-        createCampusBench(-9.5, 22, Math.PI / 2);
-        createCampusBench(9.5, 22, -Math.PI / 2);
-        createCampusBench(-11, 58, Math.PI / 4);
-        createCampusBench(11, 58, -Math.PI / 4);
+        onSnapshot(collection(db, "twin_players"), (snapshot) => {
+            const now = Date.now(); const rosterEl = document.getElementById('online-players-list'); let onlineCount = 1; rosterEl.innerHTML = '';
+            const selfChip = document.createElement('div'); selfChip.className = 'online-user-chip'; selfChip.textContent = `🟢 @${myCallsign} (You)`; selfChip.onclick = () => window.openAvatarCustomizer(); rosterEl.appendChild(selfChip);
 
-        function createStreetLight(x, z) {
-            const lamp = new THREE.Group();
-            lamp.position.set(x, 0, z);
-            const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 5.8, 8), matBlackMetal);
-            pole.position.y = 2.9;
-            const arm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.08), matBlackMetal);
-            arm.position.set(0.35, 5.75, 0);
-            const bulb = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.08, 0.22), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-            bulb.position.set(0.7, 5.7, 0);
-            lamp.add(pole, arm, bulb);
-            scene.add(lamp);
-        }
-        [[-10.5, 16], [10.5, 16], [-10.5, 38], [10.5, 38], [-32, 40], [32, 40], [-60, 40], [60, 40], [-10.5, 68], [10.5, 68]].forEach(([lx, lz]) => createStreetLight(lx, lz));
+            snapshot.forEach((docSnap) => {
+                const p = docSnap.data(); if (!p || !p.uid || p.uid === myUid) return;
+                const isRecent = (now - (p.lastSeen || 0)) < 120000;
+                if (!isRecent) { if (remotePlayers[p.uid]) { scene.remove(remotePlayers[p.uid].actor.wrapper); delete remotePlayers[p.uid]; } return; }
+                onlineCount++;
+                const chip = document.createElement('div'); chip.className = 'online-user-chip'; chip.textContent = `🧑‍🚀 @${p.name} ↗`; chip.onclick = () => window.teleportNearPlayer(p.x || 0, p.y || 0, p.z || 20); rosterEl.appendChild(chip);
 
-        // ============================================================================
-        // PROCEDURAL MULTI-STORY BUILDING GENERATOR (CRC, Heritage, Pavilion)
-        // ============================================================================
-        const interactableObjects = [];
-        const hingedDoors = []; // Kept for logic compatibility
-        const interiorLODGroups = []; // Kept for logic compatibility
-
-        function buildMultiStoryBlock(x, z, width, depth, floors, type, titleLabel) {
-            const group = new THREE.Group();
-            group.position.set(x, 0, z);
-            const floorHeight = 4.2;
-            
-            // Base Plinth
-            const plinth = new THREE.Mesh(new THREE.BoxGeometry(width + 2, 0.3, depth + 2), matDarkGranite);
-            plinth.position.y = 0.15;
-            group.add(plinth);
-            PhysicsWorld.addFloorVolume(x - width/2 - 1, x + width/2 + 1, z - depth/2 - 1, z + depth/2 + 1, 0.3, floors * floorHeight);
-            PhysicsWorld.addCollider(x - width/2, x + width/2, z - depth/2, z + depth/2, 0.3, floors * floorHeight);
-
-            for (let i = 0; i < floors; i++) {
-                const yBase = 0.3 + (i * floorHeight);
-                const slab = new THREE.Mesh(new THREE.BoxGeometry(width + 0.5, 0.3, depth + 0.5), matWhiteTrim);
-                slab.position.y = yBase + floorHeight - 0.15;
-                group.add(slab);
-
-                if (type === 'glass_tower') {
-                    // Modern CRC Glass Ribbon Facade
-                    const glassW = new THREE.Mesh(new THREE.BoxGeometry(width, floorHeight - 0.8, depth), matGlass);
-                    glassW.position.y = yBase + floorHeight/2;
-                    group.add(glassW);
-                    [-1, 1].forEach(dx => {
-                        [-1, 1].forEach(dz => {
-                            const pillar = new THREE.Mesh(new THREE.BoxGeometry(1.2, floorHeight, 1.2), matDarkGranite);
-                            pillar.position.set(dx * (width/2 - 0.6), yBase + floorHeight/2, dz * (depth/2 - 0.6));
-                            group.add(pillar);
-                        });
-                    });
-                } else if (type === 'heritage') {
-                    // GBL Heritage Punched Windows
-                    const wallMat = i === 0 ? matGreyDado : matCreamWall;
-                    const core = new THREE.Mesh(new THREE.BoxGeometry(width - 0.2, floorHeight, depth - 0.2), wallMat);
-                    core.position.y = yBase + floorHeight/2;
-                    group.add(core);
-                    for (let cx = -width/2 + 2; cx <= width/2 - 2; cx += 5) {
-                        const colFront = new THREE.Mesh(new THREE.BoxGeometry(0.8, floorHeight, 0.6), matWhiteTrim);
-                        colFront.position.set(cx, yBase + floorHeight/2, depth/2);
-                        group.add(colFront);
-                        const win = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.8, 0.7), matBlackMetal);
-                        win.position.set(cx + 2.5, yBase + 1.8, depth/2);
-                        group.add(win);
-                        const glass = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.6, 0.8), matGlass);
-                        glass.position.set(cx + 2.5, yBase + 1.8, depth/2);
-                        group.add(glass);
-                    }
-                } else {
-                    // Standard Pavilion Wrap-around Window
-                    const core = new THREE.Mesh(new THREE.BoxGeometry(width, floorHeight, depth), matCreamWall);
-                    core.position.y = yBase + floorHeight/2;
-                    group.add(core);
-                    const ribbon = new THREE.Mesh(new THREE.BoxGeometry(width + 0.2, 1.6, depth + 0.2), matGlass);
-                    ribbon.position.y = yBase + 2.2;
-                    group.add(ribbon);
+                const remoteStyle = { shirtColor: p.shirtColor || colorPalette[p.uid.charCodeAt(0) % colorPalette.length], pantsColor: p.pantsColor || "#1e293b", hairColor: p.hairColor || "#111827", accessory: p.accessory || "none" };
+                if (!remotePlayers[p.uid]) {
+                    const newActor = buildVoxelActor({ callsign: p.name, title: p.title || 'Explorer', ...remoteStyle });
+                    newActor.wrapper.position.set(p.x || 0, p.y || 0, p.z || 20); scene.add(newActor.wrapper);
+                    remotePlayers[p.uid] = { actor: newActor, name: p.name, targetPos: new THREE.Vector3(p.x || 0, p.y || 0, p.z || 20), targetYaw: p.yaw || 0, state: p.state || 'idle', lastChatTs: 0 };
                 }
-            }
 
-            // Heritage Clock Tower Roof
-            if (type === 'heritage') {
-                const roof = new THREE.Mesh(new THREE.BoxGeometry(width + 1, 1.2, depth + 1), matTerracotta);
-                roof.position.y = 0.3 + (floors * floorHeight) + 0.6;
-                group.add(roof);
-                const tower = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 6), matCreamWall);
-                tower.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 - 2);
-                const clockFace = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.2, 16), matWhiteTrim);
-                clockFace.rotation.x = Math.PI / 2;
-                clockFace.position.set(0, 0.3 + (floors * floorHeight) + 3.2, depth/2 + 1.1);
-                group.add(tower, clockFace);
-            }
+                const rp = remotePlayers[p.uid]; rp.name = p.name; rp.targetPos.set(p.x || 0, p.y || 0, p.z || 20); rp.targetYaw = p.yaw || 0; rp.state = p.state || 'idle'; rp.actor.applyCustomization(remoteStyle);
+                const bubbleActive = p.chatMessage && (now - (p.chatTimestamp || 0) < 12000); rp.actor.updateOverheadTag(p.name, p.title || 'Explorer', bubbleActive ? p.chatMessage : '');
+                if (bubbleActive && p.chatTimestamp !== rp.lastChatTs) { rp.lastChatTs = p.chatTimestamp; const feed = document.getElementById('multiplayer-chat-feed'); const line = document.createElement('div'); line.textContent = `@${p.name}: ${p.chatMessage}`; line.style.color = '#29E7F2'; feed.appendChild(line); feed.scrollTop = feed.scrollHeight; }
+            });
+            document.getElementById('online-count').textContent = onlineCount;
+        });
 
-            if (titleLabel) {
-                const c = document.createElement('canvas'); c.width = 512; c.height = 128;
-                const ctx = c.getContext('2d');
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 512, 128);
-                ctx.strokeStyle = '#29E7F2'; ctx.lineWidth = 6; ctx.strokeRect(4, 4, 504, 120);
-                ctx.fillStyle = '#FFC857'; ctx.font = 'bold 36px Orbitron, sans-serif';
-                ctx.textAlign = 'center'; ctx.fillText(titleLabel, 256, 75);
-                const signTex = new THREE.CanvasTexture(c); signTex.encoding = THREE.sRGBEncoding;
-                const signMesh = new THREE.Mesh(new THREE.BoxGeometry(6, 1.5, 0.2), new THREE.MeshStandardMaterial({map: signTex}));
-                signMesh.position.set(0, 2.8, depth/2 + 0.2);
-                group.add(signMesh);
-            }
-
-            scene.add(group);
-            return group;
-        }
-
-        // 1. AI & ML Main Block (East, 2 Floors)
-        const mainBlock = buildMultiStoryBlock(28, -25, 40, 22, 2, 'standard', 'AI & ML DEPARTMENT');
-        
-        // Add the interactive HOD Board to the Main Block exterior
-        const hodSignTex = createSignTexture('#0f172a', '#FFC857', [{ text: 'HOD & FACULTY DIRECTORY', font: 'bold 34px Arial', color: '#FFC857' }, { text: 'Dr. Mahesh Kaluti (HoD) • Dr. Umesh D. R.', font: 'bold 25px Arial', color: '#ffffff' }], 1024, 200);
-        const hodBoard = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.75, 0.06), new THREE.MeshStandardMaterial({ map: hodSignTex }));
-        hodBoard.position.set(-8, 2.5, 11.2);
-        hodBoard.userData = { interactType: 'faculty_modal', getPrompt: () => 'Press E or Click to View Faculty Directory' };
-        interactableObjects.push(hodBoard);
-        mainBlock.add(hodBoard);
-
-        // 2. CRC Glass Tower (North-West, 3 Floors)
-        buildMultiStoryBlock(-35, -35, 26, 26, 3, 'glass_tower', 'CRC GLASS TOWER (3F)');
-        
-        // 3. GBL Heritage Block with Clock Tower (West, 2 Floors)
-        buildMultiStoryBlock(-42, 20, 36, 18, 2, 'heritage', 'GBL HERITAGE BLOCK');
-        
-        // 4. Innovation Vault Pavilion (South-West, 2 Floors)
-        buildMultiStoryBlock(-30, 75, 28, 20, 2, 'standard', 'INNOVATION PAVILION');
+        window.teleportNearPlayer = function(tx, ty, tz) { orbitMode = false; targetTeleport = { x: tx + 1.4, y: ty, z: tz + 1.4, yaw: 0, pitch: 0.05 }; };
 
         // ============================================================================
-        // TREES & LANDSCAPING
+        // LIVE 2D CAMPUS MINIMAP / RADAR RENDERER
         // ============================================================================
-        const animatedTreeCrowns = [];
-        function createTree(x, z, scale = 1) {
-            const tree = new THREE.Group();
-            const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.32 * scale, 0.48 * scale, 4 * scale, 10),
-                new THREE.MeshStandardMaterial({ color: 0x4a3525, roughness: 0.92 })
-            );
-            trunk.position.y = 2 * scale;
-            trunk.castShadow = true;
-            tree.add(trunk);
+        const minimapCanvas = document.getElementById('minimap-canvas'); const mCtx = minimapCanvas.getContext('2d'); const coordsEl = document.getElementById('radar-coords');
+        function worldToMinimap(wx, wz) { return { cx: ((wx + 100) / 200) * 275, cy: ((wz + 25) / 130) * 165 }; }
+        minimapCanvas.addEventListener('click', (e) => {
+            const rect = minimapCanvas.getBoundingClientRect(), worldX = ((e.clientX - rect.left) / rect.width) * 200 - 100, worldZ = ((e.clientY - rect.top) / rect.height) * 130 - 25;
+            if (!PhysicsWorld.checkHorizontalCollision(worldX, 0, worldZ)) { targetTeleport = { x: worldX, y: 0, z: worldZ, yaw: camYaw, pitch: 0.05 }; }
+        });
 
-            const crownGroup = new THREE.Group();
-            crownGroup.position.set(0, 4.2 * scale, 0);
-            const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.78 });
-            const c1 = new THREE.Mesh(new THREE.SphereGeometry(2.3 * scale, 12, 12), foliageMat);
-            c1.position.set(0, 0.6 * scale, 0);
-            const c2 = new THREE.Mesh(new THREE.SphereGeometry(1.8 * scale, 10, 10), foliageMat);
-            c2.position.set(1.2 * scale, 0, 0.8 * scale);
-            const c3 = new THREE.Mesh(new THREE.SphereGeometry(1.9 * scale, 10, 10), foliageMat);
-            c3.position.set(-1.1 * scale, 0.2 * scale, -0.6 * scale);
-            crownGroup.add(c1, c2, c3);
+        function renderMinimapRadar() {
+            mCtx.fillStyle = '#070c18'; mCtx.fillRect(0, 0, 275, 165); mCtx.strokeStyle = 'rgba(41, 231, 242, 0.08)'; mCtx.lineWidth = 1;
+            for (let gx = 0; gx < 275; gx += 35) { mCtx.beginPath(); mCtx.moveTo(gx, 0); mCtx.lineTo(gx, 165); mCtx.stroke(); }
+            for (let gy = 0; gy < 165; gy += 35) { mCtx.beginPath(); mCtx.moveTo(0, gy); mCtx.lineTo(275, gy); mCtx.stroke(); }
 
-            const treeShadow = new THREE.Mesh(new THREE.PlaneGeometry(5.5 * scale, 5.5 * scale), contactShadowMat);
-            treeShadow.rotation.x = -Math.PI / 2;
-            treeShadow.position.y = 0.02;
-            tree.add(crownGroup, treeShadow);
-            tree.position.set(x, 0, z);
-            scene.add(tree);
-            animatedTreeCrowns.push({ group: crownGroup, phase: Math.random() * Math.PI * 2 });
-            PhysicsWorld.addCollider(x - 0.5, x + 0.5, z - 0.5, z + 0.5, 0, 4);
+            const buildingsMap = [
+                { x: 8, z: -36, w: 40, d: 22, col: '#3b82f6', label: 'AI & ML DEPT' }, { x: -48, z: -48, w: 26, d: 26, col: '#8b5cf6', label: 'CRC TOWER' },
+                { x: -60, z: 11, w: 36, d: 18, col: '#f59e0b', label: 'GBL HERITAGE' }, { x: -44, z: 65, w: 28, d: 20, col: '#ec4899', label: 'PAVILION' }, { x: 38, z: 63, w: 32, d: 22, col: '#10b981', label: 'FOOTBALL' }
+            ];
+            buildingsMap.forEach(b => {
+                const p1 = worldToMinimap(b.x, b.z), p2 = worldToMinimap(b.x + b.w, b.z + b.d);
+                mCtx.fillStyle = b.col + '44'; mCtx.strokeStyle = b.col; mCtx.lineWidth = 1.5; mCtx.fillRect(p1.cx, p1.cy, p2.cx - p1.cx, p2.cy - p1.cy); mCtx.strokeRect(p1.cx, p1.cy, p2.cx - p1.cx, p2.cy - p1.cy);
+                mCtx.fillStyle = '#e2e8f0'; mCtx.font = 'bold 8px Orbitron, sans-serif'; mCtx.textAlign = 'center'; mCtx.fillText(b.label, (p1.cx + p2.cx) / 2, (p1.cy + p2.cy) / 2 + 3);
+            });
+
+            if (typeof facultyNPCs !== 'undefined') {
+                facultyNPCs.forEach(npc => {
+                    const fMap = worldToMinimap(npc.rig.wrapper.position.x, npc.rig.wrapper.position.z);
+                    mCtx.beginPath(); mCtx.arc(fMap.cx, fMap.cy, 4, 0, Math.PI * 2); mCtx.fillStyle = '#FFC857'; mCtx.fill(); mCtx.fillStyle = '#FFC857'; mCtx.font = 'bold 8px Inter, sans-serif'; mCtx.fillText(npc.id === 'umesh' ? 'Dr.Umesh' : 'Prof.Chetan', fMap.cx, fMap.cy - 6);
+                });
+            }
+
+            if (typeof ballState !== 'undefined') { const ballMap = worldToMinimap(ballState.pos.x, ballState.pos.z); mCtx.beginPath(); mCtx.arc(ballMap.cx, ballMap.cy, 3, 0, Math.PI * 2); mCtx.fillStyle = '#ffffff'; mCtx.fill(); }
+
+            for (let uid in remotePlayers) {
+                const rp = remotePlayers[uid]; const pos = worldToMinimap(rp.actor.wrapper.position.x, rp.actor.wrapper.position.z);
+                mCtx.beginPath(); mCtx.arc(pos.cx, pos.cy, 4, 0, Math.PI * 2); mCtx.fillStyle = '#5CFFB1'; mCtx.fill(); mCtx.fillStyle = '#5CFFB1'; mCtx.font = 'bold 8px Inter, sans-serif'; mCtx.fillText('@' + rp.name, pos.cx, pos.cy - 6);
+            }
+
+            const myMap = worldToMinimap(playerFootPos.x, playerFootPos.z); mCtx.save(); mCtx.translate(myMap.cx, myMap.cy); mCtx.rotate(-camYaw); mCtx.fillStyle = 'rgba(41, 231, 242, 0.25)';
+            mCtx.beginPath(); mCtx.moveTo(0, 0); mCtx.lineTo(-10, -22); mCtx.lineTo(10, -22); mCtx.closePath(); mCtx.fill(); mCtx.restore();
+            mCtx.beginPath(); mCtx.arc(myMap.cx, myMap.cy, 4.5, 0, Math.PI * 2); mCtx.fillStyle = '#29E7F2'; mCtx.fill(); mCtx.strokeStyle = '#ffffff'; mCtx.lineWidth = 1.5; mCtx.stroke();
+            coordsEl.textContent = `X:${Math.round(playerFootPos.x)} Z:${Math.round(playerFootPos.z)}`;
         }
 
-        [
-            [-28, 12, 1.35], [-36, 28, 1.4], [-28, -8, 1.25], [28, 12, 1.3], [36, 28, 1.35],
-            [-32, 60, 1.3], [32, 60, 1.3], [-82, 22, 1.45], [82, 22, 1.45],
-            [-22, 92, 1.4], [22, 92, 1.4], [-75, 75, 1.35], [90, 75, 1.35]
-        ].forEach(([tx, tz, sc]) => createTree(tx, tz, sc));
-                        // ============================================================================
-        // EXECUTIVE BLACK-SUIT PBR FACULTY MENTORS (DR. UMESH D. R. & PROF. CHETAN)
+        // ============================================================================
+        // EXPANDED CAMPUS VIEWPOINTS, TELEPORTATION & CONTROLS
+        // ============================================================================
+        const viewpoints = {
+            quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05 }, main: { foot: { x: 15, y: 0.0, z: -5 }, yaw: 0, pitch: 0.05 },
+            crc: { foot: { x: -35, y: 0.0, z: -22 }, yaw: -0.5, pitch: 0.02 }, gbl: { foot: { x: -42, y: 0.0, z: 35 }, yaw: -1.5, pitch: 0.05 },
+            pavilion: { foot: { x: -30, y: 0.0, z: 88 }, yaw: -1.5, pitch: 0.05 }, sports: { foot: { x: 48.0, y: 0.12, z: 74.0 }, yaw: -1.57, pitch: -0.04 }
+        };
+
+        let playerVelY = 0; let isGrounded = true; let targetTeleport = null; let orbitMode = false; let orbitAngle = 0.45, orbitElevation = 0.35, orbitDistance = 68; let currentLocomotionState = 'idle'; let activeHoveredTarget = null; let activeMentorId = null;
+
+        window.triggerActiveInteraction = function() {
+            if (!activeHoveredTarget || !activeHoveredTarget.userData) return;
+            const ud = activeHoveredTarget.userData;
+            if (ud.interactType === 'mentor' && ud.mentorId) { window.openMentorChatModal(ud.mentorId); } 
+            else if (ud.interactType === 'notice_board') { window.openNoticeBoardModal(); }
+        };
+
+        window.togglePerspectiveMode = function() { isThirdPerson = !isThirdPerson; const btn = document.getElementById('btn-viewmode'); btn.textContent = isThirdPerson ? '🧍 3rd Person' : '👁️ 1st Person'; btn.classList.toggle('active-mode', isThirdPerson); playerAvatar.wrapper.visible = isThirdPerson && !orbitMode; };
+        window.toggleOrbitMode = function() { orbitMode = !orbitMode; document.getElementById('btn-orbit').classList.toggle('active-mode', orbitMode); playerAvatar.wrapper.visible = isThirdPerson && !orbitMode; };
+        window.teleportTo = function(zoneKey) {
+            if (typeof window.closeMentorChatModal === 'function' && activeMentorId) window.closeMentorChatModal(); orbitMode = false; document.getElementById('btn-orbit').classList.remove('active-mode');
+            const v = viewpoints[zoneKey]; if (!v) return;
+            targetTeleport = { x: v.foot.x, y: v.foot.y, z: v.foot.z, yaw: v.yaw, pitch: v.pitch }; playerAvatar.wrapper.visible = isThirdPerson; document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+            if (window.innerWidth <= 900) window.toggleLeftDrawer(true);
+        };
+
+        window.applyGraphicsPreset = function(preset) { if (preset === 'HIGH') { renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); buildLivingGrassField(15000); } else if (preset === 'BALANCED') { renderer.setPixelRatio(1.5); buildLivingGrassField(8000); } else { renderer.setPixelRatio(1.0); buildLivingGrassField(3000); } };
+        window.applyGraphicsPreset(window.innerWidth <= 850 ? 'MOBILE' : 'HIGH');
+
+        const keys = { forward: false, backward: false, left: false, right: false, shift: false };
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { if (typeof window.closeNoticeBoardModal === 'function') window.closeNoticeBoardModal(); if (typeof window.closeMentorChatModal === 'function') window.closeMentorChatModal(); if (typeof window.closeAvatarCustomizer === 'function') window.closeAvatarCustomizer(); document.getElementById('profile-modal').style.display = 'none'; return; }
+            if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') return;
+            const k = e.key.toLowerCase();
+            if (k === 'w' || e.key === 'ArrowUp') keys.forward = true; if (k === 's' || e.key === 'ArrowDown') keys.backward = true; if (k === 'a' || e.key === 'ArrowLeft') keys.left = true; if (k === 'd' || e.key === 'ArrowRight') keys.right = true; if (e.key === 'Shift') keys.shift = true;
+            if (k === 'v') window.togglePerspectiveMode(); if (k === 'c' && typeof window.openAvatarCustomizer === 'function') window.openAvatarCustomizer();
+            if (k === 'e' && !e.repeat) window.triggerActiveInteraction(); if (k === 'f' && typeof window.kickFootball === 'function') window.kickFootball(14.5, 2.2); if (k === 'g' && typeof window.kickFootball === 'function') window.kickFootball(17.5, 5.2);
+            if (e.code === 'Space' && isGrounded) { playerVelY = 6.2; isGrounded = false; }
+        });
+        window.addEventListener('keyup', (e) => { const k = e.key.toLowerCase(); if (k === 'w' || e.key === 'ArrowUp') keys.forward = false; if (k === 's' || e.key === 'ArrowDown') keys.backward = false; if (k === 'a' || e.key === 'ArrowLeft') keys.left = false; if (k === 'd' || e.key === 'ArrowRight') keys.right = false; if (e.key === 'Shift') keys.shift = false; });
+
+        function bindTouchBtn(id, dir) { const el = document.getElementById(id); if (!el) return; el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[dir] = true; targetTeleport = null; }); el.addEventListener('touchend', (e) => { e.preventDefault(); keys[dir] = false; }); }
+        bindTouchBtn('btn-up', 'forward'); bindTouchBtn('btn-down', 'backward'); bindTouchBtn('btn-left', 'left'); bindTouchBtn('btn-right', 'right');
+
+        const raycaster = new THREE.Raycaster(); const pointer = new THREE.Vector2(); let isDragging = false, pointerDownPos = { x: 0, y: 0 }, prevX = 0, prevY = 0;
+        container.addEventListener('mousedown', (e) => { isDragging = true; pointerDownPos = { x: e.clientX, y: e.clientY }; prevX = e.clientX; prevY = e.clientY; targetTeleport = null; });
+        window.addEventListener('mouseup', (e) => {
+            if (isDragging && Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y) < 6) {
+                pointer.x = (e.clientX / window.innerWidth) * 2 - 1; pointer.y = -(e.clientY / window.innerHeight) * 2 + 1; raycaster.setFromCamera(pointer, camera);
+                if (typeof interactableObjects !== 'undefined') { const hits = raycaster.intersectObjects(interactableObjects); if (hits.length > 0 && hits[0].distance < 14) { activeHoveredTarget = hits[0].object; window.triggerActiveInteraction(); } }
+            }
+            isDragging = false;
+        });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return; const dx = e.clientX - prevX, dy = e.clientY - prevY;
+            if (orbitMode) { orbitAngle -= dx * 0.006; orbitElevation = Math.max(0.08, Math.min(1.25, orbitElevation + dy * 0.005)); } 
+            else { camYaw -= dx * 0.0045; camPitch = Math.max(-1.1, Math.min(1.1, camPitch - dy * 0.0045)); }
+            prevX = e.clientX; prevY = e.clientY;
+        });
+        container.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { isDragging = true; prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; } }, { passive: true });
+        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging || e.touches.length !== 1) return; const dx = e.touches[0].clientX - prevX, dy = e.touches[0].clientY - prevY;
+            camYaw -= dx * 0.005; camPitch = Math.max(-1.0, Math.min(1.0, camPitch - dy * 0.005)); prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
+        }, { passive: true });
+        setInterval(() => broadcastMyPresence(), 600);
+
+        // ============================================================================
+        // PBR FACULTY MENTOR GENERATOR & PATROL LOGIC
         // ============================================================================
         function createRealisticFaceSkinTexture(app) {
-            const c = document.createElement("canvas"); c.width = 512; c.height = 512;
-            const ctx = c.getContext("2d");
-            ctx.fillStyle = "#" + new THREE.Color(app.skinHex).getHexString();
-            ctx.fillRect(0, 0, 512, 512);
-
-            ctx.fillStyle = "#161920";
-            fillStrokeRoundRect(ctx, 184, 192, 52, 10, 4);
-            fillStrokeRoundRect(ctx, 276, 192, 52, 10, 4);
-
-            [210, 302].forEach(ex => {
-                ctx.fillStyle = "#f8fafc"; ctx.beginPath(); ctx.ellipse(ex, 222, 18, 10, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = app.eyeIrisHex || "#24160d"; ctx.beginPath(); ctx.arc(ex, 222, 8.5, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = "#05070a"; ctx.beginPath(); ctx.arc(ex, 222, 4.2, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(ex + 3, 219, 2.0, 0, Math.PI * 2); ctx.fill();
-            });
-
-            if (app.beardTrim) {
-                ctx.fillStyle = "rgba(22, 25, 32, 0.36)";
-                ctx.beginPath(); ctx.ellipse(256, 336, 86, 56, 0, 0.08 * Math.PI, 0.92 * Math.PI); ctx.fill();
-            }
-            if (app.mustache) {
-                ctx.fillStyle = "rgba(24, 26, 32, 0.85)";
-                fillStrokeRoundRect(ctx, 216, 282, 80, 11, 5);
-            }
-            ctx.fillStyle = "#8c4a42";
-            fillStrokeRoundRect(ctx, 228, 304, 56, 8, 3);
-
-            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
-            return tex;
+            const c = document.createElement("canvas"); c.width = 512; c.height = 512; const ctx = c.getContext("2d");
+            ctx.fillStyle = "#" + new THREE.Color(app.skinHex).getHexString(); ctx.fillRect(0, 0, 512, 512); ctx.fillStyle = "#161920";
+            fillStrokeRoundRect(ctx, 184, 192, 52, 10, 4); fillStrokeRoundRect(ctx, 276, 192, 52, 10, 4);
+            [210, 302].forEach(ex => { ctx.fillStyle = "#f8fafc"; ctx.beginPath(); ctx.ellipse(ex, 222, 18, 10, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = app.eyeIrisHex || "#24160d"; ctx.beginPath(); ctx.arc(ex, 222, 8.5, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#05070a"; ctx.beginPath(); ctx.arc(ex, 222, 4.2, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.arc(ex + 3, 219, 2.0, 0, Math.PI * 2); ctx.fill(); });
+            if (app.beardTrim) { ctx.fillStyle = "rgba(22, 25, 32, 0.36)"; ctx.beginPath(); ctx.ellipse(256, 336, 86, 56, 0, 0.08 * Math.PI, 0.92 * Math.PI); ctx.fill(); }
+            if (app.mustache) { ctx.fillStyle = "rgba(24, 26, 32, 0.85)"; fillStrokeRoundRect(ctx, 216, 282, 80, 11, 5); }
+            ctx.fillStyle = "#8c4a42"; fillStrokeRoundRect(ctx, 228, 304, 56, 8, 3);
+            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; return tex;
         }
 
         function createFacultyOverheadBadge(name, designation, borderHex = "#FFC857", stateLabel = "") {
-            const c = document.createElement("canvas"); c.width = 640; c.height = 180;
-            const ctx = c.getContext("2d"); ctx.clearRect(0, 0, 640, 180);
-
-            ctx.fillStyle = "rgba(11, 16, 32, 0.90)"; ctx.strokeStyle = borderHex; ctx.lineWidth = 4;
-            fillStrokeRoundRect(ctx, 30, 22, 580, 130, 18);
-
-            ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px Orbitron, Segoe UI, Arial"; ctx.textAlign = "center";
-            ctx.fillText(name, 320, 68);
-
-            ctx.fillStyle = borderHex; ctx.font = "600 21px Inter, Segoe UI, Arial";
-            ctx.fillText(designation, 320, 104);
-
-            ctx.fillStyle = "#5CFFB1"; ctx.font = "bold 18px JetBrains Mono, monospace";
-            ctx.fillText(stateLabel || "🎓 FACULTY MENTOR • PRESS [E] TO CHAT", 320, 136);
-
-            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
-            return tex;
+            const c = document.createElement("canvas"); c.width = 640; c.height = 180; const ctx = c.getContext("2d"); ctx.clearRect(0, 0, 640, 180);
+            ctx.fillStyle = "rgba(11, 16, 32, 0.90)"; ctx.strokeStyle = borderHex; ctx.lineWidth = 4; fillStrokeRoundRect(ctx, 30, 22, 580, 130, 18);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 32px Orbitron, Segoe UI, Arial"; ctx.textAlign = "center"; ctx.fillText(name, 320, 68);
+            ctx.fillStyle = borderHex; ctx.font = "600 21px Inter, Segoe UI, Arial"; ctx.fillText(designation, 320, 104);
+            ctx.fillStyle = "#5CFFB1"; ctx.font = "bold 18px JetBrains Mono, monospace"; ctx.fillText(stateLabel || "🎓 FACULTY MENTOR • PRESS [E] TO CHAT", 320, 136);
+            const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; return tex;
         }
 
         function buildRealisticPBRFacultyRig(config) {
-            const app = config.appearance;
-            const s = app.heightScale || 1.0;
-            const root = new THREE.Group();
-
+            const app = config.appearance, s = app.heightScale || 1.0, root = new THREE.Group();
             const skinMat = new THREE.MeshStandardMaterial({ color: app.skinHex, roughness: 0.52, metalness: 0.03 });
             const hairMat = new THREE.MeshStandardMaterial({ color: app.hairHex, roughness: 0.78, metalness: 0.04 });
             const shirtMat = new THREE.MeshStandardMaterial({ color: app.shirtHex, roughness: 0.62, metalness: 0.04 });
@@ -1259,184 +762,86 @@
             const shoeMat = new THREE.MeshStandardMaterial({ color: app.shoeHex || 0x050505, roughness: 0.22, metalness: 0.18 });
 
             const hips = new THREE.Group(); hips.position.y = 0.94 * s; root.add(hips);
-            const pelvisMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.165 * s, 0.155 * s, 0.18 * s, 18), trouserMat);
-            pelvisMesh.scale.set(1.0, 1.0, 0.74); pelvisMesh.castShadow = true; hips.add(pelvisMesh);
-
+            const pelvisMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.165 * s, 0.155 * s, 0.18 * s, 18), trouserMat); pelvisMesh.scale.set(1.0, 1.0, 0.74); pelvisMesh.castShadow = true; hips.add(pelvisMesh);
             const spine = new THREE.Group(); spine.position.y = 0.09 * s; hips.add(spine);
-            const torsoWidth = app.shoulderWidth;
-            const chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(torsoWidth * s, 0.158 * s, 0.50 * s, 20), suitJacketMat);
+            const torsoWidth = app.shoulderWidth, chestMesh = new THREE.Mesh(new THREE.CylinderGeometry(torsoWidth * s, 0.158 * s, 0.50 * s, 20), suitJacketMat);
             chestMesh.scale.set(1.0, 1.0, 0.68); chestMesh.position.y = 0.25 * s; chestMesh.castShadow = true; spine.add(chestMesh);
 
-            const shirtFront = new THREE.Mesh(new THREE.BoxGeometry(0.125 * s, 0.45 * s, 0.025 * s), shirtMat);
-            shirtFront.position.set(0, 0.26 * s, 0.108 * s); spine.add(shirtFront);
-
-            [-1, 1].forEach(side => {
-                const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.052 * s, 0.38 * s, 0.032 * s), suitJacketMat);
-                lapel.position.set(side * 0.062 * s, 0.28 * s, 0.114 * s);
-                lapel.rotation.z = -side * 0.14;
-                spine.add(lapel);
-            });
-
-            if (app.tieHex) {
-                const tieMat = new THREE.MeshStandardMaterial({ color: app.tieHex, roughness: 0.35, metalness: 0.1 });
-                const tieMesh = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.34 * s, 0.033 * s), tieMat);
-                tieMesh.position.set(0, 0.25 * s, 0.120 * s); spine.add(tieMesh);
-            }
-
-            const pocketSq = new THREE.Mesh(new THREE.BoxGeometry(0.035 * s, 0.018 * s, 0.015 * s), new THREE.MeshBasicMaterial({ color: app.tieHex || 0x29E7F2 }));
-            pocketSq.position.set(-0.095 * s, 0.36 * s, 0.115 * s);
-            spine.add(pocketSq);
+            const shirtFront = new THREE.Mesh(new THREE.BoxGeometry(0.125 * s, 0.45 * s, 0.025 * s), shirtMat); shirtFront.position.set(0, 0.26 * s, 0.108 * s); spine.add(shirtFront);
+            [-1, 1].forEach(side => { const lapel = new THREE.Mesh(new THREE.BoxGeometry(0.052 * s, 0.38 * s, 0.032 * s), suitJacketMat); lapel.position.set(side * 0.062 * s, 0.28 * s, 0.114 * s); lapel.rotation.z = -side * 0.14; spine.add(lapel); });
+            if (app.tieHex) { const tieMesh = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.34 * s, 0.033 * s), new THREE.MeshStandardMaterial({ color: app.tieHex, roughness: 0.35, metalness: 0.1 })); tieMesh.position.set(0, 0.25 * s, 0.120 * s); spine.add(tieMesh); }
+            const pocketSq = new THREE.Mesh(new THREE.BoxGeometry(0.035 * s, 0.018 * s, 0.015 * s), new THREE.MeshBasicMaterial({ color: app.tieHex || 0x29E7F2 })); pocketSq.position.set(-0.095 * s, 0.36 * s, 0.115 * s); spine.add(pocketSq);
 
             const neck = new THREE.Group(); neck.position.y = 0.52 * s; spine.add(neck);
-            const neckCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.058 * s, 0.065 * s, 0.10 * s, 16), skinMat);
-            neckCyl.position.y = 0.06 * s; neck.add(neckCyl);
-
+            const neckCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.058 * s, 0.065 * s, 0.10 * s, 16), skinMat); neckCyl.position.y = 0.06 * s; neck.add(neckCyl);
             const headGroup = new THREE.Group(); headGroup.position.y = 0.11 * s; neck.add(headGroup);
-            const faceMat = new THREE.MeshStandardMaterial({ map: createRealisticFaceSkinTexture(app), roughness: 0.52 });
-            const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.128 * s, 28, 24), faceMat);
-            cranium.scale.set(0.92, 1.10, 0.98); cranium.rotation.y = -Math.PI / 2;
-            cranium.position.y = 0.10 * s; cranium.castShadow = true; headGroup.add(cranium);
-
-            const noseMesh = new THREE.Mesh(new THREE.ConeGeometry(0.022 * s, 0.058 * s, 10), skinMat);
-            noseMesh.rotation.x = Math.PI * 0.42; noseMesh.position.set(0, 0.095 * s, 0.124 * s); headGroup.add(noseMesh);
-
-            const mouthAperture = new THREE.Mesh(new THREE.BoxGeometry(0.044 * s, 0.008 * s, 0.015 * s), new THREE.MeshBasicMaterial({ color: 0x2b1111 }));
-            mouthAperture.position.set(0, 0.042 * s, 0.116 * s); headGroup.add(mouthAperture);
-
-            const hairCrown = new THREE.Mesh(new THREE.SphereGeometry(0.133 * s, 22, 18, 0, Math.PI * 2, 0, Math.PI * 0.58), hairMat);
-            hairCrown.scale.set(0.94, 1.08, 1.01); hairCrown.position.y = 0.112 * s; hairCrown.rotation.x = -0.18; headGroup.add(hairCrown);
-
-            if (app.hasGlasses) {
-                const frameMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.75, roughness: 0.25 });
-                [-1, 1].forEach(side => {
-                    const rim = new THREE.Mesh(new THREE.RingGeometry(0.019 * s, 0.024 * s, 16), frameMat);
-                    rim.position.set(side * 0.042 * s, 0.112 * s, 0.124 * s); headGroup.add(rim);
-                });
-            }
+            const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.128 * s, 28, 24), new THREE.MeshStandardMaterial({ map: createRealisticFaceSkinTexture(app), roughness: 0.52 }));
+            cranium.scale.set(0.92, 1.10, 0.98); cranium.rotation.y = -Math.PI / 2; cranium.position.y = 0.10 * s; cranium.castShadow = true; headGroup.add(cranium);
+            const noseMesh = new THREE.Mesh(new THREE.ConeGeometry(0.022 * s, 0.058 * s, 10), skinMat); noseMesh.rotation.x = Math.PI * 0.42; noseMesh.position.set(0, 0.095 * s, 0.124 * s); headGroup.add(noseMesh);
+            const mouthAperture = new THREE.Mesh(new THREE.BoxGeometry(0.044 * s, 0.008 * s, 0.015 * s), new THREE.MeshBasicMaterial({ color: 0x2b1111 })); mouthAperture.position.set(0, 0.042 * s, 0.116 * s); headGroup.add(mouthAperture);
+            const hairCrown = new THREE.Mesh(new THREE.SphereGeometry(0.133 * s, 22, 18, 0, Math.PI * 2, 0, Math.PI * 0.58), hairMat); hairCrown.scale.set(0.94, 1.08, 1.01); hairCrown.position.y = 0.112 * s; hairCrown.rotation.x = -0.18; headGroup.add(hairCrown);
+            if (app.hasGlasses) { const frameMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.75, roughness: 0.25 }); [-1, 1].forEach(side => { const rim = new THREE.Mesh(new THREE.RingGeometry(0.019 * s, 0.024 * s, 16), frameMat); rim.position.set(side * 0.042 * s, 0.112 * s, 0.124 * s); headGroup.add(rim); }); }
 
             function buildArticulatedArm(side) {
                 const shoulder = new THREE.Group(); shoulder.position.set(side * (torsoWidth + 0.025) * s, 0.45 * s, 0); spine.add(shoulder);
-                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052 * s, 0.044 * s, 0.30 * s, 14), suitJacketMat);
-                upperArm.position.y = -0.15 * s; upperArm.castShadow = true; shoulder.add(upperArm);
+                const upperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.052 * s, 0.044 * s, 0.30 * s, 14), suitJacketMat); upperArm.position.y = -0.15 * s; upperArm.castShadow = true; shoulder.add(upperArm);
                 const elbow = new THREE.Group(); elbow.position.y = -0.30 * s; shoulder.add(elbow);
-                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.044 * s, 0.036 * s, 0.26 * s, 14), suitJacketMat);
-                foreArm.position.y = -0.13 * s; foreArm.castShadow = true; elbow.add(foreArm);
-                const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.037 * s, 0.037 * s, 0.025 * s, 12), shirtMat);
-                cuff.position.y = -0.255 * s; elbow.add(cuff);
-                const hand = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.075 * s, 0.052 * s), skinMat);
-                hand.position.set(0, -0.295 * s, 0.008 * s); elbow.add(hand);
+                const foreArm = new THREE.Mesh(new THREE.CylinderGeometry(0.044 * s, 0.036 * s, 0.26 * s, 14), suitJacketMat); foreArm.position.y = -0.13 * s; foreArm.castShadow = true; elbow.add(foreArm);
+                const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.037 * s, 0.037 * s, 0.025 * s, 12), shirtMat); cuff.position.y = -0.255 * s; elbow.add(cuff);
+                const hand = new THREE.Mesh(new THREE.BoxGeometry(0.038 * s, 0.075 * s, 0.052 * s), skinMat); hand.position.set(0, -0.295 * s, 0.008 * s); elbow.add(hand);
                 return { arm: shoulder, foreArm: elbow };
             }
-
             function buildArticulatedLeg(side) {
                 const hipJoint = new THREE.Group(); hipJoint.position.set(side * 0.092 * s, -0.04 * s, 0); hips.add(hipJoint);
-                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.074 * s, 0.058 * s, 0.44 * s, 14), trouserMat);
-                thigh.position.y = -0.22 * s; thigh.castShadow = true; hipJoint.add(thigh);
+                const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.074 * s, 0.058 * s, 0.44 * s, 14), trouserMat); thigh.position.y = -0.22 * s; thigh.castShadow = true; hipJoint.add(thigh);
                 const knee = new THREE.Group(); knee.position.y = -0.44 * s; hipJoint.add(knee);
-                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.056 * s, 0.046 * s, 0.42 * s, 14), trouserMat);
-                shin.position.y = -0.21 * s; shin.castShadow = true; knee.add(shin);
-                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.092 * s, 0.068 * s, 0.21 * s), shoeMat);
-                shoe.position.set(0, -0.43 * s, 0.038 * s); shoe.castShadow = true; knee.add(shoe);
+                const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.056 * s, 0.046 * s, 0.42 * s, 14), trouserMat); shin.position.y = -0.21 * s; shin.castShadow = true; knee.add(shin);
+                const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.092 * s, 0.068 * s, 0.21 * s), shoeMat); shoe.position.set(0, -0.43 * s, 0.038 * s); shoe.castShadow = true; knee.add(shoe);
                 return { upLeg: hipJoint, leg: knee };
             }
-
-            const leftArm = buildArticulatedArm(1), rightArm = buildArticulatedArm(-1);
-            const leftLeg = buildArticulatedLeg(1), rightLeg = buildArticulatedLeg(-1);
-
-            const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(0.95 * s, 0.95 * s), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3, depthWrite: false }));
-            shadowPlane.rotation.x = -Math.PI / 2; shadowPlane.position.y = 0.015; root.add(shadowPlane);
+            const leftArm = buildArticulatedArm(1), rightArm = buildArticulatedArm(-1), leftLeg = buildArticulatedLeg(1), rightLeg = buildArticulatedLeg(-1);
 
             const badgeTex = createFacultyOverheadBadge(config.name, config.designation, app.badgeBorderHex, "");
-            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: badgeTex, transparent: true, depthTest: false }));
-            tagSprite.position.set(0, 2.24 * s, 0); tagSprite.scale.set(2.35, 0.66, 1); tagSprite.renderOrder = 999; root.add(tagSprite);
+            const tagSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: badgeTex, transparent: true, depthTest: false })); tagSprite.position.set(0, 2.24 * s, 0); tagSprite.scale.set(2.35, 0.66, 1); tagSprite.renderOrder = 999; root.add(tagSprite);
 
             return {
                 wrapper: root, tagSprite, baseHipY: 0.94 * s, lastBadgeHash: "",
                 updateBadgeState(stateText) {
-                    const hash = `${config.name}|${stateText}`;
-                    if (this.lastBadgeHash === hash) return;
-                    this.lastBadgeHash = hash;
-                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose();
-                    this.tagSprite.material.map = createFacultyOverheadBadge(config.name, config.designation, app.badgeBorderHex, stateText);
+                    const hash = `${config.name}|${stateText}`; if (this.lastBadgeHash === hash) return; this.lastBadgeHash = hash;
+                    if (this.tagSprite.material.map) this.tagSprite.material.map.dispose(); this.tagSprite.material.map = createFacultyOverheadBadge(config.name, config.designation, app.badgeBorderHex, stateText);
                 },
-                bones: {
-                    hips, spine, neck, head: headGroup,
-                    leftArm: leftArm.arm, leftForeArm: leftArm.foreArm,
-                    rightArm: rightArm.arm, rightForeArm: rightArm.foreArm,
-                    leftUpLeg: leftLeg.upLeg, leftLeg: leftLeg.leg,
-                    rightUpLeg: rightLeg.upLeg, rightLeg: rightLeg.leg,
-                    mouthAperture
-                }
+                bones: { hips, spine, neck, head: headGroup, leftArm: leftArm.arm, leftForeArm: leftArm.foreArm, rightArm: rightArm.arm, rightForeArm: rightArm.foreArm, leftUpLeg: leftLeg.upLeg, leftLeg: leftLeg.leg, rightUpLeg: rightLeg.upLeg, rightLeg: rightLeg.leg, mouthAperture }
             };
         }
 
         function blendFacultySkeletalPose(rig, state, dt, elapsed, walkPhase, isSpeakingAudio = false) {
             const b = rig.bones; if (!b) return;
-            const lerpRate = Math.min(1, dt * 10);
-            const lerp = (cur, target) => cur + (target - cur) * lerpRate;
-
-            let hipOffsetY = Math.sin(elapsed * 2.1) * 0.008;
-            let spineRotY = 0, headRotX = 0, headRotY = 0;
-            let lArmX = 0.04, lArmZ = 0.06, lForeX = -0.14;
-            let rArmX = 0.04, rArmZ = -0.06, rForeX = -0.14;
-            let lUpLegX = 0, lKneeX = 0, rUpLegX = 0, rKneeX = 0;
+            const lerpRate = Math.min(1, dt * 10), lerp = (cur, target) => cur + (target - cur) * lerpRate;
+            let hipOffsetY = Math.sin(elapsed * 2.1) * 0.008, spineRotY = 0, headRotX = 0, headRotY = 0, lArmX = 0.04, lArmZ = 0.06, lForeX = -0.14, rArmX = 0.04, rArmZ = -0.06, rForeX = -0.14, lUpLegX = 0, lKneeX = 0, rUpLegX = 0, rKneeX = 0;
 
             if (state === "walk") {
-                const amp = 0.40; const s = Math.sin(walkPhase), c = Math.cos(walkPhase);
-                hipOffsetY = Math.abs(s) * 0.028 - 0.01; spineRotY = -s * 0.075;
-                lUpLegX = s * amp; rUpLegX = -s * amp;
-                lKneeX = Math.max(0, -c * amp * 1.15); rKneeX = Math.max(0, c * amp * 1.15);
-                lArmX = -s * (amp * 0.72); rArmX = s * (amp * 0.72);
-                lForeX = -0.22 - Math.max(0, -s) * 0.18; rForeX = -0.22 - Math.max(0, s) * 0.18;
+                const amp = 0.40, s = Math.sin(walkPhase), c = Math.cos(walkPhase);
+                hipOffsetY = Math.abs(s) * 0.028 - 0.01; spineRotY = -s * 0.075; lUpLegX = s * amp; rUpLegX = -s * amp; lKneeX = Math.max(0, -c * amp * 1.15); rKneeX = Math.max(0, c * amp * 1.15);
+                lArmX = -s * (amp * 0.72); rArmX = s * (amp * 0.72); lForeX = -0.22 - Math.max(0, -s) * 0.18; rForeX = -0.22 - Math.max(0, s) * 0.18;
             } else if (state === "listen") {
-                headRotX = Math.sin(elapsed * 2.2) * 0.04 + 0.02;
-                lArmX = -0.22; lArmZ = 0.08; lForeX = -0.58;
-                rArmX = 0.05;  rArmZ = -0.06; rForeX = -0.20;
+                headRotX = Math.sin(elapsed * 2.2) * 0.04 + 0.02; lArmX = -0.22; lArmZ = 0.08; lForeX = -0.58; rArmX = 0.05;  rArmZ = -0.06; rForeX = -0.20;
             } else if (state === "explain") {
                 headRotX = Math.sin(elapsed * 2.8) * 0.045; headRotY = Math.sin(elapsed * 1.5) * 0.08; spineRotY = Math.sin(elapsed * 1.3) * 0.05;
                 lArmX = -0.48 + Math.sin(elapsed * 3.6) * 0.18; lArmZ = 0.14 + Math.cos(elapsed * 2.5) * 0.06; lForeX = -0.82 + Math.sin(elapsed * 4.2) * 0.16;
                 rArmX = -0.38 + Math.cos(elapsed * 3.2) * 0.16; rArmZ = -0.12; rForeX = -0.74 + Math.cos(elapsed * 3.8) * 0.14;
             }
-
-            b.hips.position.y = lerp(b.hips.position.y, rig.baseHipY + hipOffsetY);
-            b.spine.rotation.y = lerp(b.spine.rotation.y, spineRotY);
-            b.head.rotation.x = lerp(b.head.rotation.x, headRotX);
-            b.head.rotation.y = lerp(b.head.rotation.y, headRotY);
-            b.leftArm.rotation.x = lerp(b.leftArm.rotation.x, lArmX);
-            b.leftArm.rotation.z = lerp(b.leftArm.rotation.z, lArmZ);
-            b.leftForeArm.rotation.x = lerp(b.leftForeArm.rotation.x, lForeX);
-            b.rightArm.rotation.x = lerp(b.rightArm.rotation.x, rArmX);
-            b.rightArm.rotation.z = lerp(b.rightArm.rotation.z, rArmZ);
-            b.rightForeArm.rotation.x = lerp(b.rightForeArm.rotation.x, rForeX);
-            b.leftUpLeg.rotation.x = lerp(b.leftUpLeg.rotation.x, lUpLegX);
-            b.leftLeg.rotation.x = lerp(b.leftLeg.rotation.x, lKneeX);
-            b.rightUpLeg.rotation.x = lerp(b.rightUpLeg.rotation.x, rUpLegX);
-            b.rightLeg.rotation.x = lerp(b.rightLeg.rotation.x, rKneeX);
-
+            b.hips.position.y = lerp(b.hips.position.y, rig.baseHipY + hipOffsetY); b.spine.rotation.y = lerp(b.spine.rotation.y, spineRotY);
+            b.head.rotation.x = lerp(b.head.rotation.x, headRotX); b.head.rotation.y = lerp(b.head.rotation.y, headRotY);
+            b.leftArm.rotation.x = lerp(b.leftArm.rotation.x, lArmX); b.leftArm.rotation.z = lerp(b.leftArm.rotation.z, lArmZ); b.leftForeArm.rotation.x = lerp(b.leftForeArm.rotation.x, lForeX);
+            b.rightArm.rotation.x = lerp(b.rightArm.rotation.x, rArmX); b.rightArm.rotation.z = lerp(b.rightArm.rotation.z, rArmZ); b.rightForeArm.rotation.x = lerp(b.rightForeArm.rotation.x, rForeX);
+            b.leftUpLeg.rotation.x = lerp(b.leftUpLeg.rotation.x, lUpLegX); b.leftLeg.rotation.x = lerp(b.leftLeg.rotation.x, lKneeX);
+            b.rightUpLeg.rotation.x = lerp(b.rightUpLeg.rotation.x, rUpLegX); b.rightLeg.rotation.x = lerp(b.rightLeg.rotation.x, rKneeX);
             b.mouthAperture.scale.y = (isSpeakingAudio || state === "explain") ? 0.6 + Math.abs(Math.sin(elapsed * 14.0)) * 2.0 : 0.25;
         }
 
         const FACULTY_CONFIGS = {
-            umesh: {
-                id: "umesh", name: "Dr. Umesh D. R.", designation: "Professor & COE, CSE (AI & ML)", roleShort: "Professor & COE — CSE (AI & ML), PESCE Mandya",
-                researchText: "Research: Data Analytics, AI & Machine Learning",
-                systemPrompt: `You are a virtual academic mentor simulation of Dr. Umesh D. R., Professor (CAS) & Controller of Examinations in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research areas: Data Analytics, Artificial Intelligence, and Machine Learning. Be academically rigorous, structured, and encouraging. Ask 1 concise follow-up question to test the student's fundamentals. Keep responses concise (3-5 sentences).`,
-                appearance: { heightScale: 1.03, shoulderWidth: 0.235, skinHex: 0xc68b63, hairHex: 0x1c2128, mustache: true, beardTrim: false, hasGlasses: true, shirtHex: 0xffffff, jacketHex: 0x0c1017, tieHex: 0x991b1b, trouserHex: 0x090d16, shoeHex: 0x050505, eyeIrisHex: "#2c1d11", badgeBorderHex: "#FFC857" },
-                patrolSpeed: 1.50, strideLength: 0.74,
-                waypoints: [{ x: 0.0, y: 0.0, z: 36.0, pauseSec: 4.0 }, { x: 5.2, y: 0.0, z: 26.0, pauseSec: 2.5 }, { x: 3.4, y: 0.0, z: 10.5, pauseSec: 4.5 }, { x: -3.4, y: 0.0, z: 12.0, pauseSec: 3.0 }, { x: -5.2, y: 0.0, z: 28.0, pauseSec: 3.0 }],
-                greetings: ["Tell me what you're working on. Start with the problem statement, explain your approach, and let's examine whether your solution actually works.", "Hello! What AI, Machine Learning, or Data Analytics problem are you investigating today? Let's examine your methodology."],
-                suggestedQuestions: ["How do I validate my ML model beyond accuracy?", "How should I structure my AI research problem statement?", "What are common pitfalls in data analytics pipelines?"]
-            },
-            chetan: {
-                id: "chetan", name: "Prof. Chetan Kumar V.", designation: "Assistant Professor, CSE (AI & ML)", roleShort: "Assistant Professor — CSE (AI & ML), PESCE Mandya",
-                researchText: "Research Area: Big Data Analytics & Practical Systems",
-                systemPrompt: `You are a virtual academic mentor simulation of Prof. Chetan Kumar V., Assistant Professor in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research area: Big Data Analytics. Be practical, analytical, and encouraging. Help students debug code, design scalable data pipelines, and turn hackathon ideas into working engineering systems. Keep responses concise (3-5 sentences).`,
-                appearance: { heightScale: 0.99, shoulderWidth: 0.218, skinHex: 0xd1976e, hairHex: 0x11141a, mustache: true, beardTrim: true, hasGlasses: false, shirtHex: 0xe0f2fe, jacketHex: 0x111827, tieHex: 0x0284c7, trouserHex: 0x0b0f19, shoeHex: 0x050505, eyeIrisHex: "#1e150d", badgeBorderHex: "#29E7F2" },
-                patrolSpeed: 1.75, strideLength: 0.78,
-                waypoints: [{ x: 10.5, y: 0.20, z: -6.5, pauseSec: 4.0 }, { x: 14.8, y: 0.20, z: -10.2, pauseSec: 3.5 }, { x: 4.2, y: 0.20, z: -4.2, pauseSec: 2.5 }, { x: 0.0, y: 0.20, z: 2.0, pauseSec: 3.5 }, { x: -6.5, y: 0.20, z: -4.5, pauseSec: 3.0 }],
-                greetings: ["What are you building right now? Explain what works, what doesn't, and what you've tried so far. We'll work through the problem step by step.", "Hi! Show me your project architecture or Big Data pipeline—let's see how we can make it practical and scalable."],
-                suggestedQuestions: ["How do I design a scalable Big Data processing pipeline?", "How should I debug a slow query or API bottleneck?", "How can I turn my hackathon prototype into a working system?"]
-            }
+            umesh: { id: "umesh", name: "Dr. Umesh D. R.", designation: "Professor & COE, CSE (AI & ML)", roleShort: "Professor & COE — CSE (AI & ML), PESCE Mandya", researchText: "Research: Data Analytics, AI & Machine Learning", systemPrompt: `You are a virtual academic mentor simulation of Dr. Umesh D. R., Professor (CAS) & Controller of Examinations in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research areas: Data Analytics, Artificial Intelligence, and Machine Learning. Be academically rigorous, structured, and encouraging. Ask 1 concise follow-up question to test the student's fundamentals. Keep responses concise (3-5 sentences).`, appearance: { heightScale: 1.03, shoulderWidth: 0.235, skinHex: 0xc68b63, hairHex: 0x1c2128, mustache: true, beardTrim: false, hasGlasses: true, shirtHex: 0xffffff, jacketHex: 0x0c1017, tieHex: 0x991b1b, trouserHex: 0x090d16, shoeHex: 0x050505, eyeIrisHex: "#2c1d11", badgeBorderHex: "#FFC857" }, patrolSpeed: 1.50, strideLength: 0.74, waypoints: [{ x: 0.0, y: 0.0, z: 36.0, pauseSec: 4.0 }, { x: 5.2, y: 0.0, z: 26.0, pauseSec: 2.5 }, { x: 3.4, y: 0.0, z: 10.5, pauseSec: 4.5 }, { x: -3.4, y: 0.0, z: 12.0, pauseSec: 3.0 }, { x: -5.2, y: 0.0, z: 28.0, pauseSec: 3.0 }], greetings: ["Tell me what you're working on. Start with the problem statement, explain your approach, and let's examine whether your solution actually works.", "Hello! What AI, Machine Learning, or Data Analytics problem are you investigating today? Let's examine your methodology."], suggestedQuestions: ["How do I validate my ML model beyond accuracy?", "How should I structure my AI research problem statement?", "What are common pitfalls in data analytics pipelines?"] },
+            chetan: { id: "chetan", name: "Prof. Chetan Kumar V.", designation: "Assistant Professor, CSE (AI & ML)", roleShort: "Assistant Professor — CSE (AI & ML), PESCE Mandya", researchText: "Research Area: Big Data Analytics & Practical Systems", systemPrompt: `You are a virtual academic mentor simulation of Prof. Chetan Kumar V., Assistant Professor in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research area: Big Data Analytics. Be practical, analytical, and encouraging. Help students debug code, design scalable data pipelines, and turn hackathon ideas into working engineering systems. Keep responses concise (3-5 sentences).`, appearance: { heightScale: 0.99, shoulderWidth: 0.218, skinHex: 0xd1976e, hairHex: 0x11141a, mustache: true, beardTrim: true, hasGlasses: false, shirtHex: 0xe0f2fe, jacketHex: 0x111827, tieHex: 0x0284c7, trouserHex: 0x0b0f19, shoeHex: 0x050505, eyeIrisHex: "#1e150d", badgeBorderHex: "#29E7F2" }, patrolSpeed: 1.75, strideLength: 0.78, waypoints: [{ x: 10.5, y: 0.20, z: -6.5, pauseSec: 4.0 }, { x: 14.8, y: 0.20, z: -10.2, pauseSec: 3.5 }, { x: 4.2, y: 0.20, z: -4.2, pauseSec: 2.5 }, { x: 0.0, y: 0.20, z: 2.0, pauseSec: 3.5 }, { x: -6.5, y: 0.20, z: -4.5, pauseSec: 3.0 }], greetings: ["What are you building right now? Explain what works, what doesn't, and what you've tried so far. We'll work through the problem step by step.", "Hi! Show me your project architecture or Big Data pipeline—let's see how we can make it practical and scalable."], suggestedQuestions: ["How do I design a scalable Big Data processing pipeline?", "How should I debug a slow query or API bottleneck?", "How can I turn my hackathon prototype into a working system?"] }
         };
 
         class AutonomousFacultyMentor {
@@ -1445,12 +850,10 @@
                 this.waypoints = config.waypoints.map(w => ({ pos: new THREE.Vector3(w.x, w.y, w.z), pauseSec: w.pauseSec || 3.0 }));
                 this.currentWpIndex = 0; this.pauseTimer = 1.5; this.walkPhase = Math.random() * Math.PI * 2;
                 this.isEngagedInDialogue = false; this.isSpeakingAudio = false; this.state = "walk";
-                this.rig = buildRealisticPBRFacultyRig(config);
-                this.rig.wrapper.position.copy(this.waypoints[0].pos); scene.add(this.rig.wrapper);
+                this.rig = buildRealisticPBRFacultyRig(config); this.rig.wrapper.position.copy(this.waypoints[0].pos); scene.add(this.rig.wrapper);
 
                 const hitbox = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 2.1, 10), new THREE.MeshBasicMaterial({ visible: false }));
-                hitbox.position.y = 1.05;
-                hitbox.userData = { interactType: "mentor", mentorId: this.id, getPrompt: () => `👨‍🏫 ${this.name} — Press E to Chat Face-to-Face` };
+                hitbox.position.y = 1.05; hitbox.userData = { interactType: "mentor", mentorId: this.id, getPrompt: () => `👨‍🏫 ${this.name} — Press E to Chat Face-to-Face` };
                 this.rig.wrapper.add(hitbox); interactableObjects.push(hitbox);
             }
             normalizeAngle(a) { while (a < -Math.PI) a += Math.PI * 2; while (a > Math.PI) a -= Math.PI * 2; return a; }
@@ -1500,14 +903,6 @@
             ctx.fillStyle = "#111827"; ctx.beginPath(); ctx.arc(39, 40, 2.3, 0, Math.PI * 2); ctx.arc(53, 40, 2.3, 0, Math.PI * 2); ctx.fill();
             if (app.hasGlasses) { ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 1.8; ctx.strokeRect(32, 35, 13, 9); ctx.strokeRect(47, 35, 13, 9); }
         }
-
-        window.walkToFacultyMentor = function(mentorId) {
-            const npc = facultyNPCs.find(n => n.id === mentorId); if (!npc) return;
-            orbitMode = false; document.getElementById('btn-orbit').classList.remove('active-mode');
-            const mPos = npc.rig.wrapper.position, fwdX = Math.sin(npc.rig.wrapper.rotation.y), fwdZ = Math.cos(npc.rig.wrapper.rotation.y);
-            playerFootPos.set(mPos.x + fwdX * 1.85, mPos.y, mPos.z + fwdZ * 1.85); playerAvatar.wrapper.position.copy(playerFootPos);
-            if (window.innerWidth <= 900) window.toggleLeftDrawer(true);
-        };
 
         window.openMentorChatModal = function(mentorId) {
             const npc = facultyNPCs.find(n => n.id === mentorId); if (!npc) return;
@@ -1591,76 +986,6 @@
         };
 
         // ============================================================================
-        // FOOTBALL PHYSICS, DB SYNC, AND SCOREBOARD
-        // ============================================================================
-        function createSoccerBallTexture() {
-            const c = document.createElement('canvas'); c.width = 256; c.height = 256; const ctx = c.getContext('2d');
-            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 256, 256); ctx.fillStyle = '#111827';
-            [[64, 64], [192, 64], [128, 128], [64, 192], [192, 192]].forEach(([bx, by]) => { ctx.beginPath(); ctx.arc(bx, by, 28, 0, Math.PI * 2); ctx.fill(); });
-            return new THREE.CanvasTexture(c);
-        }
-        const footballMesh = new THREE.Mesh(new THREE.SphereGeometry(0.32, 20, 20), new THREE.MeshStandardMaterial({ map: createSoccerBallTexture(), roughness: 0.35, metalness: 0.1 }));
-        footballMesh.castShadow = true; footballMesh.position.set(54, 0.44, 74); scene.add(footballMesh);
-
-        const ballState = { pos: new THREE.Vector3(54, 0.44, 74), vel: new THREE.Vector3(0, 0, 0), scoreCyan: 0, scoreGold: 0, lastKickerUid: "", lastKickerName: "", lastGoalTime: 0 };
-        const matchDocRef = doc(db, "campus_activities", "football_match");
-
-        onSnapshot(matchDocRef, (snap) => {
-            if (!snap.exists()) return; const d = snap.data();
-            ballState.scoreCyan = d.scoreCyan || 0; ballState.scoreGold = d.scoreGold || 0;
-            document.getElementById('score-cyan').textContent = ballState.scoreCyan; document.getElementById('score-gold').textContent = ballState.scoreGold;
-            
-            const statusStr = d.lastEventText || 'Walk to ball & press F to Kick!';
-            document.getElementById('football-last-event').textContent = statusStr;
-            // Assumes update3DScoreboardTexture exists from Part 2. It does.
-            if(typeof update3DScoreboardTexture === 'function') update3DScoreboardTexture(ballState.scoreCyan, ballState.scoreGold, statusStr);
-
-            if (d.lastGoalTime && d.lastGoalTime !== ballState.lastGoalTime && (Date.now() - d.lastGoalTime < 6000)) {
-                ballState.lastGoalTime = d.lastGoalTime;
-                const banner = document.getElementById('goal-banner'); banner.textContent = d.lastEventText || '⚽ GOAL!';
-                banner.style.display = 'block'; setTimeout(() => { banner.style.display = 'none'; }, 3500);
-            }
-            if (d.lastKickerUid !== myUid || d.isReset) {
-                if (typeof d.x === 'number') ballState.pos.set(d.x, d.y || 0.44, d.z);
-                if (typeof d.vx === 'number') ballState.vel.set(d.vx, d.vy || 0, d.vz);
-                ballState.lastKickerUid = d.lastKickerUid || "";
-            }
-        });
-
-        async function syncBallToFirestore(extraFields = {}) {
-            try { await setDoc(matchDocRef, { x: Number(ballState.pos.x.toFixed(2)), y: Number(ballState.pos.y.toFixed(2)), z: Number(ballState.pos.z.toFixed(2)), vx: Number(ballState.vel.x.toFixed(2)), vy: Number(ballState.vel.y.toFixed(2)), vz: Number(ballState.vel.z.toFixed(2)), lastKickerUid: myUid, lastKickerName: myCallsign, updatedAt: Date.now(), ...extraFields }, { merge: true }); } catch (e) {}
-        }
-
-        window.kickFootball = function(power = 14.5, lift = 2.4) {
-            if (Math.hypot(playerFootPos.x - ballState.pos.x, playerFootPos.z - ballState.pos.z) > 3.6) { document.getElementById('football-last-event').textContent = '⚠️ Move closer to the ball (within 3m) to kick!'; return; }
-            ballState.vel.set(-Math.sin(camYaw) * power, lift, -Math.cos(camYaw) * power);
-            ballState.lastKickerUid = myUid; ballState.lastKickerName = myCallsign;
-            syncBallToFirestore({ isReset: false, lastEventText: `⚽ @${myCallsign} kicked the ball!` });
-        };
-
-        window.resetFootballMatch = async function(resetScores = false) {
-            ballState.pos.set(54, 0.5, 74); ballState.vel.set(0, 0, 0);
-            const p = { x: 54, y: 0.5, z: 74, vx: 0, vy: 0, vz: 0, isReset: true, lastEventText: resetScores ? `🏆 Match reset by @${myCallsign}` : `🔄 Ball centered by @${myCallsign}` };
-            if (resetScores) { p.scoreCyan = 0; p.scoreGold = 0; }
-            await syncBallToFirestore(p);
-        };
-
-        async function triggerValidatedGoal(scoringTeam) {
-            const now = Date.now(); if (now - ballState.lastGoalTime < 4000) return;
-            ballState.lastGoalTime = now; ballState.pos.set(54, 0.5, 74); ballState.vel.set(0, 0, 0);
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const docSnap = await transaction.get(matchDocRef);
-                    const data = docSnap.exists() ? docSnap.data() : { scoreCyan: 0, scoreGold: 0, lastGoalTime: 0 };
-                    if (now - (data.lastGoalTime || 0) < 3500) return;
-                    const nextCyan = scoringTeam === 'CYAN' ? (data.scoreCyan || 0) + 1 : (data.scoreCyan || 0);
-                    const nextGold = scoringTeam === 'GOLD' ? (data.scoreGold || 0) + 1 : (data.scoreGold || 0);
-                    transaction.set(matchDocRef, { x: 54, y: 0.5, z: 74, vx: 0, vy: 0, vz: 0, scoreCyan: nextCyan, scoreGold: nextGold, lastGoalTime: now, isReset: true, lastEventText: `⚽ GOAL FOR ${scoringTeam} BY @${myCallsign}! (${nextCyan} - ${nextGold})` }, { merge: true });
-                });
-            } catch (e) {}
-        }
-
-        // ============================================================================
         // MASTER ANIMATION & RENDER LOOP
         // ============================================================================
         function animate() {
@@ -1675,33 +1000,35 @@
             const nearPitch = playerFootPos.x > 30 && playerFootPos.x < 86 && playerFootPos.z > 54 && playerFootPos.z < 92;
             document.getElementById('football-hud').style.display = nearPitch ? 'flex' : 'none';
 
-            const dxB = ballState.pos.x - playerFootPos.x, dzB = ballState.pos.z - playerFootPos.z, distB = Math.hypot(dxB, dzB);
-            if (distB < 0.85 && Math.abs(playerFootPos.y - ballState.pos.y) < 1.2) {
-                ballState.vel.set((dxB / (distB || 1)) * 6.5, 1.2, (dzB / (distB || 1)) * 6.5);
-                ballState.lastKickerUid = myUid; syncBallToFirestore({ isReset: false });
-            }
-
-            if (ballState.vel.lengthSq() > 0.001 || ballState.pos.y > 0.44) {
-                ballState.vel.y -= 14.5 * dt; ballState.pos.addScaledVector(ballState.vel, dt);
-                if (ballState.pos.y <= 0.44) {
-                    ballState.pos.y = 0.44; ballState.vel.y = Math.abs(ballState.vel.y) > 0.8 ? -ballState.vel.y * 0.58 : 0;
-                    const fric = Math.pow(0.28, dt); ballState.vel.x *= fric; ballState.vel.z *= fric;
+            if (typeof ballState !== 'undefined' && typeof footballMesh !== 'undefined') {
+                const dxB = ballState.pos.x - playerFootPos.x, dzB = ballState.pos.z - playerFootPos.z, distB = Math.hypot(dxB, dzB);
+                if (distB < 0.85 && Math.abs(playerFootPos.y - ballState.pos.y) < 1.2) {
+                    ballState.vel.set((dxB / (distB || 1)) * 6.5, 1.2, (dzB / (distB || 1)) * 6.5);
+                    ballState.lastKickerUid = myUid; if (typeof syncBallToFirestore === 'function') syncBallToFirestore({ isReset: false });
                 }
-                const inGoalMouthZ = ballState.pos.z >= 71.4 && ballState.pos.z <= 76.6 && ballState.pos.y <= 2.45;
-                if (inGoalMouthZ && ballState.pos.x <= 38.8 && ballState.lastKickerUid === myUid) { triggerValidatedGoal('GOLD'); return; }
-                if (inGoalMouthZ && ballState.pos.x >= 69.2 && ballState.lastKickerUid === myUid) { triggerValidatedGoal('CYAN'); return; }
-                
-                if (ballState.pos.x < 37.5) { ballState.pos.x = 37.5; ballState.vel.x *= -0.7; }
-                if (ballState.pos.x > 70.5) { ballState.pos.x = 70.5; ballState.vel.x *= -0.7; }
-                if (ballState.pos.z < 62.5) { ballState.pos.z = 62.5; ballState.vel.z *= -0.7; }
-                if (ballState.pos.z > 85.5) { ballState.pos.z = 85.5; ballState.vel.z *= -0.7; }
 
-                footballMesh.rotation.z -= ballState.vel.x * dt * 2.2; footballMesh.rotation.x += ballState.vel.z * dt * 2.2;
+                if (ballState.vel.lengthSq() > 0.001 || ballState.pos.y > 0.44) {
+                    ballState.vel.y -= 14.5 * dt; ballState.pos.addScaledVector(ballState.vel, dt);
+                    if (ballState.pos.y <= 0.44) {
+                        ballState.pos.y = 0.44; ballState.vel.y = Math.abs(ballState.vel.y) > 0.8 ? -ballState.vel.y * 0.58 : 0;
+                        const fric = Math.pow(0.28, dt); ballState.vel.x *= fric; ballState.vel.z *= fric;
+                    }
+                    const inGoalMouthZ = ballState.pos.z >= 71.4 && ballState.pos.z <= 76.6 && ballState.pos.y <= 2.45;
+                    if (inGoalMouthZ && ballState.pos.x <= 38.8 && ballState.lastKickerUid === myUid && typeof triggerValidatedGoal === 'function') { triggerValidatedGoal('GOLD'); return; }
+                    if (inGoalMouthZ && ballState.pos.x >= 69.2 && ballState.lastKickerUid === myUid && typeof triggerValidatedGoal === 'function') { triggerValidatedGoal('CYAN'); return; }
+                    
+                    if (ballState.pos.x < 37.5) { ballState.pos.x = 37.5; ballState.vel.x *= -0.7; }
+                    if (ballState.pos.x > 70.5) { ballState.pos.x = 70.5; ballState.vel.x *= -0.7; }
+                    if (ballState.pos.z < 62.5) { ballState.pos.z = 62.5; ballState.vel.z *= -0.7; }
+                    if (ballState.pos.z > 85.5) { ballState.pos.z = 85.5; ballState.vel.z *= -0.7; }
+
+                    footballMesh.rotation.z -= ballState.vel.x * dt * 2.2; footballMesh.rotation.x += ballState.vel.z * dt * 2.2;
+                }
+                footballMesh.position.copy(ballState.pos);
             }
-            footballMesh.position.copy(ballState.pos);
 
             // Update NPCs
-            facultyNPCs.forEach(npc => npc.update(dt, elapsed, playerFootPos));
+            if (typeof facultyNPCs !== 'undefined') facultyNPCs.forEach(npc => npc.update(dt, elapsed, playerFootPos));
 
             if (myChatText && (Date.now() - myChatTimestamp > 10000)) {
                 myChatText = ""; playerAvatar.updateOverheadTag(myCallsign, myTitle, "");
