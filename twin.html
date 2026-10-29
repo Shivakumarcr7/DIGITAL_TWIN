@@ -953,7 +953,7 @@
         </div>
         <div class="profile-item">
             <h4>CSE (AI & ML) Faculty Roster — PESCE Mandya</h4>
-            <p style="font-size:0.76rem; color:#cbd5e1; margin-top:4px;">Prof. Chetan Kumar V. (Big Data Analytics) • Prof. Sindhu P. • Prof. Ashwini M. C. • Prof. M. S. Shanthi Swaroop • Prof. Renuka H. R. • Prof. Ashwitha B. M. • Prof. Pavan Krishna K.</p>
+            <p style="font-size:0.76rem; color:#cbd5e1; margin-top:4px;">Dr. Chetan Kumar V. (Big Data Analytics) • Prof. Sindhu P. • Prof. Ashwini M. C. • Prof. M. S. Shanthi Swaroop • Prof. Renuka H. R. • Prof. Ashwitha B. M. • Prof. Pavan Krishna K.</p>
         </div>
         <div class="profile-item">
             <h4>TACHYON AIML Club Leadership</h4>
@@ -1011,7 +1011,7 @@
                 <span>AI/ML</span>
             </button>
             <button class="mentor-locate-btn" onclick="walkToFacultyMentor('chetan')">
-                <span>👨‍💻 Meet Prof. Chetan Kumar</span>
+                <span>👨‍💻 Meet Dr. Chetan Kumar</span>
                 <span>Big Data</span>
             </button>
 
@@ -1056,7 +1056,7 @@
             <div class="info-card" id="zone-info">
                 <h3 id="info-title">⛲ Central Campus Quad</h3>
                 <p id="info-desc">
-                    Walk up to Dr. Umesh D. R. or Prof. Chetan Kumar V. (Press E) for face-to-face AI mentoring, press C to customize your avatar, or play Football in Zone 9!
+                    Walk up to Dr. Umesh D. R. or Dr. Chetan Kumar V. (Press E) for face-to-face AI mentoring, press C to customize your avatar, or play Football in Zone 9!
                 </p>
                 <div class="telemetry-row">
                     <span id="actor-status">🟢 2 Faculty Mentors Roaming</span>
@@ -1082,7 +1082,7 @@
     <div class="multiplayer-chat-dock" id="bottom-chat-dock">
         <button class="chat-slide-handle" id="chat-drawer-btn" onclick="toggleBottomChatDock()">💬 Hide Chat ▼</button>
         <div class="chat-feed-mini" id="multiplayer-chat-feed">
-            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near <strong>Dr. Umesh D. R.</strong> or <strong>Prof. Chetan Kumar V.</strong> to chat face-to-face, or press <strong>C</strong> to customize your avatar!</div>
+            <div><strong style="color:var(--cyan);">[Campus Network]:</strong> Press <strong>E</strong> near <strong>Dr. Umesh D. R.</strong> or <strong>Dr. Chetan Kumar V.</strong> to chat face-to-face, or press <strong>C</strong> to customize your avatar!</div>
         </div>
         <div class="chat-input-row">
             <input type="text" id="overhead-chat-input" maxlength="90" placeholder="💬 Type message to display above your head... (Press Enter)">
@@ -1108,7 +1108,7 @@
         </div>
         <div class="sarvam-quick-chips">
             <button class="s-chip" onclick="askSarvamPreset('Who are the President, Vice President, and Faculty of CSE AI & ML at PESCE Mandya?')">👨‍🏫 Faculty & Club Leaders?</button>
-            <button class="s-chip" onclick="askSarvamPreset('Where can I meet Dr. Umesh D. R. and Prof. Chetan Kumar V.?')">🎓 Locate Faculty Mentors?</button>
+            <button class="s-chip" onclick="askSarvamPreset('Where can I meet Dr. Umesh D. R. and Dr. Chetan Kumar V.?')">🎓 Locate Faculty Mentors?</button>
             <button class="s-chip" onclick="askSarvamPreset('Where is the football field?')">⚽ Football Field?</button>
             <button class="s-chip" onclick="askSarvamPreset('How do I publish a notice?')">📌 Publish Notice?</button>
         </div>
@@ -1205,7 +1205,7 @@ OFFICIAL PESCE MANDYA & TACHYON CLUB DIRECTORY (VERIFIED FROM PESCE.AC.IN):
    - Head of Department (HoD): Dr. Mahesh Kaluti (Professor & HoD, CSE AI & ML).
    - Professor & Controller of Examinations (COE) / Former HoD: Dr. Umesh D. R. (Professor CAS & COE).
    - Assistant Professors in CSE (AI & ML):
-     * Prof. Chetan Kumar V. (Assistant Professor)
+     * Dr. Chetan Kumar V. (Assistant Professor)
      * Prof. Sindhu P. (Assistant Professor)
      * Prof. Ashwini M. C. (Assistant Professor)
      * Prof. M. S. Shanthi Swaroop (Assistant Professor)
@@ -1246,7 +1246,7 @@ Always answer clearly, accurately, and concisely.
         function getVerifiedCampusGuideReply(queryLower) {
             if (queryLower.includes('umesh') || queryLower.includes('chetan') || queryLower.includes('meet') || queryLower.includes('locate')) {
                 return {
-                    text: "🎓 Both Faculty Mentors roam the 3D campus in tailored black suits:\n• Dr. Umesh D. R. patrols the Central Quad & AI/ML Portico.\n• Prof. Chetan Kumar V. patrols the AI & ML Foyer & TACHYON Project Lab.\nApproach either mentor and press [E] for face-to-face mentoring!",
+                    text: "🎓 Both Faculty Mentors roam the 3D campus in tailored black suits:\n• Dr. Umesh D. R. patrols the Central Quad & AI/ML Portico.\n• Dr. Chetan Kumar V. patrols the AI & ML Foyer & TACHYON Project Lab.\nApproach either mentor and press [E] for face-to-face mentoring!",
                     actionLabel: "👨‍🏫 Walk to Dr. Umesh D. R.",
                     actionFn: () => window.walkToFacultyMentor('umesh')
                 };
@@ -1260,7 +1260,7 @@ Always answer clearly, accurately, and concisely.
             }
             if (queryLower.includes('president') || queryLower.includes('vice') || queryLower.includes('faculty') || queryLower.includes('hod') || queryLower.includes('prof') || queryLower.includes('teacher') || queryLower.includes('principal')) {
                 return {
-                    text: "🏛️ PESCE Mandya CSE (AI & ML) & TACHYON Leadership:\n• Principal: Dr. Vinay S.\n• HoD, CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• AI & ML Faculty: Prof. Chetan Kumar V., Prof. Sindhu P., Prof. Ashwini M. C., Prof. M. S. Shanthi Swaroop, Prof. Renuka H. R., Prof. Ashwitha B. M., Prof. Pavan Krishna K.\n• TACHYON Club President: Shivakumar Patil (@shivu)\n• Vice President: Pavan Bhargav",
+                    text: "🏛️ PESCE Mandya CSE (AI & ML) & TACHYON Leadership:\n• Principal: Dr. Vinay S.\n• HoD, CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• AI & ML Faculty: Dr. Chetan Kumar V., Prof. Sindhu P., Prof. Ashwini M. C., Prof. M. S. Shanthi Swaroop, Prof. Renuka H. R., Prof. Ashwitha B. M., Prof. Pavan Krishna K.\n• TACHYON Club President: Shivakumar Patil (@shivu)\n• Vice President: Pavan Bhargav",
                     actionLabel: "👨‍🏫 Open Faculty & Leadership Directory",
                     actionFn: () => { document.getElementById('profile-modal').style.display = 'flex'; }
                 };
@@ -1392,7 +1392,7 @@ Always answer clearly, accurately, and concisely.
             } else if (campusMatch) {
                 appendChatMsg('bot', campusMatch.text, campusMatch);
             } else {
-                appendChatMsg('bot', "🏛️ TACHYON Campus Assistant:\n• Principal: Dr. Vinay S.\n• HoD CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• Assistant Professor: Prof. Chetan Kumar V.\n• TACHYON President: Shivakumar Patil (@shivu)");
+                appendChatMsg('bot', "🏛️ TACHYON Campus Assistant:\n• Principal: Dr. Vinay S.\n• HoD CSE (AI & ML): Dr. Mahesh Kaluti\n• Professor & COE: Dr. Umesh D. R.\n• Assistant Professor: Dr. Chetan Kumar V.\n• TACHYON President: Shivakumar Patil (@shivu)");
             }
         };
 
@@ -2986,7 +2986,7 @@ Always answer clearly, accurately, and concisely.
         }
 
         // ============================================================================
-        // EXECUTIVE BLACK-SUIT PBR FACULTY MENTORS (DR. UMESH D. R. & PROF. CHETAN)
+        // EXECUTIVE BLACK-SUIT PBR FACULTY MENTORS (DR. UMESH D. R. & Dr. CHETAN)
         // ============================================================================
         function createRealisticFaceSkinTexture(app) {
             const c = document.createElement("canvas"); c.width = 512; c.height = 512;
@@ -3272,7 +3272,7 @@ Always answer clearly, accurately, and concisely.
                 designation: "Assistant Professor, CSE (AI & ML)",
                 roleShort: "Assistant Professor — CSE (AI & ML), PESCE Mandya",
                 researchText: "Research Area: Big Data Analytics & Practical Systems",
-                systemPrompt: `You are a virtual academic mentor simulation of Prof. Chetan Kumar V., Assistant Professor in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research area: Big Data Analytics. Be practical, analytical, and encouraging. Help students debug code, design scalable data pipelines, and turn hackathon ideas into working engineering systems. Keep responses concise (3-5 sentences).`,
+                systemPrompt: `You are a virtual academic mentor simulation of Dr. Chetan Kumar V., Assistant Professor in CSE (AI & ML) at P.E.S. College of Engineering, Mandya. Research area: Big Data Analytics. Be practical, analytical, and encouraging. Help students debug code, design scalable data pipelines, and turn hackathon ideas into working engineering systems. Keep responses concise (3-5 sentences).`,
                 appearance: {
                     heightScale: 0.99, shoulderWidth: 0.218, skinHex: 0xd1976e, hairHex: 0x11141a,
                     mustache: true, beardTrim: true, hasGlasses: false,
@@ -4003,7 +4003,7 @@ Always answer clearly, accurately, and concisely.
                 mCtx.beginPath(); mCtx.arc(fMap.cx, fMap.cy, 4, 0, Math.PI * 2);
                 mCtx.fillStyle = '#FFC857'; mCtx.fill();
                 mCtx.fillStyle = '#FFC857'; mCtx.font = 'bold 8px Inter, sans-serif';
-                mCtx.fillText(npc.id === 'umesh' ? 'Dr.Umesh' : 'Prof.Chetan', fMap.cx, fMap.cy - 6);
+                mCtx.fillText(npc.id === 'umesh' ? 'Dr.Umesh' : 'Dr.Chetan', fMap.cx, fMap.cy - 6);
             });
 
             const ballMap = worldToMinimap(ballState.pos.x, ballState.pos.z);
@@ -4041,7 +4041,7 @@ Always answer clearly, accurately, and concisely.
             quad: { foot: { x: 0, y: 0.0, z: 34 }, yaw: 0, pitch: 0.05, title: "⛲ Central Campus Quad", desc: "Walk up to Dr. Umesh D. R. (Press E) for face-to-face mentoring, press C to customize your avatar, or head to Zone 9 for Football!" },
             portico: { foot: { x: 0, y: 0.18, z: 4.8 }, yaw: 0, pitch: 0.04, title: "🚪 AI & ML Main Entrance Foyer", desc: "Check the Department Notice Board on your right, visit Ground-Floor HOD Cabins, or climb the Switchback Staircase." },
             hod: { foot: { x: -15.5, y: 0.20, z: -6.0 }, yaw: 0.4, pitch: 0.0, title: "👨‍🏫 HOD & Faculty Cabins (Ground West)", desc: "Ground-floor administrative and faculty research wing. Press E on the board to view leadership profiles." },
-            project: { foot: { x: 11.5, y: 0.20, z: -4.5 }, yaw: 0, pitch: -0.04, title: "🤖 TACHYON AI & Robotics Project Lab", desc: "Meet Prof. Chetan Kumar V. here (Press E) to discuss Big Data pipelines and hackathon prototypes!" },
+            project: { foot: { x: 11.5, y: 0.20, z: -4.5 }, yaw: 0, pitch: -0.04, title: "🤖 TACHYON AI & Robotics Project Lab", desc: "Meet Dr. Chetan Kumar V. here (Press E) to discuss Big Data pipelines and hackathon prototypes!" },
             stairs: { foot: { x: -9.5, y: 0.20, z: -0.6 }, yaw: 0, pitch: 0.12, title: "🪜 Switchback Staircase", desc: "Walk forward up the granite steps to reach the 1st-Floor AI & ML Corridor." },
             corridor: { foot: { x: -7.5, y: 4.12, z: 0.25 }, yaw: -1.57, pitch: -0.02, title: "🚶 1st Floor AI & ML Corridor", desc: "Matte-brown floor tiles leading to the Deep Learning Lab and Smart Classroom 101." },
             lab: { foot: { x: -2.0, y: 4.12, z: -2.5 }, yaw: 0.25, pitch: -0.06, title: "💻 AI & ML Deep Learning Lab", desc: "High-performance dual-monitor GPU workstation cluster on the 1st Floor." },
