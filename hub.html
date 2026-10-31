@@ -576,6 +576,71 @@
         .bp-btn-fork:hover { background: linear-gradient(135deg, var(--cyan), var(--mint)); color: var(--obsidian); border-color: #fff; transform: scale(1.02); }
 
         /* ==========================================================================
+           DETAILED AGENT, MISSION & BADGE ELEMENTS (RESTORED FOR OLD DATA)
+           ========================================================================== */
+        .unit-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .unit-avatar-title { display: flex; align-items: center; gap: 12px; }
+        .unit-emblem {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .unit-name { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; color: var(--soft-white); }
+        .unit-creator { font-size: 0.78rem; color: var(--slate); margin-top: 2px; }
+        .unit-creator strong { color: var(--cyan); }
+        .status-badge {
+            font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+            padding: 3px 9px; border-radius: 99px; text-transform: uppercase; white-space: nowrap;
+        }
+        .status-running { background: rgba(52, 211, 153, 0.16); color: var(--mint); border: 1px solid rgba(52, 211, 153, 0.4); }
+        .status-featured { background: var(--gold); color: var(--obsidian); font-weight: 800; }
+        .status-ready { background: rgba(56, 189, 248, 0.14); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.35); }
+        .unit-purpose { font-size: 0.88rem; color: #CBD5E1; line-height: 1.55; margin-top: 10px; }
+        .unit-skills-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .skill-chip {
+            font-family: var(--font-mono); font-size: 0.66rem; padding: 3px 9px; border-radius: 99px;
+            background: rgba(167, 139, 250, 0.14); border: 1px solid rgba(167, 139, 250, 0.32); color: #DDD6FE;
+        }
+        .unit-telemetry-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 12px;
+            background: rgba(5, 7, 14, 0.55); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);
+            font-family: var(--font-mono); font-size: 0.68rem;
+        }
+        .tele-cell span:first-child { color: var(--slate); display: block; font-size: 0.6rem; }
+        .tele-cell span:last-child { color: var(--soft-white); font-weight: 700; }
+        .unit-actions-row { display: flex; gap: 8px; margin-top: 8px; }
+        .unit-btn {
+            flex: 1; padding: 10px 12px; border-radius: 99px; font-family: var(--font-body);
+            font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+            text-align: center; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .unit-btn-inspect { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); color: var(--soft-white); }
+        .unit-btn-inspect:hover { border-color: var(--cyan); color: var(--cyan); }
+        .unit-btn-boost { background: rgba(56, 189, 248, 0.16); border: 1px solid var(--cyan); color: var(--cyan); }
+        .unit-btn-boost:hover { background: var(--cyan); color: var(--obsidian); }
+        .unit-btn-disabled { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--slate); cursor: default; }
+
+        .badge-rarity-tag {
+            font-family: var(--font-mono); font-size: 0.62rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 99px;
+        }
+        .tag-Common { background: rgba(148, 163, 184, 0.2); color: #94A3B8; }
+        .tag-Uncommon { background: rgba(56, 189, 248, 0.18); color: #38BDF8; }
+        .tag-Rare { background: rgba(167, 139, 250, 0.22); color: #C4B5FD; }
+        .tag-Epic { background: rgba(244, 114, 182, 0.22); color: #F472B6; }
+        .tag-Legendary { background: rgba(251, 191, 36, 0.25); color: #FBBF24; }
+
+        .title-selector-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 10px; }
+        .title-choice-btn {
+            padding: 10px 14px; border-radius: 12px; background: rgba(5, 7, 14, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12); color: var(--soft-white);
+            font-size: 0.8rem; font-weight: 700; text-align: left; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .title-choice-btn.equipped { border-color: var(--gold); background: rgba(251, 191, 36, 0.15); color: var(--gold); }
+        .title-choice-btn.locked-title { opacity: 0.45; cursor: not-allowed; }
+
+        /* ==========================================================================
            STANDARD GRIDS & CARDS (AGENTS, MISSIONS, BADGES, LOADOUT)
            ========================================================================== */
         .section-toolbar {
@@ -832,8 +897,18 @@
                 AUTHENTICATE WITH GOOGLE
             </button>
             <button class="btn-editorial-outline" data-hint="Bypass login to view the demo experience" style="width:100%; justify-content:center; border-radius:14px; padding:14px;" onclick="activateOperativeDemoMode()">
-                ✨ ENTER CINEMATIC PREVIEW (@shivu)
+                ✨ ENTER CINEMATIC PREVIEW
             </button>
+        </div>
+    </div>
+
+    <!-- Username Registration Modal -->
+    <div id="username-modal" class="modal-backdrop" style="display:none; z-index: 3500;">
+        <div class="modal-box" style="text-align: center; max-width: 420px;">
+            <div style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 900; letter-spacing: 1px;">REGISTER CALLSIGN</div>
+            <p style="color: var(--slate); font-size: 0.9rem;">Choose your unique operative callsign for the leaderboard.</p>
+            <input type="text" id="customUsernameInput" class="form-input" placeholder="e.g. Shivu, Neo, Axlr8r">
+            <button class="btn-editorial-primary" style="width: 100%; justify-content:center; margin-top: 10px;" onclick="saveUsername()">INITIALIZE PROFILE</button>
         </div>
     </div>
 
@@ -851,7 +926,7 @@
             <a href="index.html" class="nav-ext-link" data-hint="Return to the main department portal">01 / Welcome</a>
             <a href="twin.html" class="nav-ext-link" data-hint="Explore our interactive 3D virtual campus">02 / Digital Twin</a>
             <button class="nav-tab active" id="tab-arena" onclick="switchArenaView('arena')" data-hint="View and manage autonomous AI units">
-                ⚡ Agent Arena <span class="nav-pill-count" id="nav-agent-count">4</span>
+                ⚡ Agent Arena <span class="nav-pill-count" id="nav-agent-count">0</span>
             </button>
             <button class="nav-tab" id="tab-forge" onclick="switchArenaView('forge')" data-hint="Clone & summon curated GitHub repositories">
                 🧬 Blueprint Forge <span class="nav-pill-count" id="nav-forge-count">NEW</span>
@@ -860,7 +935,7 @@
                 🎯 Missions <span class="nav-pill-count" id="nav-mission-count">6</span>
             </button>
             <button class="nav-tab" id="tab-trophies" onclick="switchArenaView('trophies')" data-hint="Inspect your unlocked holographic badges">
-                🏆 Trophy Room <span class="nav-pill-count" id="nav-badge-count">13</span>
+                🏆 Trophy Room <span class="nav-pill-count" id="nav-badge-count">0/15</span>
             </button>
             <button class="nav-tab" id="tab-profile" onclick="switchArenaView('profile')" data-hint="Update your callsign and avatar">
                 🧑‍🚀 Profile
@@ -869,8 +944,8 @@
 
         <div class="nav-utility-cluster">
             <div class="rpg-top-hud" data-hint="Your current Operative Rank and XP">
-                <span class="hud-stat" id="hud-lvl-txt">LVL 07</span>
-                <span class="hud-stat" style="color:var(--cyan);" id="hud-xp-txt">640 XP</span>
+                <span class="hud-stat" id="hud-lvl-txt">LVL 01</span>
+                <span class="hud-stat" style="color:var(--cyan);" id="hud-xp-txt">0 XP</span>
                 <span class="hud-stat" style="color:var(--gold);">⚡ <span id="hud-cores">5</span> Cores</span>
             </div>
             <button class="icon-btn" onclick="toggleNotifDrawer()" data-hint="Check system logs and alerts">🔔 <span class="notif-dot" id="notif-count">1</span></button>
@@ -898,44 +973,56 @@
                         <div>
                             <span class="editorial-badge">PESCE AI & ML ACADEMY • 2026 EDITION</span>
                             <h1>AUTONOMOUS AGENTS & <span>DIGITAL TWIN ECOSYSTEM</span></h1>
-                            <p>Build, test, and deploy verified artificial intelligence models. Fork community blueprints instantly or immerse yourself in our department's 3D spatial twin.</p>
+                            <p>Build, test, and deploy verified artificial intelligence models. Fork community blueprints instantly or immerse yourself in our department's 3D spatial twin. <strong style="color:var(--cyan);">— Shivakumar Patil, President</strong></p>
                         </div>
                         <div class="hero-action-row">
-                            <button class="btn-editorial-primary" onclick="openDeployModal()">🚀 DEPLOY YOUR AGENT (+50 XP)</button>
-                            <button class="btn-editorial-outline" onclick="switchArenaView('forge')">🧬 EXPLORE BLUEPRINT FORGE</button>
+                            <button class="btn-editorial-primary" onclick="openDeployModal()" data-hint="Deploy your AI agent and earn +50 XP">🚀 DEPLOY YOUR AGENT (+50 XP)</button>
+                            <button class="btn-editorial-outline" onclick="switchArenaView('forge')" data-hint="Fork starter templates with 1 click">🧬 EXPLORE BLUEPRINT FORGE</button>
+                            <a href="https://aistudio.google.com/" target="_blank" class="btn-editorial-outline" style="text-decoration:none; border-color:var(--magenta);" data-hint="Open Google AI Studio">✨ Build in AI Studio ↗</a>
                         </div>
                     </div>
                     <div class="hero-telemetry-box">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--cyan);">OPERATIVE TELEMETRY</span>
-                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--gold);">🔥 9-Day Streak</span>
+                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--cyan);" id="hero-lvl-badge">LVL 01</span>
+                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--gold);" id="hero-streak-badge">🔥 1-Day Streak</span>
                         </div>
-                        <div>
-                            <div style="font-family:var(--font-display); font-size:1.4rem; font-weight:700;" id="hero-greeting-text">@shivu</div>
-                            <div style="font-size:0.85rem; color:var(--slate); margin-top:2px;" id="hero-title-pill">★ Arena Champion • Rank #1</div>
+                        <div style="display:flex; align-items:center; gap:14px;">
+                            <div id="hero-avatar-icon" style="font-size:2.2rem;">🤖</div>
+                            <div>
+                                <div style="font-family:var(--font-display); font-size:1.35rem; font-weight:700;" id="hero-greeting-text">Welcome back, @Operative</div>
+                                <div style="font-size:0.82rem; color:var(--gold); font-family:var(--font-mono); margin-top:2px;" id="hero-title-pill">★ Rookie Coder</div>
+                            </div>
                         </div>
                         <div>
                             <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.72rem; color:var(--slate); margin-bottom:6px;">
-                                <span id="hero-xp-current">640 XP</span>
-                                <span id="hero-xp-target">Next Rank: 700 XP</span>
+                                <span id="hero-xp-current">0 XP</span>
+                                <span id="hero-xp-target">Next: 100 XP</span>
                             </div>
                             <div style="width:100%; height:8px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
-                                <div id="hero-xp-fill" style="height:100%; width:60%; background:linear-gradient(90deg, var(--violet), var(--cyan)); border-radius:99px;"></div>
+                                <div id="hero-xp-fill" style="height:100%; width:10%; background:linear-gradient(90deg, var(--violet), var(--cyan)); border-radius:99px; transition:width 0.5s ease;"></div>
                             </div>
+                            <div id="hero-lvl-preview" style="font-family:var(--font-mono); font-size:0.68rem; color:var(--mint); margin-top:6px;">100 XP remaining to Level 2</div>
+                        </div>
+                        <div style="background:rgba(52, 211, 153, 0.08); border:1px solid rgba(52, 211, 153, 0.3); border-radius:14px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                            <div>
+                                <div style="font-family:var(--font-display); font-size:0.72rem; color:var(--mint); font-weight:700;">⚡ FEATURED: DEBUG THE MATRIX</div>
+                                <div style="font-size:0.74rem; color:var(--soft-white);">Pass 3 AI/coding verification tasks (+100 XP)</div>
+                            </div>
+                            <button class="unit-btn unit-btn-boost" style="flex:0 0 auto; padding:7px 14px;" onclick="openChallengeModal()">START →</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="section-toolbar">
                     <div class="filter-pill-group">
-                        <button class="filter-pill active" onclick="setAgentFilter('all', this)">All Units</button>
-                        <button class="filter-pill" onclick="setAgentFilter('running', this)">High-Performing</button>
-                        <button class="filter-pill" onclick="setAgentFilter('official', this)">Official Broadcasts</button>
-                        <button class="filter-pill" onclick="setAgentFilter('mine', this)">My Units</button>
+                        <button class="filter-pill active" onclick="setAgentFilter('all', this)">🌐 All Units (<span id="count-all-units">0</span>)</button>
+                        <button class="filter-pill" onclick="setAgentFilter('running', this)">🟢 High-Performing</button>
+                        <button class="filter-pill" onclick="setAgentFilter('official', this)">👑 Official Broadcasts</button>
+                        <button class="filter-pill" onclick="setAgentFilter('mine', this)">⚡ My Deployed Units</button>
                     </div>
                     <div style="position:relative; min-width:265px;">
                         <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%);">🔍</span>
-                        <input type="text" id="agentSearchInput" class="form-input" style="padding-left:38px;" placeholder="Search agents or skills..." oninput="renderAgents()">
+                        <input type="text" id="agentSearchInput" class="form-input" style="padding-left:38px;" placeholder="Search agent name, skill, or @creator..." oninput="renderAgents()">
                     </div>
                 </div>
 
@@ -987,10 +1074,17 @@
             <section id="view-missions" class="view-section">
                 <div class="section-toolbar">
                     <div>
-                        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800;">MISSION CONTROL</h2>
-                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Complete verified challenges to earn XP and unlock collectible badges.</p>
+                        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800;">🎯 MISSION CONTROL // ACTIVE QUESTS</h2>
+                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Complete verified coding, AI/ML, and Digital Twin exploration quests. Rewards are validated and persisted to your profile.</p>
                     </div>
-                    <button class="btn-editorial-primary" onclick="openChallengeModal()">💻 LAUNCH LAB</button>
+                    <button class="btn-editorial-primary" onclick="openChallengeModal()">💻 LAUNCH VERIFICATION LAB</button>
+                </div>
+                <div class="filter-pill-group">
+                    <button class="filter-pill active" onclick="setMissionFilter('all', this)">All Missions</button>
+                    <button class="filter-pill" onclick="setMissionFilter('agent', this)">🚀 Agent Building</button>
+                    <button class="filter-pill" onclick="setMissionFilter('coding', this)">💻 Coding & AI/ML</button>
+                    <button class="filter-pill" onclick="setMissionFilter('exploration', this)">🏛️ Digital Twin</button>
+                    <button class="filter-pill" onclick="setMissionFilter('streak', this)">🔥 Streaks & Social</button>
                 </div>
                 <div class="missions-grid" id="missions-grid"></div>
             </section>
@@ -999,9 +1093,22 @@
             <section id="view-trophies" class="view-section">
                 <div class="section-toolbar">
                     <div>
-                        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--gold);">COLLECTIBLE TROPHY ROOM</h2>
-                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Inspect your unlocked holographic medallions and achievements.</p>
+                        <h2 style="font-family:var(--font-display); font-size:1.6rem; font-weight:800; color:var(--gold);">🏆 COLLECTIBLE TROPHY ROOM</h2>
+                        <p style="color:var(--slate); font-size:0.9rem; margin-top:4px;">Click any medallion to inspect its lore, unlock requirements, and pin it to your profile showcase.</p>
                     </div>
+                    <select id="badgeSortSelect" class="form-select" style="width:auto;" onchange="renderBadgesGallery()">
+                        <option value="rarity">Sort: Rarity Tier</option>
+                        <option value="earned">Sort: Earned First</option>
+                        <option value="locked">Sort: Locked First</option>
+                    </select>
+                </div>
+                <div class="filter-pill-group">
+                    <button class="filter-pill active" onclick="setBadgeCategory('all', this)">All Emblems (15)</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('aiml', this)">🧠 AI & ML</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('coding', this)">💻 Coding</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('collaboration', this)">🤝 Collaboration</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('exploration', this)">🏛️ Exploration</button>
+                    <button class="filter-pill" onclick="setBadgeCategory('events', this)">👑 Special & Elite</button>
                 </div>
                 <div class="badge-gallery-grid" id="badge-gallery-grid"></div>
             </section>
@@ -1010,30 +1117,40 @@
             <section id="view-profile" class="view-section">
                 <div class="loadout-grid">
                     <div class="loadout-panel">
-                        <h3>🧑‍🚀 OPERATIVE LOADOUT</h3>
+                        <h3>🧑‍🚀 OPERATIVE IDENTITY & LOADOUT</h3>
                         <div style="display:flex; align-items:center; gap:16px;">
-                            <div id="profile-big-avatar" style="font-size:2.5rem;">🐉</div>
+                            <div id="profile-big-avatar" style="font-size:2.6rem;">🤖</div>
                             <div>
-                                <div style="font-family:var(--font-display); font-size:1.3rem; font-weight:800;" id="profile-callsign">@shivu</div>
-                                <div style="color:var(--gold); font-size:0.8rem; font-family:var(--font-mono); margin-top:4px;" id="profile-equipped-title">★ Arena Champion</div>
+                                <div style="font-family:var(--font-display); font-size:1.3rem; font-weight:800;" id="profile-callsign">@Operative</div>
+                                <div style="color:var(--gold); font-size:0.8rem; font-family:var(--font-mono); margin-top:4px;" id="profile-equipped-title">★ Rookie Coder</div>
                             </div>
                         </div>
                         <div>
-                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Select Avatar:</label>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Select Operative Avatar Emblem:</label>
                             <div class="filter-pill-group" id="avatar-picker"></div>
                         </div>
                         <div>
-                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Update Callsign:</label>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Update Display Callsign:</label>
                             <div style="display:flex; gap:10px;">
-                                <input type="text" id="editCallsignInput" class="form-input" placeholder="Callsign">
+                                <input type="text" id="editCallsignInput" class="form-input" placeholder="New Callsign">
                                 <button class="btn-editorial-primary" style="padding:10px 20px;" onclick="updateOperativeCallsign()">SAVE</button>
                             </div>
                         </div>
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Equip Earned Academy Title:</label>
+                            <div class="title-selector-list" id="title-selector-list"></div>
+                        </div>
                     </div>
                     <div class="loadout-panel">
-                        <h3>🎖️ SHOWCASE BADGES & XP LEDGER</h3>
-                        <div id="profile-showcase-badges" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;"></div>
-                        <div id="profile-xp-ledger" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; margin-top:10px;"></div>
+                        <h3>🎖️ SHOWCASE MEDALLIONS & XP LEDGER</h3>
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Equipped Showcase Badges (Pin from Trophy Room):</label>
+                            <div id="profile-showcase-badges" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;"></div>
+                        </div>
+                        <div>
+                            <label style="font-size:0.78rem; color:var(--slate); display:block; margin-bottom:8px;">Auditable XP Transaction & Contribution Ledger:</label>
+                            <div id="profile-xp-ledger" style="display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto;"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1043,12 +1160,16 @@
         <!-- Right Rail: Leaderboard -->
         <aside class="leaderboard-rail">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-family:var(--font-display); font-size:1rem; font-weight:800;">LEADERBOARD</span>
+                <span style="font-family:var(--font-display); font-size:0.95rem; font-weight:800;">🏆 TACHYON RANKINGS</span>
+                <div style="display:flex; gap:4px;">
+                    <button class="filter-pill active" id="lb-tab-all" style="padding:4px 10px; font-size:0.68rem;" onclick="setLeaderboardMode('all')">All-Time</button>
+                    <button class="filter-pill" id="lb-tab-weekly" style="padding:4px 10px; font-size:0.68rem;" onclick="setLeaderboardMode('weekly')">Weekly</button>
+                </div>
             </div>
             <div class="podium-top-three" id="leaderboard-podium"></div>
-            <input type="text" id="lbSearchInput" class="form-input" placeholder="🔍 Search @callsign..." oninput="renderLeaderboard()">
+            <input type="text" id="lbSearchInput" class="form-input" placeholder="🔍 Find student @callsign..." oninput="renderLeaderboard()">
             <div style="display:flex; flex-direction:column; gap:8px;" id="leaderboard-list"></div>
-            <button class="unit-btn unit-btn-inspect" style="margin-top:auto; color:var(--danger); background:none; border:none; cursor:pointer; font-weight:700;" onclick="logout()">⏻ Disconnect</button>
+            <button class="unit-btn unit-btn-inspect" style="margin-top:auto; color:var(--danger); border-color:rgba(251,113,133,0.35);" onclick="logout()">⏻ Disconnect Session</button>
         </aside>
     </div>
 
@@ -1064,15 +1185,16 @@
     <!-- Modals -->
     <div class="modal-backdrop" id="deployModal">
         <div class="modal-box">
-            <h2>🚀 DEPLOY AI AGENT</h2>
-            <input type="text" id="agentName" class="form-input" placeholder="Agent Name">
+            <h2>🚀 DEPLOY AI AGENT UNIT</h2>
+            <p style="color:var(--slate); font-size:0.84rem;">Deploying a verified working agent awards <strong style="color:var(--cyan);">+50 XP</strong> and progresses your <strong>FIRST BOOT</strong> & <strong>SWARM ARCHITECT</strong> badges.</p>
+            <input type="text" id="agentName" class="form-input" placeholder="Agent Name (e.g. CodeSentinel v2)">
             <input type="text" id="studentName" class="form-input" readonly style="opacity:0.7;">
-            <input type="text" id="agentLink" class="form-input" placeholder="GitHub / AI Studio Link">
-            <input type="text" id="agentSkills" class="form-input" placeholder="Skills (comma separated)">
-            <textarea id="agentDesc" class="form-textarea" rows="3" placeholder="Description..."></textarea>
+            <input type="text" id="agentLink" class="form-input" placeholder="Agent URL / GitHub / Google AI Studio Link">
+            <input type="text" id="agentSkills" class="form-input" placeholder="Skills (comma-separated: Python, RAG, Vision, PyTorch)">
+            <textarea id="agentDesc" class="form-textarea" rows="3" placeholder="Describe what your AI agent accomplishes..."></textarea>
             <div style="display:flex; gap:10px;">
-                <button class="btn-editorial-outline" onclick="closeDeployModal()" style="flex:1;">Cancel</button>
-                <button class="btn-editorial-primary" onclick="submitAgent()" style="flex:1; justify-content:center;">DEPLOY (+50 XP)</button>
+                <button class="btn-editorial-outline" onclick="closeDeployModal()" style="flex:1; justify-content:center;">Cancel</button>
+                <button class="btn-editorial-primary" id="deploySubmitBtn" onclick="submitAgent()" style="flex:1; justify-content:center;">LAUNCH AGENT (+50 XP)</button>
             </div>
         </div>
     </div>
@@ -1175,69 +1297,203 @@
         window.toggleSoundFX = function() {
             sfxEnabled = !sfxEnabled;
             document.getElementById('sfxToggleBtn').innerText = sfxEnabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+            if (sfxEnabled) playSound('blip');
         };
+        function playSound(type) {
+            if (!sfxEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+                if (type === 'blip') {
+                    osc.frequency.setValueAtTime(580, now);
+                    osc.frequency.exponentialRampToValueAtTime(840, now + 0.05);
+                    gain.gain.setValueAtTime(0.04, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now); osc.stop(now + 0.05);
+                } else if (type === 'fanfare') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(330, now);
+                    osc.frequency.setValueAtTime(440, now + 0.08);
+                    osc.frequency.setValueAtTime(660, now + 0.16);
+                    gain.gain.setValueAtTime(0.10, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now); osc.stop(now + 0.35);
+                }
+            } catch (e) {}
+        }
 
+        function calculateProgression(totalXP) {
+            const xp = Math.max(0, totalXP || 0);
+            const level = Math.floor(xp / 100) + 1;
+            const currentLevelProgress = xp % 100;
+            const nextLevelXP = level * 100;
+            const remainingXP = nextLevelXP - xp;
+            return { level, xp, currentLevelProgress, nextLevelXP, remainingXP };
+        }
+
+        // --- FULL 15 COLLECTIBLE BADGES CATALOG (MATCHES YOUR EXISTING DATABASE) ---
         const BADGE_CATALOG = [
-            { id: 'first_boot', name: 'FIRST BOOT', rarity: 'Common', category: 'aiml', xp: 25, icon: '🚀', desc: 'Deploy your first AI agent.', reqText: 'Deploy 1 Agent' },
-            { id: 'early_access', name: 'EARLY ACCESS', rarity: 'Common', category: 'events', xp: 20, icon: '⚡', desc: 'Join Tachyon 2.0.', reqText: 'Authenticate' },
-            { id: 'prompt_engineer', name: 'PROMPT ENGINEER', rarity: 'Uncommon', category: 'aiml', xp: 40, icon: '✨', desc: 'Pass prompt challenge.', reqText: 'Pass Challenge' },
-            { id: 'bug_hunter', name: 'BUG HUNTER', rarity: 'Uncommon', category: 'coding', xp: 40, icon: '🐛', desc: 'Fix neural bug.', reqText: 'Fix Bug' },
-            { id: 'code_warrior', name: 'CODE WARRIOR', rarity: 'Rare', category: 'coding', xp: 75, icon: '⚔️', desc: 'Complete all Lab tasks.', reqText: 'Solve Lab Tasks' },
-            { id: 'arena_champion', name: 'ARENA CHAMPION', rarity: 'Legendary', category: 'events', xp: 200, icon: '👑', desc: 'Hold Rank #1.', reqText: 'Rank #1' }
+            { id: 'first_boot', name: 'FIRST BOOT', rarity: 'Common', category: 'aiml', xp: 25, icon: '🚀', desc: 'Deploy your first working AI agent to the Tachyon network.', reqText: 'Deploy 1 AI Agent' },
+            { id: 'early_access', name: 'EARLY ACCESS', rarity: 'Common', category: 'events', xp: 20, icon: '⚡', desc: 'Participate in the official PESCE Tachyon 2.0 launch season.', reqText: 'Authenticate & join Tachyon 2.0' },
+            { id: 'prompt_engineer', name: 'PROMPT ENGINEER', rarity: 'Uncommon', category: 'aiml', xp: 40, icon: '✨', desc: 'Complete the verified Prompt Engineering system challenge.', reqText: 'Pass Prompt Challenge in Lab' },
+            { id: 'bug_hunter', name: 'BUG HUNTER', rarity: 'Uncommon', category: 'coding', xp: 40, icon: '🐛', desc: 'Identify and fix a verified neural pipeline bug in the Verification Lab.', reqText: 'Pass Bug Hunter Challenge' },
+            { id: 'campus_explorer', name: 'CAMPUS EXPLORER', rarity: 'Uncommon', category: 'exploration', xp: 50, icon: '🏛️', desc: 'Visit the PESCE AI & ML Digital Twin virtual campus.', reqText: 'Explore Digital Twin zones' },
+            { id: 'team_player', name: 'TEAM PLAYER', rarity: 'Uncommon', category: 'collaboration', xp: 45, icon: '🤝', desc: 'Support fellow students by boosting/overclocking 3 peer AI agents.', reqText: 'Overclock 3 peer AI agents' },
+            { id: 'code_warrior', name: 'CODE WARRIOR', rarity: 'Rare', category: 'coding', xp: 75, icon: '⚔️', desc: 'Pass all verified coding & AI evaluation challenges in the Lab.', reqText: 'Complete all 3 Lab Challenges' },
+            { id: 'model_trainer', name: 'MODEL TRAINER', rarity: 'Rare', category: 'aiml', xp: 70, icon: '🧠', desc: 'Complete the supervised ML loss-convergence evaluation mission.', reqText: 'Pass ML Evaluation Challenge' },
+            { id: 'swarm_architect', name: 'SWARM ARCHITECT', rarity: 'Rare', category: 'aiml', xp: 100, icon: '🐝', desc: 'Deploy and manage 3 functional AI agents in the arena.', reqText: 'Deploy 3 AI Agents' },
+            { id: 'knowledge_seeker', name: 'KNOWLEDGE SEEKER', rarity: 'Rare', category: 'exploration', xp: 80, icon: '📚', desc: 'Complete at least 4 Academy Missions in Mission Control.', reqText: 'Complete 4 Missions' },
+            { id: 'overclocked', name: 'OVERCLOCKED', rarity: 'Epic', category: 'aiml', xp: 110, icon: '🔥', desc: 'Earn at least 3 community boosts/overclocks across your deployed agents.', reqText: 'Receive 3+ Agent Boosts' },
+            { id: 'streak_master', name: 'STREAK MASTER', rarity: 'Epic', category: 'events', xp: 120, icon: '📅', desc: 'Maintain an active learning and contribution streak.', reqText: 'Reach a 3+ Day Streak or 250+ XP' },
+            { id: 'innovator', name: 'INNOVATOR', rarity: 'Epic', category: 'collaboration', xp: 125, icon: '💡', desc: 'Deploy an agent with a live external URL / AI Studio link.', reqText: 'Deploy Agent with Live URL' },
+            { id: 'arena_champion', name: 'ARENA CHAMPION', rarity: 'Legendary', category: 'events', xp: 200, icon: '👑', desc: 'Reach the #1 top developer rank on the TACHYON Leaderboard.', reqText: 'Hold Rank #1 on Leaderboard' },
+            { id: 'legend_of_tachyon', name: 'LEGEND OF TACHYON', rarity: 'Legendary', category: 'events', xp: 250, icon: '🌌', desc: 'Unlock at least 8 achievements across the TACHYON Academy.', reqText: 'Earn 8+ Collectible Badges' }
         ];
 
         const TITLE_CATALOG = [
-            { id: 'Rookie Coder', reqBadge: null },
-            { id: 'Prompt Alchemist', reqBadge: 'prompt_engineer' },
-            { id: 'Arena Champion', reqBadge: 'arena_champion' }
+            { id: 'Rookie Coder', reqBadge: null, desc: 'Default Academy Operative Title' },
+            { id: 'Prompt Alchemist', reqBadge: 'prompt_engineer', desc: 'Requires PROMPT ENGINEER Badge' },
+            { id: 'Neural Architect', reqBadge: 'model_trainer', desc: 'Requires MODEL TRAINER Badge' },
+            { id: 'Swarm Commander', reqBadge: 'swarm_architect', desc: 'Requires SWARM ARCHITECT Badge' },
+            { id: 'Arena Champion', reqBadge: 'arena_champion', desc: 'Requires ARENA CHAMPION Badge' },
+            { id: 'Legend of Tachyon', reqBadge: 'legend_of_tachyon', desc: 'Requires LEGEND OF TACHYON Badge' }
         ];
 
         const MISSIONS_CATALOG = [
-            { id: 'm_first_contact', title: 'MISSION: FIRST CONTACT', category: 'agent', diff: 'easy', xp: 50, badgeId: 'first_boot', desc: 'Deploy an AI agent.', target: 1, getProgress: s => Math.min(1, s.myAgentCount) },
-            { id: 'm_debug_matrix', title: 'MISSION: DEBUG THE MATRIX', category: 'coding', diff: 'medium', xp: 100, badgeId: 'code_warrior', desc: 'Solve lab challenges.', target: 3, getProgress: s => Math.min(3, s.solvedCount) }
+            { id: 'm_first_contact', title: 'MISSION: FIRST CONTACT', category: 'agent', diff: 'easy', xp: 50, badgeId: 'first_boot', duration: '5 mins', desc: 'Deploy a functioning AI agent to the TACHYON Arena.', target: 1, getProgress: (stats) => Math.min(1, stats.myAgentCount) },
+            { id: 'm_debug_matrix', title: 'MISSION: DEBUG THE MATRIX', category: 'coding', diff: 'medium', xp: 100, badgeId: 'code_warrior', duration: '10 mins', desc: 'Solve all 3 validated coding & AI tasks in the Verification Lab.', target: 3, getProgress: (stats) => Math.min(3, stats.solvedCount) },
+            { id: 'm_model_forge', title: 'MISSION: MODEL FORGE', category: 'coding', diff: 'medium', xp: 150, badgeId: 'model_trainer', duration: '8 mins', desc: 'Complete the supervised machine learning evaluation exercise in the Lab.', target: 1, getProgress: (stats) => stats.hasSolvedML ? 1 : 0 },
+            { id: 'm_campus_scout', title: 'MISSION: CAMPUS SCOUT', category: 'exploration', diff: 'easy', xp: 75, badgeId: 'campus_explorer', duration: '5 mins', desc: 'Explore the PESCE 3D Digital Twin campus or launch the Digital Twin walkthrough.', target: 1, getProgress: (stats) => stats.twinVisited ? 1 : 0 },
+            { id: 'm_swarm_protocol', title: 'MISSION: SWARM PROTOCOL', category: 'agent', diff: 'hard', xp: 200, badgeId: 'swarm_architect', duration: '15 mins', desc: 'Create and deploy 3 working AI agents to the network.', target: 3, getProgress: (stats) => Math.min(3, stats.myAgentCount) },
+            { id: 'm_peer_synergy', title: 'MISSION: NEURAL SYNERGY', category: 'streak', diff: 'easy', xp: 100, badgeId: 'team_player', duration: '5 mins', desc: 'Test and overclock (boost) 3 peer AI agents in the Arena.', target: 3, getProgress: (stats) => Math.min(3, stats.myBoostsGiven) }
         ];
 
         const LAB_CHALLENGES = [
-            { id: 'ch_prompt', title: '1. Prompt Engineering', question: 'Which parameter controls randomness?', options: ['Weight Decay', 'Temperature', 'Dropout'], correctIndex: 1, badgeId: 'prompt_engineer' },
-            { id: 'ch_bug', title: '2. Bug Hunter', question: 'What zeroes gradients in PyTorch?', options: ['eval()', 'zero_grad()', 'no_grad()'], correctIndex: 1, badgeId: 'bug_hunter' }
-        ];
-
-        const TACHYON_VERIFIED_BLUEPRINTS = [
             {
-                id: 'bp_yolo_fastapi', icon: '👁️', rarity: 'MYTHIC', title: 'YOLOv8 + FastAPI Vision', name: 'tachyon-yolov8-fastapi', fullName: 'ultralytics/ultralytics', author: 'TACHYON Core', stars: 420, healthScore: 99, desc: 'Real-time object detection stream over WebSockets.', stack: ['FastAPI', 'YOLOv8', 'Docker'], repoUrl: 'https://github.com/ultralytics/ultralytics', dockerfile: 'FROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nCMD ["uvicorn", "main:app"]'
+                id: 'ch_prompt',
+                title: '1. Prompt Engineering: System Guardrail Injection',
+                question: 'Which parameter in a Transformer LLM decoding step controls randomness by scaling logits before softmax?',
+                options: ['A) Weight Decay (L2)', 'B) Temperature (T)', 'C) Batch Normalization', 'D) Dropout Rate'],
+                correctIndex: 1,
+                badgeId: 'prompt_engineer'
             },
             {
-                id: 'bp_rag_voice', icon: '🎙️', rarity: 'MYTHIC', title: 'Sarvam AI Voice RAG', name: 'sarvam-rag-voice', fullName: 'langchain-ai/langchain', author: 'TACHYON AI', stars: 510, healthScore: 99, desc: 'Multilingual voice agent powered by FastAPI & ChromaDB.', stack: ['FastAPI', 'Sarvam AI', 'LangChain'], repoUrl: 'https://github.com/langchain-ai/langchain', dockerfile: 'FROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nCMD ["uvicorn", "server:app"]'
+                id: 'ch_bug',
+                title: '2. Bug Hunter: PyTorch Training Loop Fix',
+                question: 'In a PyTorch training loop, gradients accumulate across batches if which method is omitted before loss.backward()?',
+                options: ['A) model.eval()', 'B) torch.no_grad()', 'C) optimizer.zero_grad()', 'D) scheduler.step()'],
+                correctIndex: 2,
+                badgeId: 'bug_hunter'
+            },
+            {
+                id: 'ch_ml',
+                title: '3. Model Forge: F1-Score Evaluation',
+                question: 'A binary classifier has Precision = 0.80 and Recall = 0.80 on the PESCE test set. What is its harmonic F1-Score?',
+                options: ['A) 0.64', 'B) 0.80', 'C) 0.90', 'D) 1.60'],
+                correctIndex: 1,
+                badgeId: 'model_trainer'
             }
         ];
 
-        const SEED_USERS = {
-            "shivu@pesce.ac.in": { uid: "demo", customName: "shivu", email: "shivu@pesce.ac.in", bonusXP: 530, streakCount: 9, avatarId: "🐉", equippedTitle: "Arena Champion", completedMissions: ['m_first_contact'], solvedChallenges: ['ch_prompt'], earnedBadges: ['first_boot', 'early_access', 'arena_champion'], showcaseBadges: ['arena_champion'] }
-        };
-        const SEED_AGENTS = [
-            { id: "a1", name: "code corrector", author: "suhas", authorEmail: "suhas@pesce.ac.in", desc: "Automated syntax and tensor bug patching agent.", skills: ["Python", "AST"], upvotes: 2, boostedBy: ["shivu@pesce.ac.in"], timestamp: Date.now() }
+        const AVATAR_OPTIONS = ['🤖', '🧑‍🚀', '⚡', '🦊', '🐉', '🧬', '🛡️', '👑'];
+
+        const TACHYON_VERIFIED_BLUEPRINTS = [
+            {
+                id: 'bp_yolo_fastapi', icon: '👁️', rarity: 'MYTHIC', title: 'YOLOv8 + FastAPI Vision', name: 'tachyon-yolov8-fastapi', fullName: 'ultralytics/ultralytics', author: 'TACHYON Core', stars: 420, healthScore: 99, desc: 'Real-time object detection stream over WebSockets with pre-resolved dependencies.', stack: ['FastAPI', 'YOLOv8', 'Docker'], repoUrl: 'https://github.com/ultralytics/ultralytics', dockerfile: 'FROM python:3.11-slim\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\nCMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]'
+            },
+            {
+                id: 'bp_rag_voice', icon: '🎙️', rarity: 'MYTHIC', title: 'Sarvam AI Voice RAG', name: 'sarvam-rag-voice', fullName: 'langchain-ai/langchain', author: 'TACHYON AI', stars: 510, healthScore: 99, desc: 'Multilingual voice agent powered by FastAPI, Sarvam AI & ChromaDB vector memory.', stack: ['FastAPI', 'Sarvam AI', 'LangChain'], repoUrl: 'https://github.com/langchain-ai/langchain', dockerfile: 'FROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nRUN pip install fastapi uvicorn chromadb\nCMD ["uvicorn", "server:app", "--port", "8000"]'
+            },
+            {
+                id: 'bp_esp32_iot', icon: '📡', rarity: 'EPIC', title: 'ESP32 + Next.js Telemetry', name: 'esp32-nextjs-twin-node', fullName: 'espressif/arduino-esp32', author: 'PESCE IoT Lab', stars: 315, healthScore: 97, desc: 'Bi-directional MQTT sensor telemetry dashboard for hardware-in-the-loop Digital Twins.', stack: ['ESP32', 'Next.js', 'MQTT'], repoUrl: 'https://github.com/espressif/arduino-esp32', dockerfile: 'FROM node:20-alpine\nWORKDIR /app\nCOPY package*.json ./\nRUN npm install\nCOPY . .\nCMD ["npm", "run", "dev"]'
+            },
+            {
+                id: 'bp_three_twin', icon: '🧊', rarity: 'EPIC', title: 'Three.js Spatial Twin Starter', name: 'threejs-digital-twin-starter', fullName: 'mrdoob/three.js', author: 'TACHYON 3D', stars: 640, healthScore: 98, desc: 'Interactive 3D room template with orbit controls, spatial audio, and glowing telemetry nodes.', stack: ['Three.js', 'WebGL', 'Vite'], repoUrl: 'https://github.com/mrdoob/three.js', dockerfile: 'FROM node:20-alpine\nWORKDIR /app\nCOPY . .\nRUN npm install && npm run build\nCMD ["npx", "vite", "preview"]'
+            }
         ];
 
-        let allUsers = { ...SEED_USERS };
-        let allAgents = [...SEED_AGENTS];
-        let currentUserUid = "demo";
-        let currentUserEmail = "shivu@pesce.ac.in";
-        let currentCustomName = "shivu";
+        let allUsers = {};
+        let allAgents = [];
+        let currentUserUid = "";
+        let currentUserEmail = "";
+        let currentCustomName = "";
         let activeAgentFilter = "all";
+        let activeMissionFilter = "all";
+        let activeBadgeCategory = "all";
+        let leaderboardMode = "all";
         let forgeSourceFilter = "all";
         let liveGithubResults = [];
         let forgeCoresCount = 5;
 
+        document.querySelectorAll('a[href="twin.html"]').forEach(link => {
+            link.addEventListener('click', () => {
+                localStorage.setItem('tachyon_twin_visited', 'true');
+            });
+        });
+
+        function renderBadgeSVG(badge, isEarned) {
+            const colorMap = { Common: '#94A3B8', Uncommon: '#38BDF8', Rare: '#A78BFA', Epic: '#F472B6', Legendary: '#FBBF24' };
+            const strokeCol = isEarned ? (colorMap[badge.rarity] || '#38BDF8') : '#475569';
+            return `
+                <svg width="74" height="74" viewBox="0 0 80 80">
+                    <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="rgba(5,7,14,0.85)" stroke="${strokeCol}" stroke-width="3"/>
+                    <circle cx="40" cy="40" r="24" fill="none" stroke="${strokeCol}" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    <text x="40" y="47" text-anchor="middle" font-size="24">${isEarned ? badge.icon : '🔒'}</text>
+                </svg>
+            `;
+        }
+
+        function pushNotification(text) {
+            const list = document.getElementById('notif-list');
+            if (!list) return;
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `${text}<time>${new Date().toLocaleTimeString()}</time>`;
+            list.prepend(item);
+            const countEl = document.getElementById('notif-count');
+            if (countEl) countEl.innerText = parseInt(countEl.innerText || '0') + 1;
+        }
+
+        const TACHY_TIPS = [
+            '"Summon Mythic templates, auto-inject Docker shields, and fork directly to your GitHub."',
+            '"Every blueprint you fork into the Arena grants +50 XP and progresses your First Boot & Innovator badges!"',
+            '"Stuck on environment setup? Click Quick Setup on any relic to get an instant Dockerfile."'
+        ];
+        let tachyTipIdx = 0;
+        window.cycleTachyDialogue = function() {
+            playSound('blip');
+            tachyTipIdx = (tachyTipIdx + 1) % TACHY_TIPS.length;
+            const el = document.getElementById('tachy-npc-dialogue');
+            if (el) el.innerText = TACHY_TIPS[tachyTipIdx];
+        };
+
         window.activateOperativeDemoMode = function() {
             document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('username-modal').style.display = 'none';
+            if (!currentUserEmail) {
+                const existingEmails = Object.keys(allUsers);
+                if (existingEmails.length > 0) {
+                    currentUserEmail = existingEmails[0];
+                    currentCustomName = allUsers[currentUserEmail].customName || "Operative";
+                    currentUserUid = allUsers[currentUserEmail].uid || "";
+                } else {
+                    currentUserEmail = "demo@pesce.ac.in";
+                    currentCustomName = "demo_operative";
+                }
+            }
             document.getElementById('studentName').value = currentCustomName;
             document.getElementById('editCallsignInput').value = currentCustomName;
-            showGlassToast('⚡ Cinematic Preview Active (@shivu)');
+            showGlassToast('⚡ Cinematic Preview Active — Live Database Connected');
             refreshAllUI();
             renderBlueprintForge();
         };
 
         window.switchArenaView = function(viewKey) {
+            playSound('blip');
             ['arena', 'forge', 'missions', 'trophies', 'profile'].forEach(k => {
                 document.getElementById('view-' + k)?.classList.toggle('active', k === viewKey);
                 document.getElementById('tab-' + k)?.classList.toggle('active', k === viewKey);
@@ -1262,75 +1518,240 @@
             setTimeout(() => el.remove(), 1200);
         };
 
+        // --- REAL FIREBASE AUTHENTICATION & LISTENER SETUP ---
         document.getElementById('googleLoginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(() => activateOperativeDemoMode());
+            signInWithPopup(auth, provider).catch(err => {
+                console.error(err);
+                showGlassToast('⚠️ Google sign-in popup blocked in preview. Click "Enter Cinematic Preview" below to view live database.');
+            });
         });
 
         onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                document.getElementById('login-screen').style.display = 'none';
-                activateOperativeDemoMode();
+            if (user) {
+                currentUserUid = user.uid;
+                currentUserEmail = user.email;
+                const userDocRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userDocRef);
+
+                if (userSnap.exists() && userSnap.data().customName) {
+                    const data = userSnap.data();
+                    currentCustomName = data.customName;
+                    document.getElementById('studentName').value = currentCustomName;
+                    document.getElementById('editCallsignInput').value = currentCustomName;
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'none';
+
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    if (data.lastStreakDate !== todayStr) {
+                        const newStreak = (data.streakCount || 0) + 1;
+                        await setDoc(userDocRef, {
+                            lastStreakDate: todayStr,
+                            streakCount: newStreak,
+                            lastLogin: Date.now()
+                        }, { merge: true });
+                    }
+                    showGlassToast(`⚡ Welcome back, @${currentCustomName}!`);
+                    refreshAllUI();
+                } else {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('username-modal').style.display = 'flex';
+                }
+            } else {
+                currentUserUid = "";
+                currentUserEmail = "";
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('username-modal').style.display = 'none';
             }
         });
 
+        window.saveUsername = async () => {
+            const inputName = document.getElementById('customUsernameInput').value.trim();
+            const lowerName = inputName.toLowerCase();
+            if (inputName.length < 3) { showGlassToast("⚠️ Callsign must be at least 3 characters."); return; }
+
+            const q = query(collection(db, "users"), where("customNameLower", "==", lowerName));
+            if (!(await getDocs(q)).empty) { showGlassToast("⚠️ That callsign is already registered!"); return; }
+
+            const user = auth.currentUser;
+            if (!user) return;
+            const todayStr = new Date().toISOString().split('T')[0];
+            await setDoc(doc(db, "users", user.uid), {
+                customName: inputName,
+                customNameLower: lowerName,
+                email: user.email,
+                lastLogin: Date.now(),
+                streakCount: 1,
+                lastStreakDate: todayStr,
+                bonusXP: 0,
+                completedMissions: [],
+                earnedBadges: ['early_access'],
+                equippedTitle: 'Rookie Coder',
+                avatarId: '🤖'
+            }, { merge: true });
+
+            currentCustomName = inputName;
+            document.getElementById('studentName').value = currentCustomName;
+            document.getElementById('username-modal').style.display = 'none';
+            playSound('fanfare');
+            showGlassToast(`🛡️ Profile Initialized! Welcome @${currentCustomName}`);
+        };
+
+        window.logout = () => signOut(auth).then(() => {
+            document.getElementById('login-screen').style.display = 'flex';
+        });
+
+        // --- REAL-TIME FIRESTORE LISTENERS (LOADS YOUR OLD USERS & AGENTS) ---
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            allUsers = {};
+            snapshot.forEach((d) => {
+                const data = d.data();
+                data.uid = d.id;
+                if (data.email) allUsers[data.email] = data;
+            });
+            refreshAllUI();
+        });
+
+        onSnapshot(collection(db, "agents"), (snapshot) => {
+            allAgents = [];
+            snapshot.forEach((d) => {
+                const data = d.data();
+                data.id = d.id;
+                allAgents.push(data);
+            });
+            const navCount = document.getElementById('nav-agent-count');
+            const unitCount = document.getElementById('count-all-units');
+            if (navCount) navCount.innerText = allAgents.length;
+            if (unitCount) unitCount.innerText = allAgents.length;
+            refreshAllUI();
+        });
+
+        // --- EXACT SCORE & BADGE CALCULATION FROM YOUR ORIGINAL DATABASE ---
         function computeAllUserScores() {
             const statsByEmail = {};
+
             for (let email in allUsers) {
                 const u = allUsers[email];
                 if (!u.customName) continue;
                 statsByEmail[email] = {
+                    uid: u.uid,
                     name: u.customName,
-                    email,
+                    email: email,
                     baseXP: 10,
                     bonusXP: u.bonusXP || 0,
                     myAgentCount: 0,
+                    myUpvotesReceived: 0,
+                    myBoostsGiven: 0,
+                    hasLiveLinkAgent: false,
                     completedMissions: u.completedMissions || [],
                     solvedChallenges: u.solvedChallenges || [],
                     storedBadges: u.earnedBadges || ['early_access'],
                     equippedTitle: u.equippedTitle || 'Rookie Coder',
                     showcaseBadges: u.showcaseBadges || [],
-                    avatarId: u.avatarId || '🐉',
+                    avatarId: u.avatarId || '🤖',
                     streakCount: u.streakCount || 1,
                     xpHistory: u.xpHistory || []
                 };
             }
+
             allAgents.forEach(a => {
-                const ae = a.authorEmail || 'unknown';
-                if (!statsByEmail[ae]) {
-                    statsByEmail[ae] = { name: a.author || 'Operative', email: ae, baseXP: 0, bonusXP: 0, myAgentCount: 0, completedMissions: [], solvedChallenges: [], storedBadges: ['early_access'], equippedTitle: 'Rookie Coder', showcaseBadges: [], avatarId: '🤖', streakCount: 1, xpHistory: [] };
+                const authorEmail = a.authorEmail || "unknown";
+                const upvotes = a.upvotes || 0;
+                if (!statsByEmail[authorEmail]) {
+                    statsByEmail[authorEmail] = {
+                        uid: null,
+                        name: a.author || "Operative",
+                        email: authorEmail,
+                        baseXP: 0,
+                        bonusXP: 0,
+                        myAgentCount: 0,
+                        myUpvotesReceived: 0,
+                        myBoostsGiven: 0,
+                        hasLiveLinkAgent: false,
+                        completedMissions: [],
+                        solvedChallenges: [],
+                        storedBadges: ['early_access'],
+                        equippedTitle: 'Rookie Coder',
+                        showcaseBadges: [],
+                        avatarId: '🤖',
+                        streakCount: 1,
+                        xpHistory: []
+                    };
                 }
-                statsByEmail[ae].baseXP += 50 + ((a.upvotes || 0) * 10);
-                statsByEmail[ae].myAgentCount += 1;
+                statsByEmail[authorEmail].baseXP += 50 + (upvotes * 10);
+                statsByEmail[authorEmail].myAgentCount += 1;
+                statsByEmail[authorEmail].myUpvotesReceived += upvotes;
+                if (a.link && a.link.trim().length > 4) {
+                    statsByEmail[authorEmail].hasLiveLinkAgent = true;
+                }
+                if (Array.isArray(a.boostedBy)) {
+                    a.boostedBy.forEach(boosterEmail => {
+                        if (statsByEmail[boosterEmail]) {
+                            statsByEmail[boosterEmail].myBoostsGiven += 1;
+                        }
+                    });
+                }
             });
 
-            const sortedEmails = Object.keys(statsByEmail).sort((a, b) => (statsByEmail[b].baseXP + statsByEmail[b].bonusXP) - (statsByEmail[a].baseXP + statsByEmail[a].bonusXP));
+            const sortedEmails = Object.keys(statsByEmail).sort((a, b) => {
+                const totA = statsByEmail[a].baseXP + statsByEmail[a].bonusXP;
+                const totB = statsByEmail[b].baseXP + statsByEmail[b].bonusXP;
+                return totB - totA;
+            });
+
             sortedEmails.forEach((email, idx) => {
                 const st = statsByEmail[email];
                 st.rank = idx + 1;
                 st.totalXP = st.baseXP + st.bonusXP;
                 st.solvedCount = st.solvedChallenges.length;
+                st.hasSolvedML = st.solvedChallenges.includes('ch_ml');
+                st.twinVisited = localStorage.getItem('tachyon_twin_visited') === 'true' || st.completedMissions.includes('m_campus_scout');
+
                 const unlocked = new Set(st.storedBadges);
+                unlocked.add('early_access');
                 if (st.myAgentCount >= 1) unlocked.add('first_boot');
-                if (st.rank === 1) unlocked.add('arena_champion');
+                if (st.myAgentCount >= 3) unlocked.add('swarm_architect');
+                if (st.myUpvotesReceived >= 3) unlocked.add('overclocked');
+                if (st.myBoostsGiven >= 3) unlocked.add('team_player');
+                if (st.hasLiveLinkAgent) unlocked.add('innovator');
+                if (st.solvedChallenges.includes('ch_prompt')) unlocked.add('prompt_engineer');
+                if (st.solvedChallenges.includes('ch_bug')) unlocked.add('bug_hunter');
+                if (st.solvedChallenges.includes('ch_ml')) unlocked.add('model_trainer');
+                if (st.solvedCount >= 3) unlocked.add('code_warrior');
+                if (st.twinVisited && email === currentUserEmail) unlocked.add('campus_explorer');
+                if (st.completedMissions.length >= 4) unlocked.add('knowledge_seeker');
+                if (st.streakCount >= 3 || st.totalXP >= 250) unlocked.add('streak_master');
+                if (st.rank === 1 && sortedEmails.length > 0) unlocked.add('arena_champion');
+                if (unlocked.size >= 8) unlocked.add('legend_of_tachyon');
+
                 st.earnedBadgesList = Array.from(unlocked);
             });
+
             return { statsByEmail, sortedEmails };
         }
 
         function refreshAllUI() {
             const { statsByEmail, sortedEmails } = computeAllUserScores();
-            const myStats = statsByEmail[currentUserEmail];
+            const myStats = statsByEmail[currentUserEmail] || (sortedEmails[0] ? statsByEmail[sortedEmails[0]] : null);
+
             if (myStats) {
-                const lvl = Math.floor(myStats.totalXP / 100) + 1;
-                document.getElementById('hero-greeting-text').innerText = `@${myStats.name}`;
+                const prog = calculateProgression(myStats.totalXP);
+                const avEl = document.getElementById('hero-avatar-icon');
+                if (avEl) avEl.innerText = myStats.avatarId;
+                document.getElementById('hero-greeting-text').innerText = `Welcome back, @${myStats.name}`;
                 document.getElementById('hero-title-pill').innerText = `★ ${myStats.equippedTitle} • Rank #${myStats.rank}`;
-                document.getElementById('hero-xp-current').innerText = `${myStats.totalXP} XP`;
-                document.getElementById('hero-xp-target').innerText = `Next: ${lvl * 100} XP`;
-                document.getElementById('hero-xp-fill').style.width = `${Math.min(100, myStats.totalXP % 100)}%`;
-                document.getElementById('hud-lvl-txt').innerText = `LVL 0${lvl}`;
-                document.getElementById('hud-xp-txt').innerText = `${myStats.totalXP} XP`;
+                document.getElementById('hero-lvl-badge').innerText = `LVL 0${prog.level}`;
+                document.getElementById('hero-streak-badge').innerText = `🔥 ${myStats.streakCount}-Day Streak`;
+                document.getElementById('hero-xp-current').innerText = `${prog.xp} TOTAL XP (Rank #${myStats.rank})`;
+                document.getElementById('hero-xp-target').innerText = `Next: ${prog.nextLevelXP} XP`;
+                document.getElementById('hero-xp-fill').style.width = `${Math.max(6, prog.currentLevelProgress)}%`;
+                const prevEl = document.getElementById('hero-lvl-preview');
+                if (prevEl) prevEl.innerText = `${prog.remainingXP} XP remaining to Level ${prog.level + 1}`;
+                document.getElementById('nav-badge-count').innerText = `${myStats.earnedBadgesList.length}/${BADGE_CATALOG.length}`;
+                document.getElementById('hud-lvl-txt').innerText = `LVL 0${prog.level}`;
+                document.getElementById('hud-xp-txt').innerText = `${prog.xp} XP`;
                 document.getElementById('hud-cores').innerText = forgeCoresCount;
             }
+
             renderAgents(statsByEmail);
             renderLeaderboard(statsByEmail, sortedEmails);
             renderMissionsView(myStats);
@@ -1338,78 +1759,225 @@
             renderProfileLoadout(myStats);
         }
 
-        window.setAgentFilter = function(filter, btn) {
+        // --- RENDER COLLECTIBLE AI AGENT CARDS (FULL TELEMETRY & SKILLS) ---
+        window.setAgentFilter = function(filter, btnEl) {
             activeAgentFilter = filter;
             document.querySelectorAll('#view-arena .filter-pill').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
+            if (btnEl) btnEl.classList.add('active');
             refreshAllUI();
         };
 
         window.renderAgents = function() {
             const grid = document.getElementById('agent-grid');
-            const q = (document.getElementById('agentSearchInput')?.value || '').toLowerCase();
+            const q = (document.getElementById('agentSearchInput')?.value || '').toLowerCase().trim();
+            if (!grid) return;
             grid.innerHTML = '';
-            allAgents.filter(a => {
+
+            const filtered = allAgents.filter(a => {
                 if (activeAgentFilter === 'running' && (a.upvotes || 0) < 1) return false;
+                if (activeAgentFilter === 'official' && !a.isOfficial) return false;
                 if (activeAgentFilter === 'mine' && a.authorEmail !== currentUserEmail) return false;
-                if (q && !`${a.name} ${a.author}`.toLowerCase().includes(q)) return false;
+                if (q) {
+                    const matchText = `${a.name} ${a.author} ${a.desc} ${(a.skills || []).join(' ')}`.toLowerCase();
+                    return matchText.includes(q);
+                }
                 return true;
-            }).forEach(agent => {
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--slate); background:var(--surface-card); border-radius:24px; border:1px dashed var(--glass-border);">No AI agent units match this filter. Click <strong>DEPLOY YOUR AGENT</strong> or fork a template from the <strong>Blueprint Forge</strong>!</div>`;
+                return;
+            }
+
+            filtered.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0)).forEach(agent => {
+                const upvotes = agent.upvotes || 0;
+                const isOwner = agent.authorEmail === currentUserEmail;
+                const hasBoosted = Array.isArray(agent.boostedBy) && agent.boostedBy.includes(currentUserEmail);
+                const skills = Array.isArray(agent.skills) && agent.skills.length > 0 ? agent.skills : ['AI Agent', 'Neural Node', 'Tachyon'];
+
+                let statusHTML = `<span class="status-badge status-ready">● READY</span>`;
+                if (agent.isOfficial) {
+                    statusHTML = `<span class="status-badge status-featured">👑 OFFICIAL</span>`;
+                } else if (upvotes >= 1) {
+                    statusHTML = `<span class="status-badge status-running">⚡ RUNNING</span>`;
+                }
+
+                let boostBtnHTML = '';
+                if (isOwner) {
+                    boostBtnHTML = `<button class="unit-btn unit-btn-disabled" onclick="event.stopPropagation();">🔒 YOUR UNIT (${upvotes})</button>`;
+                } else if (hasBoosted) {
+                    boostBtnHTML = `<button class="unit-btn unit-btn-disabled" style="color:var(--mint); border-color:rgba(52,211,153,0.4);" onclick="event.stopPropagation();">✅ BOOSTED (${upvotes})</button>`;
+                } else {
+                    boostBtnHTML = `<button class="unit-btn unit-btn-boost" onclick="event.stopPropagation(); upvoteAgent('${agent.id}', '${agent.authorEmail}')">⚡ OVERCLOCK (+10 XP) [${upvotes}]</button>`;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'unit-agent-card';
-                card.setAttribute('data-hint', `AI Unit: ${agent.name} <br><span style="color:var(--cyan)">By @${agent.author}</span>`);
+                card.setAttribute('data-hint', `<strong>${agent.name}</strong><br>Created by @${agent.author} • Click to inspect telemetry`);
+                card.onclick = () => openAgentInspectModal(agent);
                 card.innerHTML = `
                     <div>
-                        <div style="font-family:var(--font-display); font-size:1.1rem; font-weight:700;">${agent.name}</div>
-                        <div style="font-size:0.8rem; color:var(--slate); margin-top:2px;">Creator: <strong>@${agent.author}</strong></div>
-                        <p style="font-size:0.88rem; color:#CBD5E1; margin-top:10px;">${agent.desc}</p>
+                        <div class="unit-header-row">
+                            <div class="unit-avatar-title">
+                                <div class="unit-emblem">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${agent.isOfficial ? '#FBBF24' : '#38BDF8'}" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="16" rx="3"/>
+                                        <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+                                        <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+                                        <path d="M9 16h6"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="unit-name">${agent.name}</div>
+                                    <div class="unit-creator">Creator: <strong>@${agent.author}</strong></div>
+                                </div>
+                            </div>
+                            ${statusHTML}
+                        </div>
+
+                        <p class="unit-purpose">${agent.desc}</p>
+
+                        <div class="unit-skills-row">
+                            ${skills.slice(0, 3).map(s => `<span class="skill-chip">${s}</span>`).join('')}
+                        </div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--cyan);">⚡ ${agent.upvotes || 0} Runs</span>
-                        <button class="editorial-outline" style="padding:6px 14px; border-radius:99px; font-size:0.75rem; background:rgba(56,189,248,0.1); border:1px solid var(--cyan); color:var(--cyan); cursor:pointer;" onclick="upvoteAgent('${agent.id}')">Overclock</button>
+
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <div class="unit-telemetry-grid">
+                            <div class="tele-cell"><span>RUNS / BOOSTS</span><span>${upvotes} Runs</span></div>
+                            <div class="tele-cell"><span>CREATOR XP</span><span style="color:var(--cyan);">+${50 + upvotes * 10} XP</span></div>
+                            <div class="tele-cell"><span>STATE</span><span>Verified</span></div>
+                        </div>
+                        <div class="unit-actions-row">
+                            <button class="unit-btn unit-btn-inspect" onclick="event.stopPropagation(); openAgentInspectModalById('${agent.id}')">🔍 Details</button>
+                            ${boostBtnHTML}
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         };
 
-        window.upvoteAgent = function(id) {
-            const ag = allAgents.find(a => a.id === id);
-            if (ag) ag.upvotes = (ag.upvotes || 0) + 1;
-            spawnXPFloat('+10 XP!');
-            showGlassToast('⚡ Agent Overclocked (+10 XP)!');
-            refreshAllUI();
+        window.openAgentInspectModalById = function(id) {
+            const agent = allAgents.find(a => a.id === id);
+            if (agent) openAgentInspectModal(agent);
         };
 
-        window.openDeployModal = () => document.getElementById('deployModal').style.display = 'flex';
+        function openAgentInspectModal(agent) {
+            playSound('blip');
+            const upvotes = agent.upvotes || 0;
+            const dateStr = agent.timestamp ? new Date(agent.timestamp).toLocaleString() : 'Active Deployment';
+            const linkHTML = agent.link ? `<a href="${agent.link.startsWith('http') ? agent.link : 'https://' + agent.link}" target="_blank" class="btn-editorial-primary" style="justify-content:center; text-decoration:none;">🔗 LAUNCH LIVE AGENT / REPO ↗</a>` : '';
+
+            const box = document.getElementById('agentInspectContent');
+            box.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 style="font-family:var(--font-display);">🤖 ${agent.name}</h2>
+                    <button class="btn-editorial-outline" style="padding:6px 14px;" onclick="document.getElementById('agentInspectModal').style.display='none'">✕ Close</button>
+                </div>
+                <div style="font-family:var(--font-mono); font-size:0.78rem; color:var(--cyan);">
+                    CREATOR: @${agent.author} // DEPLOYED: ${dateStr}
+                </div>
+                <p style="color:var(--soft-white); line-height:1.6; background:rgba(5,7,14,0.75); padding:16px; border-radius:14px; border:1px solid var(--glass-border);">
+                    ${agent.desc}
+                </p>
+                <div class="unit-telemetry-grid">
+                    <div class="tele-cell"><span>STATUS</span><span style="color:var(--mint);">ONLINE</span></div>
+                    <div class="tele-cell"><span>OVERCLOCKS</span><span>${upvotes} Verified</span></div>
+                    <div class="tele-cell"><span>XP GENERATED</span><span>+${50 + upvotes * 10} XP</span></div>
+                </div>
+                ${linkHTML}
+            `;
+            document.getElementById('agentInspectModal').style.display = 'flex';
+        }
+
+        window.openDeployModal = () => { playSound('blip'); document.getElementById('deployModal').style.display = 'flex'; };
         window.closeDeployModal = () => document.getElementById('deployModal').style.display = 'none';
 
-        window.submitAgent = function() {
+        window.submitAgent = async function() {
             const name = document.getElementById('agentName').value.trim();
-            if (!name) return;
-            allAgents.unshift({ id: 'a_' + Date.now(), name, author: currentCustomName, authorEmail: currentUserEmail, desc: document.getElementById('agentDesc').value || 'Autonomous unit.', upvotes: 0 });
-            closeDeployModal();
-            spawnXPFloat('+50 XP!');
-            showGlassToast('🚀 Agent deployed successfully!');
-            refreshAllUI();
+            const link = document.getElementById('agentLink').value.trim();
+            const skillsRaw = document.getElementById('agentSkills').value.trim();
+            const desc = document.getElementById('agentDesc').value.trim();
+
+            if (!name) { showGlassToast("⚠️ Please enter an Agent Name."); return; }
+            const btn = document.getElementById('deploySubmitBtn');
+            btn.disabled = true;
+            btn.innerText = "DEPLOYING TO NETWORK...";
+
+            const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : ['AI Agent', 'PESCE AIML'];
+
+            try {
+                await addDoc(collection(db, "agents"), {
+                    name,
+                    link: link || "",
+                    skills,
+                    author: currentCustomName || "Operative",
+                    authorEmail: currentUserEmail || "demo@pesce.ac.in",
+                    desc: desc || "Autonomous AI unit deployed to the PESCE Tachyon Arena.",
+                    upvotes: 0,
+                    boostedBy: [],
+                    timestamp: Date.now()
+                });
+                playSound('fanfare');
+                window.spawnXPFloat('+50 XP AGENT DEPLOYED!');
+                pushNotification(`🚀 Deployed agent "${name}" (+50 XP earned).`);
+                showGlassToast(`🚀 Deployed "${name}" to the database!`);
+                closeDeployModal();
+                document.getElementById('agentName').value = '';
+                document.getElementById('agentLink').value = '';
+                document.getElementById('agentSkills').value = '';
+                document.getElementById('agentDesc').value = '';
+            } catch (err) {
+                showGlassToast("⚠️ Deployment requires authentication or active network.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "LAUNCH AGENT (+50 XP)";
+            }
         };
 
+        window.upvoteAgent = async function(id, authorEmail) {
+            if (!currentUserEmail || currentUserEmail === authorEmail) {
+                showGlassToast('⚠️ Sign in with Google to overclock peer agents.');
+                return;
+            }
+            playSound('fanfare');
+            window.spawnXPFloat('+10 XP OVERCLOCK!');
+            await updateDoc(doc(db, "agents", id), {
+                upvotes: increment(1),
+                boostedBy: arrayUnion(currentUserEmail)
+            });
+            showGlassToast('⚡ Agent Overclocked (+10 XP)!');
+        };
+
+        // --- BLUEPRINT FORGE (WITH AUTO-DOCKER SETUP & REAL FIRESTORE FORK) ---
         window.executeBlueprintSearch = async function() {
             const queryVal = document.getElementById('forgeSearchQuery').value.trim();
             if (!queryVal) return;
             showGlassToast(`🧭 Scanning GitHub for "${queryVal}"...`);
             try {
-                const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(queryVal)}&per_page=4`);
+                const res = await fetch(`https://api.github.com/search/repositories?q=${encodeURIComponent(queryVal)}&sort=stars&per_page=4`);
                 const data = await res.json();
                 if (data && data.items) {
                     liveGithubResults = data.items.map(repo => ({
-                        id: 'gh_' + repo.id, icon: '🐙', rarity: 'MYTHIC', title: repo.name, name: repo.name, author: `@${repo.owner?.login}`, stars: repo.stargazers_count, healthScore: 98, desc: repo.description || 'GitHub verified starter.', stack: [repo.language || 'Code'], repoUrl: repo.html_url
+                        id: 'gh_' + repo.id,
+                        icon: '🐙',
+                        rarity: repo.stargazers_count > 500 ? 'MYTHIC' : 'EPIC',
+                        title: repo.name,
+                        name: repo.name,
+                        author: `@${repo.owner?.login}`,
+                        stars: repo.stargazers_count,
+                        healthScore: 98,
+                        desc: repo.description || 'Verified public GitHub starter repository.',
+                        stack: [repo.language || 'Code', 'GitHub', 'Docker'],
+                        repoUrl: repo.html_url,
+                        dockerfile: `FROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nCMD ["python", "main.py"]`
                     }));
                     renderBlueprintForge();
                     showGlassToast(`⚡ Summoned ${liveGithubResults.length} GitHub repositories!`);
                 }
             } catch (e) {
-                showGlassToast('⚠️ GitHub API limit reached. Showing curated relics.');
+                showGlassToast('⚠️ GitHub API rate limit reached. Showing curated TACHYON relics.');
             }
         };
 
@@ -1428,32 +1996,90 @@
             pool.filter(bp => forgeSourceFilter === 'all' || bp.rarity === forgeSourceFilter || (forgeSourceFilter === 'github' && bp.id.startsWith('gh_'))).forEach(bp => {
                 const card = document.createElement('div');
                 card.className = `blueprint-card loot-${bp.rarity}`;
-                card.setAttribute('data-hint', `<strong>${bp.rarity} RELIC</strong><br>Interact to fork ${bp.title}`);
+                card.setAttribute('data-hint', `<strong>${bp.rarity} RELIC</strong><br>1-Click Fork deploys this starter into your Agent Arena`);
                 card.innerHTML = `
                     <div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                             <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--gold);">👑 ${bp.rarity} RELIC</span>
-                            <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--mint);">⭐ ${bp.stars}</span>
+                            <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--mint);">💚 ${bp.healthScore}% Health • ⭐ ${bp.stars}</span>
                         </div>
                         <div style="display:flex; align-items:center; gap:12px;">
                             <span style="font-size:2rem;">${bp.icon}</span>
-                            <div style="font-family:var(--font-display); font-size:1.05rem; font-weight:700;">${bp.title}</div>
+                            <div>
+                                <div style="font-family:var(--font-display); font-size:1.05rem; font-weight:700;">${bp.title}</div>
+                                <div style="font-size:0.75rem; color:var(--slate);">Curated by ${bp.author}</div>
+                            </div>
                         </div>
-                        <p style="font-size:0.85rem; color:#CBD5E1; margin-top:12px;">${bp.desc}</p>
+                        <p style="font-size:0.85rem; color:#CBD5E1; margin-top:12px; line-height:1.5;">${bp.desc}</p>
+                        <div class="unit-skills-row">
+                            ${(bp.stack || []).map(s => `<span class="skill-chip">${s}</span>`).join('')}
+                        </div>
                     </div>
                     <div class="bp-footer-btns">
-                        <button class="bp-btn-setup" onclick="window.open('${bp.repoUrl}', '_blank')">🐙 View Repo</button>
-                        <button class="bp-btn-fork" onclick="cloneBlueprint('${bp.name}')">⚡ 1-Click Fork</button>
+                        <button class="bp-btn-setup" onclick="openBlueprintSetupModal('${bp.id}')">🐳 Quick Setup</button>
+                        <button class="bp-btn-fork" onclick="cloneBlueprint('${bp.id}')">⚡ 1-Click Fork (+50 XP)</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
         };
 
-        window.cloneBlueprint = function(name) {
+        window.openBlueprintSetupModal = function(bpId) {
+            playSound('blip');
+            const pool = [...TACHYON_VERIFIED_BLUEPRINTS, ...liveGithubResults];
+            const bp = pool.find(x => x.id === bpId) || TACHYON_VERIFIED_BLUEPRINTS[0];
+            const box = document.getElementById('blueprintInspectContent');
+            box.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 style="font-family:var(--font-display);">🐳 ${bp.title} // Quick Setup</h2>
+                    <button class="btn-editorial-outline" style="padding:6px 14px;" onclick="document.getElementById('blueprintInspectModal').style.display='none'">✕ Close</button>
+                </div>
+                <p style="font-size:0.86rem; color:var(--slate);">3-Step Junior Terminal Checklist & Auto-Injected Dockerfile:</p>
+                <pre style="background:#05070E; border:1px solid var(--glass-border); padding:14px; border-radius:12px; font-family:var(--font-mono); font-size:0.76rem; color:var(--cyan); overflow-x:auto;">git clone ${bp.repoUrl}.git
+cd ${bp.name}
+docker build -t ${bp.name} . && docker run -p 8000:8000 ${bp.name}</pre>
+                <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--gold);">AUTO-GENERATED DOCKERFILE:</div>
+                <pre style="background:#05070E; border:1px solid var(--glass-border); padding:14px; border-radius:12px; font-family:var(--font-mono); font-size:0.75rem; color:var(--mint); overflow-x:auto;">${bp.dockerfile || 'FROM python:3.11-slim\nWORKDIR /app\nCOPY . .\nCMD ["python", "main.py"]'}</pre>
+                <div style="display:flex; gap:10px;">
+                    <a href="${bp.repoUrl}" target="_blank" class="btn-editorial-outline" style="flex:1; justify-content:center; text-decoration:none;">🐙 Open GitHub ↗</a>
+                    <button class="btn-editorial-primary" style="flex:1; justify-content:center;" onclick="cloneBlueprint('${bp.id}'); document.getElementById('blueprintInspectModal').style.display='none';">⚡ Fork & Deploy (+50 XP)</button>
+                </div>
+            `;
+            document.getElementById('blueprintInspectModal').style.display = 'flex';
+        };
+
+        window.cloneBlueprint = async function(bpId) {
+            const pool = [...TACHYON_VERIFIED_BLUEPRINTS, ...liveGithubResults];
+            const bp = pool.find(x => x.id === bpId) || TACHYON_VERIFIED_BLUEPRINTS[0];
             forgeCoresCount += 1;
+            playSound('fanfare');
             spawnXPFloat('+50 XP & +1 Core!');
-            showGlassToast(`🧬 Successfully forged <strong>${name}</strong> (+50 XP & +1 Core)!`);
+
+            if (currentUserUid && currentUserEmail) {
+                try {
+                    await addDoc(collection(db, "agents"), {
+                        name: `${bp.title} [Fork]`,
+                        link: bp.repoUrl,
+                        skills: bp.stack || ['Blueprint Fork', 'TACHYON'],
+                        author: currentCustomName || "Operative",
+                        authorEmail: currentUserEmail,
+                        desc: `Forked via TACHYON Blueprint Forge: ${bp.desc}`,
+                        upvotes: 0,
+                        boostedBy: [],
+                        timestamp: Date.now()
+                    });
+                    pushNotification(`🧬 Forked & deployed "${bp.title}" to the Arena (+50 XP).`);
+                } catch (e) {}
+            }
+            showGlassToast(`🧬 Forged <strong>${bp.title}</strong> (+50 XP & +1 Core)!`);
+            refreshAllUI();
+        };
+
+        // --- MISSIONS & IDEMPOTENT REWARD CLAIMING ---
+        window.setMissionFilter = function(cat, btnEl) {
+            activeMissionFilter = cat;
+            document.querySelectorAll('#view-missions .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
             refreshAllUI();
         };
 
@@ -1461,80 +2087,354 @@
             const grid = document.getElementById('missions-grid');
             if (!grid || !myStats) return;
             grid.innerHTML = '';
-            MISSIONS_CATALOG.forEach(m => {
+
+            const list = MISSIONS_CATALOG.filter(m => activeMissionFilter === 'all' || m.category === activeMissionFilter);
+            list.forEach(m => {
                 const prog = m.getProgress(myStats);
-                const claimed = myStats.completedMissions.includes(m.id);
+                const isClaimed = myStats.completedMissions.includes(m.id);
+                const isReadyToClaim = prog >= m.target && !isClaimed;
+                const pct = Math.min(100, Math.round((prog / m.target) * 100));
+
+                let actionBtn = '';
+                if (isClaimed) {
+                    actionBtn = `<button class="unit-btn unit-btn-disabled" style="color:var(--mint); border-color:rgba(52,211,153,0.4);">✅ REWARD CLAIMED (+${m.xp} XP)</button>`;
+                } else if (isReadyToClaim) {
+                    actionBtn = `<button class="btn-editorial-primary" style="width:100%; justify-content:center;" onclick="claimMissionReward('${m.id}')">🎁 CLAIM REWARD (+${m.xp} XP)</button>`;
+                } else if (m.category === 'coding') {
+                    actionBtn = `<button class="unit-btn unit-btn-boost" onclick="openChallengeModal()">💻 Open Verification Lab (${prog}/${m.target})</button>`;
+                } else if (m.category === 'exploration') {
+                    actionBtn = `<a href="twin.html" class="unit-btn unit-btn-boost">🏛️ Enter Digital Twin →</a>`;
+                } else {
+                    actionBtn = `<button class="unit-btn unit-btn-inspect" onclick="switchArenaView('arena')">⚡ Go to Arena (${prog}/${m.target})</button>`;
+                }
+
                 grid.innerHTML += `
                     <div class="mission-card">
                         <div>
-                            <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--cyan);">${m.diff.toUpperCase()}</div>
-                            <div style="font-family:var(--font-display); font-size:1.1rem; font-weight:700; margin-top:4px;">${m.title}</div>
-                            <p style="font-size:0.85rem; color:var(--slate); margin-top:6px;">${m.desc}</p>
+                            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.7rem;">
+                                <span style="color:var(--cyan); text-transform:uppercase;">${m.diff}</span>
+                                <span style="color:var(--slate);">⏱️ ${m.duration}</span>
+                            </div>
+                            <h3 style="font-family:var(--font-display); font-size:1.08rem; margin-top:6px;">${m.title}</h3>
+                            <p style="font-size:0.85rem; color:var(--slate); margin-top:6px; line-height:1.5;">${m.desc}</p>
+                            <div style="display:flex; gap:8px; margin-top:10px;">
+                                <span class="skill-chip" style="color:var(--gold); border-color:rgba(251,191,36,0.35);">⚡ +${m.xp} XP</span>
+                                <span class="skill-chip">🏅 Badge Progress</span>
+                            </div>
                         </div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.72rem; color:var(--slate);">
+                                <span>PROGRESS</span>
+                                <span>${prog} / ${m.target} (${pct}%)</span>
+                            </div>
+                            <div style="width:100%; height:7px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden;">
+                                <div style="height:100%; width:${pct}%; background:linear-gradient(90deg, var(--cyan), var(--mint));"></div>
+                            </div>
+                            <div style="margin-top:6px;">${actionBtn}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        window.claimMissionReward = async function(missionId) {
+            if (!currentUserUid) { showGlassToast('⚠️ Sign in with Google to claim mission XP.'); return; }
+            const mission = MISSIONS_CATALOG.find(m => m.id === missionId);
+            if (!mission) return;
+
+            const userRef = doc(db, "users", currentUserUid);
+            const snap = await getDoc(userRef);
+            if (!snap.exists()) return;
+            const claimed = snap.data().completedMissions || [];
+            if (claimed.includes(missionId)) return;
+
+            await updateDoc(userRef, {
+                bonusXP: increment(mission.xp),
+                completedMissions: arrayUnion(missionId),
+                earnedBadges: arrayUnion(mission.badgeId),
+                xpHistory: arrayUnion({ reason: `Completed ${mission.title}`, xp: mission.xp, timestamp: Date.now() })
+            });
+
+            playSound('fanfare');
+            window.spawnXPFloat(`+${mission.xp} XP MISSION COMPLETE!`);
+            pushNotification(`🎯 Claimed +${mission.xp} XP for ${mission.title}!`);
+
+            const unlockedBadge = BADGE_CATALOG.find(b => b.id === mission.badgeId);
+            if (unlockedBadge) openBadgeInspectModal(unlockedBadge, true, true);
+        };
+
+        // --- INTERACTIVE AI & CODING VERIFICATION LAB ---
+        window.openChallengeModal = function() {
+            playSound('blip');
+            const myStats = computeAllUserScores().statsByEmail[currentUserEmail];
+            const solved = myStats ? myStats.solvedChallenges : [];
+            const container = document.getElementById('challenge-body');
+            container.innerHTML = '';
+
+            LAB_CHALLENGES.forEach(ch => {
+                const isSolved = solved.includes(ch.id);
+                container.innerHTML += `
+                    <div style="background:rgba(5,7,14,0.8); border:1px solid ${isSolved ? 'var(--mint)' : 'var(--glass-border)'}; padding:14px; border-radius:14px;">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--gold);">+${m.xp} XP</span>
-                            <button class="btn-editorial-primary" style="padding:8px 16px; font-size:0.75rem;" ${claimed ? 'disabled' : ''} onclick="claimMission('${m.id}', ${m.xp})">${claimed ? 'Claimed' : 'Claim Reward'}</button>
+                            <strong style="color:var(--cyan); font-size:0.86rem;">${ch.title}</strong>
+                            <span style="font-family:var(--font-mono); font-size:0.7rem; color:${isSolved ? 'var(--mint)' : 'var(--gold)'};">${isSolved ? '✅ VERIFIED' : '+35 XP'}</span>
+                        </div>
+                        <p style="font-size:0.82rem; color:var(--soft-white); margin:8px 0;">${ch.question}</p>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                            ${ch.options.map((opt, idx) => `
+                                <button class="unit-btn ${isSolved && idx === ch.correctIndex ? 'unit-btn-boost' : 'unit-btn-inspect'}"
+                                    ${isSolved ? 'disabled' : ''}
+                                    onclick="submitLabChallenge('${ch.id}', ${idx})">${opt}</button>
+                            `).join('')}
                         </div>
                     </div>
                 `;
             });
+            document.getElementById('challengeModal').style.display = 'flex';
         };
+        window.closeChallengeModal = () => document.getElementById('challengeModal').style.display = 'none';
 
-        window.claimMission = function(id, xp) {
-            const u = allUsers[currentUserEmail];
-            if (u && !u.completedMissions.includes(id)) {
-                u.completedMissions.push(id);
-                u.bonusXP = (u.bonusXP || 0) + xp;
-                spawnXPFloat(`+${xp} XP!`);
-                showGlassToast(`🎯 Mission reward claimed (+${xp} XP)!`);
-                refreshAllUI();
+        window.submitLabChallenge = async function(chId, chosenIdx) {
+            const ch = LAB_CHALLENGES.find(c => c.id === chId);
+            if (!ch) return;
+            if (chosenIdx !== ch.correctIndex) {
+                showGlassToast("⚠️ Incorrect response! Review the AI/ML concept and try again.");
+                return;
             }
-        };
+            if (!currentUserUid) { showGlassToast("⚠️ Sign in with Google to save Lab verification XP."); return; }
 
-        window.renderBadgesGallery = function() {
-            const grid = document.getElementById('badge-gallery-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            BADGE_CATALOG.forEach(b => {
-                grid.innerHTML += `
-                    <div class="collectible-badge-card">
-                        <div style="font-size:2.2rem;">${b.icon}</div>
-                        <div style="font-family:var(--font-display); font-size:0.85rem; font-weight:700;">${b.name}</div>
-                        <p style="font-size:0.75rem; color:var(--slate);">${b.desc}</p>
-                    </div>
-                `;
+            const userRef = doc(db, "users", currentUserUid);
+            const snap = await getDoc(userRef);
+            const solved = (snap.data()?.solvedChallenges) || [];
+            if (solved.includes(chId)) return;
+
+            await updateDoc(userRef, {
+                bonusXP: increment(35),
+                solvedChallenges: arrayUnion(chId),
+                earnedBadges: arrayUnion(ch.badgeId),
+                xpHistory: arrayUnion({ reason: `Verified ${ch.title}`, xp: 35, timestamp: Date.now() })
             });
+
+            playSound('fanfare');
+            window.spawnXPFloat('+35 XP CHALLENGE VERIFIED!');
+            pushNotification(`💻 Verified ${ch.title} (+35 XP).`);
+            openChallengeModal();
         };
 
-        window.renderProfileLoadout = function(myStats) {
-            if (!myStats) return;
-            document.getElementById('profile-callsign').innerText = `@${myStats.name}`;
-            document.getElementById('profile-equipped-title').innerText = `★ ${myStats.equippedTitle}`;
-            const picker = document.getElementById('avatar-picker');
-            picker.innerHTML = ['🐉', '🤖', '⚡', '🦊'].map(av => `<button class="filter-pill" onclick="setAvatar('${av}')">${av}</button>`).join('');
-        };
-
-        window.setAvatar = av => {
-            allUsers[currentUserEmail].avatarId = av;
-            showGlassToast(`Avatar updated to ${av}`);
+        // --- TROPHY ROOM & 15 COLLECTIBLE BADGES ---
+        window.setBadgeCategory = function(cat, btnEl) {
+            activeBadgeCategory = cat;
+            document.querySelectorAll('#view-trophies .filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
             refreshAllUI();
         };
 
-        window.renderLeaderboard = function(map, sorted) {
-            const list = document.getElementById('leaderboard-list');
-            const podium = document.getElementById('leaderboard-podium');
-            if (!list || !podium) return;
-            podium.innerHTML = sorted.slice(0, 3).map((email, i) => {
-                const st = map[email];
-                return `<div class="podium-spot ${i===0?'podium-1':''}"><span>#${i+1}</span><strong>@${st.name}</strong><span style="font-size:0.7rem; color:var(--cyan);">${st.totalXP} XP</span></div>`;
-            }).join('');
-            list.innerHTML = sorted.map((email, i) => {
-                const st = map[email];
-                return `<div class="lb-row"><span>#${i+1} @${st.name}</span><strong style="color:var(--cyan);">${st.totalXP} XP</strong></div>`;
-            }).join('');
+        window.renderBadgesGallery = function(passedStats) {
+            const { statsByEmail, sortedEmails } = computeAllUserScores();
+            const myStats = passedStats || statsByEmail[currentUserEmail] || (sortedEmails[0] ? statsByEmail[sortedEmails[0]] : { earnedBadgesList: ['early_access'] });
+            const grid = document.getElementById('badge-gallery-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const sortMode = document.getElementById('badgeSortSelect')?.value || 'rarity';
+            const rarityRank = { Legendary: 5, Epic: 4, Rare: 3, Uncommon: 2, Common: 1 };
+
+            let badges = BADGE_CATALOG.filter(b => activeBadgeCategory === 'all' || b.category === activeBadgeCategory);
+            badges.sort((a, b) => {
+                const aEarned = myStats.earnedBadgesList.includes(a.id) ? 1 : 0;
+                const bEarned = myStats.earnedBadgesList.includes(b.id) ? 1 : 0;
+                if (sortMode === 'earned') return bEarned - aEarned || rarityRank[b.rarity] - rarityRank[a.rarity];
+                if (sortMode === 'locked') return aEarned - bEarned || rarityRank[b.rarity] - rarityRank[a.rarity];
+                return rarityRank[b.rarity] - rarityRank[a.rarity];
+            });
+
+            badges.forEach(badge => {
+                const isEarned = myStats.earnedBadgesList.includes(badge.id);
+                const card = document.createElement('div');
+                card.className = `collectible-badge-card ${isEarned ? '' : 'locked-badge'}`;
+                card.setAttribute('data-hint', `<strong>${badge.name}</strong> (${badge.rarity})<br>${badge.reqText}`);
+                card.onclick = () => openBadgeInspectModal(badge, isEarned, false);
+                card.innerHTML = `
+                    <span class="badge-rarity-tag tag-${badge.rarity}">${badge.rarity}</span>
+                    <div style="margin:6px 0;">${renderBadgeSVG(badge, isEarned)}</div>
+                    <div style="font-family:var(--font-display); font-size:0.86rem; font-weight:800;">${badge.name}</div>
+                    <p style="font-size:0.75rem; color:var(--slate); line-height:1.4;">${badge.desc}</p>
+                    <div style="font-family:var(--font-mono); font-size:0.68rem; color:${isEarned ? 'var(--mint)' : 'var(--gold)'}; margin-top:auto;">
+                        ${isEarned ? '✅ UNLOCKED' : '🔒 ' + badge.reqText}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
         };
 
-        window.logout = () => location.reload();
+        function openBadgeInspectModal(badge, isEarned, isNewUnlock) {
+            playSound(isNewUnlock ? 'fanfare' : 'blip');
+            const box = document.getElementById('badgeInspectContent');
+            box.innerHTML = `
+                <span class="badge-rarity-tag tag-${badge.rarity}">${badge.rarity} Medallion</span>
+                <h2 style="font-family:var(--font-display); margin-top:6px;">${isNewUnlock ? '🎉 BADGE UNLOCKED: ' : ''}${badge.name}</h2>
+                <div style="margin:12px 0; transform:scale(1.2);">${renderBadgeSVG(badge, isEarned)}</div>
+                <p style="color:var(--soft-white); font-size:0.92rem; line-height:1.5;">${badge.desc}</p>
+                <div style="background:rgba(5,7,14,0.8); padding:12px; border-radius:12px; width:100%; font-family:var(--font-mono); font-size:0.75rem; color:var(--cyan);">
+                    REQUIREMENT: ${badge.reqText} // XP BOUNTY: +${badge.xp} XP
+                </div>
+                <div style="display:flex; gap:10px; width:100%;">
+                    ${isEarned ? `<button class="btn-editorial-primary" style="flex:1; justify-content:center;" onclick="pinBadgeToShowcase('${badge.id}')">📌 Pin to Showcase</button>` : ''}
+                    <button class="btn-editorial-outline" style="flex:1; justify-content:center;" onclick="document.getElementById('badgeInspectModal').style.display='none'">${isNewUnlock ? 'COLLECT BADGE' : 'Close'}</button>
+                </div>
+            `;
+            document.getElementById('badgeInspectModal').style.display = 'flex';
+        }
+
+        window.pinBadgeToShowcase = async function(badgeId) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), {
+                showcaseBadges: arrayUnion(badgeId)
+            });
+            document.getElementById('badgeInspectModal').style.display = 'none';
+            showGlassToast(`📌 Pinned badge to your Profile Showcase!`);
+        };
+
+        // --- PLAYER PROFILE, TITLES, SHOWCASE & XP LEDGER ---
+        window.renderProfileLoadout = function(myStats) {
+            if (!myStats) return;
+            document.getElementById('profile-big-avatar').innerText = myStats.avatarId;
+            document.getElementById('profile-callsign').innerText = `@${myStats.name}`;
+            document.getElementById('profile-equipped-title').innerText = `★ ${myStats.equippedTitle}`;
+
+            const picker = document.getElementById('avatar-picker');
+            picker.innerHTML = AVATAR_OPTIONS.map(av => `
+                <button class="filter-pill ${myStats.avatarId === av ? 'active' : ''}" onclick="selectOperativeAvatar('${av}')">${av}</button>
+            `).join('');
+
+            const titleList = document.getElementById('title-selector-list');
+            if (titleList) {
+                titleList.innerHTML = TITLE_CATALOG.map(t => {
+                    const unlocked = !t.reqBadge || myStats.earnedBadgesList.includes(t.reqBadge);
+                    const equipped = myStats.equippedTitle === t.id;
+                    return `
+                        <button class="title-choice-btn ${equipped ? 'equipped' : ''} ${unlocked ? '' : 'locked-title'}"
+                            title="${t.desc}"
+                            onclick="${unlocked ? `equipOperativeTitle('${t.id}')` : ''}">
+                            <span>${t.id}</span>
+                            <span>${equipped ? '★' : (unlocked ? '✓' : '🔒')}</span>
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            const showcaseIds = (myStats.showcaseBadges && myStats.showcaseBadges.length > 0)
+                ? myStats.showcaseBadges.slice(-3)
+                : myStats.earnedBadgesList.slice(0, 3);
+            const showcaseEl = document.getElementById('profile-showcase-badges');
+            if (showcaseEl) {
+                showcaseEl.innerHTML = showcaseIds.map(bid => {
+                    const b = BADGE_CATALOG.find(x => x.id === bid) || BADGE_CATALOG[0];
+                    return `
+                        <div style="background:rgba(5,7,14,0.75); border:1px solid var(--glass-border); border-radius:14px; padding:12px; text-align:center;">
+                            <div style="font-size:1.5rem;">${b.icon}</div>
+                            <div style="font-family:var(--font-display); font-size:0.7rem; margin-top:4px;">${b.name}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const ledgerEl = document.getElementById('profile-xp-ledger');
+            if (ledgerEl) {
+                const baseItems = [
+                    { reason: `Deployed ${myStats.myAgentCount} AI Agent(s)`, xp: myStats.myAgentCount * 50 },
+                    { reason: `Received ${myStats.myUpvotesReceived} Community Overclock(s)`, xp: myStats.myUpvotesReceived * 10 },
+                    { reason: `Academy Operative Registration`, xp: 10 }
+                ];
+                const combinedLedger = [...(myStats.xpHistory || []).slice().reverse(), ...baseItems];
+                ledgerEl.innerHTML = combinedLedger.map(entry => `
+                    <div style="display:flex; justify-content:space-between; background:rgba(5,7,14,0.7); padding:10px 14px; border-radius:10px; font-size:0.8rem;">
+                        <span>${entry.reason}</span>
+                        <strong style="font-family:var(--font-mono); color:var(--mint);">+${entry.xp} XP</strong>
+                    </div>
+                `).join('');
+            }
+        };
+
+        window.selectOperativeAvatar = async function(av) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), { avatarId: av });
+            playSound('blip');
+            showGlassToast(`Avatar updated to ${av}`);
+        };
+
+        window.equipOperativeTitle = async function(titleId) {
+            if (!currentUserUid) return;
+            await updateDoc(doc(db, "users", currentUserUid), { equippedTitle: titleId });
+            playSound('fanfare');
+            showGlassToast(`★ Equipped title: ${titleId}`);
+        };
+        
+        window.updateOperativeCallsign = async function() {
+            if (!currentUserUid) return;
+            const newName = document.getElementById('editCallsignInput').value.trim();
+            if (newName.length < 3) { showGlassToast("⚠️ Callsign must be at least 3 characters."); return; }
+            await updateDoc(doc(db, "users", currentUserUid), {
+                customName: newName,
+                customNameLower: newName.toLowerCase()
+            });
+            currentCustomName = newName;
+            playSound('fanfare');
+            showGlassToast(`🛡️ Updated Operative Callsign to @${newName}`);
+        };
+
+        // --- COMPETITIVE LEADERBOARD & PODIUM (ALL-TIME & WEEKLY) ---
+        window.setLeaderboardMode = function(mode) {
+            leaderboardMode = mode;
+            document.getElementById('lb-tab-all')?.classList.toggle('active', mode === 'all');
+            document.getElementById('lb-tab-weekly')?.classList.toggle('active', mode === 'weekly');
+            refreshAllUI();
+        };
+
+        window.renderLeaderboard = function(passedMap, passedSorted) {
+            const { statsByEmail, sortedEmails } = passedMap ? { statsByEmail: passedMap, sortedEmails: passedSorted } : computeAllUserScores();
+            const podiumEl = document.getElementById('leaderboard-podium');
+            const listEl = document.getElementById('leaderboard-list');
+            const searchQ = (document.getElementById('lbSearchInput')?.value || '').toLowerCase().trim();
+            if (!podiumEl || !listEl) return;
+
+            const top1 = sortedEmails[0] ? statsByEmail[sortedEmails[0]] : null;
+            const top2 = sortedEmails[1] ? statsByEmail[sortedEmails[1]] : null;
+            const top3 = sortedEmails[2] ? statsByEmail[sortedEmails[2]] : null;
+
+            const renderSpot = (st, rankNum, cls, medal) => st ? `
+                <div class="podium-spot ${cls}">
+                    <span style="font-family:var(--font-display); font-size:0.7rem; font-weight:900;">${medal} #${rankNum}</span>
+                    <div style="font-size:1.35rem;">${st.avatarId || '🤖'}</div>
+                    <span style="font-weight:700; font-size:0.82rem; max-width:90px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">@${st.name}</span>
+                    <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--cyan); font-weight:700;">${st.totalXP} XP</span>
+                </div>
+            ` : `<div class="podium-spot ${cls}"><span style="font-family:var(--font-display); font-size:0.7rem;">#${rankNum}</span><span>--</span></div>`;
+
+            podiumEl.innerHTML = renderSpot(top2, 2, 'podium-2', '🥈') + renderSpot(top1, 1, 'podium-1', '👑') + renderSpot(top3, 3, 'podium-3', '🥉');
+
+            listEl.innerHTML = '';
+            sortedEmails.forEach((email, idx) => {
+                const st = statsByEmail[email];
+                if (searchQ && !st.name.toLowerCase().includes(searchQ)) return;
+                const prog = calculateProgression(st.totalXP);
+                const isMe = email === currentUserEmail;
+
+                listEl.innerHTML += `
+                    <div class="lb-row ${isMe ? 'is-me' : ''}">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-family:var(--font-display); font-size:0.78rem; font-weight:800; width:24px; color:var(--slate);">#${idx + 1}</span>
+                            <span style="font-size:1.15rem;">${st.avatarId || '🤖'}</span>
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-size:0.88rem; font-weight:700;">@${st.name} ${isMe ? '(You)' : ''}</span>
+                                <span style="font-family:var(--font-mono); font-size:0.64rem; color:var(--slate);">LVL ${prog.level} • ${st.equippedTitle}</span>
+                            </div>
+                        </div>
+                        <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:800; color:var(--cyan);">${st.totalXP} XP</span>
+                    </div>
+                `;
+            });
+        };
 
         renderBlueprintForge();
         refreshAllUI();
